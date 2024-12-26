@@ -1,5 +1,7 @@
+"use client";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import {
   FiCalendar,
   FiEdit2,
@@ -7,11 +9,15 @@ import {
   FiPlus,
   FiX,
   FiImage,
+  FiUser,
 } from "react-icons/fi";
 import Modal from "./Modal";
+import Link from "next/link";
 
 export default function Events() {
   const { data: session } = useSession();
+  const pathname = usePathname();
+  const isDashboard = pathname === "/dashboard";
   const [events, setEvents] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -26,6 +32,7 @@ export default function Events() {
     isOpen: false,
     eventId: null,
   });
+  const [showRegistrations, setShowRegistrations] = useState(null);
 
   useEffect(() => {
     fetchEvents();
@@ -109,6 +116,24 @@ export default function Events() {
       alert("Failed to upload image");
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleRegister = async (eventId) => {
+    try {
+      const response = await fetch(`/api/events/${eventId}/register`, {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        fetchEvents(); // Refresh the events list
+      } else {
+        const data = await response.json();
+        alert(data.error || "Failed to register");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert("Failed to register for event");
     }
   };
 
@@ -286,6 +311,35 @@ export default function Events() {
                   month: "long",
                   day: "numeric",
                 })}
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-700">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="text-sm text-gray-400">
+                      {event.registrations?.length || 0} registered
+                    </p>
+                  </div>
+                  {!isDashboard && (
+                    <Link
+                      href={`/events/register/${event._id}`}
+                      className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg transition-colors text-sm font-medium"
+                    >
+                      Register for Event
+                    </Link>
+                  )}
+                </div>
+                {isDashboard && event.registrations?.length > 0 && (
+                  <div className="mt-3">
+                    <Link
+                      href={`/events/${event._id}/registrations`}
+                      className="text-sm text-primary hover:text-primary/80 transition-colors inline-flex items-center gap-2"
+                    >
+                      <FiUser className="w-4 h-4" />
+                      View {event.registrations.length} Registration
+                      {event.registrations.length !== 1 ? "s" : ""}
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>

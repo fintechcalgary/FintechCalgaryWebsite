@@ -6,7 +6,8 @@ export default function Modal({
   message,
   confirmText = "Confirm",
   cancelText = "Cancel",
-  type = "default",
+  showCancel = true,
+  type = "info",
 }) {
   if (!isOpen) return null;
 
@@ -14,18 +15,17 @@ export default function Modal({
     switch (type) {
       case "danger":
         return {
-          button: "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/25",
+          button: "bg-red-500 hover:bg-red-600",
           icon: "text-red-500",
         };
-      case "warning":
+      case "success":
         return {
-          button:
-            "bg-yellow-500 hover:bg-yellow-600 shadow-lg shadow-yellow-500/25",
-          icon: "text-yellow-500",
+          button: "bg-green-500 hover:bg-green-600",
+          icon: "text-green-500",
         };
       default:
         return {
-          button: "bg-primary hover:bg-primary/80 shadow-lg shadow-primary/25",
+          button: "bg-primary hover:bg-primary/80",
           icon: "text-primary",
         };
     }
@@ -34,33 +34,43 @@ export default function Modal({
   const typeStyles = getTypeStyles();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-xl shadow-xl max-w-md w-full border border-gray-700/50">
+        <div className="p-6">
+          <div className="text-center mb-6">
+            <h3 className="text-xl font-semibold text-white mb-3">{title}</h3>
+            <div className="text-gray-300 text-base">
+              {typeof message === "string" ? <p>{message}</p> : message}
+            </div>
+          </div>
 
-      {/* Modal */}
-      <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-gray-900/90 p-8 shadow-xl transition-all border border-gray-700/50 backdrop-blur-sm">
-        <div className="text-center mb-8">
-          <h3 className="text-2xl font-semibold text-white mb-4">{title}</h3>
-          <p className="text-gray-300 text-sm leading-relaxed">{message}</p>
-        </div>
-
-        <div className="flex items-center justify-center gap-4">
-          <button
-            onClick={onClose}
-            className="flex-1 px-6 py-3 rounded-xl text-gray-300 hover:bg-gray-700/50 border border-gray-700/50 hover:border-gray-600 transition-all duration-200 font-medium"
-          >
-            {cancelText}
-          </button>
-          <button
-            onClick={onConfirm}
-            className={`flex-1 px-6 py-3 rounded-xl text-white transition-all duration-200 font-medium ${typeStyles.button}`}
-          >
-            {confirmText}
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            {showCancel && (
+              <button
+                onClick={onClose}
+                className="w-full sm:w-auto px-6 py-2.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all duration-200 font-medium text-sm focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 min-w-[120px]"
+              >
+                {cancelText}
+              </button>
+            )}
+            <button
+              onClick={onConfirm || onClose}
+              className={`w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200 font-medium text-sm text-white min-w-[120px]
+                ${typeStyles.button}
+                focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800
+                ${
+                  type === "danger"
+                    ? "focus:ring-red-500"
+                    : "focus:ring-primary"
+                }
+                shadow-lg ${
+                  type === "danger" ? "shadow-red-500/20" : "shadow-primary/20"
+                }
+              `}
+            >
+              {confirmText}
+            </button>
+          </div>
         </div>
       </div>
     </div>

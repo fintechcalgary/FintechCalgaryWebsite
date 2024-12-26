@@ -7,6 +7,7 @@ export async function createEvent(db, event) {
     userId: event.userId,
     imageUrl: event.imageUrl,
     createdAt: new Date(),
+    registrations: [],
   });
 }
 
@@ -28,4 +29,23 @@ export async function deleteEvent(db, eventId) {
   return await db
     .collection(EVENT_COLLECTION)
     .deleteOne({ _id: new ObjectId(eventId) });
+}
+
+export async function registerForEvent(db, eventId, registrationData) {
+  return await db.collection(EVENT_COLLECTION).updateOne(
+    { _id: new ObjectId(eventId) },
+    {
+      $addToSet: {
+        registrations: registrationData,
+      },
+    }
+  );
+}
+
+export async function isUserRegistered(db, eventId, userEmail) {
+  const event = await db.collection(EVENT_COLLECTION).findOne({
+    _id: new ObjectId(eventId),
+    "registrations.userEmail": userEmail,
+  });
+  return !!event;
 }

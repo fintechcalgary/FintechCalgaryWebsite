@@ -34,20 +34,13 @@ export async function POST(req) {
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      console.log("GET /api/events - Unauthorized request");
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-      });
-    }
-
     const db = await connectToDatabase();
-    console.log(
-      "GET /api/events - Fetching events for user:",
-      session.user.email
-    );
-    const events = await getEvents(db, session.user.email);
+    console.log("GET /api/events - Fetching all public events");
+    const events = await db
+      .collection("events")
+      .find({})
+      .sort({ date: 1 })
+      .toArray();
     console.log("GET /api/events - Found events:", events.length);
 
     return new Response(JSON.stringify(events), { status: 200 });
