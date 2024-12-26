@@ -11,6 +11,6 @@ if (!global._mongoClientPromise) {
 clientPromise = global._mongoClientPromise;
 
 export async function connectToDatabase() {
-  const db = (await clientPromise).db("htc2024"); // replace with your database name
+  const db = (await clientPromise).db("fintech-website");
   return db;
 }
