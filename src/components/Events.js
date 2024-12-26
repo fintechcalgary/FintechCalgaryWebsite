@@ -1,16 +1,25 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { FiCalendar, FiEdit2, FiTrash2, FiPlus, FiX } from "react-icons/fi";
+import {
+  FiCalendar,
+  FiEdit2,
+  FiTrash2,
+  FiPlus,
+  FiX,
+  FiImage,
+} from "react-icons/fi";
 
 export default function Events() {
   const { data: session } = useSession();
   const [events, setEvents] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     date: "",
+    imageUrl: "",
   });
 
   useEffect(() => {
@@ -64,11 +73,39 @@ export default function Events() {
     setShowForm(true);
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const data = await response.json();
+      setFormData((prev) => ({ ...prev, imageUrl: data.url }));
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("Failed to upload image");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
-          <FiCalendar className="text-green-500" />
+          <FiCalendar className="text-primary" />
           Your Events
         </h3>
         <button
@@ -77,7 +114,7 @@ export default function Events() {
             setEditingEvent(null);
             setFormData({ title: "", description: "", date: "" });
           }}
-          className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+          className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg transition-colors duration-200"
         >
           {showForm ? <FiX /> : <FiPlus />}
           {showForm ? "Cancel" : "Add Event"}
@@ -100,7 +137,7 @@ export default function Events() {
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
               }
-              className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-green-500"
+              className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-primary"
               required
             />
           </div>
@@ -114,7 +151,7 @@ export default function Events() {
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
-              className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-green-500 min-h-[100px]"
+              className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-primary min-h-[100px]"
               required
             />
           </div>
@@ -128,13 +165,53 @@ export default function Events() {
               onChange={(e) =>
                 setFormData({ ...formData, date: e.target.value })
               }
-              className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-green-500"
+              className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-primary"
               required
             />
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Event Image
+            </label>
+            <div className="flex items-center gap-4">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+                id="imageUpload"
+                required={!formData.imageUrl}
+              />
+              <label
+                htmlFor="imageUpload"
+                className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg cursor-pointer transition-colors"
+              >
+                <FiImage />
+                {uploading ? "Uploading..." : "Choose Image"}
+              </label>
+              {formData.imageUrl && (
+                <div className="relative w-20 h-20">
+                  <img
+                    src={formData.imageUrl}
+                    alt="Event preview"
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFormData((prev) => ({ ...prev, imageUrl: "" }))
+                    }
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                  >
+                    <FiX size={16} />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
           <button
             type="submit"
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+            className="w-full bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
           >
             {editingEvent ? "Update Event" : "Create Event"}
           </button>
@@ -145,39 +222,48 @@ export default function Events() {
         {events.map((event) => (
           <div
             key={event._id}
-            className="bg-gray-800/50 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow duration-200"
+            className="bg-gray-800/50 rounded-lg overflow-hidden"
           >
-            <div className="flex justify-between items-start mb-4">
-              <h4 className="text-xl font-semibold text-foreground">
-                {event.title}
-              </h4>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleEdit(event)}
-                  className="text-gray-400 hover:text-green-500 transition-colors"
-                  title="Edit"
-                >
-                  <FiEdit2 />
-                </button>
-                <button
-                  onClick={() => handleDelete(event._id)}
-                  className="text-gray-400 hover:text-red-500 transition-colors"
-                  title="Delete"
-                >
-                  <FiTrash2 />
-                </button>
-              </div>
+            <div className="aspect-video w-full">
+              <img
+                src={event.imageUrl}
+                alt={event.title}
+                className="w-full h-full object-cover"
+              />
             </div>
-            <p className="text-gray-400 mb-4 line-clamp-3">
-              {event.description}
-            </p>
-            <div className="text-sm text-gray-500">
-              {new Date(event.date).toLocaleDateString("en-US", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <h4 className="text-xl font-semibold text-foreground">
+                  {event.title}
+                </h4>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleEdit(event)}
+                    className="text-gray-400 hover:text-primary transition-colors"
+                    title="Edit"
+                  >
+                    <FiEdit2 />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(event._id)}
+                    className="text-gray-400 hover:text-red-500 transition-colors"
+                    title="Delete"
+                  >
+                    <FiTrash2 />
+                  </button>
+                </div>
+              </div>
+              <p className="text-gray-400 mb-4 line-clamp-3">
+                {event.description}
+              </p>
+              <div className="text-sm text-gray-500">
+                {new Date(event.date).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </div>
             </div>
           </div>
         ))}
@@ -185,7 +271,7 @@ export default function Events() {
 
       {events.length === 0 && !showForm && (
         <div className="text-center py-12 bg-gray-800/50 rounded-lg">
-          <FiCalendar className="mx-auto text-4xl text-gray-500 mb-4" />
+          <FiCalendar className="mx-auto text-4xl text-primary mb-4" />
           <p className="text-gray-400">
             No events yet. Create your first event!
           </p>
