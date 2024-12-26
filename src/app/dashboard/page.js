@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Events from "@/components/Events";
 import { useEffect } from "react";
+import Members from "@/components/Members";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
@@ -37,6 +38,9 @@ export default function DashboardPage() {
           </p>
         </div>
         <Events />
+        <div className="mt-12">
+          <Members />
+        </div>
       </main>
     </div>
   );

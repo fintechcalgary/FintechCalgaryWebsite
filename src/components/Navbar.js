@@ -19,7 +19,7 @@ export default function Navbar() {
           {/* Left side - Logo and name */}
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+            className="flex items-center gap-2 text-white hover:text-white/80 transition-colors"
           >
             <span className="text-xl font-bold tracking-wide">
               Fintech Calgary
