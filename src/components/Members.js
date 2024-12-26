@@ -7,6 +7,7 @@ import {
   FiX,
   FiImage,
 } from "react-icons/fi";
+import Modal from "./Modal";
 
 export default function Members() {
   const [members, setMembers] = useState([]);
@@ -18,6 +19,10 @@ export default function Members() {
     position: "",
     major: "",
     imageUrl: "",
+  });
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    memberId: null,
   });
 
   useEffect(() => {
@@ -50,14 +55,20 @@ export default function Members() {
   };
 
   const handleDelete = async (memberId) => {
-    if (confirm("Are you sure you want to remove this member?")) {
-      const response = await fetch(`/api/members/${memberId}`, {
-        method: "DELETE",
-      });
+    setDeleteModal({
+      isOpen: true,
+      memberId,
+    });
+  };
 
-      if (response.ok) {
-        fetchMembers();
-      }
+  const confirmDelete = async () => {
+    const response = await fetch(`/api/members/${deleteModal.memberId}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      fetchMembers();
+      setDeleteModal({ isOpen: false, memberId: null });
     }
   };
 
@@ -123,12 +134,10 @@ export default function Members() {
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="bg-gray-800/50 rounded-lg p-6 space-y-4"
+          className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 space-y-6 border border-gray-700/50 shadow-xl"
         >
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Name
-            </label>
+          <div className="input-group">
+            <label>Name</label>
             <input
               type="text"
               placeholder="Enter member name"
@@ -136,12 +145,11 @@ export default function Members() {
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
-              className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-primary"
               required
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-300">
               Position
             </label>
             <input
@@ -151,12 +159,12 @@ export default function Members() {
               onChange={(e) =>
                 setFormData({ ...formData, position: e.target.value })
               }
-              className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-primary"
+              className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
               required
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-300">
               Major
             </label>
             <input
@@ -166,12 +174,12 @@ export default function Members() {
               onChange={(e) =>
                 setFormData({ ...formData, major: e.target.value })
               }
-              className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-primary"
+              className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
               required
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">
               Profile Picture
             </label>
             <div className="flex items-center gap-4">
@@ -185,26 +193,31 @@ export default function Members() {
               />
               <label
                 htmlFor="imageUpload"
-                className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg cursor-pointer transition-colors"
+                className={`flex items-center gap-2 px-4 py-3 rounded-lg cursor-pointer transition-all duration-200
+                  ${
+                    uploading
+                      ? "bg-gray-700 text-gray-300"
+                      : "bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary"
+                  }`}
               >
-                <FiImage />
-                {uploading ? "Uploading..." : "Choose Image"}
+                <FiImage className="w-5 h-5" />
+                <span>{uploading ? "Uploading..." : "Choose Image"}</span>
               </label>
               {formData.imageUrl && (
-                <div className="relative w-20 h-20">
+                <div className="relative w-24 h-24 group">
                   <img
                     src={formData.imageUrl}
                     alt="Profile preview"
-                    className="w-full h-full object-cover rounded-full"
+                    className="w-full h-full object-cover rounded-full border-2 border-gray-700 group-hover:border-primary transition-colors duration-200"
                   />
                   <button
                     type="button"
                     onClick={() =>
                       setFormData((prev) => ({ ...prev, imageUrl: "" }))
                     }
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                    className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transition-colors duration-200"
                   >
-                    <FiX size={16} />
+                    <FiX size={14} />
                   </button>
                 </div>
               )}
@@ -212,9 +225,19 @@ export default function Members() {
           </div>
           <button
             type="submit"
-            className="w-full bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+            className="w-full bg-primary hover:bg-primary/80 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 mt-6 shadow-lg shadow-primary/25"
           >
-            {editingMember ? "Update Member" : "Add Member"}
+            {editingMember ? (
+              <>
+                <FiEdit2 className="w-4 h-4" />
+                Update Member
+              </>
+            ) : (
+              <>
+                <FiPlus className="w-4 h-4" />
+                Add Member
+              </>
+            )}
           </button>
         </form>
       )}
@@ -267,6 +290,17 @@ export default function Members() {
           </p>
         </div>
       )}
+
+      <Modal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ isOpen: false, memberId: null })}
+        onConfirm={confirmDelete}
+        title="Delete Member"
+        message="Are you sure you want to remove this member? This action cannot be undone."
+        confirmText="Remove Member"
+        cancelText="Cancel"
+        type="danger"
+      />
     </div>
   );
 }

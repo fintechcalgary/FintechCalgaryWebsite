@@ -1,97 +1,106 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { FcGoogle } from "react-icons/fc"; // Google icon from react-icons
-import { FaAngleLeft } from "react-icons/fa"; // Import the angle left icon
+import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
+import Link from "next/link";
 
 export default function SignUp() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    const response = await fetch("/api/auth/register", {
+    const res = await fetch("/api/auth/signup", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ email, password }),
     });
-    if (response && response.ok) {
-      router.push("/dashboard"); // Redirect to dashboard after signup
+
+    if (res.ok) {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.ok) {
+        router.push("/dashboard");
+      }
     }
   };
 
-  const handleGoogleSignUp = async () => {
-    await signIn("google", { callbackUrl: "/dashboard" });
-  };
-
-  const handleBack = () => {
-    router.push("/");
-  };
-
   return (
-    <div className="relative flex min-h-screen items-center justify-center p-6">
-      <div className="w-full max-w-md">
-        {/* Back Arrow Inside Content */}
-        <button
-          onClick={handleBack}
-          className="text-gray-300 hover:text-gray-100 transition-colors duration-200 mb-4 flex items-center"
-          aria-label="Back to Home"
-        >
-          <FaAngleLeft size={20} className="mr-2" />{" "}
-          {/* Smaller icon for close positioning */}
-          <span>Back</span>
-        </button>
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="w-full max-w-md space-y-8 bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50 shadow-xl">
+        <div>
+          <h2 className="text-3xl font-bold text-center text-white mb-2">
+            Create Account
+          </h2>
+          <p className="text-gray-400 text-center">
+            Join us on Fintech Calgary
+          </p>
+        </div>
 
-        <h2 className="text-2xl font-bold text-center text-gray-200 mb-6">
-          Sign Up
-        </h2>
-        <form onSubmit={handleSignUp} className="space-y-4">
-          <div>
+        <form onSubmit={handleSignUp} className="space-y-6">
+          <div className="input-group">
+            <label>Email</label>
             <input
               type="email"
-              placeholder="Email"
+              placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent text-gray-200"
+              required
             />
           </div>
-          <div>
+          <div className="input-group">
+            <label>Password</label>
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Create a password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent text-gray-200"
+              required
             />
           </div>
-          <div>
-            <button
-              type="submit"
-              className="w-full bg-green-700 bg-opacity-80 text-white font-semibold py-2 rounded-md border-4 border-green-900 transition-all duration-200 hover:bg-opacity-90 hover:border-green-900 focus:border-green-900"
-            >
-              Sign Up
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full bg-primary hover:bg-primary/80 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 shadow-lg shadow-primary/25"
+          >
+            Sign Up
+          </button>
         </form>
-        <div className="my-4 flex items-center justify-center">
-          <hr className="w-full border-gray-700" />
-          <span className="px-3 text-gray-400">OR</span>
-          <hr className="w-full border-gray-700" />
+
+        <div className="relative my-8">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-700"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-4 bg-gray-800/50 text-gray-400">
+              Or continue with
+            </span>
+          </div>
         </div>
+
         <button
-          onClick={handleGoogleSignUp}
-          className="flex items-center justify-center w-full bg-transparent border border-gray-600 text-gray-300 py-2 rounded-md transition-all duration-200 hover:bg-gray-600"
+          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-100 text-gray-900 font-medium py-3 px-4 rounded-xl transition-all duration-200"
         >
-          <FcGoogle className="w-5 h-5 mr-2" />
-          <span>Sign Up with Google</span>
+          <FcGoogle className="w-5 h-5" />
+          Sign up with Google
         </button>
-        <p className="mt-6 text-center text-gray-400">
+
+        <p className="text-center text-gray-400 mt-8">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-500 hover:underline">
-            Log in
-          </a>
+          <Link
+            href="/login"
+            className="text-primary hover:text-primary/80 font-medium transition-colors"
+          >
+            Sign in
+          </Link>
         </p>
       </div>
     </div>
