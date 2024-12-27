@@ -49,10 +49,16 @@ export default function Events() {
     const url = editingEvent
       ? `/api/events/${editingEvent._id}`
       : "/api/events";
+
+    // Include existing registrations when editing
+    const body = editingEvent
+      ? { ...formData, registrations: editingEvent.registrations }
+      : formData;
+
     const response = await fetch(url, {
       method: editingEvent ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(body),
     });
 
     if (response.ok) {
@@ -142,7 +148,7 @@ export default function Events() {
   return (
     <div>
       <div className="flex justify-between items-center">
-        <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
+        <h3 className="text-2xl font-bold text-foreground flex items-center gap-2 mb-4">
           <FiCalendar className="text-primary" />
           Your Events
         </h3>

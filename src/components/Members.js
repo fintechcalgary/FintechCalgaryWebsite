@@ -112,9 +112,9 @@ export default function Members() {
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       <div className="flex justify-between items-center">
-        <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
+        <h3 className="text-2xl font-bold text-foreground flex items-center gap-2 mb-4">
           <FiUser className="text-primary" />
           Team Members
         </h3>
@@ -132,114 +132,135 @@ export default function Members() {
       </div>
 
       {showForm && (
-        <form
-          onSubmit={handleSubmit}
-          className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 space-y-6 border border-gray-700/50 shadow-xl"
-        >
-          <div className="input-group">
-            <label>Name</label>
-            <input
-              type="text"
-              placeholder="Enter member name"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              required
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="block text-sm font-medium text-gray-300">
-              Position
-            </label>
-            <input
-              type="text"
-              placeholder="Enter position"
-              value={formData.position}
-              onChange={(e) =>
-                setFormData({ ...formData, position: e.target.value })
-              }
-              className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-              required
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="block text-sm font-medium text-gray-300">
-              Major
-            </label>
-            <input
-              type="text"
-              placeholder="Enter major"
-              value={formData.major}
-              onChange={(e) =>
-                setFormData({ ...formData, major: e.target.value })
-              }
-              className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
-              Profile Picture
-            </label>
-            <div className="flex items-center gap-4">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="imageUpload"
-                required={!formData.imageUrl}
-              />
-              <label
-                htmlFor="imageUpload"
-                className={`flex items-center gap-2 px-4 py-3 rounded-lg cursor-pointer transition-all duration-200
-                  ${
-                    uploading
-                      ? "bg-gray-700 text-gray-300"
-                      : "bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary"
-                  }`}
-              >
-                <FiImage className="w-5 h-5" />
-                <span>{uploading ? "Uploading..." : "Choose Image"}</span>
-              </label>
-              {formData.imageUrl && (
-                <div className="relative w-24 h-24 group">
-                  <img
-                    src={formData.imageUrl}
-                    alt="Profile preview"
-                    className="w-full h-full object-cover rounded-full border-2 border-gray-700 group-hover:border-primary transition-colors duration-200"
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <div className="flex flex-col bg-gray-800/90 backdrop-blur-sm rounded-lg p-8 space-y-6 border border-gray-700/50 shadow-xl w-full max-w-3xl relative">
+            <form onSubmit={handleSubmit} className="flex-1 space-y-6">
+              <h2 className="text-2xl font-semibold text-white">
+                {editingMember ? "Edit Member" : "Add Member"}
+              </h2>
+
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-300">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter member name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-300">
+                  Position
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter position"
+                  value={formData.position}
+                  onChange={(e) =>
+                    setFormData({ ...formData, position: e.target.value })
+                  }
+                  className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-300">
+                  Major
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter major"
+                  value={formData.major}
+                  onChange={(e) =>
+                    setFormData({ ...formData, major: e.target.value })
+                  }
+                  className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-300">
+                  Profile Picture
+                </label>
+                <div className="flex items-center gap-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="imageUpload"
+                    required={!formData.imageUrl}
                   />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setFormData((prev) => ({ ...prev, imageUrl: "" }))
-                    }
-                    className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transition-colors duration-200"
+                  <label
+                    htmlFor="imageUpload"
+                    className={`flex items-center gap-2 px-4 py-3 rounded-lg cursor-pointer transition-all duration-200
+                ${
+                  uploading
+                    ? "bg-gray-700 text-gray-300"
+                    : "bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary"
+                }`}
                   >
-                    <FiX size={14} />
-                  </button>
+                    <FiImage className="w-5 h-5" />
+                    <span>{uploading ? "Uploading..." : "Choose Image"}</span>
+                  </label>
+                  {formData.imageUrl && (
+                    <div className="relative w-24 h-24 group">
+                      <img
+                        src={formData.imageUrl}
+                        alt="Profile preview"
+                        className="w-full h-full object-cover rounded-full border-2 border-gray-700 group-hover:border-primary transition-colors duration-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFormData((prev) => ({ ...prev, imageUrl: "" }))
+                        }
+                        className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transition-colors duration-200"
+                      >
+                        <FiX size={14} />
+                      </button>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </div>
+
+              <div className="flex justify-end items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-primary hover:bg-primary/80 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg"
+                >
+                  {editingMember ? (
+                    <>
+                      <FiEdit2 className="w-4 h-4" />
+                      Update Member
+                    </>
+                  ) : (
+                    <>
+                      <FiPlus className="w-4 h-4" />
+                      Add Member
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-primary hover:bg-primary/80 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 mt-6 shadow-lg shadow-primary/25"
-          >
-            {editingMember ? (
-              <>
-                <FiEdit2 className="w-4 h-4" />
-                Update Member
-              </>
-            ) : (
-              <>
-                <FiPlus className="w-4 h-4" />
-                Add Member
-              </>
-            )}
-          </button>
-        </form>
+        </div>
       )}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
