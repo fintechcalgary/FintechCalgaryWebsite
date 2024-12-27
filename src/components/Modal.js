@@ -34,8 +34,8 @@ export default function Modal({
   const typeStyles = getTypeStyles();
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-xl shadow-xl max-w-md w-full border border-gray-700/50">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-xl z-50 shadow-xl max-w-5xl w-full border border-gray-700/50">
         <div className="p-6">
           <div className="text-center mb-6">
             <h3 className="text-xl font-semibold text-white mb-3">{title}</h3>
