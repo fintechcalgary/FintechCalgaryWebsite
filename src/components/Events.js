@@ -140,7 +140,7 @@ export default function Events() {
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       <div className="flex justify-between items-center">
         <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
           <FiCalendar className="text-primary" />
