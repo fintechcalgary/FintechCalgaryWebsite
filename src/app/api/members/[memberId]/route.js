@@ -7,7 +7,7 @@ import { updateMember, deleteMember } from "@/lib/models/member";
 
 export async function GET(req, context) {
   try {
-    const { memberId } = context.params;
+    const { memberId } = await context.params;
     const db = await connectToDatabase();
 
     const member = await db.collection("members").findOne({
@@ -39,7 +39,7 @@ export async function PUT(req, context) {
       });
     }
 
-    const { memberId } = context.params;
+    const { memberId } = await context.params;
     const db = await connectToDatabase();
     const updates = await req.json();
     console.log(
@@ -69,7 +69,7 @@ export async function DELETE(req, context) {
       });
     }
 
-    const { memberId } = context.params;
+    const { memberId } = await context.params;
     const db = await connectToDatabase();
     console.log("DELETE /api/members/[memberId] - Deleting member:", memberId);
     const result = await deleteMember(db, memberId);
