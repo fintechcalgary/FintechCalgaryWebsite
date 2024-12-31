@@ -56,12 +56,9 @@ export default function Navbar() {
               <motion.img
                 src="/logo.svg"
                 alt="FinTech Calgary Logo"
-                className="w-10 h-10 rounded-full border-2 border-purple-400 transition-transform duration-300"
+                className="w-10 h-10 transition-transform duration-300"
                 whileHover={{ scale: 1.15, rotate: 5 }}
               />
-              <span className="text-2xl font-bold tracking-wider text-white">
-                FINTECH
-              </span>
             </Link>
 
             {/* Desktop Navigation */}
