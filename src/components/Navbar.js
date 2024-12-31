@@ -25,22 +25,27 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        className="relative overflow-hidden shadow-lg backdrop-blur-md bg-gradient-to-r from-purple-600/40 to-purple-800/40"
+        className="relative overflow-hidden shadow-lg backdrop-blur-md"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
       >
-        <motion.div
+        <div
           className="absolute inset-0 pointer-events-none"
-          animate={{
-            boxShadow: [
-              "0 0 10px rgba(128, 0, 128, 0.2)",
-              "0 0 20px rgba(128, 0, 128, 0.5)",
-              "0 0 10px rgba(128, 0, 128, 0.2)",
-            ],
-          }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        />
+          style={{ zIndex: -1 }}
+        >
+          <motion.div
+            className="w-full h-full bg-gradient-to-r from-purple-900 to-purple-800"
+            animate={{
+              background: [
+                "linear-gradient(145deg, #482e70, #3b006c)",
+                "linear-gradient(145deg, #3b006c, #482e70)",
+                "linear-gradient(145deg, #482e70, #3b006c)",
+              ],
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
         <div className="container mx-auto px-4 max-w-7xl text-white">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
