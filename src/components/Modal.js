@@ -35,7 +35,7 @@ export default function Modal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-xl shadow-xl max-w-md w-full border border-gray-700/50">
+      <div className="bg-gray-900 rounded-xl shadow-xl max-w-md w-full border border-gray-800">
         <div className="p-6">
           <div className="text-center mb-6">
             <h3 className="text-xl font-semibold text-white mb-3">{title}</h3>
@@ -48,7 +48,7 @@ export default function Modal({
             {showCancel && (
               <button
                 onClick={onClose}
-                className="w-full sm:w-auto px-6 py-2.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all duration-200 font-medium text-sm focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 min-w-[120px]"
+                className="w-full sm:w-auto px-6 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-all duration-200 font-medium text-sm focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 min-w-[120px]"
               >
                 {cancelText}
               </button>
@@ -57,7 +57,7 @@ export default function Modal({
               onClick={onConfirm || onClose}
               className={`w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200 font-medium text-sm text-white min-w-[120px]
                 ${typeStyles.button}
-                focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800
+                focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900
                 ${
                   type === "danger"
                     ? "focus:ring-red-500"

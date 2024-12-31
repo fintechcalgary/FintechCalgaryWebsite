@@ -93,8 +93,8 @@ export default function Events() {
       title: event.title,
       description: event.description,
       date: event.date.split("T")[0],
-      imageUrl: event.imageUrl, // Automatically set the image URL
-      registrations: event.registrations?.length || 0, // Display number of registrations
+      imageUrl: event.imageUrl || "",
+      registrations: event.registrations?.length || 0,
     });
     setShowForm(true);
   };
@@ -145,6 +145,17 @@ export default function Events() {
     }
   };
 
+  const resetForm = () => {
+    setFormData({
+      title: "",
+      description: "",
+      date: "",
+      imageUrl: "",
+    });
+    setEditingEvent(null);
+    setShowForm(false);
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -154,9 +165,11 @@ export default function Events() {
         </h3>
         <button
           onClick={() => {
-            setShowForm(!showForm);
-            setEditingEvent(null);
-            setFormData({ title: "", description: "", date: "" });
+            if (showForm) {
+              resetForm();
+            } else {
+              setShowForm(true);
+            }
           }}
           className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg transition-colors duration-200"
         >
@@ -166,175 +179,177 @@ export default function Events() {
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50 p-4">
-          <div className="flex flex-col md:flex-row bg-gray-800/90 backdrop-blur-sm rounded-lg p-8 space-y-6 md:space-y-0 md:space-x-8 border border-gray-700/50 shadow-xl w-full max-w-5xl relative">
-            {/* Form Section */}
-            <form onSubmit={handleSubmit} className="flex-1 space-y-6">
-              <h2 className="text-2xl font-semibold text-white">
-                {editingEvent ? "Edit Event" : "Create Event"}
-              </h2>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-2xl flex items-center justify-center z-[9999] p-4">
+          <div className="relative w-full max-w-4xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50 shadow-xl overflow-y-auto max-h-[90vh]">
+            <div className="flex flex-col md:flex-row gap-6">
+              {/* Form Section */}
+              <form onSubmit={handleSubmit} className="flex-1 space-y-4">
+                <h2 className="text-2xl font-semibold text-white mb-4">
+                  {editingEvent ? "Edit Event" : "Create Event"}
+                </h2>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-300">
-                  Event Title
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter event title"
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                  className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-300">
-                  Description
-                </label>
-                <textarea
-                  placeholder="Enter event description"
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 resize-none min-h-[120px]"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-300">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) =>
-                    setFormData({ ...formData, date: e.target.value })
-                  }
-                  className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-300">
-                  Event Image
-                </label>
-                <div className="flex items-center gap-4">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    id="imageUpload"
-                    required={!formData.imageUrl}
-                  />
-                  <label
-                    htmlFor="imageUpload"
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary transition-all duration-200"
-                  >
-                    <FiImage className="w-5 h-5" />
-                    <span>{uploading ? "Uploading..." : "Choose Image"}</span>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Event Title
                   </label>
-                  {formData.imageUrl && (
-                    <div className="relative w-16 h-16">
+                  <input
+                    type="text"
+                    placeholder="Enter event title"
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Description
+                  </label>
+                  <textarea
+                    placeholder="Enter event description"
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 resize-none min-h-[100px]"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) =>
+                      setFormData({ ...formData, date: e.target.value })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Event Image
+                  </label>
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      id="imageUpload"
+                      required={!formData.imageUrl}
+                    />
+                    <label
+                      htmlFor="imageUpload"
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary transition-all duration-200"
+                    >
+                      <FiImage className="w-5 h-5" />
+                      <span>{uploading ? "Uploading..." : "Choose Image"}</span>
+                    </label>
+                    {formData.imageUrl && (
+                      <div className="relative w-16 h-16">
+                        <img
+                          src={formData.imageUrl}
+                          alt="Event preview"
+                          className="w-full h-full object-cover rounded-lg border border-gray-700"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFormData((prev) => ({ ...prev, imageUrl: "" }))
+                          }
+                          className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 transition-all duration-200"
+                        >
+                          <FiX size={12} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex justify-end items-center gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                  >
+                    {editingEvent ? (
+                      <>
+                        <FiEdit2 className="w-4 h-4" />
+                        Update Event
+                      </>
+                    ) : (
+                      <>
+                        <FiPlus className="w-4 h-4" />
+                        Create Event
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+
+              {/* Preview Section - Hidden on mobile */}
+              <div className="flex-1 bg-gray-800/50 rounded-lg overflow-hidden shadow-lg hidden md:block">
+                <h3 className="text-lg font-semibold text-white px-4 pt-4">
+                  Preview Event
+                </h3>
+                <div className="mt-2">
+                  <div className="aspect-video w-full">
+                    {formData.imageUrl ? (
                       <img
                         src={formData.imageUrl}
-                        alt="Event preview"
-                        className="w-full h-full object-cover rounded-lg border border-gray-700"
+                        alt={formData.title || "Event Image"}
+                        className="w-full h-full object-cover"
                       />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setFormData((prev) => ({ ...prev, imageUrl: "" }))
-                        }
-                        className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 transition-all duration-200"
-                      >
-                        <FiX size={12} />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex justify-end items-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-primary hover:bg-primary/80 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg"
-                >
-                  {editingEvent ? (
-                    <>
-                      <FiEdit2 className="w-4 h-4" />
-                      Update Event
-                    </>
-                  ) : (
-                    <>
-                      <FiPlus className="w-4 h-4" />
-                      Create Event
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-
-            {/* Preview Section */}
-            <div className="flex-1 bg-gray-800/50 rounded-lg overflow-hidden shadow-lg">
-              <h3 className="text-lg font-semibold text-white px-6 pt-6">
-                Preview Event
-              </h3>
-              <div className="mt-4">
-                <div className="aspect-video w-full">
-                  {formData.imageUrl ? (
-                    <img
-                      src={formData.imageUrl}
-                      alt={formData.title || "Event Image"}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full bg-gray-900 text-gray-500">
-                      No Image Selected
-                    </div>
-                  )}
-                </div>
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <h4 className="text-xl font-semibold text-white">
-                      {formData.title || "Event Title"}
-                    </h4>
+                    ) : (
+                      <div className="flex items-center justify-center h-full bg-gray-900 text-gray-500">
+                        No Image Selected
+                      </div>
+                    )}
                   </div>
-                  <p className="text-gray-400 mb-4 line-clamp-3">
-                    {formData.description ||
-                      "Event description will appear here."}
-                  </p>
-                  <div className="text-sm text-gray-500">
-                    {formData.date
-                      ? new Date(formData.date).toLocaleDateString("en-US", {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })
-                      : "Select a date"}
-                  </div>
-                  <div className="mt-4 pt-4 border-t border-gray-700">
-                    <div className="flex justify-between items-center">
-                      <p className="text-sm text-gray-400">
-                        {formData.registrations || 0} registered
-                      </p>
-                      <button className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg transition-colors text-sm font-medium">
-                        Register for Event
-                      </button>
+                  <div className="p-4">
+                    <div className="flex justify-between items-start mb-3">
+                      <h4 className="text-xl font-semibold text-white">
+                        {formData.title || "Event Title"}
+                      </h4>
+                    </div>
+                    <p className="text-gray-400 mb-3 line-clamp-3">
+                      {formData.description ||
+                        "Event description will appear here."}
+                    </p>
+                    <div className="text-sm text-gray-500">
+                      {formData.date
+                        ? new Date(formData.date).toLocaleDateString("en-US", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
+                        : "Select a date"}
+                    </div>
+                    <div className="mt-3 pt-3 border-t border-gray-700">
+                      <div className="flex justify-between items-center">
+                        <p className="text-sm text-gray-400">
+                          {formData.registrations || 0} registered
+                        </p>
+                        <button className="px-3 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg transition-colors text-sm font-medium">
+                          Register for Event
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
