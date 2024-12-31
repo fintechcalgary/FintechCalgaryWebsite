@@ -25,17 +25,22 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        className="relative overflow-hidden shadow-lg"
-        initial={{ background: "linear-gradient(145deg, #1c003a, #4c008c)" }}
-        animate={{
-          background: [
-            "linear-gradient(145deg, #1c003a, #4c008c)",
-            "linear-gradient(145deg, #2e004d, #5e009e)",
-            "linear-gradient(145deg, #1c003a, #4c008c)",
-          ],
-        }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        className="relative overflow-hidden shadow-lg backdrop-blur-md bg-gradient-to-r from-purple-600/40 to-purple-800/40"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5 }}
       >
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          animate={{
+            boxShadow: [
+              "0 0 10px rgba(128, 0, 128, 0.2)",
+              "0 0 20px rgba(128, 0, 128, 0.5)",
+              "0 0 10px rgba(128, 0, 128, 0.2)",
+            ],
+          }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        />
         <div className="container mx-auto px-4 max-w-7xl text-white">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -58,14 +63,14 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-6">
               <Link
                 href="/dashboard"
-                className="flex items-center gap-2 text-gray-300 hover:text-purple-200 transition-colors text-base font-medium"
+                className="flex items-center gap-2 text-white hover:text-purple-300 transition-colors text-base font-medium"
               >
                 <FiHome className="w-5 h-5" />
                 Dashboard
               </Link>
               <Link
                 href="/dashboard#events"
-                className="flex items-center gap-2 text-gray-300 hover:text-purple-200 transition-colors text-base font-medium"
+                className="flex items-center gap-2 text-white hover:text-purple-300 transition-colors text-base font-medium"
               >
                 <FiCalendar className="w-5 h-5" />
                 Events
@@ -76,7 +81,7 @@ export default function Navbar() {
             <div className="md:hidden flex items-center">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-gray-300 hover:text-purple-200 focus:outline-none"
+                className="text-white hover:text-purple-300 focus:outline-none"
               >
                 {isMenuOpen ? (
                   <FiX className="w-6 h-6" />
@@ -90,7 +95,7 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-4">
               <button
                 onClick={handleLogoutClick}
-                className="flex items-center gap-2 text-gray-300 hover:text-red-400 transition-all duration-300 text-base font-medium"
+                className="flex items-center gap-2 text-white hover:text-red-400 transition-all duration-300 text-base font-medium"
               >
                 <FiLogOut className="w-5 h-5" />
                 Log Out
@@ -100,11 +105,11 @@ export default function Navbar() {
 
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className="md:hidden flex flex-col gap-3 mt-4 bg-gray-900 p-3 rounded-lg">
+            <div className="md:hidden flex flex-col gap-3 mt-4 bg-purple-900/70 p-3 rounded-lg">
               <Link
                 href="/dashboard"
                 onClick={() => setIsMenuOpen(false)}
-                className="flex items-center gap-2 text-gray-300 hover:text-purple-200 transition-colors text-base font-medium"
+                className="flex items-center gap-2 text-white hover:text-purple-300 transition-colors text-base font-medium"
               >
                 <FiHome className="w-5 h-5" />
                 Dashboard
@@ -112,14 +117,14 @@ export default function Navbar() {
               <Link
                 href="/dashboard#events"
                 onClick={() => setIsMenuOpen(false)}
-                className="flex items-center gap-2 text-gray-300 hover:text-purple-200 transition-colors text-base font-medium"
+                className="flex items-center gap-2 text-white hover:text-purple-300 transition-colors text-base font-medium"
               >
                 <FiCalendar className="w-5 h-5" />
                 Events
               </Link>
               <button
                 onClick={handleLogoutClick}
-                className="flex items-center gap-2 text-gray-300 hover:text-red-400 transition-all duration-300 text-base font-medium"
+                className="flex items-center gap-2 text-white hover:text-red-400 transition-all duration-300 text-base font-medium"
               >
                 <FiLogOut className="w-5 h-5" />
                 Log Out
