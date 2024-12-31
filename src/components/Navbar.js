@@ -25,7 +25,7 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        className="relative overflow-hidden shadow-lg backdrop-blur-md"
+        className="sticky top-0 z-50 overflow-hidden shadow-lg backdrop-blur-md"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
