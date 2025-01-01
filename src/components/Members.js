@@ -155,7 +155,7 @@ export default function Members() {
   };
 
   return (
-    <div>
+    <div className="min-h-[500px]">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
           <FiUser className="text-primary" />
@@ -393,7 +393,7 @@ export default function Members() {
       </div>
 
       {members.length === 0 && !showForm && (
-        <div className="text-center py-12 bg-gray-800/50 rounded-lg">
+        <div className="text-center py-12 bg-gray-800/50 rounded-lg min-h-[400px] flex flex-col items-center justify-center">
           <FiUser className="mx-auto text-4xl text-primary mb-4" />
           <p className="text-gray-400">
             No team members yet. Add your first member!

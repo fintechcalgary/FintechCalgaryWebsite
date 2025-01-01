@@ -96,19 +96,36 @@ export async function DELETE(req, context) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
-      console.log("DELETE /api/members/[memberId] - Unauthorized request");
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
     }
 
-    const { memberId } = await context.params;
+    const { memberId } = context.params;
     const db = await connectToDatabase();
-    console.log("DELETE /api/members/[memberId] - Deleting member:", memberId);
-    const result = await deleteMember(db, memberId);
-    console.log("DELETE /api/members/[memberId] - Success:", result);
 
-    return new Response(JSON.stringify(result), { status: 200 });
+    // First get the member's email
+    const member = await db.collection("members").findOne({
+      _id: new ObjectId(memberId),
+    });
+
+    if (!member) {
+      return new Response(JSON.stringify({ error: "Member not found" }), {
+        status: 404,
+      });
+    }
+
+    // Delete from members collection
+    await db.collection("members").deleteOne({
+      _id: new ObjectId(memberId),
+    });
+
+    // Delete from users collection using the email
+    await db.collection("users").deleteOne({
+      email: member.email,
+    });
+
+    return new Response(null, { status: 204 });
   } catch (error) {
     console.error("DELETE /api/members/[memberId] - Error:", error);
     return new Response(JSON.stringify({ error: error.message }), {

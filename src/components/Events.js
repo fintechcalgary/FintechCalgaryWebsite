@@ -157,7 +157,7 @@ export default function Events() {
   };
 
   return (
-    <div>
+    <div className="min-h-[500px]">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
           <FiCalendar className="text-primary" />
@@ -440,7 +440,7 @@ export default function Events() {
       </div>
 
       {events.length === 0 && !showForm && (
-        <div className="text-center py-12 bg-gray-800/50 rounded-lg">
+        <div className="text-center py-12 bg-gray-800/50 rounded-lg min-h-[400px] flex flex-col items-center justify-center">
           <FiCalendar className="mx-auto text-4xl text-primary mb-4" />
           <p className="text-gray-400">
             No events yet. Create your first event!
