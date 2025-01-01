@@ -115,27 +115,8 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="relative my-8">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-700"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-gray-800/50 text-gray-400">
-              Or continue with
-            </span>
-          </div>
-        </div>
-
-        <button
-          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-          className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-100 text-gray-900 font-medium py-3 px-4 rounded-xl transition-all duration-200"
-        >
-          <FcGoogle className="w-5 h-5" />
-          Sign in with Google
-        </button>
-
         <p className="text-center text-gray-400 mt-8">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link
             href="/signup"
             className="text-primary hover:text-primary/80 font-medium transition-colors"
