@@ -39,7 +39,7 @@ export async function PUT(req, context) {
       });
     }
 
-    const { memberId } = context.params;
+    const { memberId } = await context.params;
     const db = await connectToDatabase();
     const updates = await req.json();
 
@@ -101,7 +101,7 @@ export async function DELETE(req, context) {
       });
     }
 
-    const { memberId } = context.params;
+    const { memberId } = await context.params;
     const db = await connectToDatabase();
 
     // First get the member's email
