@@ -2,6 +2,7 @@ import { connectToDatabase } from "@/lib/mongodb";
 import { createMember, getMembers } from "@/lib/models/member";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
+import bcrypt from "bcryptjs";
 
 export async function POST(req) {
   try {
@@ -14,7 +15,28 @@ export async function POST(req) {
 
     const db = await connectToDatabase();
     const member = await req.json();
+
+    // Check if email already exists
+    const existingMember = await db
+      .collection("members")
+      .findOne({ email: member.email });
+    if (existingMember) {
+      return new Response(JSON.stringify({ error: "Email already exists" }), {
+        status: 400,
+      });
+    }
+
+    // Create member and user account
     const result = await createMember(db, member);
+
+    // Also add to users collection for authentication
+    await db.collection("users").insertOne({
+      email: member.email,
+      password: await bcrypt.hash(member.password, 10),
+      role: "member",
+      createdAt: new Date(),
+    });
+
     return new Response(JSON.stringify(result), { status: 201 });
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {

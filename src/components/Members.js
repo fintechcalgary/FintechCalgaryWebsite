@@ -19,6 +19,8 @@ export default function Members() {
     position: "",
     major: "",
     imageUrl: "",
+    email: "",
+    password: "",
   });
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
@@ -37,20 +39,46 @@ export default function Members() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = editingMember
-      ? `/api/members/${editingMember._id}`
-      : "/api/members";
-    const response = await fetch(url, {
-      method: editingMember ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
 
-    if (response.ok) {
-      setFormData({ name: "", position: "", major: "", imageUrl: "" });
-      setShowForm(false);
-      setEditingMember(null);
+    try {
+      if (editingMember) {
+        const response = await fetch(`/api/members/${editingMember._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            oldEmail: editingMember.email, // Include old email for reference
+          }),
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || "Failed to update member");
+        }
+      } else {
+        const response = await fetch("/api/members", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || "Failed to create member");
+        }
+      }
+
+      // Reset form and refresh members list
+      resetForm();
       fetchMembers();
+    } catch (error) {
+      console.error("Error:", error);
+      // Show error message to user (you'll need to implement this)
+      alert(error.message);
     }
   };
 
@@ -75,10 +103,12 @@ export default function Members() {
   const handleEdit = (member) => {
     setEditingMember(member);
     setFormData({
-      name: member.name,
-      position: member.position,
-      major: member.major,
+      name: member.name || "",
+      position: member.position || "",
+      major: member.major || "",
       imageUrl: member.imageUrl || "",
+      email: member.email || "",
+      password: "",
     });
     setShowForm(true);
   };
@@ -117,6 +147,8 @@ export default function Members() {
       position: "",
       major: "",
       imageUrl: "",
+      email: "",
+      password: "",
     });
     setEditingMember(null);
     setShowForm(false);
@@ -146,106 +178,151 @@ export default function Members() {
 
       {showForm && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-2xl flex items-center justify-center z-[9999] p-4">
-          <div className="relative w-full max-w-2xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50 shadow-xl overflow-y-auto max-h-[90vh]">
+          <div className="relative w-full max-w-2xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50 shadow-xl overflow-y-auto max-h-[85vh]">
             <form onSubmit={handleSubmit} className="space-y-4">
               <h2 className="text-2xl font-semibold text-white mb-4">
                 {editingMember ? "Edit Member" : "Add Member"}
               </h2>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter member name"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Position
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter position"
-                    value={formData.position}
-                    onChange={(e) =>
-                      setFormData({ ...formData, position: e.target.value })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Major
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter major"
-                    value={formData.major}
-                    onChange={(e) =>
-                      setFormData({ ...formData, major: e.target.value })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-4">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                      id="imageUpload"
-                      required={!formData.imageUrl}
-                    />
-                    <label
-                      htmlFor="imageUpload"
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200
-                    ${
-                      uploading
-                        ? "bg-gray-700 text-gray-300"
-                        : "bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary"
-                    }`}
-                    >
-                      <FiImage className="w-5 h-5" />
-                      <span>{uploading ? "Uploading..." : "Choose Image"}</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      Name
                     </label>
-                    {formData.imageUrl && (
-                      <div className="relative w-16 h-16 group">
-                        <img
-                          src={formData.imageUrl}
-                          alt="Profile preview"
-                          className="w-full h-full object-cover rounded-full border-2 border-gray-700 group-hover:border-primary transition-colors duration-200"
-                        />
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setFormData((prev) => ({ ...prev, imageUrl: "" }))
-                          }
-                          className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 shadow-lg transition-colors duration-200"
-                        >
-                          <FiX size={12} />
-                        </button>
-                      </div>
-                    )}
+                    <input
+                      type="text"
+                      placeholder="Enter member name"
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="Enter email address"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      {editingMember
+                        ? "New Password (leave blank to keep current)"
+                        : "Password"}
+                    </label>
+                    <input
+                      type="password"
+                      placeholder={
+                        editingMember ? "Enter new password" : "Enter password"
+                      }
+                      value={formData.password}
+                      onChange={(e) =>
+                        setFormData({ ...formData, password: e.target.value })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                      required={!editingMember}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      Position
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter position"
+                      value={formData.position}
+                      onChange={(e) =>
+                        setFormData({ ...formData, position: e.target.value })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      Major
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter major"
+                      value={formData.major}
+                      onChange={(e) =>
+                        setFormData({ ...formData, major: e.target.value })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      Profile Image
+                    </label>
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        id="imageUpload"
+                        required={!formData.imageUrl}
+                      />
+                      <label
+                        htmlFor="imageUpload"
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200
+                        ${
+                          uploading
+                            ? "bg-gray-700 text-gray-300"
+                            : "bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary"
+                        }`}
+                      >
+                        <FiImage className="w-5 h-5" />
+                        <span>
+                          {uploading ? "Uploading..." : "Choose Image"}
+                        </span>
+                      </label>
+                      {formData.imageUrl && (
+                        <div className="relative w-16 h-16 group">
+                          <img
+                            src={formData.imageUrl}
+                            alt="Profile preview"
+                            className="w-full h-full object-cover rounded-full border-2 border-gray-700 group-hover:border-primary transition-colors duration-200"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setFormData((prev) => ({ ...prev, imageUrl: "" }))
+                            }
+                            className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 shadow-lg transition-colors duration-200"
+                          >
+                            <FiX size={12} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-end items-center gap-3 mt-6">
+              <div className="flex justify-end items-center gap-3 mt-6 pt-4 border-t border-gray-700">
                 <button
                   type="button"
                   onClick={resetForm}

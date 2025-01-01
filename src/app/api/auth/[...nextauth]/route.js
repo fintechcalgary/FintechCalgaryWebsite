@@ -19,16 +19,21 @@ export const authOptions = {
       },
       async authorize(credentials) {
         const db = await connectToDatabase();
-        const usersCollection = db.collection("users");
 
-        // Find the user by email
-        const user = await usersCollection.findOne({
-          email: credentials.email,
-        });
+        // Check both users and members collections
+        const user =
+          (await db
+            .collection("users")
+            .findOne({ email: credentials.email })) ||
+          (await db
+            .collection("members")
+            .findOne({ email: credentials.email }));
 
-        // Validate password
         if (user && bcrypt.compareSync(credentials.password, user.password)) {
-          return { email: user.email };
+          return {
+            email: user.email,
+            role: user.role || "member",
+          };
         }
         return null;
       },
