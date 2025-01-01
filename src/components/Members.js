@@ -8,8 +8,12 @@ import {
   FiImage,
 } from "react-icons/fi";
 import Modal from "./Modal";
+import { useSession } from "next-auth/react";
 
 export default function Members() {
+  const { data: session } = useSession();
+  console.log(session);
+  const isAdmin = session?.user?.role === "admin";
   const [members, setMembers] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
@@ -27,15 +31,28 @@ export default function Members() {
     memberId: null,
   });
 
-  useEffect(() => {
-    fetchMembers();
-  }, []);
-
   const fetchMembers = async () => {
     const response = await fetch("/api/members");
     const data = await response.json();
     setMembers(data);
   };
+
+  useEffect(() => {
+    fetchMembers();
+  }, []);
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-[500px] flex items-center justify-center">
+        <div className="text-center">
+          <FiUser className="mx-auto text-4xl text-primary mb-4" />
+          <p className="text-gray-400">
+            You don't have permission to manage team members.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -327,22 +344,25 @@ export default function Members() {
                   type="button"
                   onClick={resetForm}
                   className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
+                  disabled={uploading}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                  disabled={uploading}
+                  className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2
+                    ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   {editingMember ? (
                     <>
                       <FiEdit2 className="w-4 h-4" />
-                      Update Member
+                      {uploading ? "Please wait..." : "Update Member"}
                     </>
                   ) : (
                     <>
                       <FiPlus className="w-4 h-4" />
-                      Add Member
+                      {uploading ? "Please wait..." : "Add Member"}
                     </>
                   )}
                 </button>

@@ -19,20 +19,15 @@ export const authOptions = {
       },
       async authorize(credentials) {
         const db = await connectToDatabase();
-
-        // Check both users and members collections
-        const user =
-          (await db
-            .collection("users")
-            .findOne({ email: credentials.email })) ||
-          (await db
-            .collection("members")
-            .findOne({ email: credentials.email }));
+        const user = await db
+          .collection("users")
+          .findOne({ email: credentials.email });
 
         if (user && bcrypt.compareSync(credentials.password, user.password)) {
           return {
+            id: user._id,
             email: user.email,
-            role: user.role || "member",
+            role: user.role,
           };
         }
         return null;
@@ -43,15 +38,21 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async session({ session, token }) {
-      session.user = token;
-      return session;
-    },
     async jwt({ token, user }) {
       if (user) {
-        token.user = user;
+        token.email = user.email;
+        token.role = user.role;
       }
       return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user = {
+          email: token.email,
+          role: token.role,
+        };
+      }
+      return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

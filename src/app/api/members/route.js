@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 export async function POST(req) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
+    if (!session || session.user.role !== "admin") {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });

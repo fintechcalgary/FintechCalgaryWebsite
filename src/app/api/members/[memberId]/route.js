@@ -33,7 +33,7 @@ export async function GET(req, context) {
 export async function PUT(req, context) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
+    if (!session || session.user.role !== "admin") {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
@@ -95,7 +95,7 @@ export async function PUT(req, context) {
 export async function DELETE(req, context) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
+    if (!session || session.user.role !== "admin") {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
