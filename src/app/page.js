@@ -17,6 +17,18 @@ export default function Home() {
 
   const [events, setEvents] = useState([]);
 
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 200;
+      setScrolled(isScrolled);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   useEffect(() => {
     const fetchEvents = async () => {
       const response = await fetch("/api/events");
@@ -55,7 +67,13 @@ export default function Home() {
 
   return (
     <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900">
-      <nav className="fixed top-0 w-full z-50 bg-gray-900/30 backdrop-blur-md border-b border-gray-800/50">
+      <nav
+        className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${
+          scrolled
+            ? "bg-gray-900/30 backdrop-blur-md border-gray-800/50"
+            : "border-transparent"
+        }`}
+      >
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-20">
             <Link
