@@ -2,15 +2,15 @@
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FiHome, FiCalendar, FiLogOut, FiMenu, FiX } from "react-icons/fi";
-import Modal from "./Modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Modal from "./Modal";
 
 export default function Navbar() {
   const router = useRouter();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const handleLogoutClick = () => {
     setShowLogoutModal(true);
@@ -22,84 +22,113 @@ export default function Navbar() {
     router.push("/login");
   };
 
+  useEffect(() => {
+    let lastScrollY = 0;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Switch to scrolled layout if scrolling down past 60
+      if (currentScrollY > 60 && lastScrollY <= 60) {
+        setIsScrolled(true);
+      }
+      // Switch to default layout if scrolling up past 50
+      else if (currentScrollY < 50 && lastScrollY >= 50) {
+        setIsScrolled(false);
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <>
       <motion.nav
-        className="sticky top-0 z-50 overflow-hidden shadow-lg backdrop-blur-md"
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          isScrolled ? "bg-transparent" : "bg-transparent"
+        }`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
       >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ zIndex: -1 }}
-        >
-          <motion.div
-            className="w-full h-full bg-gradient-to-r from-purple-900 to-purple-800"
-            animate={{
-              background: [
-                "linear-gradient(145deg, #482e70, #3b006c)",
-                "linear-gradient(145deg, #3b006c, #482e70)",
-                "linear-gradient(145deg, #482e70, #3b006c)",
-              ],
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </div>
-        <div className="container mx-auto px-4 max-w-7xl text-white">
-          <div className="flex justify-between items-center h-16">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div
+            className={`hidden md:flex items-center ${
+              isScrolled ? "flex-col gap-4" : "justify-between h-16"
+            } transition-all duration-300`}
+          >
             {/* Logo */}
-            <Link
-              href="/dashboard"
-              className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+            <div
+              className={`flex items-center gap-3 ${
+                isScrolled ? "hidden" : ""
+              }`}
             >
-              <motion.img
-                src="/logo.svg"
-                alt="FinTech Calgary Logo"
-                className="w-10 h-10 transition-transform duration-300"
-                whileHover={{ scale: 1.15, rotate: 5 }}
-              />
-            </Link>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6">
               <Link
                 href="/dashboard"
-                className="flex items-center gap-2 text-white hover:text-purple-300 transition-colors text-base font-medium"
+                className="flex items-center gap-3 hover:opacity-90 transition-opacity"
               >
-                <FiHome className="w-5 h-5" />
-                Dashboard
-              </Link>
-              <Link
-                href="/dashboard#events"
-                className="flex items-center gap-2 text-white hover:text-purple-300 transition-colors text-base font-medium"
-              >
-                <FiCalendar className="w-5 h-5" />
-                Events
+                <motion.img
+                  src="/logo.svg"
+                  alt="Dimension Logo"
+                  className="w-16 h-16 transition-transform duration-300"
+                  whileHover={{ scale: 1.15, rotate: 5 }}
+                />
               </Link>
             </div>
 
-            {/* Hamburger Menu */}
-            <div className="md:hidden flex items-center">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-white hover:text-purple-300 focus:outline-none"
+            {/* Buttons */}
+            <div
+              className={`hidden md:flex items-center justify-center gap-4 bg-gray-800/70 py-2 px-6 rounded-lg shadow-md`}
+            >
+              <Link
+                href="/about"
+                className="text-white text-base font-medium hover:text-purple-300 transition-all"
               >
-                {isMenuOpen ? (
-                  <FiX className="w-6 h-6" />
-                ) : (
-                  <FiMenu className="w-6 h-6" />
-                )}
+                About
+              </Link>
+              <Link
+                href="/careers"
+                className="text-white text-base font-medium hover:text-purple-300 transition-all"
+              >
+                Careers
+              </Link>
+              <Link
+                href="/blog"
+                className="text-white text-base font-medium hover:text-purple-300 transition-all"
+              >
+                Blog
+              </Link>
+              <Link
+                href="/changelog"
+                className="text-white text-base font-medium hover:text-purple-300 transition-all"
+              >
+                Changelog
+              </Link>
+              <button
+                onClick={handleLogoutClick}
+                className={`${
+                  !isScrolled ? "hidden" : "block"
+                } text-base px-6 py-1 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium hover:from-purple-600 hover:to-pink-600 transition-all`}
+              >
+                Log Out
               </button>
             </div>
 
             {/* Log Out Button */}
-            <div className="hidden md:flex items-center gap-4">
+            <div
+              className={`${
+                !isScrolled ? "hidden md:flex" : "hidden"
+              } items-center`}
+            >
               <button
                 onClick={handleLogoutClick}
-                className="flex items-center gap-2 text-white hover:text-red-400 transition-all duration-300 text-base font-medium"
+                className="text-base px-7 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium hover:from-purple-600 hover:to-pink-600 transition-all"
               >
-                <FiLogOut className="w-5 h-5" />
                 Log Out
               </button>
             </div>
@@ -107,28 +136,32 @@ export default function Navbar() {
 
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className="md:hidden flex flex-col gap-3 mt-4 bg-purple-900/70 p-3 rounded-lg">
+            <div className="md:hidden mt-4 bg-gray-800/90 p-4 rounded-lg">
               <Link
                 href="/dashboard"
                 onClick={() => setIsMenuOpen(false)}
-                className="flex items-center gap-2 text-white hover:text-purple-300 transition-colors text-base font-medium"
+                className="block text-white text-base font-medium mb-3 hover:text-purple-400"
               >
-                <FiHome className="w-5 h-5" />
-                Dashboard
+                Blog
               </Link>
               <Link
-                href="/dashboard#events"
+                href="/about"
                 onClick={() => setIsMenuOpen(false)}
-                className="flex items-center gap-2 text-white hover:text-purple-300 transition-colors text-base font-medium"
+                className="block text-white text-base font-medium mb-3 hover:text-purple-400"
               >
-                <FiCalendar className="w-5 h-5" />
-                Events
+                About
+              </Link>
+              <Link
+                href="/changelog"
+                onClick={() => setIsMenuOpen(false)}
+                className="block text-white text-base font-medium mb-3 hover:text-purple-400"
+              >
+                Changelog
               </Link>
               <button
                 onClick={handleLogoutClick}
-                className="flex items-center gap-2 text-white hover:text-red-400 transition-all duration-300 text-base font-medium"
+                className="block text-white text-base font-medium mb-3 hover:text-red-400 md"
               >
-                <FiLogOut className="w-5 h-5" />
                 Log Out
               </button>
             </div>
