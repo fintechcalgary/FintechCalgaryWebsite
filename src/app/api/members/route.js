@@ -33,7 +33,7 @@ export async function POST(req) {
     await db.collection("users").insertOne({
       email: member.email,
       password: await bcrypt.hash(member.password, 10),
-      role: "member",
+      role: member.role || "member",
       createdAt: new Date(),
     });
 

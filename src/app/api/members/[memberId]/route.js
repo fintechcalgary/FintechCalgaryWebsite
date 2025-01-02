@@ -82,6 +82,18 @@ export async function PUT(req, context) {
       );
     }
 
+    if (updates.role && !["admin", "member"].includes(updates.role)) {
+      return new Response(JSON.stringify({ error: "Invalid role value" }), {
+        status: 400,
+      });
+    }
+
+    if (updates.role) {
+      await db
+        .collection("users")
+        .updateOne({ email: updates.email }, { $set: { role: updates.role } });
+    }
+
     const result = await updateMember(db, memberId, updates);
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {

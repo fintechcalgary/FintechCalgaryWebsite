@@ -25,6 +25,7 @@ export default function Members() {
     imageUrl: "",
     email: "",
     password: "",
+    role: "member",
   });
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
@@ -47,7 +48,7 @@ export default function Members() {
         <div className="text-center">
           <FiUser className="mx-auto text-4xl text-primary mb-4" />
           <p className="text-gray-400">
-            You don't have permission to manage team members.
+            You don&apos;t have permission to manage team members.
           </p>
         </div>
       </div>
@@ -119,6 +120,7 @@ export default function Members() {
 
   const handleEdit = (member) => {
     setEditingMember(member);
+    console.log(member);
     setFormData({
       name: member.name || "",
       position: member.position || "",
@@ -126,6 +128,7 @@ export default function Members() {
       imageUrl: member.imageUrl || "",
       email: member.email || "",
       password: "",
+      role: member.role || "member",
     });
     setShowForm(true);
   };
@@ -166,6 +169,7 @@ export default function Members() {
       imageUrl: "",
       email: "",
       password: "",
+      role: "member",
     });
     setEditingMember(null);
     setShowForm(false);
@@ -287,6 +291,28 @@ export default function Members() {
                       className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
                       required
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      Role
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={formData.role}
+                        onChange={(e) =>
+                          setFormData({ ...formData, role: e.target.value })
+                        }
+                        className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 appearance-none"
+                        required
+                      >
+                        <option value="admin">Admin</option>
+                        <option value="member">Member</option>
+                      </select>
+                      <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-xs text-white">
+                        ▼
+                      </div>
+                    </div>
                   </div>
 
                   <div>
