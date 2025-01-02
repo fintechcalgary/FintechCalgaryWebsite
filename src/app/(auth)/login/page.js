@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -7,13 +8,22 @@ import Image from "next/image";
 import * as THREE from "three";
 
 export default function Login() {
+  const { status } = useSession(); // Check session status
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [vantaEffect, setVantaEffect] = useState(null);
   const vantaRef = useRef(null);
-  const router = useRouter();
+
+  // Redirect to /dashboard if already logged in
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/dashboard");
+    }
+  }, [status, router]);
 
   useEffect(() => {
     if (!vantaEffect) {
