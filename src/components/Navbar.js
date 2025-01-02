@@ -158,7 +158,6 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu - updated animation and styling */}
-          {/* Mobile Menu - updated animation and styling */}
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{
