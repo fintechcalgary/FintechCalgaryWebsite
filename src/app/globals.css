@@ -7,6 +7,11 @@
   --foreground: #ededed;
 }
 
+/* Add these new styles */
+html {
+  @apply scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-primary/50 hover:scrollbar-thumb-primary/80;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
