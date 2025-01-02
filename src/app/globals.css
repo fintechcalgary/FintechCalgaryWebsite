@@ -9,7 +9,7 @@
 
 /* Add these new styles */
 html {
-  @apply scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-primary/50 hover:scrollbar-thumb-primary/80;
+  @apply scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80;
 }
 
 body {
