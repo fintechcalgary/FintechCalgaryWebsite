@@ -48,8 +48,8 @@ export default function Navbar() {
     <>
       <motion.nav
         className="sticky top-0 z-50 transition-all duration-300 bg-transparent"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
         <div className="container mx-auto px-4 max-w-7xl mt-4">
