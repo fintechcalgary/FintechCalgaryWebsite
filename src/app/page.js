@@ -60,9 +60,14 @@ export default function Home() {
           <div className="flex justify-between items-center h-20">
             <Link
               href="/"
-              className="text-2xl font-bold text-white hover:text-primary transition-colors"
+              className="flex items-center gap-3 hover:opacity-90 transition-opacity"
             >
-              Fintech Calgary
+              <motion.img
+                src="/logo.svg"
+                alt="Dimension Logo"
+                className="w-16 h-16"
+                whileHover={{ scale: 1.1 }}
+              />
             </Link>
             <div className="flex items-center gap-8">
               <Link

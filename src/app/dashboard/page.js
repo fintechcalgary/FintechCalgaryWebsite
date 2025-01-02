@@ -6,8 +6,10 @@ import { motion } from "framer-motion";
 import { ChartBarIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import Navbar from "@/components/Navbar";
 import Events from "@/components/Events";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import Members from "@/components/Members";
+import Particles from "react-particles";
+import { loadSlim } from "tsparticles-slim";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
@@ -19,6 +21,57 @@ export default function DashboardPage() {
     }
   }, [status, router]);
 
+  const particlesInit = useCallback(async (engine) => {
+    await loadSlim(engine);
+  }, []);
+
+  const particlesConfig = {
+    particles: {
+      number: {
+        value: 50,
+        density: {
+          enable: true,
+          value_area: 800,
+        },
+      },
+      color: {
+        value: "#6d28d9", // Purple color matching your theme
+      },
+      opacity: {
+        value: 0.5,
+      },
+      size: {
+        value: 3,
+      },
+      line_linked: {
+        enable: true,
+        distance: 150,
+        color: "#6d28d9",
+        opacity: 0.4,
+        width: 1,
+      },
+      move: {
+        enable: true,
+        speed: 1,
+        direction: "none",
+        random: true,
+        straight: false,
+        out_mode: "out",
+        bounce: false,
+      },
+    },
+    interactivity: {
+      detect_on: "canvas",
+      events: {
+        onhover: {
+          enable: true,
+          mode: "grab",
+        },
+      },
+    },
+    retina_detect: true,
+  };
+
   if (status === "loading") {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -28,12 +81,18 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-background/95">
+    <div className="min-h-screen relative bg-background">
+      <Particles
+        className="absolute inset-0"
+        init={particlesInit}
+        options={particlesConfig}
+      />
+
       <Navbar />
       <motion.main
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="container mx-auto px-6 py-8 max-w-7xl"
+        className="container mx-auto px-6 py-8 max-w-7xl relative"
       >
         {/* Welcome section with enhanced animation */}
         <motion.div

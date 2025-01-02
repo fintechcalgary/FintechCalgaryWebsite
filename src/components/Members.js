@@ -9,10 +9,10 @@ import {
 } from "react-icons/fi";
 import Modal from "./Modal";
 import { useSession } from "next-auth/react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Members() {
   const { data: session } = useSession();
-  console.log(session);
   const isAdmin = session?.user?.role === "admin";
   const [members, setMembers] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -211,212 +211,252 @@ export default function Members() {
         </button>
       </div>
 
-      {showForm && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-2xl flex items-center justify-center z-[9999] p-4">
-          <div className="relative w-full max-w-2xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50 shadow-xl overflow-y-auto max-h-[85vh]">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <h2 className="text-2xl font-semibold text-white mb-4">
-                {editingMember ? "Edit Member" : "Add Member"}
-              </h2>
+      <AnimatePresence>
+        {showForm && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-2xl z-[9999]"
+              onClick={() => resetForm()}
+            />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter member name"
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                      required
-                    />
-                  </div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{
+                duration: 0.2,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="fixed inset-0 flex items-center justify-center z-[9999] p-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative w-full max-w-2xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50 shadow-xl overflow-y-auto max-h-[85vh]">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <h2 className="text-2xl font-semibold text-white mb-4">
+                    {editingMember ? "Edit Member" : "Add Member"}
+                  </h2>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      placeholder="Enter email address"
-                      value={formData.email}
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                      required
-                    />
-                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                          Name
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter member name"
+                          value={formData.name}
+                          onChange={(e) =>
+                            setFormData({ ...formData, name: e.target.value })
+                          }
+                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                          required
+                        />
+                      </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                      {editingMember
-                        ? "New Password (leave blank to keep current)"
-                        : "Password"}
-                    </label>
-                    <input
-                      type="password"
-                      placeholder={
-                        editingMember ? "Enter new password" : "Enter password"
-                      }
-                      value={formData.password}
-                      onChange={(e) =>
-                        setFormData({ ...formData, password: e.target.value })
-                      }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                      required={!editingMember}
-                    />
-                  </div>
-                </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          placeholder="Enter email address"
+                          value={formData.email}
+                          onChange={(e) =>
+                            setFormData({ ...formData, email: e.target.value })
+                          }
+                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                          required
+                        />
+                      </div>
 
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                      Position
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter position"
-                      value={formData.position}
-                      onChange={(e) =>
-                        setFormData({ ...formData, position: e.target.value })
-                      }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                      required
-                    />
-                  </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                          {editingMember
+                            ? "New Password (leave blank to keep current)"
+                            : "Password"}
+                        </label>
+                        <input
+                          type="password"
+                          placeholder={
+                            editingMember
+                              ? "Enter new password"
+                              : "Enter password"
+                          }
+                          value={formData.password}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              password: e.target.value,
+                            })
+                          }
+                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                          required={!editingMember}
+                        />
+                      </div>
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                      Major
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter major"
-                      value={formData.major}
-                      onChange={(e) =>
-                        setFormData({ ...formData, major: e.target.value })
-                      }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                      required
-                    />
-                  </div>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                          Position
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter position"
+                          value={formData.position}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              position: e.target.value,
+                            })
+                          }
+                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                          required
+                        />
+                      </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                      Role
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={formData.role}
-                        onChange={(e) =>
-                          setFormData({ ...formData, role: e.target.value })
-                        }
-                        className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 appearance-none"
-                        required
-                        disabled={session?.user?.email === editingMember?.email}
-                      >
-                        <option value="admin">Admin</option>
-                        <option value="member">Member</option>
-                      </select>
-                      <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-xs text-white">
-                        ▼
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                          Major
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter major"
+                          value={formData.major}
+                          onChange={(e) =>
+                            setFormData({ ...formData, major: e.target.value })
+                          }
+                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                          Role
+                        </label>
+                        <div className="relative">
+                          <select
+                            value={formData.role}
+                            onChange={(e) =>
+                              setFormData({ ...formData, role: e.target.value })
+                            }
+                            className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 appearance-none"
+                            required
+                            disabled={
+                              session?.user?.email === editingMember?.email
+                            }
+                          >
+                            <option value="admin">Admin</option>
+                            <option value="member">Member</option>
+                          </select>
+                          <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-xs text-white">
+                            ▼
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                          Profile Image
+                        </label>
+                        <div className="flex items-center gap-4">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="hidden"
+                            id="imageUpload"
+                            required={!formData.imageUrl}
+                          />
+                          <label
+                            htmlFor="imageUpload"
+                            className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200
+                            ${
+                              uploading
+                                ? "bg-gray-700 text-gray-300"
+                                : "bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary"
+                            }`}
+                          >
+                            <FiImage className="w-5 h-5" />
+                            <span>
+                              {uploading ? "Uploading..." : "Choose Image"}
+                            </span>
+                          </label>
+                          {formData.imageUrl && (
+                            <div className="relative w-16 h-16 group">
+                              <img
+                                src={formData.imageUrl}
+                                alt="Profile preview"
+                                className="w-full h-full object-cover rounded-full border-2 border-gray-700 group-hover:border-primary transition-colors duration-200"
+                              />
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    imageUrl: "",
+                                  }))
+                                }
+                                className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 shadow-lg transition-colors duration-200"
+                              >
+                                <FiX size={12} />
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                      Profile Image
-                    </label>
-                    <div className="flex items-center gap-4">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                        id="imageUpload"
-                        required={!formData.imageUrl}
-                      />
-                      <label
-                        htmlFor="imageUpload"
-                        className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200
-                        ${
-                          uploading
-                            ? "bg-gray-700 text-gray-300"
-                            : "bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary"
-                        }`}
-                      >
-                        <FiImage className="w-5 h-5" />
-                        <span>
-                          {uploading ? "Uploading..." : "Choose Image"}
-                        </span>
-                      </label>
-                      {formData.imageUrl && (
-                        <div className="relative w-16 h-16 group">
-                          <img
-                            src={formData.imageUrl}
-                            alt="Profile preview"
-                            className="w-full h-full object-cover rounded-full border-2 border-gray-700 group-hover:border-primary transition-colors duration-200"
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setFormData((prev) => ({ ...prev, imageUrl: "" }))
-                            }
-                            className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 shadow-lg transition-colors duration-200"
-                          >
-                            <FiX size={12} />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end items-center gap-3 mt-6 pt-4 border-t border-gray-700">
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
-                  disabled={uploading}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={uploading || submitting}
-                  className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2
+                  <div className="flex justify-end items-center gap-3 mt-6 pt-4 border-t border-gray-700">
+                    <button
+                      type="button"
+                      onClick={resetForm}
+                      className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
+                      disabled={uploading}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={uploading || submitting}
+                      className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2
     ${uploading || submitting ? "opacity-50 cursor-not-allowed" : ""}`}
-                >
-                  {editingMember ? (
-                    <>
-                      <FiEdit2 className="w-4 h-4" />
-                      {submitting ? "Updating..." : "Update Member"}
-                    </>
-                  ) : (
-                    <>
-                      <FiPlus className="w-4 h-4" />
-                      {submitting ? "Adding..." : "Add Member"}
-                    </>
-                  )}
-                </button>
+                    >
+                      {editingMember ? (
+                        <>
+                          <FiEdit2 className="w-4 h-4" />
+                          {submitting ? "Updating..." : "Update Member"}
+                        </>
+                      ) : (
+                        <>
+                          <FiPlus className="w-4 h-4" />
+                          {submitting ? "Adding..." : "Add Member"}
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {members.map((member) => (
-          <div
+          <motion.div
             key={member._id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
             className="bg-gray-800/50 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow duration-200"
           >
             <div className="flex flex-col items-center text-center">
@@ -450,7 +490,7 @@ export default function Members() {
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
