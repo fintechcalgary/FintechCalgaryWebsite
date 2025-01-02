@@ -64,7 +64,7 @@ export default function Navbar() {
               transition={{ duration: 0.3 }}
             >
               <Link
-                href="/dashboard"
+                href="/"
                 className="flex items-center gap-3 hover:opacity-90 transition-opacity"
               >
                 <motion.img
@@ -88,10 +88,9 @@ export default function Navbar() {
             >
               <div className="flex items-center gap-8 bg-gray-800/70 py-3 px-8 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-700/30">
                 {[
-                  ["About", "/about"],
-                  ["Careers", "/careers"],
-                  ["Blog", "/blog"],
-                  ["Changelog", "/changelog"],
+                  ["Events", "/events"],
+                  ["Members", "/members"],
+                  ["Info", "/info"],
                 ].map(([title, path]) => (
                   <Link
                     key={path}
@@ -159,6 +158,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu - updated animation and styling */}
+          {/* Mobile Menu - updated animation and styling */}
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{
@@ -169,34 +169,20 @@ export default function Navbar() {
             className="md:hidden overflow-hidden"
           >
             <div className="bg-gray-800/90 p-4 rounded-lg mt-2 backdrop-blur-sm">
-              <Link
-                href="/about"
-                onClick={() => setIsMenuOpen(false)}
-                className="block text-white text-base font-medium mb-3 hover:text-purple-400"
-              >
-                About
-              </Link>
-              <Link
-                href="/careers"
-                onClick={() => setIsMenuOpen(false)}
-                className="block text-white text-base font-medium mb-3 hover:text-purple-400"
-              >
-                Careers
-              </Link>
-              <Link
-                href="/blog"
-                onClick={() => setIsMenuOpen(false)}
-                className="block text-white text-base font-medium mb-3 hover:text-purple-400"
-              >
-                Blog
-              </Link>
-              <Link
-                href="/changelog"
-                onClick={() => setIsMenuOpen(false)}
-                className="block text-white text-base font-medium mb-3 hover:text-purple-400"
-              >
-                Changelog
-              </Link>
+              {[
+                { href: "/events", label: "Events" },
+                { href: "/members", label: "Members" },
+                { href: "/info", label: "Info" },
+              ].map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-white text-base font-medium mb-3 hover:text-purple-400"
+                >
+                  {label}
+                </Link>
+              ))}
               <button
                 onClick={() => {
                   setIsMenuOpen(false);
