@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { FiMenu, FiX } from "react-icons/fi";
 import Modal from "./Modal";
 
 export default function Navbar() {
@@ -28,12 +29,9 @@ export default function Navbar() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // Switch to scrolled layout if scrolling down past 60
       if (currentScrollY > 60 && lastScrollY <= 60) {
         setIsScrolled(true);
-      }
-      // Switch to default layout if scrolling up past 50
-      else if (currentScrollY < 50 && lastScrollY >= 50) {
+      } else if (currentScrollY < 50 && lastScrollY >= 50) {
         setIsScrolled(false);
       }
 
@@ -134,22 +132,46 @@ export default function Navbar() {
             </div>
           </div>
 
+          {/* Mobile Menu Toggle */}
+          <div className="flex md:hidden justify-between items-center h-16">
+            <Link href="/dashboard">
+              <motion.img
+                src="/logo.svg"
+                alt="Dimension Logo"
+                className="w-14 h-14"
+              />
+            </Link>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-white text-3xl focus:outline-none"
+            >
+              {isMenuOpen ? <FiX /> : <FiMenu />}
+            </button>
+          </div>
+
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className="md:hidden mt-4 bg-gray-800/90 p-4 rounded-lg">
-              <Link
-                href="/dashboard"
-                onClick={() => setIsMenuOpen(false)}
-                className="block text-white text-base font-medium mb-3 hover:text-purple-400"
-              >
-                Blog
-              </Link>
+            <div className="md:hidden bg-gray-800/90 p-4 rounded-lg mt-2">
               <Link
                 href="/about"
                 onClick={() => setIsMenuOpen(false)}
                 className="block text-white text-base font-medium mb-3 hover:text-purple-400"
               >
                 About
+              </Link>
+              <Link
+                href="/careers"
+                onClick={() => setIsMenuOpen(false)}
+                className="block text-white text-base font-medium mb-3 hover:text-purple-400"
+              >
+                Careers
+              </Link>
+              <Link
+                href="/blog"
+                onClick={() => setIsMenuOpen(false)}
+                className="block text-white text-base font-medium mb-3 hover:text-purple-400"
+              >
+                Blog
               </Link>
               <Link
                 href="/changelog"
@@ -159,8 +181,11 @@ export default function Navbar() {
                 Changelog
               </Link>
               <button
-                onClick={handleLogoutClick}
-                className="block text-white text-base font-medium mb-3 hover:text-red-400 md"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  handleLogoutClick();
+                }}
+                className="block text-white text-base font-medium mb-3 hover:text-red-400"
               >
                 Log Out
               </button>
