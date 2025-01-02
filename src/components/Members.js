@@ -31,6 +31,7 @@ export default function Members() {
     isOpen: false,
     memberId: null,
   });
+  const [submitting, setSubmitting] = useState(false);
 
   const fetchMembers = async () => {
     const response = await fetch("/api/members");
@@ -58,7 +59,12 @@ export default function Members() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Prevent multiple submissions
+    if (submitting) return;
+
     try {
+      setSubmitting(true);
+
       if (editingMember) {
         const response = await fetch(`/api/members/${editingMember._id}`, {
           method: "PUT",
@@ -95,12 +101,20 @@ export default function Members() {
       fetchMembers();
     } catch (error) {
       console.error("Error:", error);
-      // Show error message to user (you'll need to implement this)
-      alert(error.message);
+      alert(error.message); // Display error message
+    } finally {
+      setSubmitting(false); // Reset submitting state
     }
   };
 
   const handleDelete = async (memberId) => {
+    const memberToDelete = members.find((member) => member._id === memberId);
+
+    if (session?.user?.email === memberToDelete.email) {
+      console.log("Cannot delete yourself");
+      return;
+    }
+
     setDeleteModal({
       isOpen: true,
       memberId,
@@ -305,6 +319,7 @@ export default function Members() {
                         }
                         className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 appearance-none"
                         required
+                        disabled={session?.user?.email === editingMember?.email}
                       >
                         <option value="admin">Admin</option>
                         <option value="member">Member</option>
@@ -376,19 +391,19 @@ export default function Members() {
                 </button>
                 <button
                   type="submit"
-                  disabled={uploading}
+                  disabled={uploading || submitting}
                   className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2
-                    ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
+    ${uploading || submitting ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   {editingMember ? (
                     <>
                       <FiEdit2 className="w-4 h-4" />
-                      {uploading ? "Please wait..." : "Update Member"}
+                      {submitting ? "Updating..." : "Update Member"}
                     </>
                   ) : (
                     <>
                       <FiPlus className="w-4 h-4" />
-                      {uploading ? "Please wait..." : "Add Member"}
+                      {submitting ? "Adding..." : "Add Member"}
                     </>
                   )}
                 </button>
@@ -428,6 +443,7 @@ export default function Members() {
                 <button
                   onClick={() => handleDelete(member._id)}
                   className="text-gray-400 hover:text-red-500 transition-colors p-2"
+                  disabled={session?.user?.email === member.email}
                   title="Delete"
                 >
                   <FiTrash2 />
