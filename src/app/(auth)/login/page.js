@@ -1,16 +1,51 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { FcGoogle } from "react-icons/fc";
-import Link from "next/link";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import * as THREE from "three";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [vantaEffect, setVantaEffect] = useState(null);
+  const vantaRef = useRef(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!vantaEffect) {
+      import("vanta/dist/vanta.fog.min")
+        .then((FOG) => {
+          setVantaEffect(
+            FOG.default({
+              el: vantaRef.current,
+              THREE: THREE,
+              mouseControls: true,
+              touchControls: true,
+              gyroControls: false,
+              minHeight: 200.0,
+              minWidth: 200.0,
+              scale: 1.0,
+              scaleMobile: 1.0,
+              highlightColor: 0xb88cff, // Light purple for highlights
+              midtoneColor: 0x4a148c, // Dark purple midtones
+              lowlightColor: 0x1a1a1a, // Black shadows
+              baseColor: 0x120724, // Deep purple base color
+              speed: 1.2, // Speed of the fog animation
+            })
+          );
+        })
+        .catch((error) => {
+          console.error("Vanta.js Error:", error);
+        });
+    }
+    return () => {
+      if (vantaEffect) vantaEffect.destroy();
+    };
+  }, [vantaEffect]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -37,8 +72,29 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div
+      ref={vantaRef}
+      className="min-h-screen flex items-center justify-center"
+    >
       <div className="w-full max-w-md space-y-8 bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50 shadow-xl">
+        <motion.div
+          animate={{ scale: [1, 1.05, 1], opacity: [1, 0.95, 1] }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="mx-auto w-20 h-20 rounded-full"
+        >
+          <Image
+            alt="FinTech Calgary Logo"
+            src="/logo.svg"
+            width={1000}
+            height={1000}
+            className="w-full h-full"
+          />
+        </motion.div>
+
         <div>
           <h2 className="text-3xl font-bold text-center text-white mb-2">
             Welcome Back
