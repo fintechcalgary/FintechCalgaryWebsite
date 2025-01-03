@@ -2,6 +2,9 @@ import { connectToDatabase } from "@/lib/mongodb";
 import { registerForEvent, isUserRegistered } from "@/lib/models/event";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import sgMail from "@sendgrid/mail";
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export async function POST(req, { params }) {
   try {
@@ -52,6 +55,22 @@ export async function POST(req, { params }) {
 
     // Register the user
     const result = await registerForEvent(db, eventId, registrationData);
+
+    const msg = {
+      to: registrationData.userEmail,
+      from: "rojnovyotam@gmail.com", // Replace with your verified sender email
+      subject: "Event Registration Confirmation",
+      html: `
+        <h1>Thank you for registering, ${registrationData.name}!</h1>
+        <p>You have successfully registered for the event.</p>
+        <p><strong>Event ID:</strong> ${eventId}</p>
+        <p><strong>Registration Date:</strong> ${new Date().toLocaleString()}</p>
+        <p>We look forward to seeing you there!</p>
+      `,
+    };
+
+    await sgMail.send(msg);
+
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
     console.error("POST /api/events/[eventId]/register - Error:", error);
