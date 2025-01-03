@@ -71,7 +71,7 @@ export default function Navbar() {
                   src="/logo.svg"
                   alt="Dimension Logo"
                   className="w-16 h-16"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  whileHover={{ scale: 1.1 }}
                 />
               </Link>
             </motion.div>

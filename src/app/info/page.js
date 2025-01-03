@@ -79,9 +79,9 @@ export default function InfoPage() {
   }
 
   return (
-    <div className="min-h-screen relative bg-background">
+    <div className="min-h-screen relative">
       <Particles
-        className="absolute inset-0"
+        className="absolute inset-0 -z-10"
         init={particlesInit}
         options={particlesConfig}
       />
@@ -90,15 +90,15 @@ export default function InfoPage() {
       <motion.main
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="container mx-auto px-6 py-8 max-w-7xl relative"
+        className="container mx-auto px-6 py-12 max-w-6xl relative"
       >
         <motion.div
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
-          className="relative overflow-hidden rounded-2xl mb-12"
+          className="relative overflow-hidden rounded-2xl mb-16"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary via-purple-500/30 to-primary/10 animate-gradient-x rounded-2xl" />
-          <div className="relative bg-gray-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-all">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/30 via-purple-500/20 to-primary/5 animate-gradient-x rounded-2xl" />
+          <div className="relative bg-gray-900/70 backdrop-blur-xl p-10 rounded-2xl border border-white/10 hover:border-white/20 transition-all duration-300">
             <motion.div
               initial={{ y: 20 }}
               animate={{ y: 0 }}
@@ -106,15 +106,15 @@ export default function InfoPage() {
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="inline-block px-4 py-1.5 rounded-full bg-primary/20 text-primary text-sm font-medium backdrop-blur-sm"
+                className="inline-block px-4 py-2 rounded-full bg-primary/20 text-primary text-sm font-medium backdrop-blur-sm"
               >
                 Repository & Instructions
               </motion.div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight">
                   How to Access and Contribute
                 </h1>
-                <p className="text-gray-300 text-lg">
+                <p className="text-gray-300 text-lg leading-relaxed">
                   Follow the steps below to request access to the repository and
                   make changes for future development.
                 </p>
@@ -123,32 +123,67 @@ export default function InfoPage() {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="group"
+            className="group space-y-8"
           >
             <div
-              className="relative h-full bg-gray-900/60 backdrop-blur-xl rounded-2xl p-8 border border-white/10 
-                            transition-all duration-300 hover:bg-gray-900/70 hover:shadow-xl hover:shadow-primary/10
-                            hover:border-white/20 overflow-hidden"
+              className="relative bg-gray-900/70 backdrop-blur-xl rounded-2xl p-8 border border-white/10 
+                          transition-all duration-300 hover:bg-gray-900/80 hover:shadow-2xl hover:shadow-primary/20
+                          hover:border-primary/30 hover:-translate-y-1 overflow-hidden"
             >
               <h2 className="text-2xl font-semibold text-white mb-4">
                 Repository Link
               </h2>
-              <p className="text-gray-400 mb-4">
-                Access the repository for this project at:
+              <p className="text-gray-300 mb-4">
+                Access the official repository for the Fintech Calgary website
+                project:
               </p>
               <a
-                href="https://github.com/your-repo-link"
+                href="https://github.com/Fintech-Calgary/Fintech-Calgary-Website"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary font-medium hover:underline"
+                className="inline-flex items-center space-x-2 text-primary font-medium hover:underline hover:text-primary/80 transition-colors"
               >
-                https://github.com/your-repo-link
+                <span>github.com/Fintech-Calgary/Fintech-Calgary-Website</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </a>
+            </div>
+
+            <div
+              className="relative bg-gray-900/70 backdrop-blur-xl rounded-2xl p-8 border border-white/10 
+                          transition-all duration-300 hover:bg-gray-900/80 hover:shadow-2xl hover:shadow-primary/20
+                          hover:border-primary/30 hover:-translate-y-1 overflow-hidden"
+            >
+              <h2 className="text-2xl font-semibold text-white mb-4">
+                Getting Started
+              </h2>
+              <div className="space-y-4 text-gray-300">
+                <p>Before contributing to the project, ensure you have:</p>
+                <ul className="list-disc list-inside space-y-2">
+                  <li>Node.js (v18 or higher) installed</li>
+                  <li>Git installed on your machine</li>
+                  <li>A GitHub account</li>
+                  <li>Your SSH keys configured</li>
+                </ul>
+                <p className="text-sm text-gray-400 mt-4">
+                  For detailed setup instructions, please contact the team lead.
+                </p>
+              </div>
             </div>
           </motion.section>
 
@@ -156,39 +191,40 @@ export default function InfoPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="group"
+            className="group h-full"
           >
             <div
-              className="relative h-full bg-gray-900/60 backdrop-blur-xl rounded-2xl p-8 border border-white/10 
-                            transition-all duration-300 hover:bg-gray-900/70 hover:shadow-xl hover:shadow-primary/10
-                            hover:border-white/20 overflow-hidden"
+              className="relative h-full bg-gray-900/70 backdrop-blur-xl rounded-2xl p-8 border border-white/10 
+                          transition-all duration-300 hover:bg-gray-900/80 hover:shadow-2xl hover:shadow-primary/20
+                          hover:border-primary/30 hover:-translate-y-1 overflow-hidden"
             >
-              <h2 className="text-2xl font-semibold text-white mb-4">
+              <h2 className="text-2xl font-semibold text-white mb-6">
                 Instructions
               </h2>
-              <ol className="list-decimal list-inside text-gray-400 space-y-2">
+              <ol className="list-decimal list-inside text-gray-300 space-y-4">
                 <li>Contact the project administrator to request access.</li>
                 <li>
                   Clone the repository using:
-                  <code className="bg-gray-800 text-white p-1 rounded">
-                    git clone https://github.com/your-repo-link
+                  <code className="block mt-2 bg-gray-800/80 text-white p-3 rounded-lg font-mono text-sm">
+                    git clone
+                    https://github.com/Fintech-Calgary/Fintech-Calgary-Website
                   </code>
                 </li>
                 <li>
                   Create a new branch for your changes:
-                  <code className="bg-gray-800 text-white p-1 rounded">
+                  <code className="block mt-2 bg-gray-800/80 text-white p-3 rounded-lg font-mono text-sm">
                     git checkout -b your-branch-name
                   </code>
                 </li>
                 <li>
                   Make your changes and commit them using:
-                  <code className="bg-gray-800 text-white p-1 rounded">
+                  <code className="block mt-2 bg-gray-800/80 text-white p-3 rounded-lg font-mono text-sm">
                     git commit -m "Your commit message"
                   </code>
                 </li>
                 <li>
                   Push your changes and create a pull request:
-                  <code className="bg-gray-800 text-white p-1 rounded">
+                  <code className="block mt-2 bg-gray-800/80 text-white p-3 rounded-lg font-mono text-sm">
                     git push origin your-branch-name
                   </code>
                 </li>
