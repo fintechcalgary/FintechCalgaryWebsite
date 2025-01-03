@@ -88,8 +88,8 @@ export default function Navbar() {
             >
               <div className="flex items-center gap-8 bg-gray-800/70 py-3 px-8 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-700/30">
                 {[
-                  ["Events", "/events"],
-                  ["Members", "/members"],
+                  ["Events", "/dashboard#events"],
+                  ["Members", "/dashboard#members"],
                   ["Info", "/info"],
                 ].map(([title, path]) => (
                   <Link
@@ -169,8 +169,8 @@ export default function Navbar() {
           >
             <div className="bg-gray-800/90 p-4 rounded-lg mt-2 backdrop-blur-sm">
               {[
-                { href: "/events", label: "Events" },
-                { href: "/members", label: "Members" },
+                { href: "/dashboard#events", label: "Events" },
+                { href: "/dashboard#members", label: "Members" },
                 { href: "/info", label: "Info" },
               ].map(({ href, label }) => (
                 <Link

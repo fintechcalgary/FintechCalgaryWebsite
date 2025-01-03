@@ -142,6 +142,7 @@ export default function DashboardPage() {
               className="relative h-full bg-gray-900/60 backdrop-blur-xl rounded-2xl p-8 border border-white/10 
                             transition-all duration-300 hover:bg-gray-900/70 hover:shadow-xl hover:shadow-primary/10
                             hover:border-white/20 overflow-hidden"
+              id="events"
             >
               <div className="flex items-center justify-between mb-8">
                 <div className="space-y-1">
@@ -169,7 +170,12 @@ export default function DashboardPage() {
             >
               <div className="flex items-center justify-between mb-8">
                 <div className="space-y-1">
-                  <h2 className="text-2xl font-semibold text-white">Team</h2>
+                  <h2
+                    className="text-2xl font-semibold text-white"
+                    id="members"
+                  >
+                    Team
+                  </h2>
                   <p className="text-sm text-gray-400">
                     Collaborate with others
                   </p>
