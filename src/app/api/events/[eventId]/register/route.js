@@ -6,7 +6,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 export async function POST(req, { params }) {
   try {
     const session = await getServerSession(authOptions);
-    const { eventId } = params;
+    const { eventId } = await params;
     const db = await connectToDatabase();
 
     // Handle both authenticated and public registrations
