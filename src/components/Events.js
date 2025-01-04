@@ -27,6 +27,7 @@ export default function Events() {
     title: "",
     description: "",
     date: "",
+    time: "",
     imageUrl: "",
   });
   const [deleteModal, setDeleteModal] = useState({
@@ -63,7 +64,13 @@ export default function Events() {
     });
 
     if (response.ok) {
-      setFormData({ title: "", description: "", date: "" });
+      setFormData({
+        title: "",
+        description: "",
+        date: "",
+        time: "",
+        imageUrl: "",
+      });
       setShowForm(false);
       setEditingEvent(null);
       fetchEvents();
@@ -93,7 +100,8 @@ export default function Events() {
     setFormData({
       title: event.title,
       description: event.description,
-      date: event.date.split("T")[0],
+      date: event.date.split("T")[0], // Keep existing date handling
+      time: event.time || "", // Populate the time field
       imageUrl: event.imageUrl || "",
       registrations: event.registrations?.length || 0,
     });
@@ -151,6 +159,7 @@ export default function Events() {
       title: "",
       description: "",
       date: "",
+      time: "",
       imageUrl: "",
     });
     setEditingEvent(null);
@@ -202,7 +211,7 @@ export default function Events() {
               className="fixed inset-0 flex items-center justify-center z-[9999] p-4"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-full max-w-2xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50 shadow-xl overflow-y-auto max-h-[85vh]">
+              <div className="w-full max-w-2xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50 shadow-xl overflow-y-auto min-h-[70vh] max-h-[100vh]">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <h2 className="text-2xl font-semibold text-white mb-4">
                     {editingEvent ? "Edit Event" : "Create Event"}
@@ -242,19 +251,37 @@ export default function Events() {
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                      Date
-                    </label>
-                    <input
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) =>
-                        setFormData({ ...formData, date: e.target.value })
-                      }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                      required
-                    />
+                  <div className="flex flex-col gap-4 sm:flex-row">
+                    <div className="flex-1">
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
+                        Date
+                      </label>
+                      <input
+                        type="date"
+                        value={formData.date}
+                        onChange={(e) =>
+                          setFormData({ ...formData, date: e.target.value })
+                        }
+                        className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                        required
+                      />
+                    </div>
+
+                    <div className="flex-1">
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
+                        Time
+                      </label>
+                      <input
+                        placeholder="Enter event time"
+                        type="text"
+                        value={formData.time}
+                        onChange={(e) =>
+                          setFormData({ ...formData, time: e.target.value })
+                        }
+                        className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                        required
+                      />
+                    </div>
                   </div>
 
                   <div>
@@ -380,6 +407,8 @@ export default function Events() {
                   month: "long",
                   day: "numeric",
                 })}
+                {event.time && ` at ${event.time}`}{" "}
+                {/* Display time if available */}
               </div>
               <div className="mt-4 pt-4 border-t border-gray-700">
                 <div className="flex justify-between items-center">

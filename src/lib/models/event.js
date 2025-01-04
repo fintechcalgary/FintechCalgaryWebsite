@@ -7,6 +7,7 @@ export async function createEvent(db, event) {
     userId: event.userId,
     imageUrl: event.imageUrl,
     createdAt: new Date(),
+    time: event.time, // Time represented by a string
     registrations: [],
   });
 }

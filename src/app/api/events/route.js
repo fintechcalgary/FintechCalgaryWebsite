@@ -16,6 +16,16 @@ export async function POST(req) {
     const db = await connectToDatabase();
     const event = await req.json();
 
+    // Validate required fields including time
+    if (!event.title || !event.description || !event.date || !event.time) {
+      return new Response(
+        JSON.stringify({ error: "Missing required fields" }),
+        {
+          status: 400,
+        }
+      );
+    }
+
     console.log("POST /api/events - Creating event:", event);
     const result = await createEvent(db, {
       ...event,
