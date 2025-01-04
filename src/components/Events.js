@@ -211,14 +211,17 @@ export default function Events() {
               className="fixed inset-0 flex items-center justify-center z-[9999] p-4"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-full max-w-2xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50 shadow-xl overflow-y-auto min-h-[70vh] max-h-[100vh]">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <h2 className="text-2xl font-semibold text-white mb-4">
+              <div className="w-full max-w-2xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-gray-700/50 shadow-xl overflow-y-auto max-h-[85vh] flex flex-col gap-4">
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-4 text-xs sm:text-sm"
+                >
+                  <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4">
                     {editingEvent ? "Edit Event" : "Create Event"}
                   </h2>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
                       Event Title
                     </label>
                     <input
@@ -228,13 +231,13 @@ export default function Events() {
                       onChange={(e) =>
                         setFormData({ ...formData, title: e.target.value })
                       }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                      className="w-full px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
                       Description
                     </label>
                     <textarea
@@ -246,14 +249,14 @@ export default function Events() {
                           description: e.target.value,
                         })
                       }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 resize-none min-h-[100px]"
+                      className="w-full px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 resize-none min-h-[80px] sm:min-h-[100px]"
                       required
                     />
                   </div>
 
-                  <div className="flex flex-col gap-4 sm:flex-row">
+                  <div className="flex flex-col gap-2 sm:gap-4 sm:flex-row">
                     <div className="flex-1">
-                      <label className="block text-sm font-medium text-gray-300 mb-1">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
                         Date
                       </label>
                       <input
@@ -262,13 +265,13 @@ export default function Events() {
                         onChange={(e) =>
                           setFormData({ ...formData, date: e.target.value })
                         }
-                        className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                        className="w-full px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
                         required
                       />
                     </div>
 
                     <div className="flex-1">
-                      <label className="block text-sm font-medium text-gray-300 mb-1">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
                         Time
                       </label>
                       <input
@@ -278,17 +281,17 @@ export default function Events() {
                         onChange={(e) =>
                           setFormData({ ...formData, time: e.target.value })
                         }
-                        className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                        className="w-full px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
                         required
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
                       Event Image
                     </label>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
                       <input
                         type="file"
                         accept="image/*"
@@ -299,15 +302,15 @@ export default function Events() {
                       />
                       <label
                         htmlFor="imageUpload"
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary transition-all duration-200"
+                        className="flex items-center gap-2 px-2 py-1 sm:px-3 sm:py-2 rounded-lg cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary transition-all duration-200 text-xs sm:text-sm"
                       >
-                        <FiImage className="w-5 h-5" />
+                        <FiImage className="w-4 h-4 sm:w-5 sm:h-5" />
                         <span>
                           {uploading ? "Uploading..." : "Choose Image"}
                         </span>
                       </label>
                       {formData.imageUrl && (
-                        <div className="relative w-16 h-16">
+                        <div className="relative w-12 h-12 sm:w-16 sm:h-16">
                           <img
                             src={formData.imageUrl}
                             alt="Event preview"
@@ -320,18 +323,18 @@ export default function Events() {
                             }
                             className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 transition-all duration-200"
                           >
-                            <FiX size={12} />
+                            <FiX size={10} />
                           </button>
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex justify-end items-center gap-3 mt-6 pt-4 border-t border-gray-700">
+                  <div className="flex justify-end items-center gap-2 sm:gap-3 mt-4 sm:mt-6 pt-4 border-t border-gray-700">
                     <button
                       type="button"
                       onClick={resetForm}
-                      className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
+                      className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-1 px-3 sm:py-2 sm:px-4 rounded-lg transition-all duration-200 text-xs sm:text-sm"
                       disabled={uploading}
                     >
                       Cancel
@@ -339,8 +342,9 @@ export default function Events() {
                     <button
                       type="submit"
                       disabled={uploading}
-                      className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2
-                        ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
+                      className={`bg-primary hover:bg-primary/80 text-white font-medium py-1 px-3 sm:py-2 sm:px-4 rounded-lg transition-all duration-200 text-xs sm:text-sm flex items-center justify-center gap-2 ${
+                        uploading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     >
                       {editingEvent ? (
                         <>
