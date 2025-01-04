@@ -405,12 +405,15 @@ export default function Events() {
                 {event.description}
               </p>
               <div className="text-sm text-gray-500">
-                {new Date(event.date).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                {new Date(event.date + "T00:00:00").toLocaleDateString(
+                  "en-US",
+                  {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }
+                )}
                 {event.time && ` at ${event.time}`}{" "}
                 {/* Display time if available */}
               </div>

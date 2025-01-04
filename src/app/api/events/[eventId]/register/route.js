@@ -102,7 +102,7 @@ export async function POST(req, { params }) {
                 <!-- Event Details Table -->
                 <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
                   <tr>
-                    <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold; color: #333;">Event Title:</td>
+                    <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold; color: #333;">Event Name:</td>
                     <td style="padding: 12px; border: 1px solid #ddd; color: #555;">${
                       event.title
                     }</td>
@@ -121,15 +121,10 @@ export async function POST(req, { params }) {
                   </tr>
                   <tr>
                     <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold; color: #333;">Time:</td>
-                    <td style="padding: 12px; border: 1px solid #ddd; color: #555;">${new Date(
-                      event.date
-                    ).toLocaleTimeString()}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold; color: #333;">Registration Date:</td>
-                    <td style="padding: 12px; border: 1px solid #ddd; color: #555;">${new Date(
-                      registrationData.registeredAt
-                    ).toLocaleString()}</td>
+                    <td style="padding: 12px; border: 1px solid #ddd; color: #555;">${
+                      event.time
+                    }
+                    </td>
                   </tr>
                 </table>
 

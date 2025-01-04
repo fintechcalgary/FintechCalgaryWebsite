@@ -8,9 +8,12 @@ export default function RegistrationSuccess() {
         <h1 className="text-2xl font-bold text-white mb-4">
           Registration Successful!
         </h1>
-        <p className="text-gray-400 mb-8">
+        <p className="text-gray-400 mb-4">
           Thank you for registering. You will receive a confirmation email
           shortly.
+        </p>
+        <p className="text-gray-400 mb-8">
+          If you don't see the email, please check your spam or junk folder.
         </p>
         <Link
           href="/"
