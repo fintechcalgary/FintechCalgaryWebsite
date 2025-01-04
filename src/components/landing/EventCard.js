@@ -30,6 +30,7 @@ export default function EventCard({ event, index }) {
           month: "long",
           day: "numeric",
         })}
+        {event.time && ` at ${event.time}`}
       </div>
       <Link
         href={`/events/register/${event._id}`}
