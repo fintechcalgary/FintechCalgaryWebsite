@@ -86,7 +86,7 @@ export async function POST(req, { params }) {
               
               <!-- Header with Logo -->
               <div style="padding: 30px; text-align: center; background-color: #6d28d9;">
-                <img src="http://cdn.mcauto-images-production.sendgrid.net/166a852d5e3aaf3d/db2909f3-9ea0-4084-96c3-fb694316a999/800x800.png" alt="Event Logo" style="width: 100px; height: auto; border-radius: 8px;" />
+                <img src="https://i.imgur.com/zIfFdml.png" alt="Event Logo" style="width: 100px; height: auto; border-radius: 8px;" />
               </div>
 
               <!-- Main Content -->

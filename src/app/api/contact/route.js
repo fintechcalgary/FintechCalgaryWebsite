@@ -7,34 +7,128 @@ export async function POST(req) {
   try {
     const { name, email, subject, message } = await req.json();
 
+    // Input validation
+    if (!name || !email || !subject || !message) {
+      return NextResponse.json(
+        { error: "All fields are required" },
+        { status: 400 }
+      );
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json(
+        { error: "Invalid email format" },
+        { status: 400 }
+      );
+    }
+
     const msg = {
-      to: "info@fintechcalgary.com",
-      from: "rojnovyotam@gmail.com",
-      subject: `Contact Form: ${subject}`,
+      to: "rojnovyotam@gmail.com", // Your verified email for receiving messages
+      from: "rojnovyotam@gmail.com", // Verified sender email
+      subject: `New Contact Form Submission: ${subject}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #6d28d9;">New Contact Form Submission</h2>
-          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px;">
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Subject:</strong> ${subject}</p>
-            <p><strong>Message:</strong></p>
-            <p style="white-space: pre-wrap;">${message}</p>
-          </div>
-          <p style="color: #666; font-size: 0.9em; margin-top: 20px;">
-            This email was sent from the Fintech Calgary contact form. 
-            You can reply directly to this email to respond to ${name}.
-          </p>
-        </div>
+        <html>
+          <head>
+            <title>New Contact Form Submission</title>
+            <style>
+              body {
+                font-family: 'Helvetica Neue', Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: #f4f4f4;
+              }
+              .container {
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 30px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+              }
+              .header {
+                font-size: 24px;
+                font-weight: bold;
+                color: #6d28d9;
+                margin-bottom: 16px;
+              }
+              .content {
+                color: #555555;
+                font-size: 16px;
+                line-height: 1.6;
+                margin-bottom: 24px;
+              }
+              .table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 24px;
+              }
+              .table th, .table td {
+                padding: 12px;
+                border: 1px solid #ddd;
+              }
+              .table th {
+                background-color: #f8f8f8;
+                font-weight: bold;
+                color: #333;
+              }
+              .footer {
+                padding: 20px;
+                text-align: center;
+                background-color: #f8f8f8;
+                border-top: 1px solid #ddd;
+                font-size: 12px;
+                color: #888888;
+              }
+              .footer a {
+                color: #6d28d9;
+                text-decoration: none;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">New Contact Form Submission</div>
+              <div class="content">
+                You have received a new message through the Fintech Calgary contact form. Below are the details:
+              </div>
+              <table class="table">
+                <tr>
+                  <th>Name</th>
+                  <td>${name}</td>
+                </tr>
+                <tr>
+                  <th>Email</th>
+                  <td>${email}</td>
+                </tr>
+                <tr>
+                  <th>Subject</th>
+                  <td>${subject}</td>
+                </tr>
+                <tr>
+                  <th>Message</th>
+                  <td>${message}</td>
+                </tr>
+              </table>
+              <div class="content">
+                You can reply directly to this email to respond to ${name}.
+              </div>
+            </div>
+            <div class="footer">
+              Visit us at 
+              <a href="https://fintechcalgary.ca" target="_blank">fintechcalgary.ca</a>.
+            </div>
+          </body>
+        </html>
       `,
-      replyTo: email,
+      replyTo: email, // Sets the reply-to header so responses go to the sender
     };
 
-    await sgMail.send(msg);
+    const response = await sgMail.send(msg);
+    console.log("SendGrid response:", response); // Log response for debugging
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Contact form error:", error);
+    console.error("Contact form error:", error.response?.body || error);
     return NextResponse.json(
       { error: "Failed to send message" },
       { status: 500 }
