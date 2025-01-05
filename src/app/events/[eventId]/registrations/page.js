@@ -1,5 +1,7 @@
 import EventRegistrations from "@/components/EventRegistrations";
 
-export default function EventRegistrationsPage({ params }) {
-  return <EventRegistrations eventId={params.eventId} />;
+export default async function EventRegistrationsPage({ params }) {
+  const { eventId } = await params;
+
+  return <EventRegistrations eventId={eventId} />;
 }
