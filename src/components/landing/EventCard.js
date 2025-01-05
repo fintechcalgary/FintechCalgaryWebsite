@@ -3,41 +3,51 @@ import Link from "next/link";
 
 export default function EventCard({ event, index }) {
   return (
-    <motion.div
-      className="bg-gray-800/50 p-8 rounded-xl border border-gray-700/50 shadow-lg hover:shadow-xl transition-all"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: index * 0.2 }}
-      viewport={{ once: true }}
-    >
-      {event.imageUrl && (
-        <div className="mb-6">
-          <img
-            src={event.imageUrl}
-            alt={event.title}
-            className="w-full h-48 object-cover rounded-lg"
-          />
-        </div>
-      )}
-      <h3 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">
-        {event.title}
-      </h3>
-      <p className="mb-4 text-gray-300 line-clamp-3">{event.description}</p>
-      <div className="mb-6 text-sm text-gray-400">
-        {new Date(event.date).toLocaleDateString("en-US", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}
-        {event.time && ` at ${event.time}`}
-      </div>
-      <Link
-        href={`/events/register/${event._id}`}
-        className="mt-4 inline-block bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
+    <div className="relative h-[400px] group">
+      <div
+        className="absolute inset-0 rounded-2xl overflow-hidden"
+        style={{
+          backgroundImage: event.imageUrl
+            ? `url(${event.imageUrl})`
+            : "linear-gradient(to bottom right, rgb(147, 51, 234), rgb(79, 70, 229))",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
       >
-        Register for Event
-      </Link>
-    </motion.div>
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent" />
+      </div>
+
+      <div className="relative h-full p-8 flex flex-col justify-end">
+        <div className="space-y-4">
+          {/* Date badge */}
+          <div className="inline-block px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/20 text-sm text-white">
+            {new Date(event.date).toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+            {event.time && ` • ${event.time}`}
+          </div>
+
+          {/* Title */}
+          <h3 className="text-2xl font-bold text-white transition-colors duration-300">
+            {event.title}
+          </h3>
+
+          {/* Description */}
+          <p className="text-gray-300 line-clamp-2">{event.description}</p>
+
+          {/* Register button */}
+          <Link
+            href={`/events/register/${event._id}`}
+            className="inline-flex items-center px-6 py-3 rounded-full bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-105"
+          >
+            Register Now
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 }

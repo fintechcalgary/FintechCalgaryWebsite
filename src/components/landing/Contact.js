@@ -3,7 +3,7 @@ import { FiMail, FiMapPin, FiMessageSquare } from "react-icons/fi";
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-32 relative">
+    <section id="contact" className="py-16 relative">
       <div className="container mx-auto px-4">
         <motion.h2
           className="text-5xl font-bold mb-16 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400 text-center"

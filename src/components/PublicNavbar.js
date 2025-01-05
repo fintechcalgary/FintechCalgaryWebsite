@@ -36,20 +36,6 @@ export default function PublicNavbar() {
               whileHover={{ scale: 1.1 }}
             />
           </Link>
-          <div className="flex items-center gap-8">
-            <Link
-              href="/login"
-              className="text-gray-200 hover:text-primary transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/signup"
-              className="bg-primary/90 hover:bg-primary text-white px-6 py-2.5 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-primary/25"
-            >
-              Sign Up
-            </Link>
-          </div>
         </div>
       </div>
     </nav>
