@@ -2,6 +2,8 @@
 
 A modern web platform for the University of Calgary's Fintech community. Built with Next.js, this platform facilitates event management, team collaboration, and community engagement.
 
+## Verify the official Fintech email on sendgrid before releasing the website 
+
 ## 🚀 Features
 
 - **Event Management**
