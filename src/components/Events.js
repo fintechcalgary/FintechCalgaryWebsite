@@ -220,6 +220,14 @@ export default function Events() {
                     {editingEvent ? "Edit Event" : "Create Event"}
                   </h2>
 
+                  <div className="mt-6 p-2 bg-primary text-white rounded-lg">
+                    <p className="text-sm">
+                      <strong>Note:</strong> Please use high-resolution images
+                      for the best display quality. When specifying time, ensure
+                      to include <strong>AM / PM</strong> for clarity.
+                    </p>
+                  </div>
+
                   <div>
                     <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
                       Event Title
