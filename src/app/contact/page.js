@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { FiMail, FiMapPin, FiMessageSquare, FiSend } from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
-import * as THREE from "three";
-import { useEffect, useRef } from "react";
+import Particles from "react-particles";
+import { loadSlim } from "tsparticles-slim";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -16,33 +16,39 @@ export default function ContactPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
-  const [vantaEffect, setVantaEffect] = useState(null);
-  const vantaRef = useRef(null);
 
-  useEffect(() => {
-    if (!vantaEffect) {
-      import("vanta/dist/vanta.globe.min").then((GLOBE) => {
-        setVantaEffect(
-          GLOBE.default({
-            el: vantaRef.current,
-            THREE: THREE,
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.0,
-            minWidth: 200.0,
-            scale: 1.0,
-            scaleMobile: 1.0,
-            color: 0x9900ff,
-            backgroundColor: 0x120724,
-          })
-        );
-      });
-    }
-    return () => {
-      if (vantaEffect) vantaEffect.destroy();
-    };
-  }, [vantaEffect]);
+  const particlesInit = useCallback(async (engine) => {
+    await loadSlim(engine);
+  }, []);
+
+  const particlesConfig = {
+    particles: {
+      number: { value: 50, density: { enable: true, value_area: 800 } },
+      color: { value: "#6d28d9" },
+      opacity: { value: 0.8 },
+      size: { value: 3 },
+
+      move: {
+        enable: true,
+        speed: 1,
+        direction: "none",
+        random: true,
+        straight: false,
+        out_mode: "out",
+        bounce: false,
+      },
+    },
+    interactivity: {
+      detect_on: "canvas",
+      events: {
+        onhover: {
+          enable: true,
+          mode: "grab",
+        },
+      },
+    },
+    retina_detect: true,
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,31 +81,32 @@ export default function ContactPage() {
     <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900">
       <PublicNavbar />
 
-      <motion.section
-        ref={vantaRef}
-        className="flex-grow flex items-center justify-center min-h-screen relative"
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/90 z-0"></div>
-        <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8 relative z-10">
+      <div className="relative flex-grow">
+        <Particles
+          className="absolute inset-0 z-0"
+          init={particlesInit}
+          options={particlesConfig}
+        />
+
+        <div className="relative z-10 container mx-auto px-6 py-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-16"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400 mt-10">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">
               Get in Touch
             </h1>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Have questions about Fintech Calgary? We'd love to hear from you.
-              Send us a message and we'll respond as soon as possible.
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Have questions? We'd love to hear from you.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16 w-full mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+              transition={{ delay: 0.2 }}
               className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 shadow-lg hover:border-primary/50 hover:bg-gray-800/70 transition-all duration-300"
             >
               <FiMail className="w-8 h-8 text-primary mb-4" />
@@ -115,7 +122,7 @@ export default function ContactPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.3 }}
               className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 shadow-lg hover:border-primary/50 hover:bg-gray-800/70 transition-all duration-300"
             >
               <FiMapPin className="w-8 h-8 text-primary mb-4" />
@@ -134,7 +141,7 @@ export default function ContactPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 0.4 }}
               className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 shadow-lg hover:border-primary/50 hover:bg-gray-800/70 transition-all duration-300"
             >
               <FiMessageSquare className="w-8 h-8 text-primary mb-4" />
@@ -148,112 +155,91 @@ export default function ContactPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.5 }}
             className="mx-auto"
           >
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Name
-                  </label>
                   <input
                     type="text"
-                    required
+                    placeholder="Your Name"
                     value={formData.name}
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    placeholder="Your name"
+                    required
+                    className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Email
-                  </label>
                   <input
                     type="email"
-                    required
+                    placeholder="Your Email"
                     value={formData.email}
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    placeholder="Your email"
+                    required
+                    className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
                   />
                 </div>
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Subject
-                </label>
                 <input
                   type="text"
-                  required
+                  placeholder="Subject"
                   value={formData.subject}
                   onChange={(e) =>
                     setFormData({ ...formData, subject: e.target.value })
                   }
-                  className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  placeholder="Message subject"
+                  required
+                  className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
                 />
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Message
-                </label>
                 <textarea
-                  required
+                  placeholder="Your Message"
                   value={formData.message}
                   onChange={(e) =>
                     setFormData({ ...formData, message: e.target.value })
                   }
+                  required
                   rows={6}
-                  className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  placeholder="Your message"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
                 />
               </div>
-
-              {submitStatus && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`${
-                    submitStatus === "success"
-                      ? "bg-green-500/10 border-green-500/50 text-green-500"
-                      : "bg-red-500/10 border-red-500/50 text-red-500"
-                  } border rounded-lg p-4`}
+              <div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full px-8 py-4 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {submitStatus === "success"
-                    ? "Message sent successfully!"
-                    : "Failed to send message. Please try again."}
-                </motion.div>
+                  {isSubmitting ? (
+                    "Sending..."
+                  ) : (
+                    <>
+                      Send Message
+                      <FiSend />
+                    </>
+                  )}
+                </button>
+              </div>
+              {submitStatus === "success" && (
+                <p className="text-green-400 text-center">
+                  Message sent successfully!
+                </p>
               )}
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-primary hover:bg-primary/80 text-white font-medium py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/25"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    <span>Sending...</span>
-                  </>
-                ) : (
-                  <>
-                    <FiSend className="w-5 h-5" />
-                    <span>Send Message</span>
-                  </>
-                )}
-              </button>
+              {submitStatus === "error" && (
+                <p className="text-red-400 text-center">
+                  Failed to send message. Please try again.
+                </p>
+              )}
             </form>
           </motion.div>
         </div>
-      </motion.section>
+      </div>
+
       <Footer />
     </main>
   );
