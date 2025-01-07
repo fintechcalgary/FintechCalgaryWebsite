@@ -1,18 +1,30 @@
 import { motion } from "framer-motion";
-import { FiMail, FiMapPin, FiMessageSquare } from "react-icons/fi";
+import {
+  FiMail,
+  FiMapPin,
+  FiMessageSquare,
+  FiArrowRight,
+} from "react-icons/fi";
+import Link from "next/link";
 
 export default function Contact() {
   return (
     <section id="contact" className="py-16 relative">
       <div className="container mx-auto px-4">
         <motion.h2
-          className="text-5xl font-bold mb-16 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400 text-center"
+          className="text-5xl font-bold mb-16 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400 text-center group cursor-pointer"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          Contact Us
+          <Link
+            href="/contact"
+            className="flex items-center justify-center gap-4 hover:gap-6 transition-all duration-300"
+          >
+            Contact Us
+            <FiArrowRight className="transition-all duration-300 text-primary" />
+          </Link>
         </motion.h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">

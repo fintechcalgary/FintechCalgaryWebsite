@@ -3,7 +3,7 @@ import { FiGithub, FiLinkedin, FiInstagram, FiMail } from "react-icons/fi";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900/50 border-t border-gray-800">
+    <footer className="bg-gray-900/50 border-t border-gray-800 z-50">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">

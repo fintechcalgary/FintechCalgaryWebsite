@@ -174,14 +174,8 @@ export default function Events() {
           Your Events
         </h3>
         <button
-          onClick={() => {
-            if (showForm) {
-              resetForm();
-            } else {
-              setShowForm(true);
-            }
-          }}
-          className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+          onClick={() => (showForm ? resetForm() : setShowForm(true))}
+          className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg transition-colors"
         >
           {showForm ? <FiX /> : <FiPlus />}
           {showForm ? "Cancel" : "Add Event"}
@@ -195,61 +189,63 @@ export default function Events() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
               className="fixed inset-0 bg-black/60 backdrop-blur-2xl z-[9999]"
-              onClick={() => resetForm()}
+              onClick={resetForm}
             />
 
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{
-                duration: 0.2,
-                ease: [0.16, 1, 0.3, 1],
-              }}
               className="fixed inset-0 flex items-center justify-center z-[9999] p-4"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-full max-w-2xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-gray-700/50 shadow-xl overflow-y-auto max-h-[85vh] flex flex-col gap-4">
-                <form
-                  onSubmit={handleSubmit}
-                  className="space-y-4 text-xs sm:text-sm"
-                >
-                  <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4">
+              <div className="w-full max-w-2xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-gray-700/50 shadow-xl overflow-y-auto max-h-[85vh]">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <h2 className="text-xl font-semibold text-white">
                     {editingEvent ? "Edit Event" : "Create Event"}
                   </h2>
 
-                  <div className="mt-6 p-2 bg-primary text-white rounded-lg">
-                    <p className="text-sm">
-                      <strong>Note:</strong> Please use high-resolution images
-                      for the best display quality. When specifying time, ensure
-                      to include <strong>AM / PM</strong> for clarity.
-                    </p>
+                  <div className="flex items-start space-x-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+                    <div className="flex-shrink-0 pt-0.5">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 text-primary"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-200">
+                        <span className="font-medium">Important:</span> Please
+                        use high-resolution images for the best display quality.
+                        When specifying time, ensure to include{" "}
+                        <span className="font-medium">AM / PM</span> for
+                        clarity.
+                      </p>
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
-                      Event Title
-                    </label>
+                  <div className="space-y-4">
                     <input
                       type="text"
-                      placeholder="Enter event title"
+                      placeholder="Event Title"
                       value={formData.title}
                       onChange={(e) =>
                         setFormData({ ...formData, title: e.target.value })
                       }
-                      className="w-full px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                      className="form-input"
                       required
                     />
-                  </div>
 
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
-                      Description
-                    </label>
                     <textarea
-                      placeholder="Enter event description"
+                      placeholder="Event Description"
                       value={formData.description}
                       onChange={(e) =>
                         setFormData({
@@ -257,49 +253,33 @@ export default function Events() {
                           description: e.target.value,
                         })
                       }
-                      className="w-full px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 resize-none min-h-[80px] sm:min-h-[100px]"
+                      className="form-input min-h-[80px]"
                       required
                     />
-                  </div>
 
-                  <div className="flex flex-col gap-2 sm:gap-4 sm:flex-row">
-                    <div className="flex-1">
-                      <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
-                        Date
-                      </label>
+                    <div className="grid grid-cols-2 gap-4">
                       <input
                         type="date"
                         value={formData.date}
                         onChange={(e) =>
                           setFormData({ ...formData, date: e.target.value })
                         }
-                        className="w-full px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                        className="form-input"
                         required
                       />
-                    </div>
-
-                    <div className="flex-1">
-                      <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
-                        Time
-                      </label>
                       <input
-                        placeholder="Enter event time"
                         type="text"
+                        placeholder="Event Time"
                         value={formData.time}
                         onChange={(e) =>
                           setFormData({ ...formData, time: e.target.value })
                         }
-                        className="w-full px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                        className="form-input"
                         required
                       />
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
-                      Event Image
-                    </label>
-                    <div className="flex items-center gap-2 sm:gap-4">
+                    <div className="flex items-center gap-4">
                       <input
                         type="file"
                         accept="image/*"
@@ -310,18 +290,16 @@ export default function Events() {
                       />
                       <label
                         htmlFor="imageUpload"
-                        className="flex items-center gap-2 px-2 py-1 sm:px-3 sm:py-2 rounded-lg cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary transition-all duration-200 text-xs sm:text-sm"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700"
                       >
-                        <FiImage className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span>
-                          {uploading ? "Uploading..." : "Choose Image"}
-                        </span>
+                        <FiImage />
+                        {uploading ? "Uploading..." : "Choose Image"}
                       </label>
                       {formData.imageUrl && (
-                        <div className="relative w-12 h-12 sm:w-16 sm:h-16">
+                        <div className="relative w-16 h-16">
                           <img
                             src={formData.imageUrl}
-                            alt="Event preview"
+                            alt="Preview"
                             className="w-full h-full object-cover rounded-lg border border-gray-700"
                           />
                           <button
@@ -329,7 +307,7 @@ export default function Events() {
                             onClick={() =>
                               setFormData((prev) => ({ ...prev, imageUrl: "" }))
                             }
-                            className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 transition-all duration-200"
+                            className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1"
                           >
                             <FiX size={10} />
                           </button>
@@ -338,11 +316,11 @@ export default function Events() {
                     </div>
                   </div>
 
-                  <div className="flex justify-end items-center gap-2 sm:gap-3 mt-4 sm:mt-6 pt-4 border-t border-gray-700">
+                  <div className="flex justify-end gap-3 pt-4 border-t border-gray-700">
                     <button
                       type="button"
                       onClick={resetForm}
-                      className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-1 px-3 sm:py-2 sm:px-4 rounded-lg transition-all duration-200 text-xs sm:text-sm"
+                      className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg"
                       disabled={uploading}
                     >
                       Cancel
@@ -350,21 +328,14 @@ export default function Events() {
                     <button
                       type="submit"
                       disabled={uploading}
-                      className={`bg-primary hover:bg-primary/80 text-white font-medium py-1 px-3 sm:py-2 sm:px-4 rounded-lg transition-all duration-200 text-xs sm:text-sm flex items-center justify-center gap-2 ${
-                        uploading ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
+                      className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg"
                     >
-                      {editingEvent ? (
-                        <>
-                          <FiEdit2 className="w-4 h-4" />
-                          {uploading ? "Please wait..." : "Update Event"}
-                        </>
-                      ) : (
-                        <>
-                          <FiPlus className="w-4 h-4" />
-                          {uploading ? "Please wait..." : "Add Event"}
-                        </>
-                      )}
+                      {editingEvent ? <FiEdit2 /> : <FiPlus />}
+                      {uploading
+                        ? "Please wait..."
+                        : editingEvent
+                        ? "Update Event"
+                        : "Add Event"}
                     </button>
                   </div>
                 </form>

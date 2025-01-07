@@ -137,7 +137,7 @@ export default function Home() {
               className="space-x-6"
             >
               <Link
-                href="/signup"
+                href="/about"
                 className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-full bg-primary hover:bg-primary/90 text-white transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 transform hover:-translate-y-1"
               >
                 Get Started
