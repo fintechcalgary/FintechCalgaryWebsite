@@ -187,6 +187,11 @@ export default function MembersPage() {
                               </a>
                             )}
                           </div>
+                          {member.description && (
+                            <p className="text-sm text-gray-400 mt-2">
+                              {member.description}
+                            </p>
+                          )}
                         </div>
                       </motion.div>
                     ))}
