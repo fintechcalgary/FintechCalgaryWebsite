@@ -7,6 +7,7 @@ import { loadSlim } from "tsparticles-slim";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import * as THREE from "three";
+import { SiLinkedin } from "react-icons/si";
 
 export default function MembersPage() {
   const [members, setMembers] = useState([]);
@@ -20,11 +21,11 @@ export default function MembersPage() {
 
   const particlesConfig = {
     particles: {
-      number: { value: 70, density: { enable: true, value_area: 1000 } },
+      number: { value: 50, density: { enable: true, value_area: 1200 } },
       color: { value: "#8b5cf6" },
-      opacity: { value: 0.6 },
-      size: { value: 2.5 },
-      move: { enable: true, speed: 1, random: true, out_mode: "out" },
+      opacity: { value: 0.8 },
+      size: { value: 2 },
+      move: { enable: true, speed: 0.8, random: true, out_mode: "out" },
     },
     interactivity: {
       detect_on: "canvas",
@@ -108,65 +109,86 @@ export default function MembersPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/80 z-0"></div>
 
           {/* Content Section */}
-          <div className="relative z-10 container mx-auto px-6 py-16 sm:px-8 lg:px-10">
+          <div className="relative z-10 container mx-auto px-6 py-24 sm:px-8 lg:px-12">
             {/* Page Heading */}
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-10"
+              className="text-center mb-16"
             >
-              <h1 className="text-5xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400 mb-4">
+              <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
                 Meet Our Team
               </h1>
-              <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
                 Our dedicated team of professionals is here to make a
                 difference.
               </p>
             </motion.div>
 
             {/* Members Grid */}
-            <div className="space-y-10">
-              {Object.keys(groupedMembers).map((role) => (
+            <div className="space-y-16">
+              {Object.keys(groupedMembers).map((role, index) => (
                 <motion.section
                   key={role}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="space-y-6"
+                  transition={{ delay: index * 0.1 }}
+                  className="space-y-8"
                 >
                   {/* Role Header */}
-                  <h2 className="text-2xl font-semibold text-primary mb-4">
-                    {role}
-                  </h2>
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="h-px flex-grow bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+                    <h2 className="text-3xl font-bold text-white px-4">
+                      {role}
+                    </h2>
+                    <div className="h-px flex-grow bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+                  </div>
 
                   {/* Members List */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  <div className="flex flex-wrap gap-8 justify-center">
                     {groupedMembers[role].map((member) => (
-                      <div
+                      <motion.div
                         key={member._id}
-                        className="relative bg-gray-800/70 p-5 rounded-xl border border-gray-700 hover:bg-gray-800 hover:border-primary/50 transition-all duration-300 shadow-lg"
+                        whileHover={{ scale: 1.02 }}
+                        className="flex flex-col items-center text-center gap-4 w-full max-w-[300px]"
                       >
-                        <div className="flex items-center gap-4">
-                          <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary">
-                            <img
-                              src={member.imageUrl || "/placeholder.png"}
-                              alt={`${member.name}'s profile`}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-medium text-white">
-                              {member.name}
-                            </h3>
-                            <p className="text-sm text-gray-400">
-                              {member.major}
-                            </p>
-                            <p className="text-xs text-gray-500">
+                        <div
+                          className="w-48 h-48 rounded-full overflow-hidden border-2 border-primary/50 
+                          group-hover:border-primary transition-colors duration-300 shadow-lg"
+                        >
+                          <img
+                            src={member.imageUrl || "/placeholder.png"}
+                            alt={`${member.name}'s profile`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <h3 className="text-xl font-semibold text-white hover:text-primary transition-colors">
+                            {member.name}
+                          </h3>
+                          <p className="text-base text-gray-300">
+                            {member.major}
+                          </p>
+                          <div className="flex items-center justify-center gap-3">
+                            <a
+                              href={`mailto:${member.email}`}
+                              className="text-sm text-gray-400 hover:text-primary transition-colors"
+                            >
                               {member.email}
-                            </p>
+                            </a>
+                            {member.linkedinUrl && (
+                              <a
+                                href={member.linkedinUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-400 hover:text-[#0077b5] transition-colors"
+                              >
+                                <SiLinkedin className="w-5 h-5" />
+                              </a>
+                            )}
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </motion.section>

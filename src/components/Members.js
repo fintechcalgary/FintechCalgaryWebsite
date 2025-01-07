@@ -22,6 +22,7 @@ export default function Members() {
     email: "",
     password: "",
     role: "member",
+    linkedinUrl: "",
   });
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
@@ -130,7 +131,6 @@ export default function Members() {
 
   const handleEdit = (member) => {
     setEditingMember(member);
-    console.log(member);
     setFormData({
       name: member.name || "",
       position: member.position || "",
@@ -139,6 +139,7 @@ export default function Members() {
       email: member.email || "",
       password: "",
       role: member.role || "member",
+      linkedinUrl: member.linkedinUrl || "",
     });
     setShowForm(true);
   };
@@ -447,6 +448,24 @@ export default function Members() {
                               </div>
                             )}
                           </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-300 mb-1">
+                            LinkedIn URL (optional)
+                          </label>
+                          <input
+                            type="url"
+                            placeholder="Enter LinkedIn profile URL"
+                            value={formData.linkedinUrl}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                linkedinUrl: e.target.value,
+                              })
+                            }
+                            className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                          />
                         </div>
                       </div>
                     </div>
