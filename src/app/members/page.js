@@ -8,6 +8,7 @@ import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import * as THREE from "three";
 import { SiLinkedin } from "react-icons/si";
+import { FiMail } from "react-icons/fi";
 
 export default function MembersPage() {
   const [members, setMembers] = useState([]);
@@ -172,9 +173,11 @@ export default function MembersPage() {
                           <div className="flex items-center justify-center gap-3">
                             <a
                               href={`mailto:${member.email}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
                               className="text-sm text-gray-400 hover:text-primary transition-colors"
                             >
-                              {member.email}
+                              <FiMail className="w-5 h-5" />
                             </a>
                             {member.linkedinUrl && (
                               <a
