@@ -94,17 +94,25 @@ export default function EventsPage() {
 
       {/* Page Content */}
       <div className="container mx-auto px-6 py-24 sm:px-8 lg:px-12 relative z-10">
-        {/* Page Heading */}
+        {/* Dynamic Page Heading */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
           <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
-            All Events
+            {filter === "all"
+              ? "All Events"
+              : filter === "upcoming"
+              ? "Upcoming Events"
+              : "Past Events"}
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Explore all our past and upcoming events.
+            {filter === "all"
+              ? "Explore all our past and upcoming events."
+              : filter === "upcoming"
+              ? "Check out our upcoming events and register now."
+              : "Take a look at our past events and what we've accomplished."}
           </p>
         </motion.div>
 
@@ -162,8 +170,8 @@ export default function EventsPage() {
                     <span
                       className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${
                         isUpcoming
-                          ? "bg-green-600 text-white"
-                          : "bg-red-600 text-white"
+                          ? "bg-purple-600 text-white"
+                          : "bg-purple-800 text-white"
                       }`}
                     >
                       {isUpcoming ? "Upcoming" : "Past"}
@@ -172,7 +180,7 @@ export default function EventsPage() {
                     {isUpcoming && (
                       <a
                         href={`/events/register/${event._id}`}
-                        className="px-3 py-1 text-xs font-medium text-white bg-purple-600 hover:bg-purple-500 rounded-full transition-colors"
+                        className="inline-block px-3 py-1 text-xs font-medium border-2 border-purple-600 text-purple-600 rounded-full hover:bg-purple-600 hover:text-white transition-all"
                       >
                         Register Now
                       </a>

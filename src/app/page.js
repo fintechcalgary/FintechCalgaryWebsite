@@ -43,7 +43,15 @@ export default function Home() {
       const response = await fetch("/api/events");
       if (response.ok) {
         const data = await response.json();
-        setEvents(data.slice(0, 4)); // Only show first 4 events
+
+        const currentDate = new Date();
+
+        // Filter only upcoming events
+        const upcomingEvents = data.filter(
+          (event) => new Date(event.date) >= currentDate
+        );
+
+        setEvents(upcomingEvents.slice(0, 4)); // Only show first 4 events
       }
     };
     fetchEvents();
