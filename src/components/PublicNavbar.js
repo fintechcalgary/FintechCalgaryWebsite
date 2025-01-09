@@ -1,28 +1,9 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
 
 export default function PublicNavbar() {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 200;
-      setScrolled(isScrolled);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${
-        scrolled
-          ? "bg-gray-900/30 backdrop-blur-md border-gray-800/50"
-          : "border-transparent"
-      }`}
-    >
+    <nav className="fixed top-0 w-full z-50 transition-all duration-300">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-20">
           <Link

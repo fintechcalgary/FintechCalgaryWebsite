@@ -80,6 +80,10 @@ export default function DashboardPage() {
     );
   }
 
+  if (status !== "authenticated") {
+    return null;
+  }
+
   return (
     <div className="min-h-screen relative bg-background">
       <Particles

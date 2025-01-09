@@ -20,7 +20,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/#about"
+                  href="/about"
                   className="text-gray-400 hover:text-primary transition-colors"
                 >
                   About Us
@@ -28,10 +28,18 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/#events"
+                  href="/events"
                   className="text-gray-400 hover:text-primary transition-colors"
                 >
                   Events
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/members"
+                  className="text-gray-400 hover:text-primary transition-colors"
+                >
+                  Members
                 </Link>
               </li>
               <li>
@@ -66,25 +74,31 @@ export default function Footer() {
             <h4 className="text-lg font-semibold text-white mb-4">Follow Us</h4>
             <div className="flex space-x-4">
               <a
-                href="#"
+                href="https://github.com/fintech-calgary"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-primary transition-colors"
               >
                 <FiGithub className="w-6 h-6" />
               </a>
               <a
-                href="#"
+                href="https://www.linkedin.com/company/fintechcalgary/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-primary transition-colors"
               >
                 <FiLinkedin className="w-6 h-6" />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/fintech.calgary/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-primary transition-colors"
               >
                 <FiInstagram className="w-6 h-6" />
               </a>
               <a
-                href="mailto:info@fintechcalgary.com"
+                href="mailto:fintechcalgary@gmail.com"
                 className="text-gray-400 hover:text-primary transition-colors"
               >
                 <FiMail className="w-6 h-6" />

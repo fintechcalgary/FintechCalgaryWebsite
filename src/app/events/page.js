@@ -116,78 +116,112 @@ export default function EventsPage() {
           </p>
         </motion.div>
 
-        {/* Filter Dropdown - Move to right and widen */}
-        <div className="flex justify-start mb-8">
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="px-4 py-3 w-60 bg-gray-900 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
-          >
-            <option value="all">All Events</option>
-            <option value="upcoming">Upcoming Events</option>
-            <option value="past">Past Events</option>
-          </select>
+        {/* Filter Dropdown - Enhanced styling */}
+        <div className="flex mb-8">
+          <div className="relative">
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="appearance-none px-6 py-3 w-64 bg-gray-800/50 text-white rounded-lg border border-gray-600 
+              focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
+              shadow-lg backdrop-blur-sm
+              pl-6 pr-12 hover:bg-gray-700/50 transition-colors"
+            >
+              <option value="all">All Events</option>
+              <option value="upcoming">Upcoming Events</option>
+              <option value="past">Past Events</option>
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+              <svg
+                className="h-5 w-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredEvents.map((event) => {
             const isUpcoming = new Date(event.date) >= new Date();
             return (
-              <div
+              <motion.div
                 key={event._id}
-                className="bg-gray-800/50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="group relative bg-gray-900/40 backdrop-blur-xl rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-800/50 hover:border-primary/50"
               >
-                {/* Event Image */}
-                <div className="aspect-video w-full">
+                {/* Glass Effect Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                {/* Event Image Container */}
+                <div className="relative aspect-[16/10] w-full overflow-hidden">
                   <img
                     src={event.imageUrl}
                     alt={event.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out"
                   />
+
+                  {/* Status Badge - Moved to top-right of image */}
+                  <span
+                    className={`absolute top-4 right-4 px-4 py-1.5 text-xs font-medium rounded-full 
+                    ${
+                      isUpcoming
+                        ? "bg-primary/30 text-primary border border-primary/40 backdrop-blur-sm"
+                        : "bg-gray-800/50 text-gray-300 border border-gray-700/50 backdrop-blur-sm"
+                    }`}
+                  >
+                    {isUpcoming ? "Upcoming" : "Past"}
+                  </span>
                 </div>
 
                 {/* Event Content */}
-                <div className="p-6 space-y-4">
-                  <h4 className="text-xl font-semibold text-white">
+                <div className="p-6 relative z-10">
+                  <h4 className="text-2xl font-bold text-white group-hover:text-primary transition-colors duration-300 mb-3">
                     {event.title}
                   </h4>
 
-                  <p className="text-sm text-gray-400">
-                    {new Date(event.date + "T00:00:00").toLocaleDateString(
-                      "en-US",
-                      {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      }
-                    )}
-                    {event.time && ` at ${event.time}`}
-                  </p>
-
-                  {/* Event Status and Register Button */}
-                  <div className="flex items-center gap-4">
-                    <span
-                      className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${
-                        isUpcoming
-                          ? "bg-purple-600 text-white"
-                          : "bg-purple-800 text-white"
-                      }`}
-                    >
-                      {isUpcoming ? "Upcoming" : "Past"}
-                    </span>
-
-                    {isUpcoming && (
-                      <a
-                        href={`/events/register/${event._id}`}
-                        className="inline-block px-3 py-1 text-xs font-bold border-2 border-purple-600 text-purple-600 rounded-full hover:bg-purple-600 hover:text-white transition-all"
-                      >
-                        Register Now
-                      </a>
-                    )}
+                  <div className="flex items-center space-x-2 text-gray-300 mb-4">
+                    <FiCalendar className="w-4 h-4 text-primary" />
+                    <p className="text-sm font-medium">
+                      {new Date(event.date + "T00:00:00").toLocaleDateString(
+                        "en-US",
+                        {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
+                      {event.time && (
+                        <span className="ml-1 text-primary font-semibold">{` at ${event.time}`}</span>
+                      )}
+                    </p>
                   </div>
+
+                  {/* Register Button - Full width with new styling */}
+                  {isUpcoming && (
+                    <a
+                      href={`/events/register/${event._id}`}
+                      className="block w-full text-center px-6 py-2.5 text-sm font-semibold text-white 
+                      bg-gradient-to-r from-primary via-primary/90 to-primary 
+                      rounded-xl hover:from-primary/90 hover:via-primary hover:to-primary/90 
+                      transform hover:-translate-y-0.5 transition-all duration-300 
+                      shadow-lg hover:shadow-primary/25"
+                    >
+                      Register Now
+                    </a>
+                  )}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
