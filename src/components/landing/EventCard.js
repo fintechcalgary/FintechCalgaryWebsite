@@ -22,7 +22,7 @@ export default function EventCard({ event, index }) {
         <div className="space-y-4">
           {/* Date badge */}
           <div className="inline-block px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/20 text-sm text-white">
-            {new Date(event.date).toLocaleDateString("en-US", {
+            {new Date(event.date + "T00:00:00").toLocaleDateString("en-US", {
               weekday: "long",
               year: "numeric",
               month: "long",
