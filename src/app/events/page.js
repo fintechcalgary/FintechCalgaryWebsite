@@ -180,7 +180,7 @@ export default function EventsPage() {
                     {isUpcoming && (
                       <a
                         href={`/events/register/${event._id}`}
-                        className="inline-block px-3 py-1 text-xs font-medium border-2 border-purple-600 text-purple-600 rounded-full hover:bg-purple-600 hover:text-white transition-all"
+                        className="inline-block px-3 py-1 text-xs font-bold border-2 border-purple-600 text-purple-600 rounded-full hover:bg-purple-600 hover:text-white transition-all"
                       >
                         Register Now
                       </a>
