@@ -3,7 +3,11 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ChartBarIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import {
+  ChartBarIcon,
+  ClockIcon,
+  UserGroupIcon,
+} from "@heroicons/react/24/outline";
 import Navbar from "@/components/Navbar";
 import Events from "@/components/Events";
 import { useEffect, useCallback } from "react";
@@ -102,7 +106,7 @@ export default function DashboardPage() {
         <motion.div
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
-          className="relative overflow-hidden rounded-2xl mb-12"
+          className="relative overflow-hidden rounded-2xl mb-6"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary via-purple-500/30 to-primary/10 animate-gradient-x rounded-2xl" />
           <div className="relative bg-gray-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-all">
@@ -157,6 +161,34 @@ export default function DashboardPage() {
                   <ChartBarIcon className="h-6 w-6" />
                 </span>
               </div>
+
+              {/* Reminder Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="mb-6 p-4 rounded-lg border border-white/10 hover:border-white/20 bg-gradient-to-br from-gray-900/60 via-purple-900/20 to-gray-800/40
+             shadow-md hover:shadow-purple-600/20 duration-300 backdrop-blur-lg max-w-md sm:max-w-full"
+              >
+                <div className="flex items-center space-x-3">
+                  {/* Icon Container */}
+                  <div className="hidden md:flex h-9 w-9 items-center justify-center rounded-full bg-purple-700/20 text-purple-300 backdrop-blur-sm">
+                    <ClockIcon className="h-5 w-5" />
+                  </div>
+
+                  {/* Text Content */}
+                  <div className="space-y-0.5">
+                    <h3 className="text-sm font-semibold text-white">
+                      Reminder
+                    </h3>
+                    <p className="text-xs text-purple-100 leading-relaxed">
+                      No need to delete past events—they’ll remain on the events
+                      page. Delete only those you no longer want to display.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
               <Events />
             </div>
           </motion.section>
