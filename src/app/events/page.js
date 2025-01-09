@@ -172,12 +172,12 @@ export default function EventsPage() {
 
                   {/* Status Badge - Moved to top-right of image */}
                   <span
-                    className={`absolute top-4 right-4 px-4 py-1.5 text-xs font-medium rounded-full 
-                    ${
-                      isUpcoming
-                        ? "bg-primary/30 text-primary border border-primary/40 backdrop-blur-sm"
-                        : "bg-gray-800/50 text-gray-300 border border-gray-700/50 backdrop-blur-sm"
-                    }`}
+                    className={`absolute top-4 right-4 px-4 py-1.5 text-xs font-semibold rounded-full 
+  ${
+    isUpcoming
+      ? "bg-purple-600/60 text-purple-100 border border-purple-500 backdrop-blur-md"
+      : "bg-gray-800/60 text-gray-300 border border-gray-700 backdrop-blur-md"
+  }`}
                   >
                     {isUpcoming ? "Upcoming" : "Past"}
                   </span>
