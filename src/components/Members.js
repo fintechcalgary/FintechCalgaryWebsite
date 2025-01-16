@@ -19,7 +19,7 @@ export default function Members() {
     position: "",
     major: "",
     imageUrl: "",
-    email: "",
+    username: "",
     password: "",
     role: "member",
     linkedinUrl: "",
@@ -71,7 +71,7 @@ export default function Members() {
           },
           body: JSON.stringify({
             ...formData,
-            oldEmail: editingMember.email, // Include old email for reference
+            oldUsername: editingMember.username, // Include old username for reference
           }),
         });
 
@@ -108,7 +108,7 @@ export default function Members() {
   const handleDelete = async (memberId) => {
     const memberToDelete = members.find((member) => member._id === memberId);
 
-    if (session?.user?.email === memberToDelete.email) {
+    if (session?.user?.username === memberToDelete.username) {
       console.log("Cannot delete yourself");
       return;
     }
@@ -137,7 +137,7 @@ export default function Members() {
       position: member.position || "",
       major: member.major || "",
       imageUrl: member.imageUrl || "",
-      email: member.email || "",
+      username: member.username || "",
       password: "",
       role: member.role || "member",
       linkedinUrl: member.linkedinUrl || "",
@@ -180,9 +180,11 @@ export default function Members() {
       position: "",
       major: "",
       imageUrl: "",
-      email: "",
+      username: "",
       password: "",
       role: "member",
+      linkedinUrl: "",
+      description: "",
     });
     setEditingMember(null);
     setShowForm(false);
@@ -341,16 +343,15 @@ export default function Members() {
                         <div className="space-y-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-300 mb-1">
-                              Email
+                              Username
                             </label>
                             <input
-                              type="email"
-                              placeholder="Enter email address"
-                              value={formData.email}
+                              placeholder="Enter username address"
+                              value={formData.username}
                               onChange={(e) =>
                                 setFormData({
                                   ...formData,
-                                  email: e.target.value,
+                                  username: e.target.value,
                                 })
                               }
                               className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
@@ -392,9 +393,6 @@ export default function Members() {
                                 }
                                 className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 appearance-none"
                                 required
-                                disabled={
-                                  session?.user?.email === editingMember?.email
-                                }
                               >
                                 <option value="admin">Admin</option>
                                 <option value="member">Member</option>

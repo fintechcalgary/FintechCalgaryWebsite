@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FiMail, FiMapPin, FiMessageSquare, FiSend } from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
@@ -8,6 +8,10 @@ import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 
 export default function ContactPage() {
+  useEffect(() => {
+    document.title = "Contact | Fintech Calgary";
+  }, []);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",

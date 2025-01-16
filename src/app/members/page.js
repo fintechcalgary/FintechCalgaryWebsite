@@ -16,6 +16,10 @@ export default function MembersPage() {
   const [vantaEffect, setVantaEffect] = useState(null);
   const vantaRef = useRef(null);
 
+  useEffect(() => {
+    document.title = "Members | Fintech Calgary";
+  }, []);
+
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
   }, []);

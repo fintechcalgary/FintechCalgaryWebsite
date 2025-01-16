@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
@@ -8,6 +8,10 @@ import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 
 export default function AboutPage() {
+  useEffect(() => {
+    document.title = "About | Fintech Calgary";
+  }, []);
+
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
   }, []);

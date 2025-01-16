@@ -19,6 +19,10 @@ export default function Login() {
   const [vantaEffect, setVantaEffect] = useState(null);
   const vantaRef = useRef(null);
 
+  useEffect(() => {
+    document.title = "Login | Fintech Calgary";
+  }, []);
+
   // Redirect to /dashboard if already logged in
   useEffect(() => {
     if (status === "authenticated") {

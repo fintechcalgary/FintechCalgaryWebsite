@@ -39,6 +39,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    document.title = "Home | Fintech Calgary";
+  }, []);
+
+  useEffect(() => {
     const fetchEvents = async () => {
       const response = await fetch("/api/events");
       if (response.ok) {

@@ -2,8 +2,13 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiCheck, FiArrowLeft } from "react-icons/fi";
+import { useEffect } from "react";
 
 export default function RegistrationSuccess() {
+  useEffect(() => {
+    document.title = "Registration Successful | Fintech Calgary";
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-gray-900 flex items-center justify-center p-4">
       <motion.div

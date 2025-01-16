@@ -19,6 +19,10 @@ export default function InfoPage() {
     }
   }, [status, router]);
 
+  useEffect(() => {
+    document.title = "Info | Fintech Calgary";
+  }, []);
+
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
   }, []);
