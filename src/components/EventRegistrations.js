@@ -7,6 +7,7 @@ import {
   FiCalendar,
   FiUser,
   FiMessageSquare,
+  FiDownload,
 } from "react-icons/fi";
 
 export default function EventRegistrations({ eventId }) {
@@ -30,6 +31,43 @@ export default function EventRegistrations({ eventId }) {
     fetchEvent();
   }, [eventId]);
 
+  const exportToCSV = () => {
+    if (!event?.registrations) return;
+
+    // Create CSV headers
+    const headers = ["Name", "Email", "Registration Date", "Comments"];
+
+    // Format registration data
+    const csvData = event.registrations.map((reg) => [
+      reg.name,
+      reg.userEmail,
+      new Date(reg.registeredAt).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      reg.comments || "",
+    ]);
+
+    // Combine headers and data
+    const csvContent = [
+      headers.join(","),
+      ...csvData.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+    ].join("\n");
+
+    // Create and trigger download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${event.title}-registrations.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -49,7 +87,7 @@ export default function EventRegistrations({ eventId }) {
   return (
     <div className="min-h-screen bg-background py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
+        <div className="mb-8 flex justify-between items-center">
           <Link
             href="/dashboard"
             className="inline-flex items-center text-gray-400 hover:text-white transition-colors"
@@ -57,6 +95,16 @@ export default function EventRegistrations({ eventId }) {
             <FiArrowLeft className="mr-2" />
             Back to Dashboard
           </Link>
+
+          <button
+            onClick={exportToCSV}
+            className="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary/80 
+            text-white rounded-lg transition-all duration-200 gap-2 shadow-lg 
+            hover:shadow-primary/25 hover:-translate-y-0.5"
+          >
+            <FiDownload className="w-4 h-4" />
+            Export CSV
+          </button>
         </div>
 
         <div className="bg-gray-800/50 rounded-lg p-8 shadow-xl mb-8">
