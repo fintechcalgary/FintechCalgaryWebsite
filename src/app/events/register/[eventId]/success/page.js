@@ -13,7 +13,8 @@ export default function RegistrationSuccess() {
           shortly.
         </p>
         <p className="text-gray-400 mb-8">
-          If you don't see the email, please check your spam or junk folder.
+          If you don&apos;t see the email, please check your spam or junk
+          folder.
         </p>
         <Link
           href="/"

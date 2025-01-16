@@ -219,7 +219,7 @@ export default function InfoPage() {
                 <li>
                   Make your changes and commit them using:
                   <code className="block mt-2 bg-gray-800/80 text-white p-3 rounded-lg font-mono text-sm">
-                    git commit -m "Your commit message"
+                    git commit -m &quot;Your commit message&quot;
                   </code>
                 </li>
                 <li>
