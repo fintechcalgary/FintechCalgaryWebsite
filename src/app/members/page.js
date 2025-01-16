@@ -66,6 +66,11 @@ export default function MembersPage() {
       const response = await fetch("/api/members");
       const data = await response.json();
 
+      if (!Array.isArray(data)) {
+        console.error("API did not return an array:", data);
+        return;
+      }
+
       const grouped = data.reduce((acc, member) => {
         if (!acc[member.position]) acc[member.position] = [];
         acc[member.position].push(member);

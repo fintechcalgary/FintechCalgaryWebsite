@@ -155,10 +155,10 @@ export default function Home() {
                 About Us
               </Link>
               <Link
-                href="#about"
+                href="/members"
                 className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-full border border-gray-700 hover:border-primary/50 text-white transition-all duration-300 hover:shadow-xl hover:bg-gray-800/30"
               >
-                Learn More
+                Members
               </Link>
             </motion.div>
           </div>

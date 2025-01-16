@@ -5,6 +5,8 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import * as THREE from "three";
+import { FiArrowLeft } from "react-icons/fi";
+import Link from "next/link";
 
 export default function Login() {
   const { status } = useSession(); // Check session status
@@ -86,6 +88,16 @@ export default function Login() {
       className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8"
     >
       <div className="w-full max-w-md space-y-6 sm:space-y-8 bg-gray-800/50 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-2xl border border-gray-700/50 shadow-xl">
+        <div className="flex justify-start">
+          <Link
+            href="/"
+            className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-1"
+          >
+            <FiArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
+        </div>
+
         <div className="flex justify-center items-center">
           <Image
             alt="FinTech Calgary Logo"

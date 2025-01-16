@@ -96,13 +96,6 @@ export async function POST(req) {
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-      });
-    }
-
     const db = await connectToDatabase();
     const members = await getMembers(db);
     return new Response(JSON.stringify(members), { status: 200 });
