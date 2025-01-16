@@ -14,23 +14,39 @@ export const authOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text" },
+        username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const db = await connectToDatabase();
-        const user = await db
-          .collection("users")
-          .findOne({ email: credentials.email });
+        try {
+          const db = await connectToDatabase();
 
-        if (user && bcrypt.compareSync(credentials.password, user.password)) {
-          return {
-            id: user._id,
-            email: user.email,
-            role: user.role,
-          };
+          const user = await db
+            .collection("users")
+            .findOne({ username: credentials.username });
+
+          if (!user) {
+            console.log("No user found with this username");
+            return null;
+          }
+
+          const passwordMatch = bcrypt.compareSync(
+            credentials.password,
+            user.password
+          );
+
+          if (passwordMatch) {
+            return {
+              id: user._id,
+              username: user.username,
+              role: user.role,
+            };
+          }
+          return null;
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
         }
-        return null;
       },
     }),
   ],

@@ -9,7 +9,7 @@ async function seedAdmin() {
     // Check if admin already exists
     const existingAdmin = await db
       .collection("users")
-      .findOne({ email: "admin@admin.com" });
+      .findOne({ username: "fintechcalgary" });
 
     if (existingAdmin) {
       console.log("Admin user already exists");
@@ -17,10 +17,10 @@ async function seedAdmin() {
     }
 
     // Create admin user
-    const hashedPassword = await bcrypt.hash("abc123", 10);
+    const hashedPassword = await bcrypt.hash("ucalgary210", 10);
 
     await db.collection("users").insertOne({
-      email: "admin@admin.com",
+      username: "fintechcalgary",
       password: hashedPassword,
       role: "admin",
       createdAt: new Date(),
