@@ -143,12 +143,12 @@ export default function InfoPage() {
                 project:
               </p>
               <a
-                href="https://github.com/Fintech-Calgary/Fintech-Calgary-Website"
+                href="https://github.com/fintechcalgary/website"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center space-x-2 text-primary font-medium hover:underline hover:text-primary/80 transition-colors"
               >
-                <span>github.com/Fintech-Calgary/Fintech-Calgary-Website</span>
+                <span>https://github.com/fintechcalgary/website</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5"
@@ -206,8 +206,7 @@ export default function InfoPage() {
                 <li>
                   Clone the repository using:
                   <code className="block mt-2 bg-gray-800/80 text-white p-3 rounded-lg font-mono text-sm">
-                    git clone
-                    https://github.com/Fintech-Calgary/Fintech-Calgary-Website
+                    git clone https://github.com/fintechcalgary/website
                   </code>
                 </li>
                 <li>

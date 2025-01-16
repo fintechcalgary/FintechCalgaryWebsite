@@ -178,7 +178,7 @@ export default function Events() {
           className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg transition-colors"
         >
           {showForm ? <FiX /> : <FiPlus />}
-          {showForm ? "Cancel" : "Add Event"}
+          {showForm ? "Cancel" : "Add"}
         </button>
       </div>
 

@@ -10,7 +10,7 @@ export default function Login() {
   const { status } = useSession(); // Check session status
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -63,13 +63,13 @@ export default function Login() {
 
     try {
       const result = await signIn("credentials", {
-        email,
+        username,
         password,
         redirect: false,
       });
 
       if (result?.error) {
-        setError("Invalid email or password");
+        setError("Invalid username or password");
       } else if (result?.ok) {
         router.push("/dashboard");
       }
@@ -114,12 +114,12 @@ export default function Login() {
           )}
 
           <div className="input-group">
-            <label className="text-sm sm:text-base">Email</label>
+            <label className="text-sm sm:text-base">Username</label>
             <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
               className="w-full px-3 py-2 sm:py-2.5 text-sm sm:text-base rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
             />

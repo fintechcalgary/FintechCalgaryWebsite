@@ -48,11 +48,7 @@ export default function DashboardPage() {
         value: 3,
       },
       line_linked: {
-        enable: true,
-        distance: 150,
-        color: "#6d28d9",
-        opacity: 0.4,
-        width: 1,
+        enable: false,
       },
       move: {
         enable: true,
