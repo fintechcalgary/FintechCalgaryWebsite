@@ -87,7 +87,11 @@ export default function Home() {
             scale: 1.0,
             scaleMobile: 1.0,
             color: 0x6d28d9,
-            backgroundColor: 0x1e1b2e,
+            backgroundColor: "#121212",
+            color2: 0xc63fff,
+            size: 1.4,
+            sizeMobile: 1,
+            backgroundAlpha: 0.0,
           })
         );
       });
@@ -148,7 +152,7 @@ export default function Home() {
                 href="/about"
                 className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-full bg-primary hover:bg-primary/90 text-white transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 transform hover:-translate-y-1"
               >
-                Get Started
+                About Us
               </Link>
               <Link
                 href="#about"
