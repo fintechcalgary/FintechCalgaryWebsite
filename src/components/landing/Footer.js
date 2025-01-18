@@ -4,8 +4,8 @@ import { FiGithub, FiLinkedin, FiInstagram, FiMail } from "react-icons/fi";
 export default function Footer() {
   return (
     <footer className="bg-gray-900/50 border-t border-gray-800 z-50">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="container mx-auto px-6 md:px-4 py-16 md:py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-white">Fintech Calgary</h3>
             <p className="text-gray-400">
@@ -107,7 +107,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+        <div className="border-t border-gray-800 mt-12 md:mt-8 pt-12 md:pt-8 text-center text-gray-400">
           <p>
             &copy; {new Date().getFullYear()} Fintech Calgary. All rights
             reserved.

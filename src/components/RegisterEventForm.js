@@ -65,7 +65,7 @@ export default function RegisterEventForm({ eventId }) {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background via-background to-gray-900 flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -115,7 +115,7 @@ export default function RegisterEventForm({ eventId }) {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
         <Link
           href="/"

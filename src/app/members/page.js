@@ -130,8 +130,7 @@ export default function MembersPage() {
                 Meet Our Team
               </h1>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Our dedicated team of professionals is here to make a
-                difference.
+                Our dedicated team is here to make a difference.
               </p>
             </motion.div>
 
