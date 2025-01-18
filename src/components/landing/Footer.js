@@ -74,14 +74,6 @@ export default function Footer() {
             <h4 className="text-lg font-semibold text-white mb-4">Follow Us</h4>
             <div className="flex space-x-4">
               <a
-                href="https://github.com/fintech-calgary"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-primary transition-colors"
-              >
-                <FiGithub className="w-6 h-6" />
-              </a>
-              <a
                 href="https://www.linkedin.com/company/fintechcalgary/"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -102,6 +94,14 @@ export default function Footer() {
                 className="text-gray-400 hover:text-primary transition-colors"
               >
                 <FiMail className="w-6 h-6" />
+              </a>
+              <a
+                href="https://github.com/fintech-calgary"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-primary transition-colors"
+              >
+                <FiGithub className="w-6 h-6" />
               </a>
             </div>
           </div>

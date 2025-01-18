@@ -5,6 +5,7 @@
 :root {
   --background: #171717;
   --foreground: #ededed;
+  font-size: 90%;
 }
 
 /* Add these new styles */
