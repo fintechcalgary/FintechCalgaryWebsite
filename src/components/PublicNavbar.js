@@ -35,59 +35,109 @@ export default function PublicNavbar() {
       className={`fixed top-0 w-full z-50 transition-all duration-500 mt-4`}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+      }}
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center justify-center h-24">
+        <div className="hidden md:flex items-center h-24">
           <motion.div
-            className="flex items-center space-x-4"
+            className={`w-full flex ${
+              isScrolled ? "justify-center" : "justify-between"
+            }`}
             animate={{
               scale: isScrolled ? 0.95 : 1,
             }}
-            transition={{ duration: 0.3 }}
+            transition={{
+              duration: 0.6,
+              ease: [0.32, 0.72, 0, 1],
+            }}
+            layout="position"
           >
-            <div
+            {!isScrolled && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.4 }}
+              >
+                <Link href="/" className="flex items-center group">
+                  <motion.img
+                    src="/logo.svg"
+                    alt="Dimension Logo"
+                    className="w-11 h-11 group-hover:brightness-110 transition-all"
+                    whileHover={{ scale: 1.05, rotate: -5 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  />
+                </Link>
+              </motion.div>
+            )}
+
+            <motion.div
               className={`flex items-center gap-2 ${
                 isScrolled
                   ? "bg-gray-800/70 backdrop-blur-md border border-gray-700/30"
                   : ""
               } rounded-2xl px-3 py-2`}
+              layout
+              transition={{
+                duration: 0.6,
+                ease: [0.32, 0.72, 0, 1],
+                layout: { duration: 0.4 },
+              }}
             >
-              <Link href="/" className="flex items-center mr-4 group">
-                <motion.img
-                  src="/logo.svg"
-                  alt="Dimension Logo"
-                  className="w-11 h-11 group-hover:brightness-110 transition-all"
-                  whileHover={{ scale: 1.05 }}
-                />
-              </Link>
-              {[
-                ["About", "/about"],
-                ["Events", "/events"],
-                ["Members", "/members"],
-                ["Contact", "/contact"],
-              ].map(([title, path]) => (
-                <Link key={path} href={path}>
-                  <motion.div
-                    className={`relative px-6 py-2.5 text-sm font-medium rounded-xl text-gray-200 hover:text-white transition-colors
-                      ${
-                        pathname === path
-                          ? isScrolled
-                            ? "bg-gray-700/50"
-                            : "bg-gray-700/30"
-                          : isScrolled
-                          ? "hover:bg-gray-700/30"
-                          : "hover:bg-gray-700/20"
-                      }`}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    {title}
-                  </motion.div>
-                </Link>
-              ))}
-            </div>
+              {isScrolled && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <Link href="/" className="flex items-center mr-4 group">
+                    <motion.img
+                      src="/logo.svg"
+                      alt="Dimension Logo"
+                      className="w-11 h-11 group-hover:brightness-110 transition-all"
+                      whileHover={{ scale: 1.05, rotate: -5 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 17,
+                      }}
+                    />
+                  </Link>
+                </motion.div>
+              )}
+              <div className="flex items-center space-x-4">
+                {[
+                  ["About", "/about"],
+                  ["Events", "/events"],
+                  ["Executives", "/executives"],
+                  ["Contact", "/contact"],
+                ].map(([title, path]) => (
+                  <Link key={path} href={path}>
+                    <motion.div
+                      className={`relative px-6 py-2.5 text-sm font-medium rounded-xl text-gray-200 hover:text-white transition-colors
+                        ${
+                          pathname === path
+                            ? isScrolled
+                              ? "bg-gray-700/50"
+                              : "bg-gray-700/30"
+                            : isScrolled
+                            ? "hover:bg-gray-700/30"
+                            : "hover:bg-gray-700/20"
+                        }`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {title}
+                    </motion.div>
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
           </motion.div>
         </div>
 
@@ -118,6 +168,10 @@ export default function PublicNavbar() {
             height: isMenuOpen ? "auto" : 0,
             opacity: isMenuOpen ? 1 : 0,
           }}
+          transition={{
+            duration: 0.4,
+            ease: [0.32, 0.72, 0, 1],
+          }}
           className="md:hidden overflow-hidden"
         >
           <div
@@ -130,7 +184,7 @@ export default function PublicNavbar() {
             {[
               ["About", "/about"],
               ["Events", "/events"],
-              ["Members", "/members"],
+              ["Executives", "/executives"],
               ["Contact", "/contact"],
             ].map(([title, path]) => (
               <Link key={path} href={path} onClick={() => setIsMenuOpen(false)}>

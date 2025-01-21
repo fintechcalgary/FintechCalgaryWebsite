@@ -10,7 +10,7 @@ export default function Footer() {
             <h3 className="text-2xl font-bold text-white">FinTech Calgary</h3>
             <p className="text-gray-400 max-w-md">
               Innovating the future of finance at the University of Calgary.
-              Join us in shaping tomorrow's financial landscape.
+              Join us in shaping tomorrow&apos;s financial landscape.
             </p>
           </div>
 

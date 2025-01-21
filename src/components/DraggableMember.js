@@ -1,6 +1,7 @@
 import { useDrag, useDrop } from "react-dnd";
 import { motion } from "framer-motion";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import Image from "next/image";
 
 function DraggableMember({
   member,
@@ -36,11 +37,13 @@ function DraggableMember({
       className="bg-gray-800/50 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow duration-200"
     >
       <div className="flex flex-col items-center text-center">
-        <div className="w-32 h-32 mb-4">
-          <img
+        <div className="w-32 h-32 mb-4 relative">
+          <Image
             src={member.imageUrl}
             alt={member.name}
-            className="w-full h-full object-cover rounded-full"
+            fill
+            sizes="128px"
+            className="object-cover rounded-full"
           />
         </div>
         <h4 className="text-xl font-semibold text-foreground mb-2">

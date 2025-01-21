@@ -14,6 +14,7 @@ import {
 import Modal from "./Modal";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 export default function Events() {
   const { data: session } = useSession();
@@ -297,10 +298,12 @@ export default function Events() {
                       </label>
                       {formData.imageUrl && (
                         <div className="relative w-16 h-16">
-                          <img
+                          <Image
                             src={formData.imageUrl}
                             alt="Preview"
-                            className="w-full h-full object-cover rounded-lg border border-gray-700"
+                            className="object-cover rounded-lg border border-gray-700"
+                            fill
+                            sizes="64px"
                           />
                           <button
                             type="button"
@@ -351,11 +354,14 @@ export default function Events() {
             key={event._id}
             className="bg-gray-800/50 rounded-lg overflow-hidden"
           >
-            <div className="aspect-video w-full">
-              <img
+            <div className="aspect-video w-full relative">
+              <Image
                 src={event.imageUrl}
                 alt={event.title}
-                className="w-full h-full object-cover"
+                className="object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority
               />
             </div>
             <div className="p-6">

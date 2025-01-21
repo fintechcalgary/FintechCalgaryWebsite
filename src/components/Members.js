@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DraggableMember from "./DraggableMember";
+import Image from "next/image";
 
 export default function Members() {
   const { data: session } = useSession();
@@ -452,9 +453,11 @@ export default function Members() {
                               </label>
                               {formData.imageUrl && (
                                 <div className="relative w-16 h-16 group">
-                                  <img
+                                  <Image
                                     src={formData.imageUrl}
                                     alt="Profile preview"
+                                    width={64}
+                                    height={64}
                                     className="w-full h-full object-cover rounded-full border-2 border-gray-700 group-hover:border-primary transition-colors duration-200"
                                   />
                                   <button

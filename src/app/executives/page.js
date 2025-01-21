@@ -9,6 +9,7 @@ import Footer from "@/components/landing/Footer";
 import * as THREE from "three";
 import { SiLinkedin } from "react-icons/si";
 import { FiMail } from "react-icons/fi";
+import Image from "next/image";
 
 export default function ExecutivesPage() {
   const [executives, setExecutives] = useState([]);
@@ -180,12 +181,15 @@ export default function ExecutivesPage() {
                       >
                         <div
                           className="w-48 h-48 rounded-full overflow-hidden border-2 border-primary/50 
-                          group-hover:border-primary transition-colors duration-300 shadow-lg"
+                          group-hover:border-primary transition-colors duration-300 shadow-lg relative"
                         >
-                          <img
+                          <Image
                             src={executive.imageUrl || "/placeholder.png"}
                             alt={`${executive.name}'s profile`}
-                            className="w-full h-full object-cover"
+                            fill
+                            sizes="192px"
+                            className="object-cover"
+                            priority
                           />
                         </div>
                         <div className="space-y-2">

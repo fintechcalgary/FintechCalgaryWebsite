@@ -7,6 +7,7 @@ import { loadSlim } from "tsparticles-slim";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { FiCalendar } from "react-icons/fi";
+import Image from "next/image";
 
 export default function EventsPage() {
   const [events, setEvents] = useState([]);
@@ -168,10 +169,13 @@ export default function EventsPage() {
 
                 {/* Event Image Container */}
                 <div className="relative aspect-[16/10] w-full overflow-hidden">
-                  <img
+                  <Image
                     src={event.imageUrl}
                     alt={event.title}
-                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    priority
+                    className="object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out"
                   />
 
                   {/* Status Badge - Moved to top-right of image */}
