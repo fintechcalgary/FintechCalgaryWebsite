@@ -10,14 +10,14 @@ import * as THREE from "three";
 import { SiLinkedin } from "react-icons/si";
 import { FiMail } from "react-icons/fi";
 
-export default function MembersPage() {
-  const [members, setMembers] = useState([]);
-  const [groupedMembers, setGroupedMembers] = useState({});
+export default function ExecutivesPage() {
+  const [executives, setExecutives] = useState([]);
+  const [groupedExecutives, setGroupedExecutives] = useState({});
   const [vantaEffect, setVantaEffect] = useState(null);
   const vantaRef = useRef(null);
 
   useEffect(() => {
-    document.title = "Members | FinTech Calgary";
+    document.title = "Executives | FinTech Calgary";
   }, []);
 
   const particlesInit = useCallback(async (engine) => {
@@ -65,7 +65,7 @@ export default function MembersPage() {
     };
   }, [vantaEffect]);
 
-  const fetchMembers = async () => {
+  const fetchExecutives = async () => {
     try {
       const response = await fetch("/api/members");
       const data = await response.json();
@@ -75,24 +75,24 @@ export default function MembersPage() {
         return;
       }
 
-      const grouped = data.reduce((acc, member) => {
-        if (!acc[member.position]) acc[member.position] = [];
-        acc[member.position].push(member);
+      const grouped = data.reduce((acc, executive) => {
+        if (!acc[executive.position]) acc[executive.position] = [];
+        acc[executive.position].push(executive);
         return acc;
       }, {});
 
-      setMembers(data);
-      setGroupedMembers(grouped);
+      setExecutives(data);
+      setGroupedExecutives(grouped);
     } catch (error) {
-      console.error("Failed to fetch members:", error);
+      console.error("Failed to fetch executives:", error);
     }
   };
 
   useEffect(() => {
-    fetchMembers();
+    fetchExecutives();
   }, []);
 
-  if (members.length === 0) {
+  if (executives.length === 0) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
@@ -134,9 +134,9 @@ export default function MembersPage() {
               </p>
             </motion.div>
 
-            {/* Members Grid */}
+            {/* Executives Grid */}
             <div className="space-y-16">
-              {Object.keys(groupedMembers).map((role, index) => (
+              {Object.keys(groupedExecutives).map((role, index) => (
                 <motion.section
                   key={role}
                   initial={{ opacity: 0, y: 20 }}
@@ -148,16 +148,33 @@ export default function MembersPage() {
                   <div className="flex items-center gap-4 mb-8">
                     <div className="h-px flex-grow bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
                     <h2 className="text-3xl font-bold text-white px-4">
-                      {role}
+                      {groupedExecutives[role].length > 1
+                        ? role.endsWith("y") &&
+                          !["ay", "ey", "oy", "uy"].some((ending) =>
+                            role.endsWith(ending)
+                          )
+                          ? `${role.slice(0, -1)}ies` // e.g., Secretary -> Secretaries
+                          : role.endsWith("s") ||
+                            role.endsWith("sh") ||
+                            role.endsWith("ch") ||
+                            role.endsWith("x") ||
+                            role.endsWith("z")
+                          ? `${role}es` // e.g., Boss -> Bosses, Witch -> Witches
+                          : role.endsWith("f")
+                          ? `${role.slice(0, -1)}ves` // e.g., Wolf -> Wolves
+                          : role.endsWith("fe")
+                          ? `${role.slice(0, -2)}ves` // e.g., Wife -> Wives
+                          : `${role}s` // Regular plural
+                        : role}
                     </h2>
                     <div className="h-px flex-grow bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
                   </div>
 
-                  {/* Members List */}
+                  {/* Executives List */}
                   <div className="flex flex-wrap gap-8 justify-center">
-                    {groupedMembers[role].map((member) => (
+                    {groupedExecutives[role].map((executive) => (
                       <motion.div
-                        key={member._id}
+                        key={executive._id}
                         whileHover={{ scale: 1.02 }}
                         className="flex flex-col items-center text-center gap-4 w-full max-w-[300px]"
                       >
@@ -166,30 +183,30 @@ export default function MembersPage() {
                           group-hover:border-primary transition-colors duration-300 shadow-lg"
                         >
                           <img
-                            src={member.imageUrl || "/placeholder.png"}
-                            alt={`${member.name}'s profile`}
+                            src={executive.imageUrl || "/placeholder.png"}
+                            alt={`${executive.name}'s profile`}
                             className="w-full h-full object-cover"
                           />
                         </div>
                         <div className="space-y-2">
                           <h3 className="text-xl font-semibold text-white hover:text-primary transition-colors">
-                            {member.name}
+                            {executive.name}
                           </h3>
                           <p className="text-base text-gray-300">
-                            {member.major}
+                            {executive.major}
                           </p>
                           <div className="flex items-center justify-center gap-3">
                             <a
-                              href={`mailto:${member.email}`}
+                              href={`mailto:${executive.email}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-sm text-gray-400 hover:text-primary transition-colors"
                             >
                               <FiMail className="w-5 h-5" />
                             </a>
-                            {member.linkedinUrl && (
+                            {executive.linkedinUrl && (
                               <a
-                                href={member.linkedinUrl}
+                                href={executive.linkedinUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-gray-400 hover:text-[#0077b5] transition-colors"
@@ -198,9 +215,9 @@ export default function MembersPage() {
                               </a>
                             )}
                           </div>
-                          {member.description && (
+                          {executive.description && (
                             <p className="text-sm text-gray-400 mt-2">
-                              {member.description}
+                              {executive.description}
                             </p>
                           )}
                         </div>

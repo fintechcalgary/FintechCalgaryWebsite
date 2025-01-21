@@ -169,13 +169,13 @@ export default function Home() {
                 About Us
               </Link>
               <Link
-                href="/members"
+                href="/executives"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium rounded-full 
                          border border-gray-700 hover:border-primary/50 text-white transition-all duration-300 
                          hover:shadow-xl hover:bg-gray-800/30 backdrop-blur-sm
                          group"
               >
-                Members
+                Executives
                 <FiArrowRight className="ml-2 transform transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </motion.div>
