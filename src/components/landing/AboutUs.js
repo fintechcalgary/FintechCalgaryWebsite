@@ -41,7 +41,7 @@ export default function AboutUs() {
               Our Mission
             </h3>
             <p className="text-lg text-gray-300 leading-relaxed relative">
-              Fintech Calgary is a student-led organization at the University of
+              FinTech Calgary is a student-led organization at the University of
               Calgary dedicated to exploring the intersection of finance and
               technology.
             </p>

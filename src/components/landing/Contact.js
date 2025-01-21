@@ -4,6 +4,9 @@ import {
   FiMapPin,
   FiMessageSquare,
   FiArrowRight,
+  FiLinkedin,
+  FiInstagram,
+  FiGithub,
 } from "react-icons/fi";
 import Link from "next/link";
 
@@ -48,10 +51,10 @@ export default function Contact() {
               </div>
               <h3 className="text-2xl font-bold text-white mb-4">Email</h3>
               <a
-                href="mailto:info@fintechcalgary.com"
+                href="mailto:fintech.calgary@gmail.com"
                 className="text-lg text-gray-300 hover:text-primary transition-colors duration-300"
               >
-                info@fintechcalgary.com
+                fintech.calgary@gmail.com
               </a>
             </div>
           </motion.div>
@@ -92,9 +95,43 @@ export default function Contact() {
               <h3 className="text-2xl font-bold text-white mb-4">
                 Social Media
               </h3>
-              <p className="text-lg text-gray-300">
+              <p className="text-lg text-gray-300 mb-6">
                 Follow us for the latest updates
               </p>
+              <div>
+                <div className="flex space-x-4">
+                  <a
+                    href="https://www.linkedin.com/company/fintechcalgary/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-primary transition-colors"
+                  >
+                    <FiLinkedin className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://www.instagram.com/fintech.calgary/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-primary transition-colors"
+                  >
+                    <FiInstagram className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="mailto:fintechcalgary@gmail.com"
+                    className="text-gray-400 hover:text-primary transition-colors"
+                  >
+                    <FiMail className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://github.com/fintech-calgary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-primary transition-colors"
+                  >
+                    <FiGithub className="w-6 h-6" />
+                  </a>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>

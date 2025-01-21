@@ -46,7 +46,7 @@ export default function EventsPage() {
   };
 
   useEffect(() => {
-    document.title = "Events | Fintech Calgary";
+    document.title = "Events | FinTech Calgary";
   }, []);
 
   useEffect(() => {

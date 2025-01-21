@@ -487,7 +487,7 @@ export default function Members() {
                                   description: e.target.value,
                                 })
                               }
-                              rows={3}
+                              rows={7}
                               className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
                             />
                           </div>

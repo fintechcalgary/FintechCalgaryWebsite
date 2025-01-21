@@ -1,29 +1,32 @@
 import Link from "next/link";
-import { FiGithub, FiLinkedin, FiInstagram, FiMail } from "react-icons/fi";
+import { FiMail } from "react-icons/fi";
 
 export default function Footer() {
   return (
     <footer className="bg-gray-900/50 border-t border-gray-800 z-50">
       <div className="container mx-auto px-6 md:px-4 py-16 md:py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-white">Fintech Calgary</h3>
-            <p className="text-gray-400">
-              Innovating the future of finance at the University of Calgary
+          <div className="space-y-4 md:col-span-2">
+            <h3 className="text-2xl font-bold text-white">FinTech Calgary</h3>
+            <p className="text-gray-400 max-w-md">
+              Innovating the future of finance at the University of Calgary.
+              Join us in shaping tomorrow's financial landscape.
             </p>
           </div>
 
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">
+            <h4 className="text-lg font-semibold text-white mb-6">
               Quick Links
             </h4>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               <li>
                 <Link
                   href="/about"
-                  className="text-gray-400 hover:text-primary transition-colors"
+                  className="text-gray-400 hover:text-primary transition-colors inline-flex items-center"
                 >
-                  About Us
+                  <span className="hover:translate-x-1 transition-transform">
+                    About Us
+                  </span>
                 </Link>
               </li>
               <li>
@@ -54,62 +57,27 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Contact</h4>
-            <ul className="space-y-2">
+            <h4 className="text-lg font-semibold text-white mb-6">Contact</h4>
+            <ul className="space-y-3">
               <li className="text-gray-400">University of Calgary</li>
               <li className="text-gray-400">2500 University Dr NW</li>
               <li className="text-gray-400">Calgary, AB T2N 1N4</li>
               <li>
                 <a
-                  href="mailto:info@fintechcalgary.com"
-                  className="text-primary hover:text-primary/80 transition-colors"
+                  href="mailto:fintech.calgary@gmail.com"
+                  className="text-primary hover:text-primary/80 transition-colors inline-flex items-center gap-2"
                 >
-                  info@fintechcalgary.com
+                  <FiMail className="inline" />
+                  <span>fintech.calgary@gmail.com</span>
                 </a>
               </li>
             </ul>
           </div>
-
-          <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Follow Us</h4>
-            <div className="flex space-x-4">
-              <a
-                href="https://www.linkedin.com/company/fintechcalgary/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-primary transition-colors"
-              >
-                <FiLinkedin className="w-6 h-6" />
-              </a>
-              <a
-                href="https://www.instagram.com/fintech.calgary/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-primary transition-colors"
-              >
-                <FiInstagram className="w-6 h-6" />
-              </a>
-              <a
-                href="mailto:fintechcalgary@gmail.com"
-                className="text-gray-400 hover:text-primary transition-colors"
-              >
-                <FiMail className="w-6 h-6" />
-              </a>
-              <a
-                href="https://github.com/fintech-calgary"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-primary transition-colors"
-              >
-                <FiGithub className="w-6 h-6" />
-              </a>
-            </div>
-          </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-12 md:mt-8 pt-12 md:pt-8 text-center text-gray-400">
+        <div className="border-t border-gray-800 mt-12 md:mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-400">
           <p>
-            &copy; {new Date().getFullYear()} Fintech Calgary. All rights
+            &copy; {new Date().getFullYear()} FinTech Calgary. All rights
             reserved.
           </p>
         </div>

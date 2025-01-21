@@ -40,7 +40,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    document.title = "Home | Fintech Calgary";
+    document.title = "Home | FinTech Calgary";
   }, []);
 
   useEffect(() => {
@@ -87,16 +87,19 @@ export default function Home() {
             mouseControls: true,
             touchControls: true,
             gyroControls: false,
-            minHeight: 200.0,
-            minWidth: 200.0,
             scale: 1.0,
-            scaleMobile: 1.0,
+            scaleMobile: 0.5,
             color: 0x6d28d9,
             backgroundColor: "#121212",
-            color2: 0xc63fff,
-            size: 1.4,
-            sizeMobile: 1,
+            color2: 0x6d28d9,
+            size: 0.7,
             backgroundAlpha: 0.0,
+            points: 0,
+            maxDistance: 0,
+            spacing: 0,
+            showDots: false,
+            minHeight: 800,
+            minWidth: 800,
           })
         );
       });
@@ -140,7 +143,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
             >
-              Fintech Calgary
+              FinTech Calgary
             </motion.h1>
             <motion.p
               className="text-xl md:text-2xl xl:text-3xl mb-12 text-gray-200 font-light leading-relaxed"

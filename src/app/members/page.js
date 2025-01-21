@@ -17,7 +17,7 @@ export default function MembersPage() {
   const vantaRef = useRef(null);
 
   useEffect(() => {
-    document.title = "Members | Fintech Calgary";
+    document.title = "Members | FinTech Calgary";
   }, []);
 
   const particlesInit = useCallback(async (engine) => {

@@ -33,9 +33,9 @@ export default function EventRegistrations({ eventId }) {
 
   useEffect(() => {
     if (event?.title) {
-      document.title = `${event.title} - Registrations | Fintech Calgary`;
+      document.title = `${event.title} - Registrations | FinTech Calgary`;
     } else {
-      document.title = "Event Registrations | Fintech Calgary";
+      document.title = "Event Registrations | FinTech Calgary";
     }
   }, [event?.title]);
 

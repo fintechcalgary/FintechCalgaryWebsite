@@ -89,7 +89,7 @@ export async function POST(req) {
             <div class="container">
               <div class="header">New Contact Form Submission</div>
               <div class="content">
-                You have received a new message through the Fintech Calgary contact form. Below are the details:
+                You have received a new message through the FinTech Calgary contact form. Below are the details:
               </div>
               <table class="table">
                 <tr>

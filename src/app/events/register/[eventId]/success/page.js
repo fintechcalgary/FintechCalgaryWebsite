@@ -10,7 +10,7 @@ import { loadSlim } from "tsparticles-slim";
 
 export default function RegistrationSuccess() {
   useEffect(() => {
-    document.title = "Registration Successful | Fintech Calgary";
+    document.title = "Registration Successful | FinTech Calgary";
   }, []);
 
   const particlesInit = useCallback(async (engine) => {

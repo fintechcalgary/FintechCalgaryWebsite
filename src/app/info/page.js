@@ -20,7 +20,7 @@ export default function InfoPage() {
   }, [status, router]);
 
   useEffect(() => {
-    document.title = "Info | Fintech Calgary";
+    document.title = "Info | FinTech Calgary";
   }, []);
 
   const particlesInit = useCallback(async (engine) => {
@@ -143,7 +143,7 @@ export default function InfoPage() {
                 Repository Link
               </h2>
               <p className="text-gray-300 mb-4">
-                Access the official repository for the Fintech Calgary website
+                Access the official repository for the FinTech Calgary website
                 project:
               </p>
               <a
