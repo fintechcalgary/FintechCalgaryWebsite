@@ -119,7 +119,7 @@ export default function PublicNavbar() {
                 ].map(([title, path]) => (
                   <Link key={path} href={path}>
                     <motion.div
-                      className={`relative px-6 py-2.5 text-sm font-medium rounded-xl text-gray-200 hover:text-white transition-colors
+                      className={`relative px-6 py-2.5 text-sm font-semibold rounded-xl text-gray-200 hover:text-white transition-colors
                         ${
                           pathname === path
                             ? isScrolled
