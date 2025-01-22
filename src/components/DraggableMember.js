@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import Image from "next/image";
 
+const DEFAULT_PROFILE_IMAGE = "/default-profile.webp";
+
 function DraggableMember({
   member,
   index,
@@ -39,7 +41,7 @@ function DraggableMember({
       <div className="flex flex-col items-center text-center">
         <div className="w-32 h-32 mb-4 relative">
           <Image
-            src={member.imageUrl}
+            src={member.imageUrl || DEFAULT_PROFILE_IMAGE}
             alt={member.name}
             fill
             sizes="128px"

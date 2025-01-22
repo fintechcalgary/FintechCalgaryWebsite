@@ -8,6 +8,8 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import DraggableMember from "./DraggableMember";
 import Image from "next/image";
 
+const DEFAULT_PROFILE_IMAGE = "/default-profile.webp";
+
 export default function Members() {
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === "admin";
@@ -64,6 +66,11 @@ export default function Members() {
     try {
       setSubmitting(true);
 
+      const payload = {
+        ...formData,
+        imageUrl: formData.imageUrl || DEFAULT_PROFILE_IMAGE,
+      };
+
       if (editingMember) {
         const response = await fetch(`/api/members/${editingMember._id}`, {
           method: "PUT",
@@ -71,7 +78,7 @@ export default function Members() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            ...formData,
+            ...payload,
             oldUsername: editingMember.username, // Include old username for reference
           }),
         });
@@ -86,7 +93,7 @@ export default function Members() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
@@ -435,7 +442,6 @@ export default function Members() {
                                 onChange={handleImageUpload}
                                 className="hidden"
                                 id="imageUpload"
-                                required={!formData.imageUrl}
                               />
                               <label
                                 htmlFor="imageUpload"
