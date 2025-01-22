@@ -12,6 +12,7 @@ import Contact from "@/components/landing/Contact";
 import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 import { FiArrowRight } from "react-icons/fi";
+import JoinUs from "@/components/landing/JoinUs";
 
 export default function Home() {
   const [vantaEffect, setVantaEffect] = useState(null);
@@ -181,6 +182,10 @@ export default function Home() {
             </motion.div>
           </div>
         </motion.section>
+      </div>
+
+      <div className="relative">
+        <JoinUs />
       </div>
 
       <div className="relative">
