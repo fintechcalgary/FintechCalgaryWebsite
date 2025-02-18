@@ -37,7 +37,8 @@ export const authOptions = {
 
           if (passwordMatch) {
             return {
-              id: user._id,
+              id: user._id.toString(),
+              email: user.email,
               username: user.username,
               role: user.role,
             };
@@ -57,6 +58,7 @@ export const authOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.email = user.email;
+        token.username = user.username;
         token.role = user.role;
       }
       return token;
@@ -65,6 +67,7 @@ export const authOptions = {
       if (token) {
         session.user = {
           email: token.email,
+          username: token.username,
           role: token.role,
         };
       }

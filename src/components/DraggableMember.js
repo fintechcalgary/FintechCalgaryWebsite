@@ -64,7 +64,7 @@ function DraggableMember({
           <button
             onClick={() => handleDelete(member._id)}
             className="text-gray-400 hover:text-red-500 transition-colors p-2"
-            disabled={session?.user?.email === member.email}
+            disabled={session?.user?.username == member.username}
             title="Delete"
           >
             <FiTrash2 />
