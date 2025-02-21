@@ -119,11 +119,16 @@ export default function Home() {
   }, [vantaEffect]);
 
   return (
-    <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900">
+    <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900 overflow-hidden">
       <PublicNavbar />
 
       <div className="relative flex-grow">
         <div className="absolute inset-0 opacity-5 bg-[url('/grid.svg')] bg-center"></div>
+
+        <div className="absolute top-20 left-0 w-[500px] h-[500px] bg-primary/60 max-md:bg-primary/50 rounded-full blur-[128px] -translate-x-1/2"></div>
+        <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-purple-500/50 max-md:bg-purple-500/20 rounded-full blur-[96px] translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-1/3 w-[600px] h-[600px] bg-violet-600/40 max-md:hidden rounded-full blur-[128px] -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-1/2 w-[600px] h-[600px] bg-violet-600/40 max-md:hidden rounded-full blur-[128px] -translate-y-1/2"></div>
 
         <Particles
           className="absolute inset-0 z-0"

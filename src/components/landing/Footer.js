@@ -32,25 +32,41 @@ export default function Footer() {
               <li>
                 <Link
                   href="/events"
-                  className="text-gray-400 hover:text-primary transition-colors"
+                  className="text-gray-400 hover:text-primary transition-colors inline-flex items-center"
                 >
-                  Events
+                  <span className="hover:translate-x-1 transition-transform">
+                    Events
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link
                   href="/members"
-                  className="text-gray-400 hover:text-primary transition-colors"
+                  className="text-gray-400 hover:text-primary transition-colors inline-flex items-center"
                 >
-                  Members
+                  <span className="hover:translate-x-1 transition-transform">
+                    Members
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link
                   href="/contact"
-                  className="text-gray-400 hover:text-primary transition-colors"
+                  className="text-gray-400 hover:text-primary transition-colors inline-flex items-center"
                 >
-                  Contact
+                  <span className="hover:translate-x-1 transition-transform">
+                    Contact
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/dashboard"
+                  className="text-gray-400 hover:text-primary transition-colors inline-flex items-center"
+                >
+                  <span className="hover:translate-x-1 transition-transform">
+                    Dashboard
+                  </span>
                 </Link>
               </li>
             </ul>

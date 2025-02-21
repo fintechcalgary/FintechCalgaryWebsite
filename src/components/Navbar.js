@@ -47,19 +47,23 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        className="sticky top-0 z-50 transition-all duration-300 bg-transparent"
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          isScrolled
+            ? "bg-gray-900/75 backdrop-blur-md shadow-lg"
+            : "bg-transparent"
+        }`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
         <div className="container mx-auto px-4 max-w-7xl mt-4">
           <div className="hidden md:flex items-center justify-between transition-all duration-300">
-            {/* Logo - hidden on scroll */}
+            {/* Logo - adjusted for better scroll behavior */}
             <motion.div
-              className="flex items-center gap-3 flex-1"
+              className="flex items-center gap-3"
               animate={{
-                opacity: isScrolled ? 0 : 1,
-                width: isScrolled ? 0 : "auto",
+                scale: isScrolled ? 0.9 : 1,
+                marginTop: isScrolled ? "-0.5rem" : 0,
               }}
               transition={{ duration: 0.3 }}
             >
@@ -76,17 +80,20 @@ export default function Navbar() {
               </Link>
             </motion.div>
 
-            {/* Centered Navigation Links */}
+            {/* Centered Navigation Links - adjusted for better responsiveness */}
             <motion.div
               className="flex items-center justify-center flex-[2]"
               animate={{
-                x: isScrolled ? 0 : 0,
                 scale: isScrolled ? 0.95 : 1,
-                marginTop: isScrolled ? "1.25rem" : 0,
+                marginTop: isScrolled ? "0.5rem" : 0,
               }}
               transition={{ duration: 0.3 }}
             >
-              <div className="flex items-center gap-8 bg-gray-800/70 py-3 px-8 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-700/30">
+              <div
+                className={`flex items-center gap-8 py-3 px-8 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-700/30 ${
+                  isScrolled ? "bg-gray-800/50" : "bg-gray-800/70"
+                }`}
+              >
                 {[
                   ["Events", "/dashboard#events"],
                   ["Members", "/dashboard#members"],
@@ -104,14 +111,14 @@ export default function Navbar() {
               </div>
             </motion.div>
 
-            {/* Logout Button - hidden on scroll */}
+            {/* Logout Button - adjusted for better scroll behavior */}
             <motion.div
               animate={{
-                opacity: isScrolled ? 0 : 1,
-                width: isScrolled ? 0 : "auto",
+                scale: isScrolled ? 0.9 : 1,
+                marginTop: isScrolled ? "-0.5rem" : 0,
               }}
               transition={{ duration: 0.3 }}
-              className="flex-1 flex justify-end"
+              className="flex justify-end"
             >
               <button
                 onClick={handleLogoutClick}
@@ -138,26 +145,36 @@ export default function Navbar() {
             </motion.div>
           </div>
 
-          {/* Mobile Menu Toggle - updated styling */}
-          <div className="flex md:hidden justify-between items-center h-16">
+          {/* Mobile Menu Toggle - enhanced styling */}
+          <div
+            className={`flex md:hidden justify-between items-center h-16 ${
+              isScrolled ? "py-2" : "py-4"
+            }`}
+          >
             <Link href="/dashboard">
               <motion.img
                 src="/logo.svg"
                 alt="Dimension Logo"
-                className="w-14 h-14"
+                className={`transition-all duration-300 ${
+                  isScrolled ? "w-12 h-12" : "w-14 h-14"
+                }`}
                 whileHover={{ scale: 1.1 }}
               />
             </Link>
             <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white text-3xl focus:outline-none p-2 rounded-lg hover:bg-gray-800/50"
+              className={`text-white text-3xl focus:outline-none p-2 rounded-lg ${
+                isScrolled
+                  ? "bg-gray-800/50 hover:bg-gray-800/70"
+                  : "hover:bg-gray-800/50"
+              }`}
               whileTap={{ scale: 0.95 }}
             >
               {isMenuOpen ? <FiX /> : <FiMenu />}
             </motion.button>
           </div>
 
-          {/* Mobile Menu - updated animation and styling */}
+          {/* Mobile Menu - enhanced styling */}
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{
@@ -167,7 +184,7 @@ export default function Navbar() {
             transition={{ duration: 0.2 }}
             className="md:hidden overflow-hidden"
           >
-            <div className="bg-gray-800/90 p-4 rounded-lg mt-2 backdrop-blur-sm">
+            <div className="bg-gray-800/90 p-4 rounded-lg mt-2 backdrop-blur-sm border border-gray-700/30">
               {[
                 { href: "/dashboard#events", label: "Events" },
                 { href: "/dashboard#members", label: "Members" },
