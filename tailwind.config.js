@@ -14,6 +14,7 @@ module.exports = {
       },
       animation: {
         "gradient-x": "gradient-x 15s ease infinite",
+        rock: "rock 20s ease-in-out infinite",
       },
       keyframes: {
         "gradient-x": {
@@ -25,6 +26,10 @@ module.exports = {
             "background-size": "200% 200%",
             "background-position": "right center",
           },
+        },
+        rock: {
+          "0%, 100%": { transform: "rotate(-3deg)" },
+          "50%": { transform: "rotate(3deg)" },
         },
       },
     },

@@ -12,12 +12,7 @@ import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 import { FiArrowRight } from "react-icons/fi";
 import JoinUs from "@/components/landing/JoinUs";
-import dynamic from "next/dynamic";
-
-// Dynamically import Globe component to disable SSR for it
-const Globe = dynamic(() => import("@/components/landing/Globe"), {
-  ssr: false,
-});
+import Image from "next/image";
 
 export default function Home() {
   const { scrollYProgress } = useScroll();
@@ -113,9 +108,13 @@ export default function Home() {
           className="flex-grow flex items-center justify-center min-h-screen relative overflow-hidden"
           style={{ opacity }}
         >
-          <div className="absolute inset-0 w-full h-full">
-            <Globe />
-          </div>
+          <Image
+            src="/globe.svg"
+            alt="Globe"
+            width={500}
+            height={500}
+            className="absolute inset-0 w-full h-full max-md:scale-[2] animate-rock"
+          />
           {/* <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background z-0"></div> */}
           <div className="text-center z-10 px-6 max-w-5xl mx-auto relative">
             <motion.h1
