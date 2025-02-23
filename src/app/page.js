@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import PublicNavbar from "@/components/PublicNavbar";
-import * as THREE from "three";
 import Link from "next/link";
 import AboutUs from "@/components/landing/AboutUs";
 import UpcomingEvents from "@/components/landing/UpcomingEvents";
@@ -13,11 +12,9 @@ import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 import { FiArrowRight } from "react-icons/fi";
 import JoinUs from "@/components/landing/JoinUs";
+import Globe from "@/components/landing/Globe";
 
 export default function Home() {
-  const [vantaEffect, setVantaEffect] = useState(null);
-  const vantaRef = useRef(null);
-
   const { scrollYProgress } = useScroll();
   const [opacity, setOpacity] = useState(
     useTransform(scrollYProgress, [0, 0.5], [1, 0])
@@ -79,33 +76,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (!vantaEffect && vantaRef.current) {
-      import("vanta/dist/vanta.globe.min").then((GLOBE) => {
-        setVantaEffect(
-          GLOBE.default({
-            el: vantaRef.current,
-            THREE: THREE,
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            scale: 1.0,
-            scaleMobile: 0.5,
-            color: 0x6d28d9,
-            backgroundColor: "#121212",
-            color2: 0x6d28d9,
-            size: 0.7,
-            backgroundAlpha: 0.0,
-            points: 0,
-            maxDistance: 0,
-            spacing: 0,
-            showDots: false,
-            minHeight: 800,
-            minWidth: 800,
-          })
-        );
-      });
-    }
-
     const handleScroll = () => {
       const newOpacity = Math.max(0, 1 - window.scrollY / 1000);
       setOpacity(newOpacity);
@@ -113,10 +83,9 @@ export default function Home() {
 
     window.addEventListener("scroll", handleScroll);
     return () => {
-      if (vantaEffect) vantaEffect.destroy();
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [vantaEffect]);
+  }, []);
 
   return (
     <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900 overflow-hidden">
@@ -125,10 +94,9 @@ export default function Home() {
       <div className="relative flex-grow">
         <div className="absolute inset-0 opacity-5 bg-[url('/grid.svg')] bg-center"></div>
 
-        <div className="absolute top-20 left-0 w-[500px] h-[500px] bg-primary/60 max-md:bg-primary/50 rounded-full blur-[128px] -translate-x-1/2"></div>
-        <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-purple-500/50 max-md:bg-purple-500/20 rounded-full blur-[96px] translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-1/3 w-[600px] h-[600px] bg-violet-600/40 max-md:hidden rounded-full blur-[128px] -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-1/2 w-[600px] h-[600px] bg-violet-600/40 max-md:hidden rounded-full blur-[128px] -translate-y-1/2"></div>
+        <div className="absolute top-20 left-0 w-[500px] h-[500px] bg-primary/40 max-md:bg-primary/30 rounded-full blur-[128px] -translate-x-1/2"></div>
+        <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-purple-500/40 max-md:bg-purple-500/20 rounded-full blur-[96px] translate-x-1/2"></div>
+        {/* <div className="absolute bottom-0 right-1/2 w-[600px] h-[600px] bg-violet-600/30 max-md:hidden rounded-full blur-[128px] -translate-y-1/2"></div> */}
 
         <Particles
           className="absolute inset-0 z-0"
@@ -137,12 +105,14 @@ export default function Home() {
         />
 
         <motion.section
-          ref={vantaRef}
-          className="flex-grow flex items-center justify-center min-h-screen relative"
+          className="flex-grow flex items-center justify-center min-h-screen relative overflow-hidden"
           style={{ opacity }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/90 z-0"></div>
-          <div className="text-center z-10 px-6 max-w-5xl mx-auto">
+          <div className="absolute inset-0 w-full h-full">
+            <Globe />
+          </div>
+          {/* <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background z-0"></div> */}
+          <div className="text-center z-10 px-6 max-w-5xl mx-auto relative">
             <motion.h1
               className="text-7xl xl:text-8xl mb-2 bg-clip-text text-transparent py-6 bg-gradient-to-r from-primary via-purple-400 to-pink-500 font-black"
               initial={{ opacity: 0, y: 30 }}

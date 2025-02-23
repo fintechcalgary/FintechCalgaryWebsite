@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { FiArrowRight, FiTarget, FiUsers } from "react-icons/fi";
 
@@ -12,13 +11,7 @@ export default function AboutUs() {
 
       <div className="container mx-auto px-6 relative">
         {/* Title */}
-        <motion.h2
-          className="text-6xl font-bold mb-20 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
+        <h2 className="text-6xl font-bold mb-20 text-center">
           <Link href="/about" className="group inline-block relative">
             <div className="flex items-center justify-center gap-4 hover:gap-6 transition-all duration-300">
               <div className="relative">
@@ -30,18 +23,12 @@ export default function AboutUs() {
               <FiArrowRight className="text-4xl text-primary transition-transform duration-300 group-hover:translate-x-2" />
             </div>
           </Link>
-        </motion.h2>
+        </h2>
 
         {/* Content Grid */}
         <div className="grid md:grid-cols-2 gap-10 max-w-6xl mx-auto">
           {/* Mission Card */}
-          <motion.div
-            className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-10 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500 overflow-hidden"
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
+          <div className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-10 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500 overflow-hidden">
             {/* Hover Gradient Effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
@@ -59,16 +46,10 @@ export default function AboutUs() {
                 and technology.
               </p>
             </div>
-          </motion.div>
+          </div>
 
           {/* What We Do Card */}
-          <motion.div
-            className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-10 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500 overflow-hidden"
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
+          <div className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-10 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500 overflow-hidden">
             {/* Hover Gradient Effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
@@ -84,7 +65,7 @@ export default function AboutUs() {
                 financial technology.
               </p>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

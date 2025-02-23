@@ -11,34 +11,33 @@ export default function PublicNavbar() {
 
   useEffect(() => {
     let lastScrollY = 0;
+    let ticking = false;
 
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
 
-      if (currentScrollY > 60 && lastScrollY <= 60) {
-        setIsScrolled(true);
-      } else if (currentScrollY < 50 && lastScrollY >= 50) {
-        setIsScrolled(false);
+          if (currentScrollY > 60 && lastScrollY <= 60) {
+            setIsScrolled(true);
+          } else if (currentScrollY < 50 && lastScrollY >= 50) {
+            setIsScrolled(false);
+          }
+
+          lastScrollY = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
       }
-
-      lastScrollY = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <motion.nav
-      className={`fixed top-0 w-full z-50 transition-all duration-500 mt-4`}
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.8,
-        ease: [0.22, 1, 0.36, 1],
-      }}
+    <nav
+      className={`fixed top-0 w-full z-50 transition-all duration-300 mt-4 transform-gpu`}
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         {/* Desktop Navigation */}
@@ -51,25 +50,24 @@ export default function PublicNavbar() {
               scale: isScrolled ? 0.95 : 1,
             }}
             transition={{
-              duration: 0.6,
-              ease: [0.32, 0.72, 0, 1],
+              duration: 0.3,
+              ease: "easeOut",
             }}
-            layout="position"
           >
             {!isScrolled && (
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.3 }}
               >
                 <Link href="/" className="flex items-center group">
                   <motion.img
                     src="/logo.svg"
                     alt="Dimension Logo"
                     className="w-11 h-11 group-hover:brightness-110 transition-all"
-                    whileHover={{ scale: 1.05, rotate: -5 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.2 }}
                   />
                 </Link>
               </motion.div>
@@ -81,11 +79,9 @@ export default function PublicNavbar() {
                   ? "bg-gray-800/70 backdrop-blur-md border border-gray-700/30"
                   : ""
               } rounded-2xl px-3 py-2`}
-              layout
               transition={{
-                duration: 0.6,
-                ease: [0.32, 0.72, 0, 1],
-                layout: { duration: 0.4 },
+                duration: 0.3,
+                ease: "easeOut",
               }}
             >
               {isScrolled && (
@@ -93,19 +89,15 @@ export default function PublicNavbar() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.4 }}
+                  transition={{ duration: 0.3 }}
                 >
                   <Link href="/" className="flex items-center mr-4 group">
                     <motion.img
                       src="/logo.svg"
                       alt="Dimension Logo"
                       className="w-11 h-11 group-hover:brightness-110 transition-all"
-                      whileHover={{ scale: 1.05, rotate: -5 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 17,
-                      }}
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.2 }}
                     />
                   </Link>
                 </motion.div>
@@ -169,8 +161,8 @@ export default function PublicNavbar() {
             opacity: isMenuOpen ? 1 : 0,
           }}
           transition={{
-            duration: 0.4,
-            ease: [0.32, 0.72, 0, 1],
+            duration: 0.3,
+            ease: "easeOut",
           }}
           className="md:hidden overflow-hidden"
         >
@@ -204,6 +196,6 @@ export default function PublicNavbar() {
           </div>
         </motion.div>
       </div>
-    </motion.nav>
+    </nav>
   );
 }

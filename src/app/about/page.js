@@ -67,7 +67,7 @@ export default function AboutPage() {
             >
               <div className="relative inline-block">
                 <h1 className="text-6xl md:text-7xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
-                  About FinTech Calgary
+                  About Us
                 </h1>
                 <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"></div>
               </div>

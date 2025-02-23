@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { FiArrowRight, FiUsers, FiCode, FiTrendingUp } from "react-icons/fi";
 
@@ -31,30 +30,20 @@ export default function JoinUs() {
 
       <div className="container mx-auto px-6 relative">
         {/* Title */}
-        <motion.h2
-          className="text-6xl font-bold mb-20 text-center group cursor-pointer relative"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
+        <h2 className="text-6xl font-bold mb-20 text-center group cursor-pointer relative">
           <div className="relative inline-block">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
               Join Us
             </span>
             <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"></div>
           </div>
-        </motion.h2>
+        </h2>
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           {features.map((feature, index) => (
-            <motion.div
+            <div
               key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-              viewport={{ once: true }}
               className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-8 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -67,18 +56,12 @@ export default function JoinUs() {
                 </h3>
                 <p className="text-gray-300">{feature.description}</p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* CTA Button */}
-        <motion.div
-          className="flex justify-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          viewport={{ once: true }}
-        >
+        <div className="flex justify-center">
           <Link
             href="/join"
             className="group inline-flex items-center gap-3 px-8 py-4 text-lg font-medium rounded-full 
@@ -88,7 +71,7 @@ export default function JoinUs() {
             Join Now
             <FiArrowRight className="text-xl transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
