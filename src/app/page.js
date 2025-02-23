@@ -12,7 +12,12 @@ import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 import { FiArrowRight } from "react-icons/fi";
 import JoinUs from "@/components/landing/JoinUs";
-import Globe from "@/components/landing/Globe";
+import dynamic from "next/dynamic";
+
+// Dynamically import Globe component to disable SSR for it
+const Globe = dynamic(() => import("@/components/landing/Globe"), {
+  ssr: false,
+});
 
 export default function Home() {
   const { scrollYProgress } = useScroll();
