@@ -36,7 +36,7 @@ export async function POST(req) {
 /**
  * GET /api/subscribers - Retrieve all subscribers (Admin only)
  */
-export async function GET() {
+export async function GET(req) {
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "admin") {

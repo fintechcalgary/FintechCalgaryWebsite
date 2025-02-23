@@ -98,6 +98,7 @@ export default function Navbar() {
                   ["Events", "/dashboard#events"],
                   ["Members", "/dashboard#members"],
                   ["Info", "/info"],
+                  ["Subscribers", "/dashboard/subscribers"],
                 ].map(([title, path]) => (
                   <Link
                     key={path}

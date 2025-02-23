@@ -140,13 +140,13 @@ export default function Home() {
               className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 sm:px-0 max-w-[280px] sm:max-w-none mx-auto"
             >
               <Link
-                href="/about"
+                href="/join"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium rounded-full 
-                         bg-primary hover:bg-primary/90 text-white transition-all duration-300 
-                         hover:shadow-xl hover:shadow-primary/30 transform hover:-translate-y-1
-                         border border-primary/50 hover:border-primary"
+           bg-primary hover:bg-primary/90 text-white transition-all duration-300 
+           hover:shadow-xl hover:shadow-primary/30 transform hover:-translate-y-1
+           border border-primary/50 hover:border-primary"
               >
-                About Us
+                Join Us
               </Link>
               <Link
                 href="/executives"
