@@ -88,15 +88,15 @@ export default function AboutPage() {
                   Who We Are
                 </h2>
                 <p className="text-gray-300 leading-relaxed text-lg relative">
-                  We're more than just a community; we're a dynamic hub where
-                  passion meets innovation at the intersection of finance and
-                  technology. Our members are at the forefront of understanding,
-                  discussing, and harnessing the transformative power of
-                  FinTech. We've established ourselves as a platform where
-                  professionals, students and enthusiasts within the FinTech
-                  space build valuable connections, exchange ideas and
-                  collaborate on projects and competitions that shape the future
-                  of finance.
+                  We&apos;re more than just a community; we&apos;re a dynamic
+                  hub where passion meets innovation at the intersection of
+                  finance and technology. Our members are at the forefront of
+                  understanding, discussing, and harnessing the transformative
+                  power of FinTech. We&apos;ve established ourselves as a
+                  platform where professionals, students and enthusiasts within
+                  the FinTech space build valuable connections, exchange ideas
+                  and collaborate on projects and competitions that shape the
+                  future of finance.
                 </p>
               </motion.div>
 
@@ -111,8 +111,8 @@ export default function AboutPage() {
                   What We Do
                 </h2>
                 <p className="text-gray-300 leading-relaxed text-lg relative">
-                  Our commitment extends beyond networking. We're dedicated to
-                  fostering entrepreneurship by providing resources, guidance
+                  Our commitment extends beyond networking. We&apos;re dedicated
+                  to fostering entrepreneurship by providing resources, guidance
                   and platforms like pitch competitions and hackathons.
                   Moreover, our seminars, workshops, and webinars serve as bases
                   of knowledge, highlighting the latest trends and developments
@@ -132,12 +132,12 @@ export default function AboutPage() {
                   Our Community
                 </h2>
                 <p className="text-gray-300 leading-relaxed text-lg relative">
-                  FinTech Calgary isn't just a club; it's a vibrant community
-                  that bridges the gap between finance and technology, fostering
-                  innovation and collaboration every step of the way. We explore
-                  and navigate the technological world of finance, promoting the
-                  growth and development of FinTech initiatives and businesses
-                  together. Welcome to the future of Finance.
+                  FinTech Calgary isn&apos;t just a club; it&apos;s a vibrant
+                  community that bridges the gap between finance and technology,
+                  fostering innovation and collaboration every step of the way.
+                  We explore and navigate the technological world of finance,
+                  promoting the growth and development of FinTech initiatives
+                  and businesses together. Welcome to the future of Finance.
                 </p>
               </motion.div>
             </div>
