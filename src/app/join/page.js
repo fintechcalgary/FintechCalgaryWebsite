@@ -97,10 +97,10 @@ export default function JoinPage() {
           >
             <Link
               href="/"
-              className="inline-flex items-center text-gray-400 hover:text-white transition-colors mb-8"
+              className="inline-flex items-center text-gray-400 hover:text-white hover:scale-105 active:scale-95 transition-all duration-200 mb-8 group cursor-pointer"
             >
-              <FiArrowLeft className="mr-2" />
-              Back to Home
+              <FiArrowLeft className="mr-2 group-hover:translate-x-[-4px] transition-transform duration-200" />
+              <span>Back to Home</span>
             </Link>
 
             <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50">

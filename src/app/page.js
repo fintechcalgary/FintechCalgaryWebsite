@@ -92,8 +92,6 @@ export default function Home() {
       <PublicNavbar />
 
       <div className="relative flex-grow">
-        <div className="absolute inset-0 opacity-5 bg-[url('/grid.svg')] bg-center"></div>
-
         <div className="absolute top-20 left-0 w-[500px] h-[500px] bg-primary/40 max-md:bg-primary/30 rounded-full blur-[128px] -translate-x-1/2"></div>
         <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-purple-500/40 max-md:bg-purple-500/20 rounded-full blur-[96px] translate-x-1/2"></div>
         {/* <div className="absolute bottom-0 right-1/2 w-[600px] h-[600px] bg-violet-600/30 max-md:hidden rounded-full blur-[128px] -translate-y-1/2"></div> */}

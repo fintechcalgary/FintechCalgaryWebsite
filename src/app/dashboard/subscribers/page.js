@@ -84,7 +84,7 @@ export default function SubscribersPage() {
         <Navbar />
         <div className="container mx-auto px-4 py-8">
           <p className="text-white">
-            You don't have permission to view this page.
+            You don&apos;t have permission to view this page.
           </p>
         </div>
       </div>
