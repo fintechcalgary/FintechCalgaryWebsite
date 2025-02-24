@@ -11,7 +11,7 @@ import Contact from "@/components/landing/Contact";
 import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 import { FiArrowRight } from "react-icons/fi";
-import JoinUs from "@/components/landing/JoinUs";
+import MissionStatement from "@/components/landing/MissionStatement";
 import Image from "next/image";
 
 export default function Home() {
@@ -103,16 +103,18 @@ export default function Home() {
         />
 
         <motion.section
-          className="flex-grow flex items-center justify-center min-h-screen relative overflow-hidden"
+          className="flex-grow flex items-center justify-center min-h-screen relative overflow-visible"
           style={{ opacity }}
         >
-          <Image
-            src="/globe.svg"
-            alt="Globe"
-            width={500}
-            height={500}
-            className="absolute inset-0 w-full h-full max-md:scale-[2] animate-rock"
-          />
+          <div className="absolute inset-0 overflow-visible">
+            <Image
+              src="/globe.svg"
+              alt="Globe"
+              width={500}
+              height={500}
+              className="absolute min-w-[100vw] min-h-[100vh] top-32 -right-32 max-md:min-w-[200vw] max-md:min-h-[200vh] max-md:-top-64 animate-rock"
+            />
+          </div>
           {/* <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background z-0"></div> */}
           <div className="text-center z-10 px-6 max-w-5xl mx-auto relative">
             <motion.h1
@@ -162,11 +164,11 @@ export default function Home() {
       </div>
 
       <div className="relative">
-        <JoinUs />
+        <AboutUs />
       </div>
 
       <div className="relative">
-        <AboutUs />
+        <MissionStatement />
       </div>
 
       <div className="relative">

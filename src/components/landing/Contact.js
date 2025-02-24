@@ -7,6 +7,7 @@ import {
   FiInstagram,
   FiGithub,
 } from "react-icons/fi";
+import { FaTiktok } from "react-icons/fa";
 import Link from "next/link";
 
 export default function Contact() {
@@ -104,6 +105,14 @@ export default function Contact() {
                     className="text-gray-400 hover:text-primary transition-colors"
                   >
                     <FiGithub className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://www.tiktok.com/@fintech.calgary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-primary transition-colors"
+                  >
+                    <FaTiktok className="w-5 h-5" />
                   </a>
                 </div>
               </div>

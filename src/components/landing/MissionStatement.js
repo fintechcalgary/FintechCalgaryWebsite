@@ -1,23 +1,23 @@
 import Link from "next/link";
 import { FiArrowRight, FiUsers, FiCode, FiTrendingUp } from "react-icons/fi";
 
-export default function JoinUs() {
+export default function MissionStatement() {
   const features = [
     {
       icon: <FiUsers />,
-      title: "Community",
+      title: "To Educate",
       description:
-        "Join a diverse network of students passionate about fintech",
+        "Learn about the evolving world of Fintech and its transformative impact",
     },
     {
       icon: <FiCode />,
-      title: "Innovation",
-      description: "Work on cutting-edge projects and learn new technologies",
+      title: "To Inspire",
+      description: "Foster creativity and innovation in discovering new ideas",
     },
     {
       icon: <FiTrendingUp />,
-      title: "Growth",
-      description: "Develop your skills and advance your career in fintech",
+      title: "To Shape",
+      description: "Be part of shaping the future of financial technology",
     },
   ];
 
@@ -33,7 +33,7 @@ export default function JoinUs() {
         <h2 className="text-6xl font-bold mb-20 text-center group cursor-pointer relative">
           <div className="relative inline-block">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
-              Join Us
+              Mission Statement
             </span>
             <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"></div>
           </div>
