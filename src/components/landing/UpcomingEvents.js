@@ -12,7 +12,7 @@ export default function UpcomingEvents({ events }) {
           <h2 className="text-6xl font-bold mb-20 text-center group cursor-pointer relative">
             <div className="relative inline-block">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary flex items-center justify-center gap-4 hover:gap-6 transition-all duration-300">
-                Future Events
+                Upcoming
                 <FiArrowRight className="transition-all duration-300 text-primary text-4xl" />
               </span>
               <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"></div>
