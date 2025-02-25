@@ -14,12 +14,17 @@ export async function POST(req) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Upload to Cloudinary
+    // Upload to Cloudinary with format conversion
     const result = await new Promise((resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
           {
             resource_type: "auto",
+            format: "jpg", // Force conversion to JPG
+            transformation: [
+              { quality: "auto:good" }, // Optimize quality
+              { fetch_format: "auto" }, // Use best format for browser
+            ],
           },
           (error, result) => {
             if (error) reject(error);

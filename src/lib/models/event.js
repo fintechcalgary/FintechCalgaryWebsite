@@ -5,7 +5,8 @@ export async function createEvent(db, event) {
   return await db.collection(EVENT_COLLECTION).insertOne({
     ...event,
     userId: event.userId,
-    imageUrl: event.imageUrl,
+    images: event.images || [], // Array of image URLs
+    imageUrl: event.imageUrl, // Keep for backward compatibility
     createdAt: new Date(),
     time: event.time, // Time represented by a string
     registrations: [],

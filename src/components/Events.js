@@ -30,6 +30,7 @@ export default function Events() {
     date: "",
     time: "",
     imageUrl: "",
+    images: [],
   });
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
@@ -71,6 +72,7 @@ export default function Events() {
         date: "",
         time: "",
         imageUrl: "",
+        images: [],
       });
       setShowForm(false);
       setEditingEvent(null);
@@ -104,34 +106,45 @@ export default function Events() {
       date: event.date.split("T")[0], // Keep existing date handling
       time: event.time || "", // Populate the time field
       imageUrl: event.imageUrl || "",
+      images: event.images || [],
       registrations: event.registrations?.length || 0,
     });
     setShowForm(true);
   };
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
 
     try {
       setUploading(true);
-      const formData = new FormData();
-      formData.append("file", file);
+      const uploadPromises = files.map(async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
 
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error("Upload failed");
+        }
+
+        const data = await response.json();
+        return data.url;
       });
 
-      if (!response.ok) {
-        throw new Error("Upload failed");
-      }
+      const uploadedUrls = await Promise.all(uploadPromises);
 
-      const data = await response.json();
-      setFormData((prev) => ({ ...prev, imageUrl: data.url }));
+      setFormData((prev) => ({
+        ...prev,
+        imageUrl: uploadedUrls[0], // Set first image as main image for backward compatibility
+        images: [...prev.images, ...uploadedUrls],
+      }));
     } catch (error) {
       console.error("Upload error:", error);
-      alert("Failed to upload image");
+      alert("Failed to upload images");
     } finally {
       setUploading(false);
     }
@@ -162,6 +175,7 @@ export default function Events() {
       date: "",
       time: "",
       imageUrl: "",
+      images: [],
     });
     setEditingEvent(null);
     setShowForm(false);
@@ -280,40 +294,62 @@ export default function Events() {
                       />
                     </div>
 
-                    <div className="flex items-center gap-4">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                        id="imageUpload"
-                        required={!formData.imageUrl}
-                      />
-                      <label
-                        htmlFor="imageUpload"
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700"
-                      >
-                        <FiImage />
-                        {uploading ? "Uploading..." : "Choose Image"}
-                      </label>
-                      {formData.imageUrl && (
-                        <div className="relative w-16 h-16">
-                          <Image
-                            src={formData.imageUrl}
-                            alt="Preview"
-                            className="object-cover rounded-lg border border-gray-700"
-                            fill
-                            sizes="64px"
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setFormData((prev) => ({ ...prev, imageUrl: "" }))
-                            }
-                            className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1"
-                          >
-                            <FiX size={10} />
-                          </button>
+                    <div className="flex flex-col space-y-4">
+                      <div className="flex items-center gap-4">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                          id="imageUpload"
+                          multiple
+                          required={formData.images.length === 0}
+                        />
+                        <label
+                          htmlFor="imageUpload"
+                          className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700"
+                        >
+                          <FiImage />
+                          {uploading ? "Uploading..." : "Choose Images"}
+                        </label>
+                      </div>
+
+                      {formData.images.length > 0 && (
+                        <div className="relative">
+                          <div className="flex gap-4 overflow-x-auto pt-3 pb-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900/50">
+                            {formData.images.map((imageUrl, index) => (
+                              <div
+                                key={index}
+                                className="relative w-40 h-40 flex-shrink-0 mt-2"
+                              >
+                                <Image
+                                  src={imageUrl}
+                                  alt={`Preview ${index + 1}`}
+                                  className="object-cover rounded-lg border border-gray-700"
+                                  fill
+                                  sizes="160px"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setFormData((prev) => ({
+                                      ...prev,
+                                      images: prev.images.filter(
+                                        (_, i) => i !== index
+                                      ),
+                                      imageUrl:
+                                        index === 0
+                                          ? prev.images[1] || ""
+                                          : prev.imageUrl,
+                                    }))
+                                  }
+                                  className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg"
+                                >
+                                  <FiX size={12} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       )}
                     </div>
@@ -354,15 +390,33 @@ export default function Events() {
             key={event._id}
             className="bg-gray-800/50 rounded-lg overflow-hidden"
           >
-            <div className="aspect-video w-full relative">
-              <Image
-                src={event.imageUrl}
-                alt={event.title}
-                className="object-cover"
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                priority
-              />
+            <div className="aspect-video w-full relative group">
+              {event.images?.length > 0 ? (
+                <div className="relative w-full h-full">
+                  <Image
+                    src={event.images[0]}
+                    alt={event.title}
+                    className="object-cover"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    priority
+                  />
+                  {event.images.length > 1 && (
+                    <div className="absolute bottom-2 right-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1 text-xs text-white">
+                      +{event.images.length - 1} more
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Image
+                  src={event.imageUrl}
+                  alt={event.title}
+                  className="object-cover"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
+                />
+              )}
             </div>
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">

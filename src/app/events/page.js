@@ -8,12 +8,15 @@ import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { FiCalendar } from "react-icons/fi";
 import Image from "next/image";
+import ImageCarousel from "@/components/ImageCarousel";
+import { useRouter } from "next/navigation";
 
 export default function EventsPage() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const particlesRef = useRef(null);
+  const router = useRouter();
 
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
@@ -74,6 +77,15 @@ export default function EventsPage() {
       // For events in the same category (both upcoming or both past), sort by date
       return aDate - bDate;
     });
+
+  const handleEventClick = (event) => {
+    const isUpcoming = new Date(event.date) >= new Date();
+    if (isUpcoming) {
+      router.push(`/events/register/${event._id}`);
+    } else {
+      router.push(`/events/${event._id}`);
+    }
+  };
 
   if (loading) {
     return (
@@ -162,30 +174,35 @@ export default function EventsPage() {
                 key={event._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="group relative bg-gray-900/40 backdrop-blur-xl rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-800/50 hover:border-primary/50"
+                onClick={() => handleEventClick(event)}
+                className="group relative bg-gray-900/40 backdrop-blur-xl rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-800/50 hover:border-primary/50 cursor-pointer"
               >
                 {/* Glass Effect Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                 {/* Event Image Container */}
                 <div className="relative aspect-[16/10] w-full overflow-hidden">
-                  <Image
-                    src={event.imageUrl}
-                    alt={event.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    priority
-                    className="object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out"
-                  />
+                  {event.images?.length > 0 ? (
+                    <ImageCarousel images={event.images} title={event.title} />
+                  ) : (
+                    <Image
+                      src={event.imageUrl}
+                      alt={event.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      priority
+                      className="object-cover"
+                    />
+                  )}
 
-                  {/* Status Badge - Moved to top-right of image */}
+                  {/* Status Badge */}
                   <span
                     className={`absolute top-4 right-4 px-4 py-1.5 text-xs font-semibold rounded-full 
-  ${
-    isUpcoming
-      ? "bg-purple-600/60 text-purple-100 border border-purple-500 backdrop-blur-md"
-      : "bg-gray-800/60 text-gray-300 border border-gray-700 backdrop-blur-md"
-  }`}
+                    ${
+                      isUpcoming
+                        ? "bg-purple-600/60 text-purple-100 border border-purple-500 backdrop-blur-md"
+                        : "bg-gray-800/60 text-gray-300 border border-gray-700 backdrop-blur-md"
+                    }`}
                   >
                     {isUpcoming ? "Upcoming" : "Past"}
                   </span>
@@ -214,20 +231,6 @@ export default function EventsPage() {
                       )}
                     </p>
                   </div>
-
-                  {/* Register Button - Full width with new styling */}
-                  {isUpcoming && (
-                    <a
-                      href={`/events/register/${event._id}`}
-                      className="block w-full text-center px-6 py-2.5 text-sm font-semibold text-white 
-                      bg-gradient-to-r from-primary via-primary/90 to-primary 
-                      rounded-xl hover:from-primary/90 hover:via-primary hover:to-primary/90 
-                      transform hover:-translate-y-0.5 transition-all duration-300 
-                      shadow-lg hover:shadow-primary/25"
-                    >
-                      Register Now
-                    </a>
-                  )}
                 </div>
               </motion.div>
             );
