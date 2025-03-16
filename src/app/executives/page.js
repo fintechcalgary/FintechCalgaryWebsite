@@ -128,7 +128,7 @@ export default function ExecutivesPage() {
               className="text-center mb-16"
             >
               <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
-                Meet Our Team
+                Meet Our Executives
               </h1>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto">
                 Our dedicated team is here to make a difference.

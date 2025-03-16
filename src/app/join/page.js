@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { FiCheck, FiArrowLeft } from "react-icons/fi";
+import { FiCheck, FiArrowLeft, FiAlertCircle } from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import Particles from "react-particles";
@@ -16,6 +16,7 @@ export default function JoinPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
@@ -41,8 +42,7 @@ export default function JoinPage() {
       detect_on: "canvas",
       events: {
         onhover: {
-          enable: true,
-          mode: "grab",
+          enable: false,
         },
       },
     },
@@ -52,6 +52,7 @@ export default function JoinPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMessage(""); // Clear any previous error messages
 
     try {
       const response = await fetch("/api/subscribe", {
@@ -72,7 +73,8 @@ export default function JoinPage() {
       setFormData({ name: "", email: "" });
     } catch (error) {
       setSubmitStatus("error");
-      console.error("Subscription error:", error);
+      setErrorMessage(error.message);
+      console.log("Subscription error:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -127,8 +129,23 @@ export default function JoinPage() {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    {errorMessage && (
+                      <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start">
+                        <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
+                        <div>
+                          <p className="text-red-400">{errorMessage}</p>
+                          {errorMessage.includes("already subscribed") && (
+                            <p className="text-gray-400 text-sm mt-1">
+                              Please use a different email address or check your
+                              inbox for previous communications.
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
                     <div>
-                      <label className=" text-sm font-medium text-gray-300 mb-2">
+                      <label className="text-sm font-medium text-gray-300 mb-2">
                         Name
                       </label>
                       <input

@@ -15,10 +15,7 @@ import MissionStatement from "@/components/landing/MissionStatement";
 import Image from "next/image";
 
 export default function Home() {
-  const { scrollYProgress } = useScroll();
-  const [opacity, setOpacity] = useState(
-    useTransform(scrollYProgress, [0, 0.5], [1, 0])
-  );
+  const [opacity, setOpacity] = useState(1);
 
   const [events, setEvents] = useState([]);
 
@@ -26,13 +23,19 @@ export default function Home() {
 
   useEffect(() => {
     const handleScroll = () => {
+      const newOpacity = Math.max(0, 1 - window.scrollY / 1000);
+      setOpacity(newOpacity);
+
       const isScrolled = window.scrollY > 200;
       setScrolled(isScrolled);
     };
 
+    handleScroll();
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
   }, []);
@@ -74,18 +77,6 @@ export default function Home() {
     },
     retina_detect: true,
   };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const newOpacity = Math.max(0, 1 - window.scrollY / 1000);
-      setOpacity(newOpacity);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   return (
     <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900 overflow-hidden">
