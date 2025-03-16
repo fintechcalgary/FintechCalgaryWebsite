@@ -1,11 +1,20 @@
 "use client";
 import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FiMail, FiMapPin, FiMessageSquare, FiSend } from "react-icons/fi";
+import {
+  FiGithub,
+  FiInstagram,
+  FiLinkedin,
+  FiMail,
+  FiMapPin,
+  FiMessageSquare,
+  FiSend,
+} from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
+import { FaTiktok } from "react-icons/fa";
 
 export default function ContactPage() {
   useEffect(() => {
@@ -116,10 +125,10 @@ export default function ContactPage() {
               <FiMail className="w-8 h-8 text-primary mb-4" />
               <h3 className="text-xl font-semibold text-white mb-2">Email</h3>
               <a
-                href="mailto:info@fintechcalgary.com"
+                href="mailto:fintech.calgary@gmail.com"
                 className="text-gray-300 hover:text-primary transition-colors"
               >
-                info@fintechcalgary.com
+                fintech.calgary@gmail.com
               </a>
             </motion.div>
 
@@ -152,7 +161,51 @@ export default function ContactPage() {
               <h3 className="text-xl font-semibold text-white mb-2">
                 Social Media
               </h3>
-              <p className="text-gray-300">Follow us for the latest updates</p>
+              <p className="text-gray-300 mb-4">
+                Follow us for the latest updates
+              </p>
+              <div>
+                <div className="flex space-x-4">
+                  <a
+                    href="https://www.linkedin.com/company/fintechcalgary/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-primary transition-colors"
+                  >
+                    <FiLinkedin className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://www.instagram.com/fintech.calgary/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-primary transition-colors"
+                  >
+                    <FiInstagram className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="mailto:fintechcalgary@gmail.com"
+                    className="text-gray-400 hover:text-primary transition-colors"
+                  >
+                    <FiMail className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://github.com/fintech-calgary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-primary transition-colors"
+                  >
+                    <FiGithub className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://www.tiktok.com/@fintech.calgary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-primary transition-colors"
+                  >
+                    <FaTiktok className="w-5 h-5" />
+                  </a>
+                </div>
+              </div>
             </motion.div>
           </div>
 

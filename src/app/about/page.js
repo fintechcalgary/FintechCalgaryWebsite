@@ -6,6 +6,8 @@ import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
+import Link from "next/link";
+import { FiArrowRight } from "react-icons/fi";
 
 export default function AboutPage() {
   useEffect(() => {
@@ -58,7 +60,7 @@ export default function AboutPage() {
         />
         <motion.section className="flex-grow flex items-center justify-center min-h-screen relative">
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/90 z-0"></div>
-          <div className="container mx-auto px-6 py-32 relative z-10">
+          <div className="container mx-auto px-6 py-16 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -143,6 +145,32 @@ export default function AboutPage() {
             </div>
           </div>
         </motion.section>
+        {/* Call to Action */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.8 }}
+          className="mb-32 text-center"
+        >
+          <div className="bg-gradient-to-br from-gray-800/70 to-gray-900/70 backdrop-blur-xl p-12 rounded-3xl border border-gray-700/50 max-w-4xl mx-auto">
+            <h2 className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">
+              Join Our Community
+            </h2>
+            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              Ready to be part of the future of finance and technology? Join
+              FinTech Calgary today and connect with like-minded innovators.
+            </p>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                href="/join"
+                className="inline-flex items-center px-8 py-4 rounded-full bg-primary hover:bg-primary/90 text-white text-lg font-medium transition-all duration-300 hover:shadow-xl hover:shadow-primary/30"
+              >
+                Become a Member
+                <FiArrowRight className="ml-2" />
+              </Link>
+            </motion.div>
+          </div>
+        </motion.div>
       </div>
 
       <Footer />
