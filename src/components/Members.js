@@ -34,11 +34,20 @@ export default function Members() {
     memberId: null,
   });
   const [submitting, setSubmitting] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState("All");
+  const [availableTeams, setAvailableTeams] = useState(["All"]);
 
   const fetchMembers = async () => {
     const response = await fetch("/api/members");
     const data = await response.json();
     setMembers(data);
+
+    // Extract unique team names from members
+    const uniqueTeams = [
+      "All",
+      ...new Set(data.map((member) => member.team || "General")),
+    ];
+    setAvailableTeams(uniqueTeams);
   };
 
   useEffect(() => {
@@ -202,35 +211,43 @@ export default function Members() {
   };
 
   const moveMember = (fromIndex, toIndex) => {
-    const updatedMembers = [...members];
-    const [movedMember] = updatedMembers.splice(fromIndex, 1);
-    updatedMembers.splice(toIndex, 0, movedMember);
-    setMembers(updatedMembers);
+    // 1️⃣ Get the actual member being moved from the filtered list
+    const movedMember = filteredMembers[fromIndex];
 
-    // Call API to save the new order
+    // 2️⃣ Get its index in the full members list
+    const globalFromIndex = members.findIndex((m) => m._id === movedMember._id);
+    const globalToIndex = members.findIndex(
+      (m) => m._id === filteredMembers[toIndex]._id
+    );
+
+    // 3️⃣ Swap members in the global list
+    const updatedMembers = [...members];
+    const [movedGlobalMember] = updatedMembers.splice(globalFromIndex, 1);
+    updatedMembers.splice(globalToIndex, 0, movedGlobalMember);
+
+    setMembers(updatedMembers);
     saveOrder(updatedMembers);
   };
 
   const saveOrder = async (updatedMembers) => {
     try {
-      const response = await fetch("/api/members/order", {
+      await fetch("/api/members/order", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          orderedMemberIds: updatedMembers.map((member) => member._id),
+          orderedMemberIds: updatedMembers.map((m) => m._id),
         }),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to save the new order");
-      }
     } catch (error) {
-      console.error("Error saving member order:", error);
-      alert("Failed to save the new order. Please try again.");
+      console.error("Error saving order:", error);
+      alert("Failed to save order. Try again.");
     }
   };
+
+  const filteredMembers =
+    selectedTeam === "All"
+      ? members
+      : members.filter((member) => member.team === selectedTeam);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -240,19 +257,27 @@ export default function Members() {
             <FiUser className="text-primary" />
             Team Members
           </h3>
-          <button
-            onClick={() => {
-              if (showForm) {
-                resetForm();
-              } else {
-                setShowForm(true);
-              }
-            }}
-            className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-          >
-            {showForm ? <FiX /> : <FiPlus />}
-            {showForm ? "Cancel" : "Add"}
-          </button>
+          <div className="flex gap-4 items-center">
+            <select
+              value={selectedTeam}
+              onChange={(e) => setSelectedTeam(e.target.value)}
+              className="bg-gray-900 text-white border border-gray-700 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary"
+            >
+              {availableTeams.map((team) => (
+                <option key={team} value={team}>
+                  {team}
+                </option>
+              ))}
+            </select>
+
+            <button
+              onClick={() => (showForm ? resetForm() : setShowForm(true))}
+              className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+            >
+              {showForm ? <FiX /> : <FiPlus />}
+              {showForm ? "Cancel" : "Add"}
+            </button>
+          </div>
         </div>
 
         <AnimatePresence>
@@ -569,7 +594,7 @@ export default function Members() {
         </AnimatePresence>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {members.map((member, index) => (
+          {filteredMembers.map((member, index) => (
             <DraggableMember
               key={member._id}
               member={member}
