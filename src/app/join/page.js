@@ -82,7 +82,7 @@ export default function JoinPage() {
     <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900">
       <PublicNavbar />
 
-      <div className="relative flex-grow flex items-center justify-center py-20">
+      <div className="relative flex-grow flex items-center justify-center py-20 min-h-screen">
         <Particles
           className="absolute inset-0 z-0"
           init={particlesInit}
