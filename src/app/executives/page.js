@@ -77,8 +77,8 @@ export default function ExecutivesPage() {
       }
 
       const grouped = data.reduce((acc, executive) => {
-        if (!acc[executive.position]) acc[executive.position] = [];
-        acc[executive.position].push(executive);
+        if (!acc[executive.team]) acc[executive.team] = [];
+        acc[executive.team].push(executive);
         return acc;
       }, {});
 
@@ -149,24 +149,7 @@ export default function ExecutivesPage() {
                   <div className="flex items-center gap-4 mb-8">
                     <div className="h-px flex-grow bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
                     <h2 className="text-3xl font-bold text-white px-4">
-                      {groupedExecutives[role].length > 1
-                        ? role.endsWith("y") &&
-                          !["ay", "ey", "oy", "uy"].some((ending) =>
-                            role.endsWith(ending)
-                          )
-                          ? `${role.slice(0, -1)}ies` // e.g., Secretary -> Secretaries
-                          : role.endsWith("s") ||
-                            role.endsWith("sh") ||
-                            role.endsWith("ch") ||
-                            role.endsWith("x") ||
-                            role.endsWith("z")
-                          ? `${role}es` // e.g., Boss -> Bosses, Witch -> Witches
-                          : role.endsWith("f")
-                          ? `${role.slice(0, -1)}ves` // e.g., Wolf -> Wolves
-                          : role.endsWith("fe")
-                          ? `${role.slice(0, -2)}ves` // e.g., Wife -> Wives
-                          : `${role}s` // Regular plural
-                        : role}
+                      {role}
                     </h2>
                     <div className="h-px flex-grow bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
                   </div>
@@ -193,6 +176,9 @@ export default function ExecutivesPage() {
                           />
                         </div>
                         <div className="space-y-2">
+                          <p className="text-lg font-bold text-primary">
+                            {executive.position}
+                          </p>
                           <h3 className="text-xl font-semibold text-white hover:text-primary transition-colors">
                             {executive.name}
                           </h3>
