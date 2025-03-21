@@ -35,22 +35,10 @@ export default function DashboardPage() {
 
   const particlesConfig = {
     particles: {
-      number: {
-        value: 50,
-        density: {
-          enable: true,
-          value_area: 800,
-        },
-      },
-      color: {
-        value: "#6d28d9", // Purple color matching your theme
-      },
-      opacity: {
-        value: 0.5,
-      },
-      size: {
-        value: 3,
-      },
+      number: { value: 50, density: { enable: true, value_area: 800 } },
+      color: { value: "#6d28d9" },
+      opacity: { value: 0.5 },
+      size: { value: 3 },
       line_linked: {
         enable: false,
       },
@@ -68,8 +56,7 @@ export default function DashboardPage() {
       detect_on: "canvas",
       events: {
         onhover: {
-          enable: true,
-          mode: "grab",
+          enable: false,
         },
       },
     },

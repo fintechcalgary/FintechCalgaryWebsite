@@ -65,15 +65,30 @@ export default function Home() {
 
   const particlesConfig = {
     particles: {
-      number: { value: 50, density: { enable: true, value_area: 1200 } },
-      color: { value: "#8b5cf6" },
-      opacity: { value: 0.8 },
-      size: { value: 2 },
-      move: { enable: true, speed: 0.8, random: true, out_mode: "out" },
+      number: { value: 50, density: { enable: true, value_area: 800 } },
+      color: { value: "#6d28d9" },
+      opacity: { value: 0.5 },
+      size: { value: 3 },
+      line_linked: {
+        enable: false,
+      },
+      move: {
+        enable: true,
+        speed: 1,
+        direction: "none",
+        random: true,
+        straight: false,
+        out_mode: "out",
+        bounce: false,
+      },
     },
     interactivity: {
       detect_on: "canvas",
-      events: { onhover: { enable: true, mode: "grab" } },
+      events: {
+        onhover: {
+          enable: false,
+        },
+      },
     },
     retina_detect: true,
   };

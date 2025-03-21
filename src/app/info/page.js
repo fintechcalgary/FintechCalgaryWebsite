@@ -29,28 +29,12 @@ export default function InfoPage() {
 
   const particlesConfig = {
     particles: {
-      number: {
-        value: 50,
-        density: {
-          enable: true,
-          value_area: 800,
-        },
-      },
-      color: {
-        value: "#6d28d9",
-      },
-      opacity: {
-        value: 0.5,
-      },
-      size: {
-        value: 3,
-      },
+      number: { value: 50, density: { enable: true, value_area: 800 } },
+      color: { value: "#6d28d9" },
+      opacity: { value: 0.5 },
+      size: { value: 3 },
       line_linked: {
-        enable: true,
-        distance: 150,
-        color: "#6d28d9",
-        opacity: 0.4,
-        width: 1,
+        enable: false,
       },
       move: {
         enable: true,
@@ -66,8 +50,7 @@ export default function InfoPage() {
       detect_on: "canvas",
       events: {
         onhover: {
-          enable: true,
-          mode: "grab",
+          enable: false,
         },
       },
     },
