@@ -17,8 +17,8 @@ export default function RootLayout({ children }) {
     <SessionProvider>
       <html lang="en">
         <Head>
-          <title>Fintech Calgary</title>
-          <meta name="description" content="Calgary's Fintech Community" />
+          <title>FinTech Calgary</title>
+          <meta name="description" content="Calgary's FinTech Community" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
         <body className={`${dmSans.className} bg-background text-foreground`}>

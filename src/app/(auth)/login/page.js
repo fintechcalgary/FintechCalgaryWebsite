@@ -20,7 +20,7 @@ export default function Login() {
   const vantaRef = useRef(null);
 
   useEffect(() => {
-    document.title = "Login | Fintech Calgary";
+    document.title = "Login | FinTech Calgary";
   }, []);
 
   // Redirect to /dashboard if already logged in

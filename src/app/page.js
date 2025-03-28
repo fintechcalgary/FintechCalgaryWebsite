@@ -41,7 +41,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    document.title = "Home | FinTech Calgary";
+    document.title = "FinTech Calgary";
   }, []);
 
   useEffect(() => {

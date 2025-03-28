@@ -48,10 +48,16 @@ export default function PublicNavbar() {
             }`}
             animate={{
               scale: isScrolled ? 0.95 : 1,
+              x: isScrolled ? "0%" : "0%",
             }}
+            layout
             transition={{
               duration: 0.3,
               ease: "easeOut",
+              layout: {
+                duration: 0.3,
+                ease: "easeOut",
+              },
             }}
           >
             {!isScrolled && (
@@ -167,11 +173,7 @@ export default function PublicNavbar() {
           className="md:hidden overflow-hidden"
         >
           <div
-            className={`${
-              isScrolled
-                ? "bg-gray-800/90 backdrop-blur-xl border border-gray-700/30"
-                : ""
-            } rounded-2xl p-3 mb-4 space-y-1`}
+            className={`bg-gray-800/90 backdrop-blur-xl border border-gray-700/30 rounded-2xl p-3 mb-4 space-y-1`}
           >
             {[
               ["About", "/about"],

@@ -26,7 +26,7 @@ export default function DashboardPage() {
   }, [status, router]);
 
   useEffect(() => {
-    document.title = "Dashboard | Fintech Calgary";
+    document.title = "Dashboard | FinTech Calgary";
   }, []);
 
   const particlesInit = useCallback(async (engine) => {

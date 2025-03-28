@@ -67,7 +67,7 @@ export default function AboutUs() {
             <div className="hidden lg:block mt-8">
               <Image
                 src="/finance.svg"
-                alt="Fintech Illustration"
+                alt="FinTech Illustration"
                 width={500}
                 height={300}
                 className="rounded-2xl transform group-hover:scale-105 transition-transform duration-500"

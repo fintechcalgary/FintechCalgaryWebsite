@@ -88,34 +88,6 @@ export default function MissionStatement() {
 
   return (
     <section id="join" className="py-24 relative">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 opacity-5 bg-[url('/grid.svg')] bg-center pointer-events-none"></div>
-      <motion.div
-        animate={{
-          opacity: [0.1, 0.2, 0.1],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
-        className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[128px] -translate-x-1/2"
-      />
-      <motion.div
-        animate={{
-          opacity: [0.1, 0.2, 0.1],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          repeatType: "reverse",
-          delay: 1,
-        }}
-        className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/30 rounded-full blur-[96px] translate-x-1/2"
-      />
-
       <div className="container mx-auto px-6 relative">
         {/* Animated title */}
         <motion.h2

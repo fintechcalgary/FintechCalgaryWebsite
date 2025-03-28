@@ -9,34 +9,6 @@ export default function UpcomingEvents({ events }) {
 
   return (
     <section id="events" className="py-24 relative overflow-hidden">
-      {/* Enhanced background elements */}
-      <div className="absolute inset-0 opacity-5 bg-[url('/grid.svg')] bg-center"></div>
-      <motion.div
-        animate={{
-          opacity: [0.1, 0.2, 0.1],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
-        className="absolute top-40 left-0 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[128px] -translate-x-1/2"
-      />
-      <motion.div
-        animate={{
-          opacity: [0.1, 0.2, 0.1],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          repeatType: "reverse",
-          delay: 1,
-        }}
-        className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/30 rounded-full blur-[96px] translate-x-1/2"
-      />
-
       <div className="container mx-auto px-4 relative">
         {/* Animated title with hover effect */}
         <Link href="/events">

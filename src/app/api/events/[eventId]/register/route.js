@@ -163,7 +163,7 @@ export async function POST(req, { params }) {
               <!-- Footer -->
               <div style="padding: 24px; text-align: center; background-color: #f8fafc; border-top: 1px solid #e2e8f0;">
                 <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                  © ${new Date().getFullYear()} Fintech Calgary. All rights reserved.
+                  © ${new Date().getFullYear()} FinTech Calgary. All rights reserved.
                 </p>
               </div>
 

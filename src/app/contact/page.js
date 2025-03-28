@@ -18,7 +18,7 @@ import { FaTiktok } from "react-icons/fa";
 
 export default function ContactPage() {
   useEffect(() => {
-    document.title = "Contact | Fintech Calgary";
+    document.title = "Contact | FinTech Calgary";
   }, []);
 
   const [formData, setFormData] = useState({
