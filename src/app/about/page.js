@@ -20,7 +20,7 @@ export default function AboutPage() {
 
   const particlesConfig = {
     particles: {
-      number: { value: 50, density: { enable: true, value_area: 800 } },
+      number: { value: 10, density: { enable: true, value_area: 800 } },
       color: { value: "#6d28d9" },
       opacity: { value: 0.5 },
       size: { value: 3 },
@@ -35,14 +35,6 @@ export default function AboutPage() {
         straight: false,
         out_mode: "out",
         bounce: false,
-      },
-    },
-    interactivity: {
-      detect_on: "canvas",
-      events: {
-        onhover: {
-          enable: false,
-        },
       },
     },
     retina_detect: true,

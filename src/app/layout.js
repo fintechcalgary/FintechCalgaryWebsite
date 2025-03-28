@@ -20,6 +20,8 @@ export default function RootLayout({ children }) {
           <title>FinTech Calgary</title>
           <meta name="description" content="Calgary's FinTech Community" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="preconnect" href="https://res.cloudinary.com" />
+          <link rel="dns-prefetch" href="https://res.cloudinary.com" />
         </Head>
         <body className={`${dmSans.className} bg-background text-foreground`}>
           {children}
