@@ -97,8 +97,6 @@ export default function ExecutivesPage() {
         return acc;
       }, {});
 
-      console.log(data);
-
       setExecutives(data);
       setGroupedExecutives(grouped);
     } catch (error) {
