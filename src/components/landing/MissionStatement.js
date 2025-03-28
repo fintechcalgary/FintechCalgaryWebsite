@@ -1,5 +1,70 @@
 import Link from "next/link";
 import { FiArrowRight, FiUsers, FiCode, FiTrendingUp } from "react-icons/fi";
+import { motion } from "framer-motion";
+import { useState } from "react";
+
+const FeatureCard = ({ feature, index }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.2 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-8 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500"
+    >
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+      {/* Animated circles in background */}
+      <div className="absolute inset-0 overflow-hidden rounded-2xl">
+        <motion.div
+          animate={{
+            scale: isHovered ? 1.2 : 1,
+            opacity: isHovered ? 0.1 : 0,
+          }}
+          transition={{ duration: 0.6 }}
+          className="absolute -right-10 -bottom-10 w-40 h-40 bg-primary/20 rounded-full blur-2xl"
+        />
+        <motion.div
+          animate={{
+            scale: isHovered ? 1.2 : 1,
+            opacity: isHovered ? 0.1 : 0,
+          }}
+          transition={{ duration: 0.6 }}
+          className="absolute -left-10 -top-10 w-40 h-40 bg-purple-500/20 rounded-full blur-2xl"
+        />
+      </div>
+
+      <div className="relative">
+        <motion.div
+          animate={{
+            scale: isHovered ? 1.1 : 1,
+          }}
+          transition={{ duration: 0.3 }}
+          className="w-12 h-12 mb-6 bg-primary/10 rounded-xl flex items-center justify-center text-2xl text-primary"
+        >
+          {feature.icon}
+        </motion.div>
+
+        <h3 className="text-xl font-semibold text-white mb-3">
+          {feature.title}
+        </h3>
+
+        <motion.p
+          animate={{ opacity: isHovered ? 1 : 0.7 }}
+          transition={{ duration: 0.3 }}
+          className="text-gray-300"
+        >
+          {feature.description}
+        </motion.p>
+      </div>
+    </motion.div>
+  );
+};
 
 export default function MissionStatement() {
   const features = [
@@ -23,54 +88,84 @@ export default function MissionStatement() {
 
   return (
     <section id="join" className="py-24 relative">
-      {/* Background Elements */}
+      {/* Animated background elements */}
       <div className="absolute inset-0 opacity-5 bg-[url('/grid.svg')] bg-center pointer-events-none"></div>
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[128px] -translate-x-1/2 opacity-20"></div>
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/30 rounded-full blur-[96px] translate-x-1/2 opacity-20"></div>
+      <motion.div
+        animate={{
+          opacity: [0.1, 0.2, 0.1],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+        className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[128px] -translate-x-1/2"
+      />
+      <motion.div
+        animate={{
+          opacity: [0.1, 0.2, 0.1],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          repeatType: "reverse",
+          delay: 1,
+        }}
+        className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/30 rounded-full blur-[96px] translate-x-1/2"
+      />
 
       <div className="container mx-auto px-6 relative">
-        {/* Title */}
-        <h2 className="text-6xl font-bold mb-20 text-center group cursor-pointer relative">
+        {/* Animated title */}
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-6xl font-bold mb-20 text-center group relative"
+        >
           <div className="relative inline-block">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
               Mission Statement
             </span>
-            <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"></div>
+            <motion.div
+              initial={{ width: 0 }}
+              whileInView={{ width: "100%" }}
+              viewport={{ once: true }}
+              className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"
+            />
           </div>
-        </h2>
+        </motion.h2>
 
-        {/* Features Grid */}
+        {/* Features grid with animated cards */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           {features.map((feature, index) => (
-            <div
-              key={feature.title}
-              className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-8 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative">
-                <div className="w-12 h-12 mb-6 bg-primary/10 rounded-xl flex items-center justify-center text-2xl text-primary group-hover:scale-110 transition-transform duration-300">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-semibold text-white mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-300">{feature.description}</p>
-              </div>
-            </div>
+            <FeatureCard key={feature.title} feature={feature} index={index} />
           ))}
         </div>
 
-        {/* CTA Button */}
+        {/* Animated CTA button */}
         <div className="flex justify-center">
-          <Link
-            href="/join"
-            className="group inline-flex items-center gap-3 px-8 py-4 text-lg font-medium rounded-full 
-                     bg-primary hover:bg-primary/90 text-white transition-all duration-300 
-                     hover:shadow-xl hover:shadow-primary/25 transform hover:-translate-y-1"
-          >
-            Join Now
-            <FiArrowRight className="text-xl transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href="/join"
+              className="group inline-flex items-center gap-3 px-8 py-4 text-lg font-medium rounded-full 
+                       bg-primary hover:bg-primary/90 text-white transition-all duration-300 
+                       hover:shadow-xl hover:shadow-primary/25"
+            >
+              Join Now
+              <motion.div
+                animate={{ x: [0, 5, 0] }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+              >
+                <FiArrowRight className="text-xl" />
+              </motion.div>
+            </Link>
+          </motion.div>
         </div>
       </div>
     </section>

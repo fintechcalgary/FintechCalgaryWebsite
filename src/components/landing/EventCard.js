@@ -16,7 +16,7 @@ export default function EventCard({ event, index }) {
   };
 
   return (
-    <div className="relative h-[400px] group">
+    <div className="relative h-[400px] group w-full">
       <div
         className="absolute inset-0 rounded-2xl overflow-hidden"
         style={{

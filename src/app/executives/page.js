@@ -194,7 +194,7 @@ export default function ExecutivesPage() {
                           <p className="text-lg font-bold text-primary">
                             {executive.position}
                           </p>
-                          <h3 className="text-xl font-semibold text-white hover:text-primary transition-colors">
+                          <h3 className="text-xl font-semibold text-white transition-colors">
                             {executive.name}
                           </h3>
                           <p className="text-base text-gray-300">

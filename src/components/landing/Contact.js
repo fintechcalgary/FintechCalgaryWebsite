@@ -2,20 +2,144 @@ import {
   FiMail,
   FiMapPin,
   FiMessageSquare,
-  FiArrowRight,
   FiLinkedin,
   FiInstagram,
   FiGithub,
 } from "react-icons/fi";
 import { FaTiktok } from "react-icons/fa";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { useState } from "react";
+
+const ContactCard = ({ children, icon: Icon, title }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-10 rounded-2xl 
+                 border border-gray-700/50 hover:border-primary/50 transition-all duration-500"
+    >
+      {/* Animated background gradient */}
+      <motion.div
+        animate={{
+          opacity: isHovered ? 1 : 0,
+          scale: isHovered ? 1 : 0.8,
+        }}
+        transition={{ duration: 0.3 }}
+        className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl"
+      />
+
+      {/* Animated circles in background */}
+      <div className="absolute inset-0 overflow-hidden rounded-2xl">
+        <motion.div
+          animate={{
+            scale: isHovered ? 1.2 : 1,
+            opacity: isHovered ? 0.1 : 0,
+          }}
+          transition={{ duration: 0.6 }}
+          className="absolute -right-10 -bottom-10 w-40 h-40 bg-primary/20 rounded-full blur-2xl"
+        />
+        <motion.div
+          animate={{
+            scale: isHovered ? 1.2 : 1,
+            opacity: isHovered ? 0.1 : 0,
+          }}
+          transition={{ duration: 0.6 }}
+          className="absolute -left-10 -top-10 w-40 h-40 bg-purple-500/20 rounded-full blur-2xl"
+        />
+      </div>
+
+      <div className="flex flex-col items-center text-center relative">
+        <motion.div
+          animate={{
+            scale: isHovered ? 1.1 : 1,
+          }}
+          transition={{ duration: 0.3 }}
+          className="w-20 h-20 mb-8 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+        >
+          <Icon className="w-10 h-10 text-primary" />
+        </motion.div>
+
+        <motion.h3
+          animate={{ y: isHovered ? -5 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="text-2xl font-bold text-white mb-4"
+        >
+          {title}
+        </motion.h3>
+
+        <motion.div
+          animate={{
+            y: isHovered ? 5 : 0,
+            opacity: isHovered ? 1 : 0.8,
+          }}
+          transition={{ duration: 0.3 }}
+          className="relative z-10"
+        >
+          {children}
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
+const SocialIcon = ({ href, icon: Icon, className = "" }) => (
+  <motion.a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    whileHover={{ scale: 1.2 }}
+    whileTap={{ scale: 0.9 }}
+    className={`text-gray-400 hover:text-primary transition-colors ${className}`}
+  >
+    <Icon className="w-6 h-6" />
+  </motion.a>
+);
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-24 relative">
+    <section id="contact" className="py-24 relative overflow-hidden">
+      {/* Enhanced background elements */}
       <div className="absolute inset-0 opacity-5 bg-[url('/grid.svg')] bg-center"></div>
+      <motion.div
+        animate={{
+          opacity: [0.1, 0.2, 0.1],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+        className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[128px] -translate-x-1/2"
+      />
+      <motion.div
+        animate={{
+          opacity: [0.1, 0.2, 0.1],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          repeatType: "reverse",
+          delay: 1,
+        }}
+        className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/30 rounded-full blur-[96px] translate-x-1/2"
+      />
+
       <div className="container mx-auto px-4">
-        <h2 className="text-6xl font-bold mb-20 text-center group cursor-pointer relative">
+        {/* Animated title */}
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-6xl font-bold mb-20 text-center group cursor-pointer relative"
+        >
           <Link
             href="/contact"
             className="flex items-center justify-center gap-4 hover:gap-6 transition-all duration-300"
@@ -24,100 +148,62 @@ export default function Contact() {
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
                 Contact Us
               </span>
-              <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"></div>
+              <motion.div
+                initial={{ width: 0 }}
+                whileInView={{ width: "100%" }}
+                viewport={{ once: true }}
+                className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"
+              />
             </div>
-            <FiArrowRight className="transition-all duration-300 text-primary text-4xl" />
           </Link>
-        </h2>
+        </motion.h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-          <div className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-10 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="flex flex-col items-center text-center relative">
-              <div className="w-20 h-20 mb-8 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <FiMail className="w-10 h-10 text-primary" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Email</h3>
-              <a
-                href="mailto:fintech.calgary@gmail.com"
-                className="text-lg text-gray-300 hover:text-primary transition-colors duration-300"
-              >
-                fintech.calgary@gmail.com
-              </a>
-            </div>
-          </div>
+          <ContactCard icon={FiMail} title="Email">
+            <a
+              href="mailto:fintech.calgary@gmail.com"
+              className="text-lg text-gray-300 hover:text-primary transition-colors duration-300"
+            >
+              fintech.calgary@gmail.com
+            </a>
+          </ContactCard>
 
-          <div className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-10 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="flex flex-col items-center text-center relative">
-              <div className="w-20 h-20 mb-8 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <FiMapPin className="w-10 h-10 text-primary" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Location</h3>
-              <div className="text-lg text-gray-300 space-y-2">
-                <p>University of Calgary</p>
-                <p>2500 University Dr NW</p>
-                <p>Calgary, AB T2N 1N4</p>
-              </div>
+          <ContactCard icon={FiMapPin} title="Location">
+            <div className="text-lg text-gray-300 space-y-2">
+              <p>University of Calgary</p>
+              <p>2500 University Dr NW</p>
+              <p>Calgary, AB T2N 1N4</p>
             </div>
-          </div>
+          </ContactCard>
 
-          <div className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-10 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="flex flex-col items-center text-center relative">
-              <div className="w-20 h-20 mb-8 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <FiMessageSquare className="w-10 h-10 text-primary" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">
-                Social Media
-              </h3>
-              <p className="text-lg text-gray-300 mb-6">
-                Follow us for the latest updates
-              </p>
-              <div>
-                <div className="flex space-x-4">
-                  <a
-                    href="https://www.linkedin.com/company/fintechcalgary/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-primary transition-colors"
-                  >
-                    <FiLinkedin className="w-6 h-6" />
-                  </a>
-                  <a
-                    href="https://www.instagram.com/fintech.calgary/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-primary transition-colors"
-                  >
-                    <FiInstagram className="w-6 h-6" />
-                  </a>
-                  <a
-                    href="mailto:fintechcalgary@gmail.com"
-                    className="text-gray-400 hover:text-primary transition-colors"
-                  >
-                    <FiMail className="w-6 h-6" />
-                  </a>
-                  <a
-                    href="https://github.com/fintech-calgary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-primary transition-colors"
-                  >
-                    <FiGithub className="w-6 h-6" />
-                  </a>
-                  <a
-                    href="https://www.tiktok.com/@fintech.calgary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-primary transition-colors"
-                  >
-                    <FaTiktok className="w-5 h-5" />
-                  </a>
-                </div>
-              </div>
+          <ContactCard icon={FiMessageSquare} title="Social Media">
+            <p className="text-lg text-gray-300 mb-6">
+              Follow us for the latest updates
+            </p>
+            <div className="flex justify-center space-x-6">
+              <SocialIcon
+                href="https://www.linkedin.com/company/fintechcalgary/"
+                icon={FiLinkedin}
+              />
+              <SocialIcon
+                href="https://www.instagram.com/fintech.calgary/"
+                icon={FiInstagram}
+              />
+              <SocialIcon
+                href="mailto:fintechcalgary@gmail.com"
+                icon={FiMail}
+              />
+              <SocialIcon
+                href="https://github.com/fintech-calgary"
+                icon={FiGithub}
+              />
+              <SocialIcon
+                href="https://www.tiktok.com/@fintech.calgary"
+                icon={FaTiktok}
+                className="w-5 h-5"
+              />
             </div>
-          </div>
+          </ContactCard>
         </div>
       </div>
     </section>
