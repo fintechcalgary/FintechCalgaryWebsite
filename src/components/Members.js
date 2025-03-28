@@ -288,305 +288,307 @@ export default function Members() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="fixed inset-0 bg-black/60 backdrop-blur-2xl z-[9999]"
+                className="fixed inset-0 bg-black/60 backdrop-blur-2xl z-[99999]"
                 onClick={() => resetForm()}
-              />
-
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                transition={{
-                  duration: 0.2,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="fixed inset-0 z-[9999] p-4 flex items-start justify-center overflow-y-auto"
-                onClick={(e) => e.stopPropagation()}
               >
-                <div className="relative w-full max-w-4xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg border border-gray-700/50 shadow-xl flex flex-col my-8">
-                  <div className="sticky top-0 z-10 bg-gray-800/90 backdrop-blur-sm p-6 border-b border-gray-700 rounded-t-lg">
-                    <h2 className="text-2xl font-semibold text-white">
-                      {editingMember ? "Edit Member" : "Add Member"}
-                    </h2>
-                  </div>
+                <div className="min-h-screen overflow-y-auto py-8 px-4">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                    transition={{
+                      duration: 0.2,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    className="relative w-full max-w-4xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg border border-gray-700/50 shadow-xl flex flex-col my-8"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="sticky top-0 z-10 bg-gray-800/90 backdrop-blur-sm p-6 border-b border-gray-700 rounded-t-lg">
+                      <h2 className="text-2xl font-semibold text-white">
+                        {editingMember ? "Edit Member" : "Add Member"}
+                      </h2>
+                    </div>
 
-                  <div className="p-6 overflow-y-auto">
-                    <form
-                      id="memberForm"
-                      onSubmit={handleSubmit}
-                      className="space-y-4"
-                    >
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div className="space-y-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-1">
-                              Name
-                            </label>
-                            <input
-                              type="text"
-                              placeholder="Enter member name"
-                              value={formData.name}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  name: e.target.value,
-                                })
-                              }
-                              className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                              required
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-1">
-                              Team
-                            </label>
-                            <input
-                              type="text"
-                              placeholder="Enter team"
-                              value={formData.team}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  team: e.target.value,
-                                })
-                              }
-                              className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                              required
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-1">
-                              Position
-                            </label>
-                            <input
-                              type="text"
-                              placeholder="Enter position"
-                              value={formData.position}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  position: e.target.value,
-                                })
-                              }
-                              className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                              required
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-1">
-                              Major
-                            </label>
-                            <input
-                              type="text"
-                              placeholder="Enter major"
-                              value={formData.major}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  major: e.target.value,
-                                })
-                              }
-                              className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                              required
-                            />
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-1">
-                              Username
-                            </label>
-                            <input
-                              placeholder="Enter username address"
-                              value={formData.username}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  username: e.target.value,
-                                })
-                              }
-                              className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                              required
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-1">
-                              Password
-                            </label>
-                            <input
-                              type="password"
-                              placeholder="Enter password"
-                              value={formData.password}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  password: e.target.value,
-                                })
-                              }
-                              className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                              required={!editingMember}
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-1">
-                              Role
-                            </label>
-                            <div className="relative">
-                              <select
-                                value={formData.role}
+                    <div className="p-6 overflow-y-auto">
+                      <form
+                        id="memberForm"
+                        onSubmit={handleSubmit}
+                        className="space-y-4"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          <div className="space-y-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-300 mb-1">
+                                Name
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="Enter member name"
+                                value={formData.name}
                                 onChange={(e) =>
                                   setFormData({
                                     ...formData,
-                                    role: e.target.value,
+                                    name: e.target.value,
                                   })
                                 }
-                                className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 appearance-none"
+                                className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
                                 required
-                              >
-                                <option value="admin">Admin</option>
-                                <option value="member">Member</option>
-                              </select>
-                              <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-xs text-white">
-                                ▼
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-300 mb-1">
+                                Team
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="Enter team"
+                                value={formData.team}
+                                onChange={(e) =>
+                                  setFormData({
+                                    ...formData,
+                                    team: e.target.value,
+                                  })
+                                }
+                                className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                                required
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-300 mb-1">
+                                Position
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="Enter position"
+                                value={formData.position}
+                                onChange={(e) =>
+                                  setFormData({
+                                    ...formData,
+                                    position: e.target.value,
+                                  })
+                                }
+                                className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                                required
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-300 mb-1">
+                                Major
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="Enter major"
+                                value={formData.major}
+                                onChange={(e) =>
+                                  setFormData({
+                                    ...formData,
+                                    major: e.target.value,
+                                  })
+                                }
+                                className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                                required
+                              />
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-300 mb-1">
+                                Username
+                              </label>
+                              <input
+                                placeholder="Enter username address"
+                                value={formData.username}
+                                onChange={(e) =>
+                                  setFormData({
+                                    ...formData,
+                                    username: e.target.value,
+                                  })
+                                }
+                                className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                                required
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-300 mb-1">
+                                Password
+                              </label>
+                              <input
+                                type="password"
+                                placeholder="Enter password"
+                                value={formData.password}
+                                onChange={(e) =>
+                                  setFormData({
+                                    ...formData,
+                                    password: e.target.value,
+                                  })
+                                }
+                                className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                                required={!editingMember}
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-300 mb-1">
+                                Role
+                              </label>
+                              <div className="relative">
+                                <select
+                                  value={formData.role}
+                                  onChange={(e) =>
+                                    setFormData({
+                                      ...formData,
+                                      role: e.target.value,
+                                    })
+                                  }
+                                  className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 appearance-none"
+                                  required
+                                >
+                                  <option value="admin">Admin</option>
+                                  <option value="member">Member</option>
+                                </select>
+                                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-xs text-white">
+                                  ▼
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="space-y-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-1">
-                              LinkedIn URL
-                            </label>
-                            <input
-                              type="url"
-                              placeholder="Enter LinkedIn profile URL"
-                              value={formData.linkedinUrl}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  linkedinUrl: e.target.value,
-                                })
-                              }
-                              className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-1">
-                              Profile Image
-                            </label>
-                            <div className="flex items-center gap-4">
-                              <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageUpload}
-                                className="hidden"
-                                id="imageUpload"
-                              />
-                              <label
-                                htmlFor="imageUpload"
-                                className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200
-                                ${
-                                  uploading
-                                    ? "bg-gray-700 text-gray-300"
-                                    : "bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary"
-                                }`}
-                              >
-                                <FiImage className="w-5 h-5" />
-                                <span>
-                                  {uploading ? "Uploading..." : "Choose Image"}
-                                </span>
+                          <div className="space-y-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-300 mb-1">
+                                LinkedIn URL
                               </label>
-                              {formData.imageUrl && (
-                                <div className="relative w-16 h-16 group">
-                                  <Image
-                                    src={formData.imageUrl}
-                                    alt="Profile preview"
-                                    width={64}
-                                    height={64}
-                                    className="w-full h-full object-cover rounded-full border-2 border-gray-700 group-hover:border-primary transition-colors duration-200"
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      setFormData((prev) => ({
-                                        ...prev,
-                                        imageUrl: "",
-                                      }))
-                                    }
-                                    className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 shadow-lg transition-colors duration-200"
-                                  >
-                                    <FiX size={12} />
-                                  </button>
-                                </div>
-                              )}
+                              <input
+                                type="url"
+                                placeholder="Enter LinkedIn profile URL"
+                                value={formData.linkedinUrl}
+                                onChange={(e) =>
+                                  setFormData({
+                                    ...formData,
+                                    linkedinUrl: e.target.value,
+                                  })
+                                }
+                                className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-300 mb-1">
+                                Profile Image
+                              </label>
+                              <div className="flex items-center gap-4">
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={handleImageUpload}
+                                  className="hidden"
+                                  id="imageUpload"
+                                />
+                                <label
+                                  htmlFor="imageUpload"
+                                  className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200
+                                  ${
+                                    uploading
+                                      ? "bg-gray-700 text-gray-300"
+                                      : "bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700 hover:border-primary"
+                                  }`}
+                                >
+                                  <FiImage className="w-5 h-5" />
+                                  <span>
+                                    {uploading
+                                      ? "Uploading..."
+                                      : "Choose Image"}
+                                  </span>
+                                </label>
+                                {formData.imageUrl && (
+                                  <div className="relative w-16 h-16 group">
+                                    <Image
+                                      src={formData.imageUrl}
+                                      alt="Profile preview"
+                                      width={64}
+                                      height={64}
+                                      className="w-full h-full object-cover rounded-full border-2 border-gray-700 group-hover:border-primary transition-colors duration-200"
+                                    />
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setFormData((prev) => ({
+                                          ...prev,
+                                          imageUrl: "",
+                                        }))
+                                      }
+                                      className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 shadow-lg transition-colors duration-200"
+                                    >
+                                      <FiX size={12} />
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-300 mb-1">
+                                Description
+                              </label>
+                              <textarea
+                                placeholder="Enter member description"
+                                value={formData.description}
+                                onChange={(e) =>
+                                  setFormData({
+                                    ...formData,
+                                    description: e.target.value,
+                                  })
+                                }
+                                rows={7}
+                                className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                              />
                             </div>
                           </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-1">
-                              Description
-                            </label>
-                            <textarea
-                              placeholder="Enter member description"
-                              value={formData.description}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  description: e.target.value,
-                                })
-                              }
-                              rows={7}
-                              className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                            />
-                          </div>
                         </div>
-                      </div>
-                    </form>
-                  </div>
-
-                  <div className="sticky bottom-0 z-10 bg-gray-800/90 backdrop-blur-sm p-6 border-t border-gray-700 rounded-b-lg">
-                    <div className="flex justify-end items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={resetForm}
-                        className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
-                        disabled={uploading}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        form="memberForm"
-                        disabled={uploading || submitting}
-                        className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2
-                        ${
-                          uploading || submitting
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
-                      >
-                        {editingMember ? (
-                          <>
-                            <FiEdit2 className="w-4 h-4" />
-                            {submitting ? "Updating..." : "Update Member"}
-                          </>
-                        ) : (
-                          <>
-                            <FiPlus className="w-4 h-4" />
-                            {submitting ? "Adding..." : "Add Member"}
-                          </>
-                        )}
-                      </button>
+                      </form>
                     </div>
-                  </div>
+
+                    <div className="sticky bottom-0 z-10 bg-gray-800/90 backdrop-blur-sm p-6 border-t border-gray-700 rounded-b-lg">
+                      <div className="flex justify-end items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={resetForm}
+                          className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
+                          disabled={uploading}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          form="memberForm"
+                          disabled={uploading || submitting}
+                          className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2
+                          ${
+                            uploading || submitting
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
+                        >
+                          {editingMember ? (
+                            <>
+                              <FiEdit2 className="w-4 h-4" />
+                              {submitting ? "Updating..." : "Update Member"}
+                            </>
+                          ) : (
+                            <>
+                              <FiPlus className="w-4 h-4" />
+                              {submitting ? "Adding..." : "Add Member"}
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
                 </div>
               </motion.div>
             </>
