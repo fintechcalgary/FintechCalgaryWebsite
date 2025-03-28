@@ -97,6 +97,8 @@ export default function ExecutivesPage() {
         return acc;
       }, {});
 
+      console.log(data);
+
       setExecutives(data);
       setGroupedExecutives(grouped);
     } catch (error) {
@@ -202,10 +204,11 @@ export default function ExecutivesPage() {
                           </p>
                           <div className="flex items-center justify-center gap-3">
                             <a
-                              href={`mailto:${executive.email}`}
+                              href={`mailto:${executive.username}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-sm text-gray-400 hover:text-primary transition-colors"
+                              aria-label={`Email ${executive.name}`}
                             >
                               <FiMail className="w-5 h-5" />
                             </a>

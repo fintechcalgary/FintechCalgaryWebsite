@@ -123,17 +123,34 @@ export default function EventPage() {
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
               {/* Image Section */}
-              <div className="relative aspect-video lg:aspect-auto lg:h-[600px]">
+              <div className="relative bg-gray-950 overflow-hidden flex items-center justify-center">
                 {event.images?.length > 0 ? (
-                  <ImageCarousel images={event.images} title={event.title} />
+                  <div className="w-full h-full">
+                    <ImageCarousel images={event.images} title={event.title} />
+                  </div>
                 ) : (
-                  <Image
-                    src={event.imageUrl}
-                    alt={event.title}
-                    fill
-                    priority
-                    className="object-cover"
-                  />
+                  <div className="relative w-full h-full flex items-center justify-center p-8">
+                    {/* Blurred background version of the image */}
+                    <div className="absolute inset-0 overflow-hidden">
+                      <Image
+                        src={event.imageUrl}
+                        alt=""
+                        fill
+                        className="object-cover blur-md scale-110 opacity-50"
+                        priority
+                      />
+                    </div>
+
+                    {/* Main image with proper dimensions */}
+                    <Image
+                      src={event.imageUrl}
+                      alt={event.title}
+                      width={800}
+                      height={600}
+                      className="relative z-10 max-w-full max-h-[600px] object-contain"
+                      priority
+                    />
+                  </div>
                 )}
               </div>
 
