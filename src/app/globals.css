@@ -89,8 +89,6 @@ input[type="tel"],
 input[type="url"],
 textarea {
   -webkit-appearance: none;
-  -webkit-border-radius: 0;
-  border-radius: 0;
 }
 
 /* Custom select styling */
