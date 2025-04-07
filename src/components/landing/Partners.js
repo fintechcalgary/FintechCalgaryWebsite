@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { useState } from "react";
 
 export default function Partners() {
@@ -34,36 +33,21 @@ export default function Partners() {
 
       <div className="container mx-auto px-6 relative">
         {/* Title */}
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-6xl font-bold mb-20 text-center"
-        >
+        <h2 className="text-6xl font-bold mb-20 text-center">
           <Link href="/partners" className="group inline-block relative">
             <div className="flex items-center justify-center gap-4 hover:gap-6 transition-all duration-300">
               <div className="relative">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-primary">
                   Our Partners
                 </span>
-                <motion.div
-                  className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-28 h-1 bg-gradient-to-r from-primary to-purple-500 rounded-full"
-                  initial={{ width: "0%" }}
-                  whileInView={{ width: "100%" }}
-                  viewport={{ once: true }}
-                ></motion.div>
+                <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-28 h-1 bg-gradient-to-r from-primary to-purple-500 rounded-full"></div>
               </div>
             </div>
           </Link>
-        </motion.h2>
+        </h2>
 
         {/* Partners Showcase - Modernized */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-6xl mx-auto"
-        >
+        <div className="max-w-6xl mx-auto">
           <div
             className="bg-gradient-to-br from-gray-800/60 to-gray-900/80 rounded-3xl p-10 lg:p-12 
             shadow-xl border border-gray-700/50 backdrop-blur-xl"
@@ -75,15 +59,16 @@ export default function Partners() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               {partners.map((partner, index) => (
-                <motion.div
+                <div
                   key={partner.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  onHoverStart={() => setHoveredPartner(partner.name)}
-                  onHoverEnd={() => setHoveredPartner(null)}
+                  onMouseEnter={() => setHoveredPartner(partner.name)}
+                  onMouseLeave={() => setHoveredPartner(null)}
                   className="group relative"
+                  style={{
+                    opacity: 1,
+                    transform: "translateY(0)",
+                    transition: "opacity 0.3s, transform 0.3s",
+                  }}
                 >
                   <div
                     className="bg-[#12121a]/80 backdrop-blur-xl rounded-2xl p-6 w-full h-48 flex flex-col items-center justify-center
@@ -91,21 +76,27 @@ export default function Partners() {
                     hover:shadow-lg hover:shadow-primary/20 overflow-hidden"
                   >
                     {/* Dynamic background gradient on hover */}
-                    <motion.div
-                      className="absolute inset-0 opacity-0 rounded-2xl z-0"
+                    <div
+                      className="absolute inset-0 rounded-2xl z-0"
                       style={{
                         background: `radial-gradient(circle at center, ${partner.color}20 0%, transparent 70%)`,
-                      }}
-                      animate={{
                         opacity: hoveredPartner === partner.name ? 0.8 : 0,
-                        scale: hoveredPartner === partner.name ? 1.2 : 1,
+                        transform: `scale(${
+                          hoveredPartner === partner.name ? 1.2 : 1
+                        })`,
+                        transition: "opacity 0.5s, transform 0.5s",
                       }}
-                      transition={{ duration: 0.5 }}
                     />
 
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
+                    <div
                       className="relative w-full h-28 flex items-center justify-center z-10"
+                      style={{
+                        transform:
+                          hoveredPartner === partner.name
+                            ? "scale(1.05)"
+                            : "scale(1)",
+                        transition: "transform 0.3s",
+                      }}
                     >
                       <Image
                         src={partner.logo}
@@ -114,30 +105,44 @@ export default function Partners() {
                         height={90}
                         className="object-contain max-h-28"
                       />
-                    </motion.div>
+                    </div>
 
-                    <motion.p
+                    <p
                       className="mt-6 text-gray-300 text-center font-medium z-10"
-                      animate={{
+                      style={{
                         color:
                           hoveredPartner === partner.name
                             ? "#ffffff"
                             : "#d1d5db",
+                        transition: "color 0.3s",
                       }}
-                      transition={{ duration: 0.3 }}
                     >
                       {partner.name}
-                    </motion.p>
+                    </p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
             <div className="text-center">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <div
                 className="inline-block"
+                style={{
+                  transform: "scale(1)",
+                  transition: "transform 0.3s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.transform = "scale(0.95)";
+                }}
+                onMouseUp={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                }}
               >
                 <Link
                   href="/partners"
@@ -147,10 +152,10 @@ export default function Partners() {
                   <span>View All Partners</span>
                   <FiArrowRight className="transform transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
-              </motion.div>
+              </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 export default function AboutUs() {
   return (
@@ -13,35 +12,22 @@ export default function AboutUs() {
 
       <div className="container mx-auto px-6 relative">
         {/* Title */}
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-6xl font-bold mb-20 text-center"
-        >
+        <h2 className="text-6xl font-bold mb-20 text-center">
           <Link href="/about" className="group inline-block relative">
             <div className="flex items-center justify-center gap-4 hover:gap-6 transition-all duration-300">
               <div className="relative">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-primary">
                   About Us
                 </span>
-                <motion.div
-                  className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-28 h-1 bg-gradient-to-r from-primary to-purple-500 rounded-full"
-                  initial={{ width: "0%" }}
-                  whileInView={{ width: "100%" }}
-                  viewport={{ once: true }}
-                ></motion.div>
+                <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-28 h-1 bg-gradient-to-r from-primary to-purple-500 rounded-full"></div>
               </div>
             </div>
           </Link>
-        </motion.h2>
+        </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
           {/* Left Section (Large Card) */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+          <div
             className="group lg:col-span-2 bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-3xl p-10 lg:p-12 
               shadow-xl hover:shadow-2xl border border-gray-700/50 hover:border-primary/50 
               transition-all duration-500 flex flex-col justify-between backdrop-blur-xl border-l-4 border-l-purple-500"
@@ -73,17 +59,13 @@ export default function AboutUs() {
                 className="rounded-2xl transform group-hover:scale-105 transition-transform duration-500"
               />
             </div>
-          </motion.div>
+          </div>
 
           {/* Right Section (Two Stacked Cards) */}
           <div className="flex flex-col gap-8 h-full">
             {["What We Do", "Our Approach"].map((title, index) => (
-              <motion.div
+              <div
                 key={title}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
                 className="group bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-3xl p-10 
                   shadow-xl hover:shadow-2xl border border-gray-700/50 hover:border-primary/50 
                   transition-all duration-500 backdrop-blur-xl relative flex-1 overflow-hidden
@@ -107,7 +89,7 @@ export default function AboutUs() {
                     <FiArrowRight className="transform transition-transform duration-300 group-hover:translate-x-1" />
                   </Link>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
