@@ -175,8 +175,9 @@ export default function DashboardPage() {
                       Reminder
                     </h3>
                     <p className="text-xs text-purple-100 leading-relaxed">
-                      No need to delete past events—they'll remain on the events
-                      page. Delete only those you no longer want to display.
+                      No need to delete past events—they&apos;ll remain on the
+                      events page. Delete only those you no longer want to
+                      display.
                     </p>
                   </div>
                 </div>

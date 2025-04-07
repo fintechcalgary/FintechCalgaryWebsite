@@ -94,14 +94,14 @@ export default function ContactPage() {
           options={particlesConfig}
         />
 
-        <div className="relative z-10 container mx-auto px-6 py-24">
+        <div className="container mx-auto px-6 py-24 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-16"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">
-              Get in Touch
+            <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
+              Contact Us
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               Have questions? We&apos;d love to hear from you.

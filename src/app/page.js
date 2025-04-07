@@ -12,6 +12,7 @@ import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 import { FiArrowRight } from "react-icons/fi";
 import MissionStatement from "@/components/landing/MissionStatement";
+import Partners from "@/components/landing/Partners";
 import Image from "next/image";
 
 export default function Home() {
@@ -170,6 +171,10 @@ export default function Home() {
 
       <div className="relative">
         <UpcomingEvents events={events} />
+      </div>
+
+      <div className="relative">
+        <Partners />
       </div>
 
       <div className="relative">

@@ -113,6 +113,7 @@ export default function PublicNavbar() {
                   ["About", "/about"],
                   ["Events", "/events"],
                   ["Executives", "/executives"],
+                  ["Partners", "/partners"],
                   ["Contact", "/contact"],
                 ].map(([title, path]) => (
                   <Link key={path} href={path}>
@@ -179,6 +180,7 @@ export default function PublicNavbar() {
               ["About", "/about"],
               ["Events", "/events"],
               ["Executives", "/executives"],
+              ["Partners", "/partners"],
               ["Contact", "/contact"],
             ].map(([title, path]) => (
               <Link key={path} href={path} onClick={() => setIsMenuOpen(false)}>

@@ -51,6 +51,16 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/partners"
+                  className="text-gray-400 hover:text-primary transition-colors inline-flex items-center"
+                >
+                  <span className="hover:translate-x-1 transition-transform">
+                    Partners
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/contact"
                   className="text-gray-400 hover:text-primary transition-colors inline-flex items-center"
                 >
