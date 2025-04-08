@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import Image from "next/image";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function AboutUs() {
   return (
@@ -51,12 +52,12 @@ export default function AboutUs() {
               </Link>
             </div>
             <div className="hidden lg:block mt-8">
-              <Image
-                src="/finance.svg"
-                alt="FinTech Illustration"
-                width={500}
-                height={300}
-                className="rounded-2xl transform group-hover:scale-105 transition-transform duration-500"
+              <DotLottieReact
+                src="/lottie/crypto.lottie"
+                autoplay
+                loop
+                className="w-full h-full object-contain"
+                renderer="svg"
               />
             </div>
           </div>

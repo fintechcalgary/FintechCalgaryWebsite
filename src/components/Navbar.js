@@ -47,23 +47,18 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        className={`sticky top-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-gray-900/75 backdrop-blur-md shadow-lg"
-            : "bg-transparent"
-        }`}
+        className={`sticky top-0 z-50 transition-all duration-300 pt-2`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
         <div className="container mx-auto px-4 max-w-7xl mt-4">
           <div className="hidden md:flex items-center justify-between transition-all duration-300">
-            {/* Logo - adjusted for better scroll behavior */}
+            {/* Logo - adjusted for vertical centering when scrolled */}
             <motion.div
               className="flex items-center gap-3"
               animate={{
                 scale: isScrolled ? 0.9 : 1,
-                marginTop: isScrolled ? "-0.5rem" : 0,
               }}
               transition={{ duration: 0.3 }}
             >
@@ -80,12 +75,11 @@ export default function Navbar() {
               </Link>
             </motion.div>
 
-            {/* Centered Navigation Links - adjusted for better responsiveness */}
+            {/* Centered Navigation Links - adjusted for vertical centering */}
             <motion.div
               className="flex items-center justify-center flex-[2]"
               animate={{
                 scale: isScrolled ? 0.95 : 1,
-                marginTop: isScrolled ? "0.5rem" : 0,
               }}
               transition={{ duration: 0.3 }}
             >
@@ -112,11 +106,10 @@ export default function Navbar() {
               </div>
             </motion.div>
 
-            {/* Logout Button - adjusted for better scroll behavior */}
+            {/* Logout Button - adjusted for vertical centering */}
             <motion.div
               animate={{
                 scale: isScrolled ? 0.9 : 1,
-                marginTop: isScrolled ? "-0.5rem" : 0,
               }}
               transition={{ duration: 0.3 }}
               className="flex justify-end"

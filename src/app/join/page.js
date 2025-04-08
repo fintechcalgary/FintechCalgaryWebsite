@@ -8,6 +8,7 @@ import Footer from "@/components/landing/Footer";
 import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 import Link from "next/link";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function JoinPage() {
   const [formData, setFormData] = useState({
@@ -109,11 +110,27 @@ export default function JoinPage() {
 
             <div className="relative z-40">
               <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50">
-                <h1 className="text-3xl font-bold text-white mb-4">Join Us</h1>
-                <p className="text-gray-300 mb-6">
-                  Join the FinTech Calgary community to stay updated with our
-                  latest events, workshops, and opportunities.
-                </p>
+                <div className="flex flex-col md:flex-row items-center gap-6 mb-8">
+                  <div className="w-full md:w-1/2">
+                    <DotLottieReact
+                      src="/lottie/blockchain3.lottie"
+                      autoplay
+                      loop
+                      className="w-full mx-auto"
+                    />
+                  </div>
+                  <div className="w-full md:w-1/2">
+                    <h1 className="text-3xl font-bold text-white mb-4">
+                      Join Us
+                    </h1>
+                    <p className="text-gray-300">
+                      Join the FinTech Calgary community to stay updated with
+                      our latest events, workshops, and opportunities. Connect
+                      with industry leaders and innovators in the blockchain and
+                      financial technology space.
+                    </p>
+                  </div>
+                </div>
 
                 {submitStatus === "success" ? (
                   <div className="text-center py-8">

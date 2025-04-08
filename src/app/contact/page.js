@@ -15,6 +15,7 @@ import Footer from "@/components/landing/Footer";
 import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 import { FaTiktok } from "react-icons/fa";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function ContactPage() {
   useEffect(() => {
@@ -108,7 +109,7 @@ export default function ContactPage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -129,25 +130,6 @@ export default function ContactPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 shadow-lg hover:border-primary/50 hover:bg-gray-800/70 transition-all duration-300"
-            >
-              <FiMapPin className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">
-                Location
-              </h3>
-              <p className="text-gray-300">
-                University of Calgary
-                <br />
-                2500 University Dr NW
-                <br />
-                Calgary, AB T2N 1N4
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
               className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 shadow-lg hover:border-primary/50 hover:bg-gray-800/70 transition-all duration-300"
             >
               <FiMessageSquare className="w-8 h-8 text-primary mb-4" />
@@ -202,91 +184,108 @@ export default function ContactPage() {
             </motion.div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mx-auto"
-          >
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid lg:grid-cols-2 gap-12 mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="order-2 lg:order-1"
+            >
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Your Name"
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      required
+                      className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="email"
+                      placeholder="Your Email"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                      required
+                      className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                    />
+                  </div>
+                </div>
                 <div>
                   <input
                     type="text"
-                    placeholder="Your Name"
-                    value={formData.name}
+                    placeholder="Subject"
+                    value={formData.subject}
                     onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
+                      setFormData({ ...formData, subject: e.target.value })
                     }
                     required
                     className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
                   />
                 </div>
                 <div>
-                  <input
-                    type="email"
-                    placeholder="Your Email"
-                    value={formData.email}
+                  <textarea
+                    placeholder="Your Message"
+                    value={formData.message}
                     onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
+                      setFormData({ ...formData, message: e.target.value })
                     }
                     required
+                    rows={6}
                     className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
                   />
                 </div>
-              </div>
-              <div>
-                <input
-                  type="text"
-                  placeholder="Subject"
-                  value={formData.subject}
-                  onChange={(e) =>
-                    setFormData({ ...formData, subject: e.target.value })
-                  }
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
-                />
-              </div>
-              <div>
-                <textarea
-                  placeholder="Your Message"
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData({ ...formData, message: e.target.value })
-                  }
-                  required
-                  rows={6}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
-                />
-              </div>
-              <div>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full px-8 py-4 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    "Sending..."
-                  ) : (
-                    <>
-                      Send Message
-                      <FiSend />
-                    </>
-                  )}
-                </button>
-              </div>
-              {submitStatus === "success" && (
-                <p className="text-green-400 text-center">
-                  Message sent successfully!
-                </p>
-              )}
-              {submitStatus === "error" && (
-                <p className="text-red-400 text-center">
-                  Failed to send message. Please try again.
-                </p>
-              )}
-            </form>
-          </motion.div>
+                <div>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full px-8 py-4 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    {isSubmitting ? (
+                      "Sending..."
+                    ) : (
+                      <>
+                        Send Message
+                        <FiSend />
+                      </>
+                    )}
+                  </button>
+                </div>
+                {submitStatus === "success" && (
+                  <p className="text-green-400 text-center">
+                    Message sent successfully!
+                  </p>
+                )}
+                {submitStatus === "error" && (
+                  <p className="text-red-400 text-center">
+                    Failed to send message. Please try again.
+                  </p>
+                )}
+              </form>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="order-1 lg:order-2 flex items-center justify-center"
+            >
+              <DotLottieReact
+                src="/lottie/contact.lottie"
+                autoplay
+                loop
+                className="w-full h-full object-contain"
+                renderer="svg"
+              />
+            </motion.div>
+          </div>
         </div>
       </div>
 
