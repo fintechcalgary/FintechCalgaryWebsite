@@ -51,7 +51,7 @@ export default function AboutUs() {
                 <FiArrowRight className="transform transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>
-            <div className="hidden lg:block mt-8">
+            <div className="block mt-8">
               <DotLottieReact
                 src="/lottie/crypto.lottie"
                 autoplay
