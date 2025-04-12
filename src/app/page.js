@@ -125,12 +125,12 @@ export default function Home() {
               FinTech Calgary
             </motion.h1>
             <motion.p
-              className="text-xl md:text-2xl xl:text-3xl mb-12 text-gray-200 font-light leading-relaxed"
+              className="text-xl md:text-2xl xl:text-3xl mb-12 text-gray-300 font-light leading-relaxed"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.4 }}
             >
-              Innovating the future of finance at the University of Calgary
+              Innovating the future of finance
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
