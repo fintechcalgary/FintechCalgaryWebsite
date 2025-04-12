@@ -88,7 +88,6 @@ export default function EventPage() {
           init={particlesInit}
           options={particlesConfig}
         />
-        <div className="absolute inset-0 opacity-5 bg-[url('/grid.svg')] bg-center z-0"></div>
 
         <div className="container mx-auto px-4 pt-32 pb-20 relative z-10">
           {/* Back Button */}

@@ -108,9 +108,6 @@ export default function PartnersPage() {
         {/* Modern gradient background */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f] via-[#0f0f19] to-[#13131f] z-0"></div>
 
-        {/* Animated grid pattern */}
-        <div className="absolute inset-0 opacity-5 bg-[url('/grid.svg')] bg-center z-0"></div>
-
         {/* Animated gradient orbs */}
         <div className="absolute top-40 left-20 w-72 h-72 bg-primary/20 rounded-full blur-[100px] animate-pulse"></div>
         <div className="absolute bottom-40 right-20 w-80 h-80 bg-purple-600/20 rounded-full blur-[120px] animate-pulse delay-1000"></div>

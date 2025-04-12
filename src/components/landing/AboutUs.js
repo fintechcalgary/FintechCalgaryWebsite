@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
-import Image from "next/image";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function AboutUs() {
   return (
     <section id="about" className="py-24 relative">
       {/* Background Elements */}
-      <div className="absolute inset-0 opacity-5 bg-[url('/grid.svg')] bg-center pointer-events-none"></div>
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[128px] -translate-x-1/2 opacity-20"></div>
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/30 rounded-full blur-[96px] translate-x-1/2 opacity-20"></div>
 

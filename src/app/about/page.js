@@ -46,7 +46,6 @@ export default function AboutPage() {
       <PublicNavbar />
 
       <div className="relative flex-grow">
-        <div className="absolute inset-0 opacity-5 bg-[url('/grid.svg')] bg-center"></div>
         <Particles
           className="absolute inset-0 z-0"
           init={particlesInit}
