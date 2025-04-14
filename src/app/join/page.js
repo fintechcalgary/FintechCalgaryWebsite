@@ -348,12 +348,14 @@ export default function JoinPage() {
                         </p>
                         <button
                           onClick={handlePremiumRedirect}
-                          className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center"
+                          className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center cursor-not-allowed"
+                          disabled
                         >
-                          Continue to Premium Sign Up
+                          Premium Sign Up Available in September
                         </button>
                         <p className="text-xs text-gray-400 text-center">
-                          You&apos;ll be redirected to our secure payment page.
+                          Our premium membership option is coming soon. Check
+                          back in September!
                         </p>
                       </div>
                     )}
