@@ -292,6 +292,7 @@ export default function JoinPage() {
                           )}
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Name input - commented out
                             <div>
                               <label className="text-sm font-medium text-gray-300 mb-1 block">
                                 Name
@@ -329,14 +330,17 @@ export default function JoinPage() {
                                 placeholder="Your email address"
                               />
                             </div>
+                            */}
                           </div>
 
                           <button
                             type="submit"
-                            disabled={isSubmitting}
-                            className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                            disabled={true}
+                            className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                           >
-                            {isSubmitting ? "Joining..." : "Join Now"}
+                            {isSubmitting
+                              ? "Joining..."
+                              : "Coming in September"}
                           </button>
                         </form>
                       </div>
@@ -348,7 +352,7 @@ export default function JoinPage() {
                         </p>
                         <button
                           onClick={handlePremiumRedirect}
-                          className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center cursor-not-allowed"
+                          className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                           disabled
                         >
                           Premium Sign Up Available in September
