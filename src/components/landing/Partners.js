@@ -42,6 +42,11 @@ export default function Partners() {
       logo: "/partners/trescon.png",
       color: "#a78bfa",
     },
+    {
+      name: "Helcim",
+      logo: "/partners/helcim.png",
+      color: "#a78bfa",
+    },
   ];
 
   // Duplicate partners array to create a seamless loop
