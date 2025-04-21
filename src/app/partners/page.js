@@ -79,7 +79,7 @@ export default function PartnersPage() {
       logo: "/partners/dubai-fintech-summit.png",
       description:
         "A premier global event bringing together FinTech innovators, investors, and industry leaders to shape the future of financial technology.",
-      website: "https://www.dubaifintechsummit.com/",
+      website: "https://dubaifintechsummit.com/get-involved/#buy-tickets",
       color: "#6d28d9",
     },
     {
