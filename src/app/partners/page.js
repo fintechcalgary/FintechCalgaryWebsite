@@ -98,6 +98,15 @@ export default function PartnersPage() {
       website: "https://www.tresconglobal.com/",
       color: "#a78bfa",
     },
+    {
+      name: "Helcim",
+      logo: "/partners/helcim.png",
+      description:
+        "An innovative fintech company offering integrated payment solutions and business tools built for modern commerce.",
+      website:
+        "https://www.helcim.com/partners/fintechcalgary/?af=3a785c9580a52b",
+      color: "#a78bfa",
+    },
   ];
 
   return (
