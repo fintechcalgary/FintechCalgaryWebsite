@@ -70,7 +70,7 @@ export default function PublicNavbar() {
                 <Link href="/" className="flex items-center group">
                   <motion.img
                     src="/logo.svg"
-                    alt="Dimension Logo"
+                    alt="FinTech Calgary"
                     className="w-11 h-11 group-hover:brightness-110 transition-all"
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.2 }}
@@ -100,7 +100,7 @@ export default function PublicNavbar() {
                   <Link href="/" className="flex items-center mr-4 group">
                     <motion.img
                       src="/logo.svg"
-                      alt="Dimension Logo"
+                      alt="FinTech Calgary"
                       className="w-11 h-11 group-hover:brightness-110 transition-all"
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.2 }}
@@ -145,7 +145,7 @@ export default function PublicNavbar() {
           <Link href="/">
             <motion.img
               src="/logo.svg"
-              alt="Dimension Logo"
+              alt="FinTech Calgary"
               className="w-10 h-10"
               whileHover={{ scale: 1.05 }}
             />

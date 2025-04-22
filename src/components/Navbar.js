@@ -68,7 +68,7 @@ export default function Navbar() {
               >
                 <motion.img
                   src="/logo.svg"
-                  alt="Dimension Logo"
+                  alt="FinTech Calgary"
                   className="w-16 h-16"
                   whileHover={{ scale: 1.1 }}
                 />
@@ -148,7 +148,7 @@ export default function Navbar() {
             <Link href="/dashboard">
               <motion.img
                 src="/logo.svg"
-                alt="Dimension Logo"
+                alt="FinTech Calgary"
                 className={`transition-all duration-300 ${
                   isScrolled ? "w-12 h-12" : "w-14 h-14"
                 }`}
