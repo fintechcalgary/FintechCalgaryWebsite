@@ -1,6 +1,6 @@
 # FinTech Calgary
 
-A modern web platform for the University of Calgary's FinTech community. Built with Next.js, this platform facilitates event management, team collaboration, and community engagement.
+A modern web platform for Calgary's FinTech community. Built with Next.js, this platform facilitates event management, team collaboration, and community engagement.
 
 ## Verify the official FinTech email on sendgrid before releasing the website
 
@@ -47,4 +47,3 @@ The platform uses NextAuth.js for authentication with the following features:
 ## 👥 Team
 
 - Project maintained by FinTech Calgary
-- University of Calgary

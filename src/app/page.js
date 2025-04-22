@@ -15,24 +15,8 @@ import Partners from "@/components/landing/Partners";
 import Image from "next/image";
 
 export default function Home() {
-  const [opacity, setOpacity] = useState(1);
   const [events, setEvents] = useState([]);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const newOpacity = Math.max(0, 1 - window.scrollY / 1000);
-      setOpacity(newOpacity);
-
-      const isScrolled = window.scrollY > 200;
-      setScrolled(isScrolled);
-    };
-
-    handleScroll();
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const [isLowPerfDevice, setIsLowPerfDevice] = useState(false);
 
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
@@ -61,9 +45,29 @@ export default function Home() {
     fetchEvents();
   }, []);
 
+  useEffect(() => {
+    // Check for low performance devices
+    const checkPerformance = () => {
+      // Check if device is mobile
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      // Check if device has low memory (if available)
+      const hasLowMemory = navigator.deviceMemory && navigator.deviceMemory < 4;
+
+      // Check if device has low CPU cores (if available)
+      const hasLowCPU =
+        navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
+
+      // Set as low performance if any conditions are true
+      setIsLowPerfDevice(isMobile || hasLowMemory || hasLowCPU);
+    };
+
+    checkPerformance();
+  }, []);
+
   const particlesConfig = {
     particles: {
-      number: { value: 10, density: { enable: true, value_area: 800 } },
+      number: { value: 15, density: { enable: true, value_area: 1000 } },
       color: { value: "#6d28d9" },
       opacity: { value: 0.5 },
       size: { value: 3 },
@@ -72,7 +76,7 @@ export default function Home() {
       },
       move: {
         enable: true,
-        speed: 1,
+        speed: 0.8,
         direction: "none",
         random: true,
         straight: false,
@@ -80,7 +84,29 @@ export default function Home() {
         bounce: false,
       },
     },
-    retina_detect: true,
+    retina_detect: false,
+  };
+
+  const simplifiedParticlesConfig = {
+    particles: {
+      number: { value: 8, density: { enable: true, value_area: 1500 } },
+      color: { value: "#6d28d9" },
+      opacity: { value: 0.4 },
+      size: { value: 2 },
+      line_linked: {
+        enable: false,
+      },
+      move: {
+        enable: true,
+        speed: 0.3,
+        direction: "none",
+        random: true,
+        straight: false,
+        out_mode: "out",
+        bounce: false,
+      },
+    },
+    retina_detect: false,
   };
 
   return (
@@ -88,20 +114,22 @@ export default function Home() {
       <PublicNavbar />
 
       <div className="relative flex-grow">
-        <div className="absolute top-20 left-0 w-[500px] h-[500px] bg-primary/40 max-md:bg-primary/30 rounded-full blur-[128px] -translate-x-1/2"></div>
-        <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-purple-500/40 max-md:bg-purple-500/20 rounded-full blur-[96px] translate-x-1/2"></div>
-        {/* <div className="absolute bottom-0 right-1/2 w-[600px] h-[600px] bg-violet-600/30 max-md:hidden rounded-full blur-[128px] -translate-y-1/2"></div> */}
+        {!isLowPerfDevice && (
+          <>
+            <div className="absolute top-20 left-0 w-[400px] h-[400px] bg-primary/30 max-md:bg-primary/20 rounded-full blur-[80px] -translate-x-1/2"></div>
+            <div className="absolute top-1/2 right-0 w-[300px] h-[300px] bg-purple-500/30 max-md:bg-purple-500/10 rounded-full blur-[60px] translate-x-1/2"></div>
+          </>
+        )}
 
         <Particles
           className="absolute inset-0 z-0"
           init={particlesInit}
-          options={particlesConfig}
+          options={
+            isLowPerfDevice ? simplifiedParticlesConfig : particlesConfig
+          }
         />
 
-        <section
-          className="flex-grow flex items-center justify-center min-h-screen relative overflow-visible"
-          style={{ opacity }}
-        >
+        <section className="flex-grow flex items-center justify-center min-h-screen relative overflow-visible">
           <div className="absolute inset-0 overflow-visible">
             <Image
               src="/globe.svg"
@@ -111,12 +139,21 @@ export default function Home() {
               className="absolute min-w-[100vw] min-h-[100vh] top-32 -right-32 max-md:min-w-[200vw] max-md:min-h-[200vh] max-md:-top-64 animate-rock"
             />
           </div>
-          {/* <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background z-0"></div> */}
           <div className="text-center z-10 px-6 max-w-5xl mx-auto relative">
-            <h1 className="text-7xl xl:text-8xl mb-2 bg-clip-text text-transparent py-6 bg-gradient-to-r from-primary via-purple-400 to-pink-500 font-black animate-fade-in-down">
+            <h1
+              className={`text-7xl xl:text-8xl mb-2 bg-clip-text text-transparent py-6 bg-gradient-to-r from-primary via-purple-400 to-pink-500 font-black ${
+                isLowPerfDevice ? "" : "animate-fade-in-down"
+              }`}
+            >
               FinTech Calgary
             </h1>
-            <p className="text-xl md:text-2xl xl:text-3xl mb-12 text-gray-300 font-light leading-relaxed animate-fade-in-down animation-delay-300">
+            <p
+              className={`text-xl md:text-2xl xl:text-3xl mb-12 text-gray-300 font-light leading-relaxed ${
+                isLowPerfDevice
+                  ? ""
+                  : "animate-fade-in-down animation-delay-300"
+              }`}
+            >
               Innovating the future of finance
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 sm:px-0 max-w-[280px] sm:max-w-none mx-auto animate-fade-in-up animation-delay-600">

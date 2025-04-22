@@ -2,6 +2,13 @@ import Link from "next/link";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 export default function Partners() {
   const [hoveredPartner, setHoveredPartner] = useState(null);
@@ -75,16 +82,22 @@ export default function Partners() {
 
     let animationId;
     let startTime;
-    const duration = 30000; // 30 seconds for one complete scroll
+    const duration = 60000; // 60 seconds for one complete scroll (slower is smoother)
     const totalWidth = scrollContainer.scrollWidth / 3; // Divide by 3 because we tripled the partners
 
+    // Use a more efficient animation approach with translateX instead of scrollLeft
     const scroll = (timestamp) => {
       if (!startTime) startTime = timestamp;
       const elapsed = timestamp - startTime;
 
       // Calculate position based on elapsed time
-      const position = ((elapsed % duration) / duration) * totalWidth;
-      scrollContainer.scrollLeft = position;
+      const progress = (elapsed % duration) / duration;
+      const translateX = -progress * totalWidth;
+
+      // Apply transform instead of scrollLeft for smoother animation
+      if (scrollContainer.firstChild) {
+        scrollContainer.firstChild.style.transform = `translateX(${translateX}px)`;
+      }
 
       animationId = requestAnimationFrame(scroll);
     };
@@ -145,7 +158,7 @@ export default function Partners() {
         </Link>
 
         <div className="max-w-7xl mx-auto">
-          {/* Partners Showcase - Scrolling on desktop, carousel on mobile */}
+          {/* Partners Showcase - Swiper on desktop, carousel on mobile */}
           <div className="relative mb-12 overflow-hidden">
             {isMobile ? (
               // Mobile carousel with previews
@@ -169,7 +182,7 @@ export default function Partners() {
                       return (
                         <div
                           key={`${partner.name}-${index}`}
-                          className={`transition-all duration-300 transform ${
+                          className={`transition-all duration-500 transform ${
                             isCenter
                               ? "scale-100 z-10 opacity-100"
                               : "scale-75 opacity-40"
@@ -280,73 +293,95 @@ export default function Partners() {
                 </div>
               </div>
             ) : (
-              // Scrolling container for desktop
-              <div ref={scrollContainerRef} className="overflow-x-hidden py-4">
-                <div className="flex gap-16 items-center">
-                  {allPartners.map((partner, index) => (
-                    <div
+              // Swiper for desktop - adjusted for continuous left-to-right scrolling
+              <Swiper
+                modules={[Autoplay, Pagination, Navigation]}
+                spaceBetween={30}
+                slidesPerView="auto"
+                centeredSlides={false}
+                loop={true}
+                speed={2000}
+                autoplay={{
+                  delay: 0,
+                  disableOnInteraction: false,
+                  pauseOnMouseEnter: true,
+                  stopOnLastSlide: false,
+                  waitForTransition: false,
+                  reverseDirection: false,
+                }}
+                className="partners-swiper py-4"
+                style={{
+                  overflow: "visible",
+                }}
+              >
+                {/* Add more duplicated partners to ensure continuous scrolling */}
+                {[...partners, ...partners, ...partners, ...partners].map(
+                  (partner, index) => (
+                    <SwiperSlide
                       key={`${partner.name}-${index}`}
-                      onMouseEnter={() => setHoveredPartner(partner.name)}
-                      onMouseLeave={() => setHoveredPartner(null)}
-                      className="group relative flex-shrink-0"
-                      style={{
-                        transition: "transform 0.3s",
-                      }}
+                      style={{ width: "auto" }}
                     >
                       <div
-                        className="backdrop-blur-sm rounded-2xl p-6 w-64 h-48 flex flex-col items-center justify-center
+                        onMouseEnter={() => setHoveredPartner(partner.name)}
+                        onMouseLeave={() => setHoveredPartner(null)}
+                        className="group relative mx-4"
+                      >
+                        <div
+                          className="backdrop-blur-sm rounded-2xl p-6 w-64 h-48 flex flex-col items-center justify-center
                         border border-gray-700/30 hover:border-primary/50 transition-all duration-300
                         hover:shadow-lg hover:shadow-primary/20 overflow-hidden"
-                      >
-                        {/* Dynamic background gradient on hover */}
-                        <div
-                          className="absolute inset-0 rounded-2xl z-0"
-                          style={{
-                            background: `radial-gradient(circle at center, ${partner.color}20 0%, transparent 70%)`,
-                            opacity: hoveredPartner === partner.name ? 0.8 : 0,
-                            transform: `scale(${
-                              hoveredPartner === partner.name ? 1.2 : 1
-                            })`,
-                            transition: "opacity 0.5s, transform 0.5s",
-                          }}
-                        />
-
-                        <div
-                          className="relative w-full h-28 flex items-center justify-center z-10"
-                          style={{
-                            transform:
-                              hoveredPartner === partner.name
-                                ? "scale(1.05)"
-                                : "scale(1)",
-                            transition: "transform 0.3s",
-                          }}
                         >
-                          <Image
-                            src={partner.logo}
-                            alt={partner.name}
-                            width={180}
-                            height={90}
-                            className="object-contain max-h-28"
+                          {/* Dynamic background gradient on hover */}
+                          <div
+                            className="absolute inset-0 rounded-2xl z-0"
+                            style={{
+                              background: `radial-gradient(circle at center, ${partner.color}20 0%, transparent 70%)`,
+                              opacity:
+                                hoveredPartner === partner.name ? 0.8 : 0,
+                              transform: `scale(${
+                                hoveredPartner === partner.name ? 1.2 : 1
+                              })`,
+                              transition: "opacity 0.5s, transform 0.5s",
+                            }}
                           />
-                        </div>
 
-                        <p
-                          className="mt-6 text-gray-300 text-center font-medium z-10"
-                          style={{
-                            color:
-                              hoveredPartner === partner.name
-                                ? "#ffffff"
-                                : "#d1d5db",
-                            transition: "color 0.3s",
-                          }}
-                        >
-                          {partner.name}
-                        </p>
+                          <div
+                            className="relative w-full h-28 flex items-center justify-center z-10"
+                            style={{
+                              transform:
+                                hoveredPartner === partner.name
+                                  ? "scale(1.05)"
+                                  : "scale(1)",
+                              transition: "transform 0.3s",
+                            }}
+                          >
+                            <Image
+                              src={partner.logo}
+                              alt={partner.name}
+                              width={180}
+                              height={90}
+                              className="object-contain max-h-28"
+                            />
+                          </div>
+
+                          <p
+                            className="mt-6 text-gray-300 text-center font-medium z-10"
+                            style={{
+                              color:
+                                hoveredPartner === partner.name
+                                  ? "#ffffff"
+                                  : "#d1d5db",
+                              transition: "color 0.3s",
+                            }}
+                          >
+                            {partner.name}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                    </SwiperSlide>
+                  )
+                )}
+              </Swiper>
             )}
           </div>
 
