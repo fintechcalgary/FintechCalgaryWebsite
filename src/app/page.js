@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
 import PublicNavbar from "@/components/PublicNavbar";
 import Link from "next/link";
 import AboutUs from "@/components/landing/AboutUs";
@@ -17,9 +16,7 @@ import Image from "next/image";
 
 export default function Home() {
   const [opacity, setOpacity] = useState(1);
-
   const [events, setEvents] = useState([]);
-
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -101,7 +98,7 @@ export default function Home() {
           options={particlesConfig}
         />
 
-        <motion.section
+        <section
           className="flex-grow flex items-center justify-center min-h-screen relative overflow-visible"
           style={{ opacity }}
         >
@@ -116,28 +113,13 @@ export default function Home() {
           </div>
           {/* <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background z-0"></div> */}
           <div className="text-center z-10 px-6 max-w-5xl mx-auto relative">
-            <motion.h1
-              className="text-7xl xl:text-8xl mb-2 bg-clip-text text-transparent py-6 bg-gradient-to-r from-primary via-purple-400 to-pink-500 font-black"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-            >
+            <h1 className="text-7xl xl:text-8xl mb-2 bg-clip-text text-transparent py-6 bg-gradient-to-r from-primary via-purple-400 to-pink-500 font-black animate-fade-in-down">
               FinTech Calgary
-            </motion.h1>
-            <motion.p
-              className="text-xl md:text-2xl xl:text-3xl mb-12 text-gray-300 font-light leading-relaxed"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.4 }}
-            >
+            </h1>
+            <p className="text-xl md:text-2xl xl:text-3xl mb-12 text-gray-300 font-light leading-relaxed animate-fade-in-down animation-delay-300">
               Innovating the future of finance
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.6 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 sm:px-0 max-w-[280px] sm:max-w-none mx-auto"
-            >
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 sm:px-0 max-w-[280px] sm:max-w-none mx-auto animate-fade-in-up animation-delay-600">
               <Link
                 href="/join"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium rounded-full 
@@ -151,14 +133,14 @@ export default function Home() {
                 href="/executives"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium rounded-full 
                          border border-gray-700 hover:border-primary/50 text-white transition-all duration-300 
-                         hover:shadow-xl hover:bg-gray-800/30"
+                         hover:shadow-xl hover:bg-gray-800/30 group"
               >
                 Executives
                 <FiArrowRight className="ml-2 transform transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
-            </motion.div>
+            </div>
           </div>
-        </motion.section>
+        </section>
       </div>
 
       <div className="relative">
