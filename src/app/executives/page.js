@@ -2,11 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import Particles from "react-particles";
-import { loadSlim } from "tsparticles-slim";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
-import * as THREE from "three";
 import { SiLinkedin } from "react-icons/si";
 import { FiMail } from "react-icons/fi";
 import Image from "next/image";
@@ -14,64 +11,10 @@ import Image from "next/image";
 export default function ExecutivesPage() {
   const [executives, setExecutives] = useState([]);
   const [groupedExecutives, setGroupedExecutives] = useState({});
-  const [vantaEffect, setVantaEffect] = useState(null);
-  const vantaRef = useRef(null);
 
   useEffect(() => {
     document.title = "Executives | FinTech Calgary";
   }, []);
-
-  const particlesInit = useCallback(async (engine) => {
-    await loadSlim(engine);
-  }, []);
-
-  const particlesConfig = {
-    particles: {
-      number: { value: 10, density: { enable: true, value_area: 800 } },
-      color: { value: "#6d28d9" },
-      opacity: { value: 0.5 },
-      size: { value: 3 },
-      line_linked: {
-        enable: false,
-      },
-      move: {
-        enable: true,
-        speed: 1,
-        direction: "none",
-        random: true,
-        straight: false,
-        out_mode: "out",
-        bounce: false,
-      },
-    },
-    retina_detect: true,
-  };
-
-  useEffect(() => {
-    if (!vantaEffect && vantaRef.current) {
-      import("vanta/dist/vanta.globe.min").then((GLOBE) => {
-        setVantaEffect(
-          GLOBE.default({
-            el: vantaRef.current,
-            THREE: THREE,
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.0,
-            minWidth: 200.0,
-            scale: 1.0,
-            scaleMobile: 1.0,
-            color: 0x6d28d9,
-            backgroundColor: 0x1e1b2e,
-          })
-        );
-      });
-    }
-
-    return () => {
-      if (vantaEffect) vantaEffect.destroy();
-    };
-  }, [vantaEffect]);
 
   const fetchExecutives = async () => {
     try {
@@ -113,17 +56,8 @@ export default function ExecutivesPage() {
       {/* Navbar */}
       <PublicNavbar />
 
-      {/* Particles + Vanta background */}
       <div className="relative flex-grow">
-        <Particles
-          className="absolute inset-0 z-0"
-          init={particlesInit}
-          options={particlesConfig}
-        />
-        <motion.section
-          ref={vantaRef}
-          className="relative z-10 flex items-center justify-center min-h-screen"
-        >
+        <motion.section className="relative z-10 flex items-center justify-center min-h-screen">
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/80 z-0"></div>
 
           {/* Content Section */}

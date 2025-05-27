@@ -6,8 +6,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
-import Particles from "react-particles";
-import { loadSlim } from "tsparticles-slim";
 
 export default function InfoPage() {
   const { data: session, status } = useSession();
@@ -23,32 +21,6 @@ export default function InfoPage() {
     document.title = "Info | FinTech Calgary";
   }, []);
 
-  const particlesInit = useCallback(async (engine) => {
-    await loadSlim(engine);
-  }, []);
-
-  const particlesConfig = {
-    particles: {
-      number: { value: 10, density: { enable: true, value_area: 800 } },
-      color: { value: "#6d28d9" },
-      opacity: { value: 0.5 },
-      size: { value: 3 },
-      line_linked: {
-        enable: false,
-      },
-      move: {
-        enable: true,
-        speed: 1,
-        direction: "none",
-        random: true,
-        straight: false,
-        out_mode: "out",
-        bounce: false,
-      },
-    },
-    retina_detect: true,
-  };
-
   if (status === "loading") {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -59,12 +31,6 @@ export default function InfoPage() {
 
   return (
     <div className="min-h-screen relative">
-      <Particles
-        className="absolute inset-0 -z-10"
-        init={particlesInit}
-        options={particlesConfig}
-      />
-
       <Navbar />
       <motion.main
         initial={{ opacity: 0, y: 20 }}

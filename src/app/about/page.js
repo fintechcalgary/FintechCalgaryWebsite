@@ -1,11 +1,9 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
-import Particles from "react-particles";
-import { loadSlim } from "tsparticles-slim";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
@@ -15,42 +13,11 @@ export default function AboutPage() {
     document.title = "About | FinTech Calgary";
   }, []);
 
-  const particlesInit = useCallback(async (engine) => {
-    await loadSlim(engine);
-  }, []);
-
-  const particlesConfig = {
-    particles: {
-      number: { value: 10, density: { enable: true, value_area: 800 } },
-      color: { value: "#6d28d9" },
-      opacity: { value: 0.5 },
-      size: { value: 3 },
-      line_linked: {
-        enable: false,
-      },
-      move: {
-        enable: true,
-        speed: 1,
-        direction: "none",
-        random: true,
-        straight: false,
-        out_mode: "out",
-        bounce: false,
-      },
-    },
-    retina_detect: true,
-  };
-
   return (
     <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900">
       <PublicNavbar />
 
       <div className="relative flex-grow">
-        <Particles
-          className="absolute inset-0 z-0"
-          init={particlesInit}
-          options={particlesConfig}
-        />
         <div className="container mx-auto px-6 py-24 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: -20 }}

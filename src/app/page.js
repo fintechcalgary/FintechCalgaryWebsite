@@ -7,8 +7,6 @@ import AboutUs from "@/components/landing/AboutUs";
 import UpcomingEvents from "@/components/landing/UpcomingEvents";
 import Footer from "@/components/landing/Footer";
 import Contact from "@/components/landing/Contact";
-import Particles from "react-particles";
-import { loadSlim } from "tsparticles-slim";
 import { FiArrowRight } from "react-icons/fi";
 import MissionStatement from "@/components/landing/MissionStatement";
 import Partners from "@/components/landing/Partners";
@@ -17,10 +15,6 @@ import Image from "next/image";
 export default function Home() {
   const [events, setEvents] = useState([]);
   const [isLowPerfDevice, setIsLowPerfDevice] = useState(false);
-
-  const particlesInit = useCallback(async (engine) => {
-    await loadSlim(engine);
-  }, []);
 
   useEffect(() => {
     document.title = "FinTech Calgary";
@@ -65,50 +59,6 @@ export default function Home() {
     checkPerformance();
   }, []);
 
-  const particlesConfig = {
-    particles: {
-      number: { value: 15, density: { enable: true, value_area: 1000 } },
-      color: { value: "#6d28d9" },
-      opacity: { value: 0.5 },
-      size: { value: 3 },
-      line_linked: {
-        enable: false,
-      },
-      move: {
-        enable: true,
-        speed: 0.8,
-        direction: "none",
-        random: true,
-        straight: false,
-        out_mode: "out",
-        bounce: false,
-      },
-    },
-    retina_detect: false,
-  };
-
-  const simplifiedParticlesConfig = {
-    particles: {
-      number: { value: 8, density: { enable: true, value_area: 1500 } },
-      color: { value: "#6d28d9" },
-      opacity: { value: 0.4 },
-      size: { value: 2 },
-      line_linked: {
-        enable: false,
-      },
-      move: {
-        enable: true,
-        speed: 0.3,
-        direction: "none",
-        random: true,
-        straight: false,
-        out_mode: "out",
-        bounce: false,
-      },
-    },
-    retina_detect: false,
-  };
-
   return (
     <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900 overflow-hidden">
       <PublicNavbar />
@@ -120,14 +70,6 @@ export default function Home() {
             <div className="absolute top-1/2 right-0 w-[300px] h-[300px] bg-purple-500/30 max-md:bg-purple-500/10 rounded-full blur-[60px] translate-x-1/2"></div>
           </>
         )}
-
-        <Particles
-          className="absolute inset-0 z-0"
-          init={particlesInit}
-          options={
-            isLowPerfDevice ? simplifiedParticlesConfig : particlesConfig
-          }
-        />
 
         <section className="flex-grow flex items-center justify-center min-h-screen relative overflow-visible">
           <div className="absolute inset-0 overflow-visible">

@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import Particles from "react-particles";
-import { loadSlim } from "tsparticles-slim";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { FiCalendar } from "react-icons/fi";
@@ -15,34 +13,7 @@ export default function EventsPage() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
-  const particlesRef = useRef(null);
   const router = useRouter();
-
-  const particlesInit = useCallback(async (engine) => {
-    await loadSlim(engine);
-  }, []);
-
-  const particlesConfig = {
-    particles: {
-      number: { value: 10, density: { enable: true, value_area: 800 } },
-      color: { value: "#6d28d9" },
-      opacity: { value: 0.5 },
-      size: { value: 3 },
-      line_linked: {
-        enable: false,
-      },
-      move: {
-        enable: true,
-        speed: 1,
-        direction: "none",
-        random: true,
-        straight: false,
-        out_mode: "out",
-        bounce: false,
-      },
-    },
-    retina_detect: true,
-  };
 
   const fetchEvents = async () => {
     try {
@@ -106,15 +77,6 @@ export default function EventsPage() {
     <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900">
       {/* Navbar */}
       <PublicNavbar />
-
-      {/* Particles Background */}
-      <div ref={particlesRef} className="relative">
-        <Particles
-          init={particlesInit}
-          options={particlesConfig}
-          className="absolute inset-0 z-0"
-        />
-      </div>
 
       {/* Page Content */}
       <div className="container mx-auto px-6 py-24 sm:px-8 lg:px-12 relative z-10">

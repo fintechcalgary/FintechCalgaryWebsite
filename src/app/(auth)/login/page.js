@@ -16,8 +16,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [vantaEffect, setVantaEffect] = useState(null);
-  const vantaRef = useRef(null);
 
   useEffect(() => {
     document.title = "Login | FinTech Calgary";
@@ -29,38 +27,6 @@ export default function Login() {
       router.push("/dashboard");
     }
   }, [status, router]);
-
-  useEffect(() => {
-    if (!vantaEffect) {
-      import("vanta/dist/vanta.fog.min")
-        .then((FOG) => {
-          setVantaEffect(
-            FOG.default({
-              el: vantaRef.current,
-              THREE: THREE,
-              mouseControls: true,
-              touchControls: true,
-              gyroControls: false,
-              minHeight: 200.0,
-              minWidth: 200.0,
-              scale: 1.0,
-              scaleMobile: 1.0,
-              highlightColor: 0xb88cff, // Light purple for highlights
-              midtoneColor: 0x4a148c, // Dark purple midtones
-              lowlightColor: 0x1a1a1a, // Black shadows
-              baseColor: 0x120724, // Deep purple base color
-              speed: 1.2, // Speed of the fog animation
-            })
-          );
-        })
-        .catch((error) => {
-          console.error("Vanta.js Error:", error);
-        });
-    }
-    return () => {
-      if (vantaEffect) vantaEffect.destroy();
-    };
-  }, [vantaEffect]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -87,10 +53,7 @@ export default function Login() {
   };
 
   return (
-    <div
-      ref={vantaRef}
-      className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8"
-    >
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8">
       <div className="w-full max-w-md space-y-6 sm:space-y-8 bg-gray-800/50 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-2xl border border-gray-700/50 shadow-xl">
         <div className="flex justify-start">
           <Link

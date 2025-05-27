@@ -7,71 +7,13 @@ import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import * as THREE from "three";
-import { loadSlim } from "tsparticles-slim";
-import Particles from "react-particles";
 
 export default function PartnersPage() {
-  const [vantaEffect, setVantaEffect] = useState(null);
-  const vantaRef = useRef(null);
-
   useEffect(() => {
     document.title = "Partners & Sponsors | FinTech Calgary";
   }, []);
 
   const [hoveredPartner, setHoveredPartner] = useState(null);
-
-  const particlesInit = useCallback(async (engine) => {
-    await loadSlim(engine);
-  }, []);
-
-  const particlesConfig = {
-    particles: {
-      number: { value: 10, density: { enable: true, value_area: 800 } },
-      color: { value: "#6d28d9" },
-      opacity: { value: 0.5 },
-      size: { value: 3 },
-      line_linked: {
-        enable: false,
-      },
-      move: {
-        enable: true,
-        speed: 1,
-        direction: "none",
-        random: true,
-        straight: false,
-        out_mode: "out",
-        bounce: false,
-      },
-    },
-    retina_detect: true,
-  };
-
-  useEffect(() => {
-    if (!vantaEffect && vantaRef.current) {
-      import("vanta/dist/vanta.globe.min").then((GLOBE) => {
-        setVantaEffect(
-          GLOBE.default({
-            el: vantaRef.current,
-            THREE: THREE,
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.0,
-            minWidth: 200.0,
-            scale: 1.0,
-            scaleMobile: 1.0,
-            color: 0x6d28d9,
-            backgroundColor: 0x1e1b2e,
-          })
-        );
-      });
-    }
-
-    return () => {
-      if (vantaEffect) vantaEffect.destroy();
-    };
-  }, [vantaEffect]);
 
   const partners = [
     {
@@ -120,12 +62,6 @@ export default function PartnersPage() {
         {/* Animated gradient orbs */}
         <div className="absolute top-40 left-20 w-72 h-72 bg-primary/20 rounded-full blur-[100px] animate-pulse"></div>
         <div className="absolute bottom-40 right-20 w-80 h-80 bg-purple-600/20 rounded-full blur-[120px] animate-pulse delay-1000"></div>
-
-        <Particles
-          className="absolute inset-0 z-0"
-          init={particlesInit}
-          options={particlesConfig}
-        />
 
         <div className="container mx-auto px-6 py-24 sm:px-8 lg:px-12 relative z-10">
           {/* Page Heading */}
