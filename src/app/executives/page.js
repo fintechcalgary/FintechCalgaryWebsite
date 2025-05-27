@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion } from "framer-motion";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { SiLinkedin } from "react-icons/si";
@@ -53,39 +52,28 @@ export default function ExecutivesPage() {
 
   return (
     <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900">
-      {/* Navbar */}
       <PublicNavbar />
 
       <div className="relative flex-grow">
-        <motion.section className="relative z-10 flex items-center justify-center min-h-screen">
+        <section className="relative z-10 flex items-center justify-center min-h-screen">
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/80 z-0"></div>
 
           {/* Content Section */}
           <div className="relative z-10 container mx-auto px-6 py-24 sm:px-8 lg:px-12">
             {/* Page Heading */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-16"
-            >
+            <div className="text-center mb-16 animate-fadeIn">
               <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
                 Meet Our Executives
               </h1>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto">
                 Our dedicated team is here to make a difference.
               </p>
-            </motion.div>
+            </div>
 
             {/* Executives Grid */}
             <div className="space-y-16">
-              {Object.keys(groupedExecutives).map((role, index) => (
-                <motion.section
-                  key={role}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="space-y-8"
-                >
+              {Object.keys(groupedExecutives).map((role) => (
+                <section key={role} className="space-y-8 animate-fadeIn">
                   {/* Role Header */}
                   <div className="flex items-center gap-4 mb-8">
                     <div className="h-px flex-grow bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
@@ -98,15 +86,11 @@ export default function ExecutivesPage() {
                   {/* Executives List */}
                   <div className="flex flex-wrap gap-8 justify-center">
                     {groupedExecutives[role].map((executive) => (
-                      <motion.div
+                      <div
                         key={executive._id}
-                        whileHover={{ scale: 1.02 }}
-                        className="flex flex-col items-center text-center gap-4 w-full max-w-[300px]"
+                        className="flex flex-col items-center text-center gap-4 w-full max-w-[300px] hover:scale-102 transition-transform duration-300"
                       >
-                        <div
-                          className="w-48 h-48 rounded-full overflow-hidden border-2 border-primary/50 
-                          group-hover:border-primary transition-colors duration-300 shadow-lg relative"
-                        >
+                        <div className="w-48 h-48 rounded-full overflow-hidden border-2 border-primary/50 hover:border-primary transition-colors duration-300 shadow-lg relative">
                           <Image
                             src={executive.imageUrl || "/placeholder.png"}
                             alt={`${executive.name}'s profile`}
@@ -153,17 +137,16 @@ export default function ExecutivesPage() {
                             </p>
                           )}
                         </div>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
-                </motion.section>
+                </section>
               ))}
             </div>
           </div>
-        </motion.section>
+        </section>
       </div>
 
-      {/* Footer */}
       <Footer />
     </main>
   );

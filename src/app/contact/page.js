@@ -1,6 +1,5 @@
 "use client";
 import { useState, useCallback, useEffect } from "react";
-import { motion } from "framer-motion";
 import {
   FiGithub,
   FiInstagram,
@@ -62,26 +61,17 @@ export default function ContactPage() {
 
       <div className="relative flex-grow">
         <div className="container mx-auto px-6 py-24 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
-          >
+          <div className="text-center mb-16 animate-fadeIn">
             <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
               Contact Us
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               Have questions? We&apos;d love to hear from you.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 shadow-lg hover:border-primary/50 hover:bg-gray-800/70 transition-all duration-300"
-            >
+            <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 shadow-lg hover:border-primary/50 hover:bg-gray-800/70 transition-all duration-300 animate-slideInLeft">
               <FiMail className="w-8 h-8 text-primary mb-4" />
               <h3 className="text-xl font-semibold text-white mb-2">Email</h3>
               <a
@@ -90,14 +80,9 @@ export default function ContactPage() {
               >
                 fintech.calgary@gmail.com
               </a>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 shadow-lg hover:border-primary/50 hover:bg-gray-800/70 transition-all duration-300"
-            >
+            <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 shadow-lg hover:border-primary/50 hover:bg-gray-800/70 transition-all duration-300 animate-slideInRight">
               <FiMessageSquare className="w-8 h-8 text-primary mb-4" />
               <h3 className="text-xl font-semibold text-white mb-2">
                 Social Media
@@ -147,16 +132,11 @@ export default function ContactPage() {
                   </a>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="order-2 lg:order-1"
-            >
+            <div className="order-2 lg:order-1 animate-slideInUp">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -235,14 +215,9 @@ export default function ContactPage() {
                   </p>
                 )}
               </form>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="order-1 lg:order-2 flex items-center justify-center"
-            >
+            <div className="order-1 lg:order-2 flex items-center justify-center animate-slideInDown">
               <DotLottieReact
                 src="/lottie/contact.lottie"
                 autoplay
@@ -250,7 +225,7 @@ export default function ContactPage() {
                 className="w-full h-full object-contain"
                 renderer="svg"
               />
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

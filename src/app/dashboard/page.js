@@ -2,7 +2,6 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import {
   ChartBarIcon,
   ClockIcon,
@@ -42,44 +41,26 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen relative bg-background">
       <Navbar />
-      <motion.main
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="container mx-auto px-6 py-8 max-w-7xl relative"
-      >
+      <main className="container mx-auto px-6 py-8 max-w-7xl relative animate-fadeIn">
         {/* Browser recommendation message */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+        <div
           className="mb-6 p-3 rounded-lg border border-white/10 bg-gray-900/60 backdrop-blur-sm
-            flex items-center gap-3 text-sm text-gray-400 max-w-fit"
+            flex items-center gap-3 text-sm text-gray-400 max-w-fit animate-fadeIn"
         >
           <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
             <path d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728Z" />
           </svg>
           Best experience with Google Chrome
-        </motion.div>
+        </div>
 
-        {/* Welcome section with enhanced animation */}
-        <motion.div
-          initial={{ scale: 0.95 }}
-          animate={{ scale: 1 }}
-          className="relative overflow-hidden rounded-2xl mb-6"
-        >
+        {/* Welcome section */}
+        <div className="relative overflow-hidden rounded-2xl mb-6 animate-fadeIn">
           <div className="absolute inset-0 bg-gradient-to-r from-primary via-purple-500/30 to-primary/10 animate-gradient-x rounded-2xl" />
           <div className="relative bg-gray-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-all">
-            <motion.div
-              initial={{ y: 20 }}
-              animate={{ y: 0 }}
-              className="space-y-4"
-            >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="inline-block px-4 py-1.5 rounded-full bg-primary/20 text-primary text-sm font-medium backdrop-blur-sm"
-              >
+            <div className="space-y-4">
+              <div className="inline-block px-4 py-1.5 rounded-full bg-primary/20 text-primary text-sm font-medium backdrop-blur-sm hover:scale-105 transition-transform">
                 Your Workspace
-              </motion.div>
+              </div>
               <div className="space-y-2">
                 <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight">
                   Welcome back
@@ -93,18 +74,13 @@ export default function DashboardPage() {
                   Track your events and collaborate with your team members
                 </p>
               </div>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Enhanced content grid with wider cards */}
+        {/* Content grid */}
         <div className="grid grid-cols-1 gap-8">
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="group"
-          >
+          <section className="group animate-fadeIn">
             <div
               className="relative h-full bg-gray-900/60 backdrop-blur-xl rounded-2xl p-8 border border-white/10 
                             transition-all duration-300 hover:bg-gray-900/70 hover:shadow-xl hover:shadow-primary/10
@@ -122,20 +98,14 @@ export default function DashboardPage() {
               </div>
 
               {/* Reminder Section */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
+              <div
                 className="mb-6 p-4 rounded-lg border border-white/10 hover:border-white/20 bg-gradient-to-br from-gray-900/60 via-purple-900/20 to-gray-800/40
              shadow-md hover:shadow-purple-600/20 duration-300 backdrop-blur-lg max-w-md sm:max-w-full"
               >
                 <div className="flex items-center space-x-3">
-                  {/* Icon Container */}
                   <div className="hidden md:flex h-9 w-9 items-center justify-center rounded-full bg-purple-700/20 text-purple-300 backdrop-blur-sm">
                     <ClockIcon className="h-5 w-5" />
                   </div>
-
-                  {/* Text Content */}
                   <div className="space-y-0.5">
                     <h3 className="text-sm font-semibold text-white">
                       Reminder
@@ -147,18 +117,13 @@ export default function DashboardPage() {
                     </p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
 
               <Events />
             </div>
-          </motion.section>
+          </section>
 
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="group"
-          >
+          <section className="group animate-fadeIn">
             <div
               className="relative h-full bg-gray-900/60 backdrop-blur-xl rounded-2xl p-8 border border-white/10 
                             transition-all duration-300 hover:bg-gray-900/70 hover:shadow-xl hover:shadow-primary/10
@@ -182,9 +147,9 @@ export default function DashboardPage() {
               </div>
               <Members />
             </div>
-          </motion.section>
+          </section>
         </div>
-      </motion.main>
+      </main>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { FiCalendar, FiClock, FiMapPin, FiArrowLeft } from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
@@ -8,7 +8,6 @@ import Footer from "@/components/landing/Footer";
 import ImageCarousel from "@/components/ImageCarousel";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 export default function EventPage() {
   const [event, setEvent] = useState(null);
@@ -56,12 +55,7 @@ export default function EventPage() {
       <div className="relative flex-grow">
         <div className="container mx-auto px-4 pt-32 pb-20 relative z-10">
           {/* Back Button */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-8"
-          >
+          <div className="mb-8">
             <Link
               href="/events"
               className="inline-flex items-center px-4 py-2 group"
@@ -69,14 +63,9 @@ export default function EventPage() {
               <FiArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
               Back to Events
             </Link>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-gray-900/40 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-800/50 shadow-xl"
-          >
+          <div className="bg-gray-900/40 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-800/50 shadow-xl animate-fadeIn">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
               {/* Image Section */}
               <div className="relative bg-gray-950 overflow-hidden flex items-center justify-center">
@@ -165,22 +154,18 @@ export default function EventPage() {
 
                 {/* Register Button for Upcoming Events */}
                 {isUpcoming && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.4 }}
-                  >
+                  <div>
                     <Link
                       href={`/events/register/${event._id}`}
-                      className="inline-flex items-center px-6 py-3 rounded-full bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/25"
+                      className="inline-flex items-center px-6 py-3 rounded-full bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-primary/25"
                     >
                       Register Now
                     </Link>
-                  </motion.div>
+                  </div>
                 )}
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 

@@ -4,7 +4,6 @@ import { useCallback } from "react";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 
 export default function InfoPage() {
@@ -32,29 +31,14 @@ export default function InfoPage() {
   return (
     <div className="min-h-screen relative">
       <Navbar />
-      <motion.main
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="container mx-auto px-6 py-12 max-w-6xl relative"
-      >
-        <motion.div
-          initial={{ scale: 0.95 }}
-          animate={{ scale: 1 }}
-          className="relative overflow-hidden rounded-2xl mb-16"
-        >
+      <main className="container mx-auto px-6 py-12 max-w-6xl relative animate-fadeIn">
+        <div className="relative overflow-hidden rounded-2xl mb-16">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/30 via-purple-500/20 to-primary/5 animate-gradient-x rounded-2xl" />
           <div className="relative bg-gray-900/70 backdrop-blur-xl p-10 rounded-2xl border border-white/10 hover:border-white/20 transition-all duration-300">
-            <motion.div
-              initial={{ y: 20 }}
-              animate={{ y: 0 }}
-              className="space-y-4"
-            >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="inline-block px-4 py-2 rounded-full bg-primary/20 text-primary text-sm font-medium backdrop-blur-sm"
-              >
+            <div className="space-y-4">
+              <div className="inline-block px-4 py-2 rounded-full bg-primary/20 text-primary text-sm font-medium backdrop-blur-sm hover:scale-105 transition-transform">
                 Repository & Instructions
-              </motion.div>
+              </div>
               <div className="space-y-3">
                 <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight">
                   How to Access and Contribute
@@ -64,17 +48,12 @@ export default function InfoPage() {
                   make changes for future development.
                 </p>
               </div>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="group space-y-8"
-          >
+          <section className="group space-y-8 animate-fadeIn">
             <div
               className="relative bg-gray-900/70 backdrop-blur-xl rounded-2xl p-8 border border-white/10 
                           transition-all duration-300 hover:bg-gray-900/80 hover:shadow-2xl hover:shadow-primary/20
@@ -130,14 +109,9 @@ export default function InfoPage() {
                 </p>
               </div>
             </div>
-          </motion.section>
+          </section>
 
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="group h-full"
-          >
+          <section className="group h-full animate-fadeIn">
             <div
               className="relative h-full bg-gray-900/70 backdrop-blur-xl rounded-2xl p-8 border border-white/10 
                           transition-all duration-300 hover:bg-gray-900/80 hover:shadow-2xl hover:shadow-primary/20
@@ -177,9 +151,9 @@ export default function InfoPage() {
                 </li>
               </ol>
             </div>
-          </motion.section>
+          </section>
         </div>
-      </motion.main>
+      </main>
     </div>
   );
 }

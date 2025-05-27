@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion } from "framer-motion";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { FiCalendar } from "react-icons/fi";
@@ -81,11 +80,7 @@ export default function EventsPage() {
       {/* Page Content */}
       <div className="container mx-auto px-6 py-24 sm:px-8 lg:px-12 relative z-10">
         {/* Dynamic Page Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16 animate-fadeIn">
           <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
             {filter === "all"
               ? "All Events"
@@ -100,10 +95,10 @@ export default function EventsPage() {
               ? "Check out our upcoming events and register now."
               : "Take a look at our past events and what we've accomplished."}
           </p>
-        </motion.div>
+        </div>
 
         {/* Filter Dropdown - Enhanced styling */}
-        <div className="flex mb-8">
+        <div className="flex mb-8" style={{ animationDelay: "200ms" }}>
           <div className="relative">
             <select
               value={filter}
@@ -111,7 +106,7 @@ export default function EventsPage() {
               className="appearance-none px-6 py-3 w-64 bg-gray-800/50 text-white rounded-lg border border-gray-600 
               focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
               shadow-lg backdrop-blur-sm
-              pl-6 pr-12 hover:bg-gray-700/50 transition-colors"
+              pl-6 pr-12 hover:bg-gray-700/50"
             >
               <option value="all">All Events</option>
               <option value="upcoming">Upcoming Events</option>
@@ -136,15 +131,14 @@ export default function EventsPage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredEvents.map((event) => {
+          {filteredEvents.map((event, index) => {
             const isUpcoming = new Date(event.date) >= new Date();
             return (
-              <motion.div
+              <div
                 key={event._id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
                 onClick={() => handleEventClick(event)}
                 className="group relative bg-gray-900/40 backdrop-blur-xl rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-800/50 hover:border-primary/50 cursor-pointer"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Glass Effect Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -201,13 +195,13 @@ export default function EventsPage() {
                     </p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>
 
         {filteredEvents.length === 0 && (
-          <div className="text-center py-12 bg-gray-800/50 rounded-lg min-h-[400px] flex flex-col items-center justify-center mt-12">
+          <div className="text-center py-12 bg-gray-800/50 rounded-lg min-h-[400px] flex flex-col items-center justify-center mt-12 animate-fadeIn">
             <FiCalendar className="mx-auto text-4xl text-primary mb-4" />
             <p className="text-gray-400">
               No events available for the selected filter.

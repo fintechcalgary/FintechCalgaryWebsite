@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import { FiDownload, FiExternalLink, FiArrowRight } from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
@@ -65,11 +64,7 @@ export default function PartnersPage() {
 
         <div className="container mx-auto px-6 py-24 sm:px-8 lg:px-12 relative z-10">
           {/* Page Heading */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-20"
-          >
+          <div className="text-center mb-20 animate-fadeIn">
             <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
               Our Partners & Sponsors
             </h1>
@@ -77,40 +72,36 @@ export default function PartnersPage() {
               We&apos;re proud to collaborate with industry leaders who share
               our vision for innovation in financial technology.
             </p>
-          </motion.div>
+          </div>
 
-          {/* Partners Grid - Modernized */}
+          {/* Partners Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-24">
             {partners.map((partner, index) => (
-              <motion.div
+              <div
                 key={partner.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 + 0.2 }}
-                onHoverStart={() => setHoveredPartner(partner.name)}
-                onHoverEnd={() => setHoveredPartner(null)}
-                className="group relative overflow-hidden bg-[#12121a]/80 backdrop-blur-xl p-8 rounded-2xl 
-                           border border-gray-800 hover:border-primary/50 transition-all duration-500 flex flex-col"
+                onMouseEnter={() => setHoveredPartner(partner.name)}
+                onMouseLeave={() => setHoveredPartner(null)}
+                className={`group relative overflow-hidden bg-[#12121a]/80 backdrop-blur-xl p-8 rounded-2xl 
+                           border border-gray-800 hover:border-primary/50 transition-all duration-500 flex flex-col
+                           animate-fadeIn`}
+                style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Dynamic background gradient on hover */}
-                <motion.div
-                  className="absolute inset-0 opacity-0 rounded-2xl z-0"
+                <div
+                  className={`absolute inset-0 rounded-2xl z-0 transition-all duration-500
+                             ${
+                               hoveredPartner === partner.name
+                                 ? "opacity-80 scale-110"
+                                 : "opacity-0 scale-100"
+                             }`}
                   style={{
                     background: `radial-gradient(circle at center, ${partner.color}20 0%, transparent 70%)`,
                   }}
-                  animate={{
-                    opacity: hoveredPartner === partner.name ? 0.8 : 0,
-                    scale: hoveredPartner === partner.name ? 1.2 : 1,
-                  }}
-                  transition={{ duration: 0.5 }}
                 />
 
                 {/* Logo */}
                 <div className="h-40 flex items-center justify-center mb-6 relative z-10">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className="relative w-full h-32 flex items-center justify-center"
-                  >
+                  <div className="relative w-full h-32 flex items-center justify-center transition-transform duration-300 hover:scale-105">
                     <Image
                       src={partner.logo}
                       alt={partner.name}
@@ -118,7 +109,7 @@ export default function PartnersPage() {
                       height={100}
                       className="object-contain max-h-32 drop-shadow-lg"
                     />
-                  </motion.div>
+                  </div>
                 </div>
 
                 {/* Content */}
@@ -130,26 +121,20 @@ export default function PartnersPage() {
                 </p>
 
                 {/* Link */}
-                <motion.a
+                <a
                   href={partner.website}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center text-primary hover:text-purple-400 transition-colors relative z-10 font-medium"
-                  whileHover={{ x: 5 }}
                 >
                   Visit Website <FiArrowRight className="ml-2" />
-                </motion.a>
-              </motion.div>
+                </a>
+              </div>
             ))}
           </div>
 
-          {/* Sponsorship Package Section - Modernized */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="max-w-4xl mx-auto"
-          >
+          {/* Sponsorship Package Section */}
+          <div className="max-w-4xl mx-auto animate-slideInUp">
             <div className="relative overflow-hidden bg-[#12121a]/80 backdrop-blur-xl p-12 rounded-3xl border border-gray-800">
               {/* Background elements */}
               <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-[80px]"></div>
@@ -165,38 +150,32 @@ export default function PartnersPage() {
                   opportunities.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <motion.a
+                  <a
                     href="/FinTech Calgary Sponsorship Package 2025_2026.pdf"
                     download
-                    className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-primary hover:bg-primary/90 text-white text-lg font-medium transition-all duration-300 hover:shadow-xl hover:shadow-primary/30"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-primary hover:bg-primary/90 text-white text-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-xl hover:shadow-primary/30"
                   >
                     Download Package
                     <FiDownload className="ml-2" />
-                  </motion.a>
-                  <motion.a
+                  </a>
+                  <a
                     href="/FinTech Calgary Sponsorship Package 2025_2026.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-[#1e1e2d] hover:bg-[#2a2a3d] text-white text-lg font-medium transition-all duration-300 hover:shadow-xl hover:shadow-gray-700/30"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-[#1e1e2d] hover:bg-[#2a2a3d] text-white text-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-xl hover:shadow-gray-700/30"
                   >
                     View in New Tab
                     <FiExternalLink className="ml-2" />
-                  </motion.a>
+                  </a>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Contact CTA - Modernized */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="text-center mt-20"
+          {/* Contact CTA */}
+          <div
+            className="text-center mt-20 animate-fadeIn"
+            style={{ animationDelay: "300ms" }}
           >
             <p className="text-lg text-gray-300/90 mb-4">
               Interested in becoming a partner or sponsor?
@@ -207,7 +186,7 @@ export default function PartnersPage() {
             >
               Contact us to learn more <FiArrowRight className="ml-2" />
             </Link>
-          </motion.div>
+          </div>
         </div>
       </div>
 
