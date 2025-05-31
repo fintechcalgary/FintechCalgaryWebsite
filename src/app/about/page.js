@@ -34,14 +34,12 @@ export default function AboutPage() {
                 Who We Are
               </h2>
               <p className="text-gray-300 leading-relaxed text-lg relative">
-                We&apos;re more than just a community; we&apos;re a dynamic hub
-                where passion meets innovation at the intersection of finance
-                and technology. Our members are at the forefront of
-                understanding, discussing, and harnessing the transformative
-                power of FinTech. We&apos;ve established ourselves as a platform
-                where professionals, students and enthusiasts within the FinTech
-                space build valuable connections, exchange ideas and collaborate
-                on projects and competitions that shape the future of finance.
+                FinTech Calgary is a digital marketing platform clientele built
+                for B2B engagement. We specialize in connecting payment
+                processing companies with business decision makers who are ready
+                to evaluate and adopt innovative financial technologies. Our
+                platform goes beyond visibility, we enable meaningful market
+                access and direct connections that drive real business outcomes.
               </p>
             </div>
 
@@ -60,15 +58,16 @@ export default function AboutPage() {
             <div className="md:col-span-2 group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-8 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500 animate-slideInUp">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <h2 className="text-3xl font-bold text-primary mb-6 relative">
-                What We Do
+                Our Services
               </h2>
               <p className="text-gray-300 leading-relaxed text-lg relative">
-                Our commitment extends beyond networking. We&apos;re dedicated
-                to fostering entrepreneurship by providing resources, guidance
-                and platforms like pitch competitions and hackathons. Moreover,
-                our seminars, workshops, and webinars serve as bases of
-                knowledge, highlighting the latest trends and developments in
-                FinTech, including digital banking, blockchain, crypto and more.
+                We provide payment processing companies with a dedicated
+                platform to market their solutions to a curated audience of
+                businesses across key industries. Through targeted digital
+                marketing campaigns, showcase opportunities, and partner
+                features, we help our clients position their technologies in
+                front of the right stakeholders, accelerating interest,
+                adoption, and growth.
               </p>
             </div>
 
@@ -87,15 +86,16 @@ export default function AboutPage() {
             <div className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-8 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500 animate-slideInRight">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <h2 className="text-3xl font-bold text-primary mb-6 relative">
-                Our Community
+                Our Network
               </h2>
               <p className="text-gray-300 leading-relaxed text-lg relative">
-                FinTech Calgary isn&apos;t just a club; it&apos;s a vibrant
-                community that bridges the gap between finance and technology,
-                fostering innovation and collaboration every step of the way. We
-                explore and navigate the technological world of finance,
-                promoting the growth and development of FinTech initiatives and
-                businesses together. Welcome to the future of Finance.
+                FinTech Calgary brings together a powerful network of fintech
+                innovators, enterprise buyers, and sector-specific associations
+                across payments, hospitality, and services. We create the
+                conditions for strategic partnerships and real-world
+                implementation by bridging the gap between solution providers
+                and the businesses that need them. Together, we’re accelerating
+                the future of financial technology, one connection at a time.
               </p>
             </div>
           </div>

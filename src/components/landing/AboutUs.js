@@ -36,10 +36,12 @@ export default function AboutUs() {
                 Our Mission
               </h3>
               <p className="text-lg text-gray-300 leading-relaxed mb-6">
-                FinTech Calgary is a student-led organization, dedicated to
-                bridging the gap between finance and technology through
-                insightful discussions, hands-on projects, and networking
-                opportunities.
+                FinTech Calgary is a digital marketing platform clientele built
+                for B2B engagement. We specialize in connecting payment
+                processing companies with business decision makers who are ready
+                to evaluate and adopt innovative financial technologies. Our
+                platform goes beyond visibility, we enable meaningful market
+                access and direct connections that drive real business outcomes.
               </p>
               <Link
                 href="/about"
@@ -62,7 +64,7 @@ export default function AboutUs() {
 
           {/* Right Section (Two Stacked Cards) */}
           <div className="flex flex-col gap-8 h-full">
-            {["What We Do", "Our Approach"].map((title, index) => (
+            {["Our Services", "Our Network"].map((title, index) => (
               <div
                 key={title}
                 className="group bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-3xl p-10 
@@ -76,9 +78,9 @@ export default function AboutUs() {
                     {title}
                   </h3>
                   <p className="text-lg text-gray-300 leading-relaxed mb-6">
-                    {title === "What We Do"
-                      ? "We host workshops, speaker sessions, and collaborative projects providing practical experience and industry insights in the fintech sector."
-                      : "By combining academic knowledge with real-world applications, we empower students to develop critical skills and stay ahead in the evolving fintech landscape."}
+                    {title === "Our Services"
+                      ? "We provide payment processing companies with a platform to showcase their solutions to targeted businesses. Through digital marketing and partner features, we connect innovative technologies with decision-makers to drive adoption and growth."
+                      : "FinTech Calgary connects fintech innovators with enterprise buyers across payments, hospitality, and services. We bridge the gap between solution providers and businesses, fostering strategic partnerships that advance financial technology."}
                   </p>
                   <Link
                     href="/about"
