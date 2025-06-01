@@ -63,11 +63,47 @@ export default function AssociateMemberSignupPage() {
         <div className="container mx-auto px-6 py-24 relative z-10">
           <div className="text-center mb-16 animate-fadeIn">
             <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
-              Associate Member Sign up
+              Associate Member Sign Up
             </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Enter some description here.
+            <p className="text-xl text-gray-300 mx-auto">
+              Interested in learning more about Associate Membership before
+              applying? Contact us at fintech.calgary@gmail.com.
             </p>
+          </div>
+
+          <div className="flex justify-center items-center">
+            <form className="bg-gray-800/50 backdrop-blur-sm rounded-lg py-5 px-8 w-full max-w-6xl">
+              <div className="text-xl font-semibold">
+                Organization Information
+              </div>
+              <div className="my-2 border-t-2 border-primary/60 w-full"></div>
+              <div className="flex gap-x-2 mb-2">
+                <span>Logo:</span>
+                <input type="file" required className="" />
+              </div>
+              <div className="flex gap-x-2 mb-5">
+                <input
+                  type="text"
+                  placeholder="Organization Name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  required
+                  className="max-w-2xl px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                />
+              </div>
+              <div className="text-xl font-semibold">Contacts</div>
+              <div className="my-2 border-t-2 border-primary/60 w-full"></div>
+              <div className="text-xl font-semibold">
+                Organization Contact Information
+              </div>
+              <div className="my-2 border-t-2 border-primary/60 w-full"></div>
+              <div className="text-xl font-semibold">Organization Address</div>
+              <div className="my-2 border-t-2 border-primary/60 w-full"></div>
+              <div className="text-xl font-semibold">Directory Listing</div>
+              <div className="my-2 border-t-2 border-primary/60 w-full"></div>
+            </form>
           </div>
         </div>
       </div>
