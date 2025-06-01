@@ -78,9 +78,35 @@ export default function AssociateMemberSignupPage() {
               </div>
               <div className="my-2 border-t-2 border-primary/60 w-full"></div>
               <div className="flex gap-x-2 mb-2">
-                <span>Logo:</span>
-                <input type="file" required className="" />
+                <input
+                  id="logo-upload"
+                  type="file"
+                  required
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    setFormData({ ...formData, logo: file });
+                  }}
+                  className="hidden"
+                />
+
+                <label
+                  htmlFor="logo-upload"
+                  className="flex justify-between items-stretch cursor-pointer max-w-2xl px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 w-full"
+                >
+                  <span
+                    className={`truncate self-center ${
+                      formData.logo ? "" : "text-gray-400"
+                    }`}
+                  >
+                    {formData.logo ? formData.logo.name : "Organization Logo"}
+                  </span>
+
+                  <span className="flex items-center pl-4 border-l border-gray-600 text-gray-400">
+                    Browse
+                  </span>
+                </label>
               </div>
+
               <div className="flex gap-x-2 mb-5">
                 <input
                   type="text"
@@ -95,6 +121,19 @@ export default function AssociateMemberSignupPage() {
               </div>
               <div className="text-xl font-semibold">Contacts</div>
               <div className="my-2 border-t-2 border-primary/60 w-full"></div>
+              <div className="flex gap-x-2 mb-2">
+                <input
+                  type="text"
+                  placeholder="Prefix"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  required
+                  className="max-w-2xl px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                />
+              </div>
+
               <div className="text-xl font-semibold">
                 Organization Contact Information
               </div>
