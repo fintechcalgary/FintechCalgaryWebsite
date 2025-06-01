@@ -435,7 +435,7 @@ export default function AssociateMemberSignupPage() {
                 disabled={isSubmitting}
                 className="w-full px-8 py-4 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                {isSubmitting ? "Submitting..." : <>Sign Up</>}
+                {isSubmitting ? "Submitting..." : <>Submit Application</>}
               </button>
             </form>
           </div>
