@@ -5,6 +5,7 @@ export async function POST(req) {
   try {
     const data = await req.formData();
     const file = data.get("file");
+    const folder = data.get("folder"); // currently optional but eventually migrate to folder structure
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -14,23 +15,23 @@ export async function POST(req) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
+    const uploadOptions = {
+      resource_type: "auto",
+      format: "jpg",
+      transformation: [{ quality: "auto:good" }, { fetch_format: "auto" }],
+    };
+
+    if (folder) {
+      uploadOptions.folder = folder;
+    }
+
     // Upload to Cloudinary with format conversion
     const result = await new Promise((resolve, reject) => {
       cloudinary.uploader
-        .upload_stream(
-          {
-            resource_type: "auto",
-            format: "jpg", // Force conversion to JPG
-            transformation: [
-              { quality: "auto:good" }, // Optimize quality
-              { fetch_format: "auto" }, // Use best format for browser
-            ],
-          },
-          (error, result) => {
-            if (error) reject(error);
-            resolve(result);
-          }
-        )
+        .upload_stream(uploadOptions, (error, result) => {
+          if (error) reject(error);
+          resolve(result);
+        })
         .end(buffer);
     });
 
