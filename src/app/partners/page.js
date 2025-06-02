@@ -58,10 +58,6 @@ export default function PartnersPage() {
         {/* Modern gradient background */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f] via-[#0f0f19] to-[#13131f] z-0"></div>
 
-        {/* Animated gradient orbs */}
-        <div className="absolute top-40 left-20 w-72 h-72 bg-primary/20 rounded-full blur-[100px] animate-pulse"></div>
-        <div className="absolute bottom-40 right-20 w-80 h-80 bg-purple-600/20 rounded-full blur-[120px] animate-pulse delay-1000"></div>
-
         <div className="container mx-auto px-6 py-24 sm:px-8 lg:px-12 relative z-10">
           {/* Page Heading */}
           <div className="text-center mb-20 animate-fadeIn">

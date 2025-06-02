@@ -144,8 +144,8 @@ export default function AssociateMemberSignupPage() {
       <PublicNavbar />
 
       <div className="relative flex-grow">
-        <div className="container mx-auto px-6 py-24 relative z-10">
-          <div className="text-center mb-16 animate-fadeIn">
+        <div className="container mx-auto px-6 pt-24 relative z-10">
+          <div className="text-center animate-fadeIn">
             <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
               Associate Sign Up
             </h1>
@@ -173,7 +173,8 @@ export default function AssociateMemberSignupPage() {
                     Thank you for your application!
                   </h2>
                   <p className="text-gray-300">
-                    We'll review your submission and get back to you shortly.
+                    We&apos;ll review your submission and get back to you
+                    shortly.
                   </p>
                 </div>
               ) : (

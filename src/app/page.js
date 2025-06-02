@@ -64,13 +64,6 @@ export default function Home() {
       <PublicNavbar />
 
       <div className="relative flex-grow">
-        {!isLowPerfDevice && (
-          <>
-            <div className="absolute top-20 left-0 w-[400px] h-[400px] bg-primary/30 max-md:bg-primary/20 rounded-full blur-[80px] -translate-x-1/2"></div>
-            <div className="absolute top-1/2 right-0 w-[300px] h-[300px] bg-purple-500/30 max-md:bg-purple-500/10 rounded-full blur-[60px] translate-x-1/2"></div>
-          </>
-        )}
-
         <section className="flex-grow flex items-center justify-center min-h-screen relative overflow-visible">
           <div className="absolute inset-0 overflow-visible">
             <Image
@@ -109,12 +102,12 @@ export default function Home() {
                 Join Us
               </Link>
               <Link
-                href="/executives"
+                href="/associate-member-signup"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium rounded-full 
                          border border-gray-700 hover:border-primary/50 text-white transition-all duration-300 
                          hover:shadow-xl hover:bg-gray-800/30 group"
               >
-                Executives
+                Become an Associate
                 <FiArrowRight className="ml-2 transform transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>

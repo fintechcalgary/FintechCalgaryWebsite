@@ -1,5 +1,6 @@
 import "./globals.css";
 import { DM_Sans } from "next/font/google";
+import GradientCircles from "@/components/GradientCircles";
 
 // Add multiple weights for DM Sans
 const dmSans = DM_Sans({
@@ -50,6 +51,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${dmSans.className} bg-background text-foreground`}>
+        <GradientCircles />
         <ClientSessionProvider>{children}</ClientSessionProvider>
       </body>
     </html>
