@@ -51,12 +51,37 @@ export default function AssociateMemberSignupPage() {
     setSubmitStatus(null);
 
     try {
+      let logoUrl = "";
+
+      if (formData.logo) {
+        const logoData = new FormData();
+        logoData.append("file", formData.logo);
+        logoData.append("folder", "associateMemberLogos");
+
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: logoData,
+        });
+
+        if (!response.ok) {
+          throw new Error("Upload failed");
+        }
+
+        const logoResult = await response.json();
+        logoUrl = logoResult.url;
+      }
+
+      const memberData = {
+        ...formData,
+        logo: logoUrl,
+      };
+
       const response = await fetch("/api/associateMember", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(memberData),
       });
 
       if (!response.ok) {
@@ -112,7 +137,10 @@ export default function AssociateMemberSignupPage() {
           </div>
 
           <div className="flex justify-center items-center">
-            <form className="bg-gray-800/50 backdrop-blur-sm rounded-lg py-5 px-8 w-full max-w-6xl">
+            <form
+              className="bg-gray-800/50 backdrop-blur-sm rounded-lg py-5 px-8 w-full max-w-6xl"
+              onSubmit={handleSubmit}
+            >
               <div className="text-xl font-semibold">
                 Organization Information
               </div>
