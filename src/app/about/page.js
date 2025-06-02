@@ -94,8 +94,9 @@ export default function AboutPage() {
                 across payments, hospitality, and services. We create the
                 conditions for strategic partnerships and real-world
                 implementation by bridging the gap between solution providers
-                and the businesses that need them. Together, we're accelerating
-                the future of financial technology, one connection at a time.
+                and the businesses that need them. Together, we&apos;re
+                accelerating the future of financial technology, one connection
+                at a time.
               </p>
             </div>
           </div>
