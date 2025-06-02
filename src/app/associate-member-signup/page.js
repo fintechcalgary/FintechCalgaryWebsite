@@ -16,18 +16,15 @@ export default function AssociateMemberSignupPage() {
     organizationName: "",
 
     // Main Contact Info
-    prefix: "",
     title: "",
     firstName: "",
     lastName: "",
     contactEmail: "",
     contactPhoneNumber: "",
-    contactExtension: "",
 
     // Organization Contact Info
     organizationEmail: "",
     organizationPhoneNumber: "",
-    organizationExtension: "",
     website: "",
     facebook: "",
     twitter: "",
@@ -42,6 +39,9 @@ export default function AssociateMemberSignupPage() {
 
     // Directory Listing
     aboutUs: "",
+
+    // New field
+    password: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -95,16 +95,13 @@ export default function AssociateMemberSignupPage() {
       setFormData({
         logo: null,
         organizationName: "",
-        prefix: "",
         title: "",
         firstName: "",
         lastName: "",
         contactEmail: "",
         contactPhoneNumber: "",
-        contactExtension: "",
         organizationEmail: "",
         organizationPhoneNumber: "",
-        organizationExtension: "",
         website: "",
         facebook: "",
         twitter: "",
@@ -115,6 +112,7 @@ export default function AssociateMemberSignupPage() {
         city: "",
         postalCode: "",
         aboutUs: "",
+        password: "",
       });
     } catch (error) {
       setSubmitStatus("error");
@@ -170,11 +168,11 @@ export default function AssociateMemberSignupPage() {
                     <FiCheck className="w-8 h-8 text-primary" />
                   </div>
                   <h2 className="text-2xl font-bold text-white mb-2">
-                    Thank you for your application!
+                    Thank you for your interest in becoming an Associate Member!
                   </h2>
                   <p className="text-gray-300">
-                    We&apos;ll review your submission and get back to you
-                    shortly.
+                    We will be in contact with you shortly to discuss the next
+                    steps.
                   </p>
                 </div>
               ) : (
@@ -255,6 +253,24 @@ export default function AssociateMemberSignupPage() {
                         className={inputClassName}
                       />
                     </div>
+                    <div className="mb-5">
+                      <input
+                        type="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            password: e.target.value,
+                          })
+                        }
+                        required
+                        className={inputClassName}
+                      />
+                      <p className="mt-1 text-sm text-gray-400">
+                        Password must be at least 8 characters long
+                      </p>
+                    </div>
                     <div className="text-xl font-semibold">Contacts</div>
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
                     <div className="mb-2 text-gray-200 text-md">
@@ -263,29 +279,16 @@ export default function AssociateMemberSignupPage() {
                         your organization.
                       </p>
                     </div>
-                    <div className="grid grid-cols-4 gap-4 mb-5">
-                      <div className="col-span-1">
-                        <input
-                          type="text"
-                          placeholder="Prefix"
-                          value={formData.prefix}
-                          onChange={(e) =>
-                            setFormData({ ...formData, prefix: e.target.value })
-                          }
-                          className={inputClassName}
-                        />
-                      </div>
-                      <div className="col-span-3">
-                        <input
-                          type="text"
-                          placeholder="Title"
-                          value={formData.title}
-                          onChange={(e) =>
-                            setFormData({ ...formData, title: e.target.value })
-                          }
-                          className={inputClassName}
-                        />
-                      </div>
+                    <div className="grid grid-cols-1 gap-4 mb-5">
+                      <input
+                        type="text"
+                        placeholder="Title"
+                        value={formData.title}
+                        onChange={(e) =>
+                          setFormData({ ...formData, title: e.target.value })
+                        }
+                        className={inputClassName}
+                      />
                     </div>
                     <div className="grid grid-cols-2 gap-4 mb-5">
                       <input
@@ -326,33 +329,19 @@ export default function AssociateMemberSignupPage() {
                         required
                         className={inputClassName}
                       />
-                      <div className="grid grid-cols-6 gap-2">
-                        <input
-                          type="text"
-                          placeholder="Phone Number"
-                          value={formData.contactPhoneNumber}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              contactPhoneNumber: e.target.value,
-                            })
-                          }
-                          required
-                          className={`${inputClassName} col-span-5`}
-                        />
-                        <input
-                          type="text"
-                          placeholder="Ext."
-                          value={formData.contactExtension}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              contactExtension: e.target.value,
-                            })
-                          }
-                          className={`${inputClassName} col-span-1`}
-                        />
-                      </div>
+                      <input
+                        type="text"
+                        placeholder="Phone Number"
+                        value={formData.contactPhoneNumber}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            contactPhoneNumber: e.target.value,
+                          })
+                        }
+                        required
+                        className={inputClassName}
+                      />
                     </div>
 
                     <div className="text-xl font-semibold">
@@ -383,7 +372,7 @@ export default function AssociateMemberSignupPage() {
                         required
                         className={inputClassName}
                       />
-                      <div className="grid grid-cols-6 gap-2">
+                      <div className="grid grid-cols-1 gap-4 mb-5">
                         <input
                           type="text"
                           placeholder="Phone Number"
@@ -395,19 +384,7 @@ export default function AssociateMemberSignupPage() {
                             })
                           }
                           required
-                          className={`${inputClassName} col-span-5`}
-                        />
-                        <input
-                          type="text"
-                          placeholder="Ext."
-                          value={formData.organizationExtension}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              organizationExtension: e.target.value,
-                            })
-                          }
-                          className={`${inputClassName} col-span-1`}
+                          className={inputClassName}
                         />
                       </div>
                     </div>

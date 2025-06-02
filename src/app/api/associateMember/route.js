@@ -3,6 +3,7 @@ import {
   createAssociateMember,
   getAssociateMembers,
 } from "@/lib/models/associateMember";
+import bcrypt from "bcryptjs";
 
 export async function POST(req) {
   try {
@@ -23,10 +24,30 @@ export async function POST(req) {
       );
     }
 
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(organization.password, 10);
+
+    // Create associate member document
+    const memberDoc = {
+      ...organization,
+      password: hashedPassword,
+      createdAt: new Date(),
+      role: "associate",
+    };
+
     // Create associate member
-    const result = await db
-      .collection("associateMembers")
-      .insertOne(organization);
+    const result = await db.collection("associateMembers").insertOne(memberDoc);
+
+    // Also create a user account for authentication
+    await db.collection("users").insertOne({
+      username: organization.organizationName
+        .toLowerCase()
+        .replace(/\s+/g, "_"),
+      email: organization.organizationEmail,
+      password: hashedPassword,
+      role: "associate",
+      createdAt: new Date(),
+    });
 
     return new Response(JSON.stringify(result), { status: 201 });
   } catch (error) {
