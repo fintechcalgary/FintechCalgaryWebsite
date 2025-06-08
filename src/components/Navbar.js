@@ -1,5 +1,5 @@
 "use client";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -9,6 +9,7 @@ import Modal from "./Modal";
 
 export default function Navbar() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -92,7 +93,12 @@ export default function Navbar() {
                   ["Events", "/dashboard#events"],
                   ["Members", "/dashboard#members"],
                   ["Info", "/info"],
-                  ["Subscribers", "/dashboard/subscribers"],
+                  ...(session?.user?.role === "admin"
+                    ? [
+                        ["Subscribers", "/dashboard/subscribers"],
+                        ["Associates", "/dashboard/associate-members"],
+                      ]
+                    : []),
                 ].map(([title, path]) => (
                   <Link
                     key={path}
@@ -183,6 +189,15 @@ export default function Navbar() {
                 { href: "/dashboard#events", label: "Events" },
                 { href: "/dashboard#members", label: "Members" },
                 { href: "/info", label: "Info" },
+                ...(session?.user?.role === "admin"
+                  ? [
+                      { href: "/dashboard/subscribers", label: "Subscribers" },
+                      {
+                        href: "/dashboard/associate-members",
+                        label: "Associates",
+                      },
+                    ]
+                  : []),
               ].map(({ href, label }) => (
                 <Link
                   key={href}

@@ -11,6 +11,7 @@ import Navbar from "@/components/Navbar";
 import Events from "@/components/Events";
 import { useEffect, useCallback } from "react";
 import Members from "@/components/Members";
+import Link from "next/link";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
@@ -80,6 +81,129 @@ export default function DashboardPage() {
 
         {/* Content grid */}
         <div className="grid grid-cols-1 gap-8">
+          {/* Admin Section - Only visible to admins */}
+          {session?.user?.role === "admin" && (
+            <section className="group animate-fadeIn">
+              <div
+                className="relative h-full bg-gray-900/60 backdrop-blur-xl rounded-2xl p-8 border border-white/10 
+                          transition-all duration-300 hover:bg-gray-900/70 hover:shadow-xl hover:shadow-primary/10
+                          hover:border-white/20 overflow-hidden"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-semibold text-white">
+                      Admin Panel
+                    </h2>
+                    <p className="text-sm text-gray-400">
+                      Manage system resources
+                    </p>
+                  </div>
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/20 text-primary backdrop-blur-sm">
+                    <svg
+                      className="h-6 w-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                      />
+                    </svg>
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Link
+                    href="/dashboard/associate-members"
+                    className="group relative overflow-hidden bg-gradient-to-br from-purple-900/30 to-blue-900/30 rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-semibold text-white">
+                        Associate Members
+                      </h3>
+                      <svg
+                        className="w-6 h-6 text-purple-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h3M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                        />
+                      </svg>
+                    </div>
+                    <p className="text-gray-300 text-sm">
+                      View and manage associate member organizations
+                    </p>
+                    <div className="absolute bottom-2 right-2 text-purple-400 group-hover:translate-x-1 transition-transform duration-300">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/dashboard/subscribers"
+                    className="group relative overflow-hidden bg-gradient-to-br from-green-900/30 to-teal-900/30 rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/20"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-semibold text-white">
+                        Subscribers
+                      </h3>
+                      <svg
+                        className="w-6 h-6 text-green-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                    <p className="text-gray-300 text-sm">
+                      Manage newsletter subscribers and mailing lists
+                    </p>
+                    <div className="absolute bottom-2 right-2 text-green-400 group-hover:translate-x-1 transition-transform duration-300">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </section>
+          )}
+
           <section className="group animate-fadeIn">
             <div
               className="relative h-full bg-gray-900/60 backdrop-blur-xl rounded-2xl p-8 border border-white/10 

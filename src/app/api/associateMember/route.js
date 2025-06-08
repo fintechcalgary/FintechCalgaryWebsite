@@ -4,6 +4,8 @@ import {
   getAssociateMembers,
 } from "@/lib/models/associateMember";
 import bcrypt from "bcryptjs";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function POST(req) {
   try {
@@ -62,6 +64,13 @@ export async function POST(req) {
 
 export async function GET() {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== "admin") {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
+
     const db = await connectToDatabase();
     const associateMembers = await getAssociateMembers(db);
     return new Response(JSON.stringify(associateMembers), { status: 200 });

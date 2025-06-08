@@ -391,7 +391,7 @@ export default function AssociateMemberSignupPage() {
                     <div className="space-y-4 mb-5">
                       <input
                         type="text"
-                        placeholder="Facebook"
+                        placeholder="Facebook URL (Leave blank if not applicable)"
                         value={formData.facebook}
                         onChange={(e) =>
                           setFormData({ ...formData, facebook: e.target.value })
@@ -400,7 +400,7 @@ export default function AssociateMemberSignupPage() {
                       />
                       <input
                         type="text"
-                        placeholder="Twitter"
+                        placeholder="Twitter URL (Leave blank if not applicable)"
                         value={formData.twitter}
                         onChange={(e) =>
                           setFormData({ ...formData, twitter: e.target.value })
@@ -409,7 +409,7 @@ export default function AssociateMemberSignupPage() {
                       />
                       <input
                         type="text"
-                        placeholder="LinkedIn"
+                        placeholder="LinkedIn URL (Leave blank if not applicable)"
                         value={formData.linkedin}
                         onChange={(e) =>
                           setFormData({ ...formData, linkedin: e.target.value })
