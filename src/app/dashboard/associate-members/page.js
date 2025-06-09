@@ -263,7 +263,7 @@ export default function AssociateMembersPage() {
             <div className="text-center">
               <FiUsers className="mx-auto text-4xl text-primary mb-4" />
               <p className="text-gray-400">
-                You don't have permission to view associate members.
+                You don&apos;t have permission to view associate members.
               </p>
             </div>
           </div>
