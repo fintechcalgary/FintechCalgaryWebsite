@@ -47,6 +47,7 @@ export default function AssociateMemberSignupPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -124,12 +125,48 @@ export default function AssociateMemberSignupPage() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      handleFile(file);
+    }
+  };
+
+  const handleFile = (file) => {
+    if (file && file.type.startsWith("image/")) {
       setFormData({ ...formData, logo: file });
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewUrl(reader.result);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      handleFile(file);
     }
   };
 
@@ -194,7 +231,13 @@ export default function AssociateMemberSignupPage() {
 
                       <label
                         htmlFor="logo-upload"
-                        className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:border-primary/60 transition-all duration-200"
+                        className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:border-primary/60 transition-all duration-200 ${
+                          isDragOver ? "border-primary/60" : ""
+                        }`}
+                        onDragOver={handleDragOver}
+                        onDragEnter={handleDragEnter}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
                       >
                         {previewUrl ? (
                           <div className="relative w-full h-full p-4 flex items-center justify-center">
@@ -448,7 +491,7 @@ export default function AssociateMemberSignupPage() {
                         />
                         <input
                           type="text"
-                          placeholder="Province/State"
+                          placeholder="Province / State"
                           value={formData.province}
                           onChange={(e) =>
                             setFormData({
@@ -473,7 +516,7 @@ export default function AssociateMemberSignupPage() {
                         />
                         <input
                           type="text"
-                          placeholder="Postal Code"
+                          placeholder="Postal Code / Zip Code"
                           value={formData.postalCode}
                           onChange={(e) =>
                             setFormData({
