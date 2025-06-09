@@ -448,7 +448,7 @@ export default function AssociateMemberSignupPage() {
                         />
                         <input
                           type="text"
-                          placeholder="Province"
+                          placeholder="Province/State"
                           value={formData.province}
                           onChange={(e) =>
                             setFormData({

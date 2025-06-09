@@ -9,7 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Navbar from "@/components/Navbar";
 import Events from "@/components/Events";
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import Members from "@/components/Members";
 import Link from "next/link";
 
