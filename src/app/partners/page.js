@@ -16,12 +16,21 @@ export default function PartnersPage() {
 
   const partners = [
     {
+      name: "University of Calgary",
+      logo: "/partners/ucalgary.png",
+      description:
+        "Our foundational partner and home institution. The University of Calgary provides the academic foundation and support that enables FinTech Calgary to thrive as a leading student organization in financial technology innovation.",
+      website:
+        "https://suuofc.campuslabs.ca/engage/organization/fintechcalgary",
+      color: "#dc2626",
+    },
+    {
       name: "Dubai FinTech Summit",
       logo: "/partners/dubai-fintech-summit.png",
       description:
         "A premier global event bringing together FinTech innovators, investors, and industry leaders to shape the future of financial technology.",
       website: "https://dubaifintechsummit.com/get-involved/#buy-tickets",
-      color: "#6d28d9",
+      color: "#14b8a6",
     },
     {
       name: "National Payments",
@@ -29,7 +38,7 @@ export default function PartnersPage() {
       description:
         "A leading payment solutions provider offering innovative financial technology services to businesses and institutions.",
       website: "https://nationalpayments.ca/",
-      color: "#8b5cf6",
+      color: "#22c55e",
     },
     {
       name: "Trescon",
@@ -37,7 +46,7 @@ export default function PartnersPage() {
       description:
         "A global business events and consulting firm that specializes in producing high-quality B2B events focusing on tech innovation and digital transformation.",
       website: "https://www.tresconglobal.com/",
-      color: "#a78bfa",
+      color: "#14b8a6",
     },
     {
       name: "Helcim",
@@ -46,7 +55,7 @@ export default function PartnersPage() {
         "An innovative fintech company offering integrated payment solutions and business tools built for modern commerce.",
       website:
         "https://www.helcim.com/partners/fintechcalgary/?af=3a785c9580a52b",
-      color: "#a78bfa",
+      color: "#eab308",
     },
   ];
 

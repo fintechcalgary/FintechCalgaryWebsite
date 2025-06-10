@@ -8,24 +8,29 @@ export default function Partners() {
 
   const partners = [
     {
+      name: "University of Calgary",
+      logo: "/partners/ucalgary.png",
+      color: "#dc2626",
+    },
+    {
       name: "Dubai FinTech Summit",
       logo: "/partners/dubai-fintech-summit.png",
-      color: "#6d28d9",
+      color: "#14b8a6",
     },
     {
       name: "National Payments",
       logo: "/partners/national-payments.png",
-      color: "#8b5cf6",
+      color: "#22c55e",
     },
     {
       name: "Trescon",
       logo: "/partners/trescon.png",
-      color: "#a78bfa",
+      color: "#14b8a6",
     },
     {
       name: "Helcim",
       logo: "/partners/helcim.png",
-      color: "#a78bfa",
+      color: "#eab308",
     },
   ];
 
