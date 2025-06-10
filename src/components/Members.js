@@ -25,7 +25,6 @@ export default function Members() {
     major: "",
     imageUrl: "",
     username: "",
-    password: "",
     role: "member",
     linkedinUrl: "",
     description: "",
@@ -158,7 +157,6 @@ export default function Members() {
       major: member.major || "",
       imageUrl: member.imageUrl || "",
       username: member.username || "",
-      password: "",
       role: member.role || "member",
       linkedinUrl: member.linkedinUrl || "",
       description: member.description || "",
@@ -202,7 +200,6 @@ export default function Members() {
       major: "",
       imageUrl: "",
       username: "",
-      password: "",
       role: "member",
       linkedinUrl: "",
       description: "",
@@ -398,25 +395,6 @@ export default function Members() {
                             }
                             className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
                             required
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">
-                            Password
-                          </label>
-                          <input
-                            type="password"
-                            placeholder="Enter password"
-                            value={formData.password}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                password: e.target.value,
-                              })
-                            }
-                            className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                            required={!editingMember}
                           />
                         </div>
 

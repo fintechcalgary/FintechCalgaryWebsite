@@ -2,7 +2,6 @@ import { connectToDatabase } from "@/lib/mongodb";
 import { createMember, getMembers } from "@/lib/models/member";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
-import bcrypt from "bcryptjs";
 
 export async function POST(req) {
   try {
@@ -31,18 +30,10 @@ export async function POST(req) {
       );
     }
 
-    // Create member and user account
+    // Create member (no password needed for regular members)
     const result = await db.collection("members").insertOne(member);
 
-    // Also add to users collection for authentication
-    await db.collection("users").insertOne({
-      username: member.username,
-      password: await bcrypt.hash(member.password, 10),
-      role: member.role || "member",
-      createdAt: new Date(),
-    });
-
-    // Return the result directly without sending email
+    // Return the result directly without creating user account
     return new Response(JSON.stringify(result), { status: 201 });
   } catch (error) {
     return new Response(

@@ -1,14 +1,11 @@
 import { ObjectId } from "mongodb";
-import bcrypt from "bcrypt";
 const MEMBER_COLLECTION = "members";
 
 export async function createMember(db, member) {
-  const hashedPassword = await bcrypt.hash(member.password, 10);
   const memberCount = await db.collection(MEMBER_COLLECTION).countDocuments();
 
   return await db.collection(MEMBER_COLLECTION).insertOne({
     ...member,
-    password: hashedPassword,
     createdAt: new Date(),
     role: "member",
     order: memberCount + 1,

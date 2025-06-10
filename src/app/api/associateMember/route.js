@@ -12,6 +12,30 @@ export async function POST(req) {
     const db = await connectToDatabase();
     const organization = await req.json();
 
+    // Validate password length
+    if (!organization.password || organization.password.length < 6) {
+      return new Response(
+        JSON.stringify({
+          error: "Password must be at least 6 characters long",
+        }),
+        {
+          status: 400,
+        }
+      );
+    }
+
+    // Validate username length
+    if (!organization.username || organization.username.length < 3) {
+      return new Response(
+        JSON.stringify({
+          error: "Username must be at least 3 characters long",
+        }),
+        {
+          status: 400,
+        }
+      );
+    }
+
     // Check if organization already exists
     const existingMember = await db
       .collection("associateMembers")
@@ -20,6 +44,20 @@ export async function POST(req) {
     if (existingMember) {
       return new Response(
         JSON.stringify({ error: "Organization already exists" }),
+        {
+          status: 400,
+        }
+      );
+    }
+
+    // Check if username already exists in users collection
+    const existingUser = await db
+      .collection("users")
+      .findOne({ username: organization.username });
+
+    if (existingUser) {
+      return new Response(
+        JSON.stringify({ error: "Username already exists" }),
         {
           status: 400,
         }
@@ -42,9 +80,7 @@ export async function POST(req) {
 
     // Also create a user account for authentication
     await db.collection("users").insertOne({
-      username: organization.organizationName
-        .toLowerCase()
-        .replace(/\s+/g, "_"),
+      username: organization.username,
       email: organization.organizationEmail,
       password: hashedPassword,
       role: "associate",

@@ -32,6 +32,7 @@ export default function AssociateMembersPage() {
   const [editingMember, setEditingMember] = useState(null);
   const [editFormData, setEditFormData] = useState({
     organizationName: "",
+    username: "",
     title: "",
     firstName: "",
     lastName: "",
@@ -98,6 +99,7 @@ export default function AssociateMembersPage() {
     setEditingMember(member);
     setEditFormData({
       organizationName: member.organizationName || "",
+      username: member.username || "",
       title: member.title || "",
       firstName: member.firstName || "",
       lastName: member.lastName || "",
@@ -138,6 +140,10 @@ export default function AssociateMembersPage() {
 
       if (!response.ok) {
         const data = await response.json();
+        if (data.error === "Username already exists") {
+          alert("Username already exists. Please choose a different username.");
+          return;
+        }
         throw new Error(data.error || "Failed to update associate member");
       }
 
@@ -185,6 +191,7 @@ export default function AssociateMembersPage() {
   const downloadCSV = () => {
     const headers = [
       "Organization Name",
+      "Username",
       "Contact Title",
       "Contact First Name",
       "Contact Last Name",
@@ -207,6 +214,7 @@ export default function AssociateMembersPage() {
 
     const csvData = associateMembers.map((member) => [
       member.organizationName || "",
+      member.username || "",
       member.title || "",
       member.firstName || "",
       member.lastName || "",
@@ -578,6 +586,19 @@ export default function AssociateMembersPage() {
                             setEditFormData({
                               ...editFormData,
                               organizationName: e.target.value,
+                            })
+                          }
+                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                          required
+                        />
+                        <input
+                          type="text"
+                          placeholder="Username"
+                          value={editFormData.username}
+                          onChange={(e) =>
+                            setEditFormData({
+                              ...editFormData,
+                              username: e.target.value,
                             })
                           }
                           className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"

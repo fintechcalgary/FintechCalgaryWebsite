@@ -15,6 +15,9 @@ export default function AssociateMemberSignupPage() {
     logo: null,
     organizationName: "",
 
+    // Account Info
+    username: "",
+
     // Main Contact Info
     title: "",
     firstName: "",
@@ -48,11 +51,54 @@ export default function AssociateMemberSignupPage() {
   const [submitStatus, setSubmitStatus] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Password validation
+    if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters long";
+    }
+
+    // Username validation
+    if (formData.username.length < 3) {
+      newErrors.username = "Username must be at least 3 characters long";
+    }
+
+    setErrors(newErrors);
+
+    // Scroll to first error if any exist
+    if (Object.keys(newErrors).length > 0) {
+      const firstErrorField = Object.keys(newErrors)[0];
+      setTimeout(() => {
+        const errorElement = document.querySelector(
+          `[data-error="${firstErrorField}"]`
+        );
+        if (errorElement) {
+          errorElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+          errorElement.focus();
+        }
+      }, 100);
+    }
+
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
+    setErrors({});
+
+    // Validate form before submission
+    if (!validateForm()) {
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       let logoUrl = "";
@@ -89,13 +135,15 @@ export default function AssociateMemberSignupPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to send message");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to send message");
       }
 
       setSubmitStatus("success");
       setFormData({
         logo: null,
         organizationName: "",
+        username: "",
         title: "",
         firstName: "",
         lastName: "",
@@ -115,8 +163,44 @@ export default function AssociateMemberSignupPage() {
         aboutUs: "",
         password: "",
       });
+      setErrors({});
     } catch (error) {
       setSubmitStatus("error");
+      const newErrors = {};
+
+      if (error.message === "Username already exists") {
+        newErrors.username = "This username is already taken";
+      } else if (error.message === "Organization already exists") {
+        newErrors.organizationName =
+          "This organization name is already registered";
+      } else if (
+        error.message === "Password must be at least 6 characters long"
+      ) {
+        newErrors.password = "Password must be at least 6 characters long";
+      } else if (
+        error.message === "Username must be at least 3 characters long"
+      ) {
+        newErrors.username = "Username must be at least 3 characters long";
+      }
+
+      setErrors(newErrors);
+
+      // Scroll to first error if any backend validation errors exist
+      if (Object.keys(newErrors).length > 0) {
+        const firstErrorField = Object.keys(newErrors)[0];
+        setTimeout(() => {
+          const errorElement = document.querySelector(
+            `[data-error="${firstErrorField}"]`
+          );
+          if (errorElement) {
+            errorElement.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+            errorElement.focus();
+          }
+        }, 100);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -286,33 +370,95 @@ export default function AssociateMemberSignupPage() {
                         type="text"
                         placeholder="Organization Name"
                         value={formData.organizationName}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setFormData({
                             ...formData,
                             organizationName: e.target.value,
-                          })
-                        }
+                          });
+                          // Clear error when user starts typing
+                          if (errors.organizationName) {
+                            setErrors({ ...errors, organizationName: null });
+                          }
+                        }}
                         required
-                        className={inputClassName}
+                        data-error="organizationName"
+                        className={`${inputClassName} ${
+                          errors.organizationName
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                            : ""
+                        }`}
                       />
+                      {errors.organizationName && (
+                        <p className="mt-1 text-sm text-red-400">
+                          {errors.organizationName}
+                        </p>
+                      )}
+                    </div>
+                    <div className="mb-5">
+                      <input
+                        type="text"
+                        placeholder="Username"
+                        value={formData.username}
+                        onChange={(e) => {
+                          setFormData({
+                            ...formData,
+                            username: e.target.value,
+                          });
+                          // Clear error when user starts typing
+                          if (errors.username) {
+                            setErrors({ ...errors, username: null });
+                          }
+                        }}
+                        required
+                        data-error="username"
+                        className={`${inputClassName} ${
+                          errors.username
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                            : ""
+                        }`}
+                      />
+                      {errors.username ? (
+                        <p className="mt-1 text-sm text-red-400">
+                          {errors.username}
+                        </p>
+                      ) : (
+                        <p className="mt-1 text-sm text-gray-400">
+                          Choose a unique username for your account
+                        </p>
+                      )}
                     </div>
                     <div className="mb-5">
                       <input
                         type="password"
                         placeholder="Password"
                         value={formData.password}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setFormData({
                             ...formData,
                             password: e.target.value,
-                          })
-                        }
+                          });
+                          // Clear error when user starts typing
+                          if (errors.password) {
+                            setErrors({ ...errors, password: null });
+                          }
+                        }}
                         required
-                        className={inputClassName}
+                        data-error="password"
+                        className={`${inputClassName} ${
+                          errors.password
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                            : ""
+                        }`}
                       />
-                      <p className="mt-1 text-sm text-gray-400">
-                        Password must be at least 8 characters long
-                      </p>
+                      {errors.password ? (
+                        <p className="mt-1 text-sm text-red-400">
+                          {errors.password}
+                        </p>
+                      ) : (
+                        <p className="mt-1 text-sm text-gray-400">
+                          Password must be at least 6 characters long
+                        </p>
+                      )}
                     </div>
                     <div className="text-xl font-semibold">Contacts</div>
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
@@ -558,7 +704,8 @@ export default function AssociateMemberSignupPage() {
                       <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
                       <div>
                         <p className="text-red-400">
-                          Failed to submit application. Please try again.
+                          Failed to submit application. Please check the form
+                          and try again.
                         </p>
                       </div>
                     </div>

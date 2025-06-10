@@ -30,6 +30,43 @@ export async function PUT(req, context) {
       );
     }
 
+    // If username is being updated, validate uniqueness
+    if (updates.username && updates.username !== existingMember.username) {
+      const existingUser = await db
+        .collection("users")
+        .findOne({ username: updates.username });
+
+      if (existingUser) {
+        return new Response(
+          JSON.stringify({ error: "Username already exists" }),
+          {
+            status: 400,
+          }
+        );
+      }
+
+      // Update username in users collection
+      await db
+        .collection("users")
+        .updateOne(
+          { email: existingMember.organizationEmail },
+          { $set: { username: updates.username } }
+        );
+    }
+
+    // If organization email is being updated, update the users collection
+    if (
+      updates.organizationEmail &&
+      updates.organizationEmail !== existingMember.organizationEmail
+    ) {
+      await db
+        .collection("users")
+        .updateOne(
+          { email: existingMember.organizationEmail },
+          { $set: { email: updates.organizationEmail } }
+        );
+    }
+
     // Update the associate member
     const result = await db.collection("associateMembers").updateOne(
       { _id: new ObjectId(memberId) },
