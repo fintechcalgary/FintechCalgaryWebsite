@@ -40,7 +40,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen relative bg-background">
+    <div className="min-h-screen relative">
       <Navbar />
       <main className="container mx-auto px-6 py-8 max-w-7xl relative animate-fadeIn">
         {/* Browser recommendation message */}

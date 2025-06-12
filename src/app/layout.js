@@ -49,8 +49,14 @@ import ClientSessionProvider from "@/components/ClientSessionProvider";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${dmSans.className} bg-background text-foreground`}>
-        <ClientSessionProvider>{children}</ClientSessionProvider>
+      <body
+        className={`${dmSans.className} bg-background text-foreground min-h-screen bg-cover bg-top bg-no-repeat relative`}
+        style={{ backgroundImage: "url(/bg-image.jpg)" }}
+      >
+        {/* Main content wrapper */}
+        <div className="relative z-10 min-h-screen">
+          <ClientSessionProvider>{children}</ClientSessionProvider>
+        </div>
       </body>
     </html>
   );

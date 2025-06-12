@@ -13,7 +13,7 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900">
+    <main className="flex flex-col min-h-screen">
       <PublicNavbar />
 
       <div className="relative flex-grow">

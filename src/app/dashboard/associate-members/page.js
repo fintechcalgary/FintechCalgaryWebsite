@@ -253,9 +253,9 @@ export default function AssociateMembersPage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Navbar />
-        <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
         </div>
       </div>
@@ -264,7 +264,7 @@ export default function AssociateMembersPage() {
 
   if (status !== "authenticated" || session?.user?.role !== "admin") {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Navbar />
         <div className="container mx-auto px-6 py-8">
           <div className="min-h-[500px] flex items-center justify-center">
@@ -281,7 +281,7 @@ export default function AssociateMembersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Navbar />
       <main className="container mx-auto px-6 py-8 max-w-7xl">
         {/* Header */}

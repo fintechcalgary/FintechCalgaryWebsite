@@ -60,7 +60,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900 overflow-hidden relative">
+    <main className="flex flex-col min-h-screen overflow-hidden relative">
       <PublicNavbar />
 
       <div className="relative flex-grow">
@@ -126,28 +126,22 @@ export default function Home() {
       </div>
 
       <div className="relative">
-        {/* Section separator gradient */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent"></div>
         <AboutUs />
       </div>
 
       <div className="relative">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
         <MissionStatement />
       </div>
 
       <div className="relative">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
         <UpcomingEvents events={events} />
       </div>
 
       <div className="relative">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
         <Partners />
       </div>
 
       <div className="relative">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
         <Contact />
       </div>
 

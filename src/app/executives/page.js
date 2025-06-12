@@ -44,14 +44,14 @@ export default function ExecutivesPage() {
 
   if (executives.length === 0) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
       </div>
     );
   }
 
   return (
-    <main className="flex flex-col min-h-screen bg-gradient-to-b from-background via-background to-gray-900">
+    <main className="flex flex-col min-h-screen">
       <PublicNavbar />
 
       <div className="relative flex-grow">
