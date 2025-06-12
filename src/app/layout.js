@@ -49,10 +49,14 @@ import ClientSessionProvider from "@/components/ClientSessionProvider";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preload" href="/bg-image.jpg" as="image" />
+      </head>
       <body
         className={`${dmSans.className} bg-background text-foreground min-h-screen bg-cover bg-top bg-no-repeat relative`}
         style={{ backgroundImage: "url(/bg-image.jpg)" }}
       >
+        <div className="absolute inset-0 bg-black/20 z-0 pointer-events-none min-h-full"></div>
         {/* Main content wrapper */}
         <div className="relative z-10 min-h-screen">
           <ClientSessionProvider>{children}</ClientSessionProvider>
