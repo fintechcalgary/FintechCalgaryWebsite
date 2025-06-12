@@ -1,19 +1,14 @@
-"use client";
-
-import { useState, useCallback, useEffect, useRef } from "react";
 import { FiDownload, FiExternalLink, FiArrowRight } from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import Image from "next/image";
 import Link from "next/link";
 
+export const metadata = {
+  title: "Partners & Sponsors | FinTech Calgary",
+};
+
 export default function PartnersPage() {
-  useEffect(() => {
-    document.title = "Partners & Sponsors | FinTech Calgary";
-  }, []);
-
-  const [hoveredPartner, setHoveredPartner] = useState(null);
-
   const partners = [
     {
       name: "University of Calgary",
@@ -81,21 +76,17 @@ export default function PartnersPage() {
             {partners.map((partner, index) => (
               <div
                 key={partner.name}
-                onMouseEnter={() => setHoveredPartner(partner.name)}
-                onMouseLeave={() => setHoveredPartner(null)}
                 className={`group relative overflow-hidden bg-[#12121a]/80 backdrop-blur-xl p-8 rounded-2xl 
                            border border-gray-800 hover:border-primary/50 transition-all duration-500 flex flex-col
                            animate-fadeIn`}
-                style={{ animationDelay: `${index * 100}ms` }}
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                  "--partner-color": partner.color,
+                }}
               >
                 {/* Dynamic background gradient on hover */}
                 <div
-                  className={`absolute inset-0 rounded-2xl z-0 transition-all duration-500
-                             ${
-                               hoveredPartner === partner.name
-                                 ? "opacity-80 scale-110"
-                                 : "opacity-0 scale-100"
-                             }`}
+                  className="absolute inset-0 rounded-2xl z-0 transition-all duration-500 opacity-0 scale-100 group-hover:opacity-80 group-hover:scale-110"
                   style={{
                     background: `radial-gradient(circle at center, ${partner.color}20 0%, transparent 70%)`,
                   }}

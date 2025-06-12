@@ -1,52 +1,70 @@
-"use client";
-
-import { useState, useEffect, useCallback, useRef } from "react";
+import { connectToDatabase } from "@/lib/mongodb";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { SiLinkedin } from "react-icons/si";
 import { FiMail } from "react-icons/fi";
 import Image from "next/image";
 
-export default function ExecutivesPage() {
-  const [executives, setExecutives] = useState([]);
-  const [groupedExecutives, setGroupedExecutives] = useState({});
+// Server-side data fetching function
+async function getExecutives() {
+  try {
+    const db = await connectToDatabase();
+    const executives = await db
+      .collection("members")
+      .find({})
+      .sort({ order: 1 })
+      .toArray();
 
-  useEffect(() => {
-    document.title = "Executives | FinTech Calgary";
-  }, []);
+    // Convert MongoDB documents to plain objects and handle ObjectId
+    const plainExecutives = executives.map((executive) => ({
+      ...executive,
+      _id: executive._id.toString(),
+    }));
 
-  const fetchExecutives = async () => {
-    try {
-      const response = await fetch("/api/members");
-      const data = await response.json();
+    // Group executives by team on the server
+    const grouped = plainExecutives.reduce((acc, executive) => {
+      if (!acc[executive.team]) acc[executive.team] = [];
+      acc[executive.team].push(executive);
+      return acc;
+    }, {});
 
-      if (!Array.isArray(data)) {
-        console.error("API did not return an array:", data);
-        return;
-      }
+    return { executives: plainExecutives, groupedExecutives: grouped };
+  } catch (error) {
+    console.error("Failed to fetch executives:", error);
+    return { executives: [], groupedExecutives: {} };
+  }
+}
 
-      const grouped = data.reduce((acc, executive) => {
-        if (!acc[executive.team]) acc[executive.team] = [];
-        acc[executive.team].push(executive);
-        return acc;
-      }, {});
+// Generate metadata on the server
+export const metadata = {
+  title: "Executives | FinTech Calgary",
+  description:
+    "Meet the dedicated executives and team members of FinTech Calgary - Calgary's Premier FinTech Community",
+  openGraph: {
+    title: "Executives | FinTech Calgary",
+    description: "Meet our dedicated team of executives and leaders",
+  },
+};
 
-      setExecutives(data);
-      setGroupedExecutives(grouped);
-    } catch (error) {
-      console.error("Failed to fetch executives:", error);
-    }
-  };
+// Server Component
+export default async function ExecutivesPage() {
+  const { executives, groupedExecutives } = await getExecutives();
 
-  useEffect(() => {
-    fetchExecutives();
-  }, []);
-
+  // If no executives are found, show a message instead of loading spinner
   if (executives.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
-      </div>
+      <main className="flex flex-col min-h-screen">
+        <PublicNavbar />
+        <div className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-white mb-4">
+              No Executives Found
+            </h1>
+            <p className="text-gray-400">Please check back later.</p>
+          </div>
+        </div>
+        <Footer />
+      </main>
     );
   }
 

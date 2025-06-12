@@ -27,7 +27,6 @@ A modern web platform for Calgary's FinTech community. Built with Next.js, this 
   - React 18
   - Framer Motion
   - TailwindCSS
-  - Three.js & Vanta.js
 
 - **Backend**
   - MongoDB

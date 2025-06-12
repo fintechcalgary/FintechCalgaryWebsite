@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import * as THREE from "three";
 import { FiArrowLeft } from "react-icons/fi";
 import Link from "next/link";
 

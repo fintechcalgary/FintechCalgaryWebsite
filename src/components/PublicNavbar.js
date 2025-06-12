@@ -1,6 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { usePathname } from "next/navigation";
 
@@ -8,6 +10,28 @@ export default function PublicNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+
+  // Memoize navigation items to prevent recreation on every render
+  const navigationItems = useMemo(
+    () => [
+      ["About", "/about"],
+      ["Events", "/events"],
+      ["Executives", "/executives"],
+      ["Partners", "/partners"],
+      ["Contact", "/contact"],
+    ],
+    []
+  );
+
+  // Memoize the toggle menu handler
+  const toggleMenu = useCallback(() => {
+    setIsMenuOpen((prev) => !prev);
+  }, []);
+
+  // Memoize the close menu handler
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+  }, []);
 
   useEffect(() => {
     let lastScrollY = 0;
@@ -109,13 +133,7 @@ export default function PublicNavbar() {
                 </motion.div>
               )}
               <div className="flex items-center space-x-4">
-                {[
-                  ["About", "/about"],
-                  ["Events", "/events"],
-                  ["Executives", "/executives"],
-                  ["Partners", "/partners"],
-                  ["Contact", "/contact"],
-                ].map(([title, path]) => (
+                {navigationItems.map(([title, path]) => (
                   <Link key={path} href={path}>
                     <motion.div
                       className={`relative px-6 py-2.5 text-sm font-semibold rounded-xl text-gray-200 hover:text-white transition-colors
@@ -152,7 +170,7 @@ export default function PublicNavbar() {
           </Link>
 
           <motion.button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            onClick={toggleMenu}
             className="p-2.5 rounded-xl text-gray-200 hover:text-white transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -176,14 +194,8 @@ export default function PublicNavbar() {
           <div
             className={`bg-gray-800/90 backdrop-blur-xl border border-gray-700/30 rounded-2xl p-3 mb-4 space-y-1`}
           >
-            {[
-              ["About", "/about"],
-              ["Events", "/events"],
-              ["Executives", "/executives"],
-              ["Partners", "/partners"],
-              ["Contact", "/contact"],
-            ].map(([title, path]) => (
-              <Link key={path} href={path} onClick={() => setIsMenuOpen(false)}>
+            {navigationItems.map(([title, path]) => (
+              <Link key={path} href={path} onClick={closeMenu}>
                 <motion.div
                   className={`px-4 py-3 text-gray-200 hover:text-white rounded-xl transition-colors
                     ${
