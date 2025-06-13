@@ -73,6 +73,8 @@ export async function POST(req) {
       password: hashedPassword,
       createdAt: new Date(),
       role: "associate",
+      approvalStatus: "pending",
+      approvedAt: null,
     };
 
     // Create associate member

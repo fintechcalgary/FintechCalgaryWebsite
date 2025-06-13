@@ -50,6 +50,8 @@ export default function AssociateMembersPage() {
     city: "",
     postalCode: "",
     aboutUs: "",
+    approvalStatus: "pending",
+    approvedAt: null,
   });
   const [submitting, setSubmitting] = useState(false);
   const { data: session, status } = useSession();
@@ -117,6 +119,8 @@ export default function AssociateMembersPage() {
       city: member.city || "",
       postalCode: member.postalCode || "",
       aboutUs: member.aboutUs || "",
+      approvalStatus: member.approvalStatus || "pending",
+      approvedAt: member.approvedAt || null,
     });
     setShowEditModal(true);
   };
@@ -161,6 +165,35 @@ export default function AssociateMembersPage() {
       alert("Failed to update associate member. Please try again.");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleApprovalStatusChange = async (memberId, newStatus) => {
+    try {
+      const response = await fetch(`/api/associateMember/${memberId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          approvalStatus: newStatus,
+          approvedAt: newStatus === "accepted" ? new Date() : null,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update approval status");
+      }
+
+      // Refresh the members list
+      const fetchResponse = await fetch("/api/associateMember");
+      if (fetchResponse.ok) {
+        const data = await fetchResponse.json();
+        setAssociateMembers(data);
+      }
+    } catch (error) {
+      console.error("Error updating approval status:", error);
+      alert("Failed to update approval status. Please try again.");
     }
   };
 
@@ -209,6 +242,8 @@ export default function AssociateMembersPage() {
       "Country",
       "Postal Code",
       "About Us",
+      "Approval Status",
+      "Approved Date",
       "Joined Date",
     ];
 
@@ -232,6 +267,8 @@ export default function AssociateMembersPage() {
       member.country || "",
       member.postalCode || "",
       member.aboutUs || "",
+      member.approvalStatus || "pending",
+      member.approvedAt ? new Date(member.approvedAt).toLocaleDateString() : "",
       new Date(member.createdAt).toLocaleDateString(),
     ]);
 
@@ -308,18 +345,46 @@ export default function AssociateMembersPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm">
-                  Total Associate Member Organizations
-                </p>
+                <p className="text-gray-400 text-sm">Total Organizations</p>
                 <p className="text-2xl font-bold text-white">
                   {associateMembers.length}
                 </p>
               </div>
               <FiHome className="text-primary text-2xl" />
+            </div>
+          </div>
+          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-400 text-sm">Pending Approval</p>
+                <p className="text-2xl font-bold text-white">
+                  {
+                    associateMembers.filter(
+                      (m) => m.approvalStatus === "pending"
+                    ).length
+                  }
+                </p>
+              </div>
+              <FiCalendar className="text-yellow-500 text-2xl" />
+            </div>
+          </div>
+          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-400 text-sm">Approved</p>
+                <p className="text-2xl font-bold text-white">
+                  {
+                    associateMembers.filter(
+                      (m) => m.approvalStatus === "accepted"
+                    ).length
+                  }
+                </p>
+              </div>
+              <FiUsers className="text-green-500 text-2xl" />
             </div>
           </div>
         </div>
@@ -382,6 +447,51 @@ export default function AssociateMembersPage() {
                     >
                       <FiTrash2 className="w-4 h-4" />
                     </button>
+                  </div>
+                </div>
+
+                {/* Approval Status */}
+                <div className="mb-4">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        member.approvalStatus === "pending"
+                          ? "bg-yellow-500/20 text-yellow-500"
+                          : member.approvalStatus === "accepted"
+                          ? "bg-green-500/20 text-green-500"
+                          : "bg-red-500/20 text-red-500"
+                      }`}
+                    >
+                      {member.approvalStatus.charAt(0).toUpperCase() +
+                        member.approvalStatus.slice(1)}
+                    </span>
+                    {member.approvalStatus === "accepted" &&
+                      member.approvedAt && (
+                        <span className="text-xs text-gray-400">
+                          Approved on{" "}
+                          {new Date(member.approvedAt).toLocaleDateString()}
+                        </span>
+                      )}
+                    {member.approvalStatus === "pending" && (
+                      <div className="flex gap-2 ml-auto">
+                        <button
+                          onClick={() =>
+                            handleApprovalStatusChange(member._id, "accepted")
+                          }
+                          className="text-xs bg-green-500/20 hover:bg-green-500/30 text-green-500 px-2 py-1 rounded transition-colors"
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleApprovalStatusChange(member._id, "rejected")
+                          }
+                          className="text-xs bg-red-500/20 hover:bg-red-500/30 text-red-500 px-2 py-1 rounded transition-colors"
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -836,6 +946,38 @@ export default function AssociateMembersPage() {
                         rows={6}
                         className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
                       />
+                    </div>
+
+                    {/* Approval Status */}
+                    <div className="mt-6">
+                      <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2 mb-4">
+                        Approval Status
+                      </h3>
+                      <select
+                        value={editFormData.approvalStatus}
+                        onChange={(e) =>
+                          setEditFormData({
+                            ...editFormData,
+                            approvalStatus: e.target.value,
+                            approvedAt:
+                              e.target.value === "accepted" ? new Date() : null,
+                          })
+                        }
+                        className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="accepted">Accepted</option>
+                        <option value="rejected">Rejected</option>
+                      </select>
+                      {editFormData.approvalStatus === "accepted" &&
+                        editFormData.approvedAt && (
+                          <p className="mt-2 text-sm text-gray-400">
+                            Approved on{" "}
+                            {new Date(
+                              editFormData.approvedAt
+                            ).toLocaleDateString()}
+                          </p>
+                        )}
                     </div>
                   </form>
                 </div>
