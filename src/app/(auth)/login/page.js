@@ -1,14 +1,14 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FiArrowLeft } from "react-icons/fi";
 import Link from "next/link";
 
 export default function Login() {
-  const { status } = useSession(); // Check session status
+  const { data: session, status } = useSession(); // Check session status
   const router = useRouter();
 
   const [username, setUsername] = useState("");
@@ -23,9 +23,14 @@ export default function Login() {
   // Redirect to /dashboard if already logged in
   useEffect(() => {
     if (status === "authenticated") {
-      router.push("/dashboard");
+      const role = session?.user?.role;
+      if (role === "associate") {
+        router.push("/associate-member-dashboard");
+      } else if (role === "member" || role === "admin") {
+        router.push("/dashboard");
+      }
     }
-  }, [status, router]);
+  }, [status, router, session]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -42,7 +47,14 @@ export default function Login() {
       if (result?.error) {
         setError("Invalid username or password");
       } else if (result?.ok) {
-        router.push("/dashboard");
+        const updatedSession = await getSession(); // get the updated session
+        const role = updatedSession?.user?.role;
+
+        if (role === "associate") {
+          router.push("/associate-member-dashboard");
+        } else if (role === "member" || role === "admin") {
+          router.push("/dashboard");
+        }
       }
     } catch (error) {
       setError("An error occurred. Please try again.");
