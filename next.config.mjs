@@ -52,8 +52,6 @@ const nextConfig = {
   compress: true,
   // Enable static optimization
   trailingSlash: false,
-  // Optimize bundle
-  swcMinify: true,
 };
 
 export default nextConfig;
