@@ -14,7 +14,6 @@ import Image from "next/image";
 
 export default function Home() {
   const [events, setEvents] = useState([]);
-  const [isLowPerfDevice, setIsLowPerfDevice] = useState(false);
   const [executiveApplicationsOpen, setExecutiveApplicationsOpen] =
     useState(false);
 
@@ -39,26 +38,6 @@ export default function Home() {
       }
     };
     fetchEvents();
-  }, []);
-
-  useEffect(() => {
-    // Check for low performance devices
-    const checkPerformance = () => {
-      // Check if device is mobile
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-      // Check if device has low memory (if available)
-      const hasLowMemory = navigator.deviceMemory && navigator.deviceMemory < 4;
-
-      // Check if device has low CPU cores (if available)
-      const hasLowCPU =
-        navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
-
-      // Set as low performance if any conditions are true
-      setIsLowPerfDevice(isMobile || hasLowMemory || hasLowCPU);
-    };
-
-    checkPerformance();
   }, []);
 
   useEffect(() => {
@@ -87,9 +66,8 @@ export default function Home() {
           </div>
           <div className="text-center z-10 px-6 max-w-5xl mx-auto relative">
             <h1
-              className={`text-7xl xl:text-8xl mb-2 bg-clip-text text-transparent py-6 bg-gradient-to-r from-primary via-purple-400 to-pink-500 font-black tracking-tight
-                hover:scale-105 transition-all duration-500 ease-out
-                ${isLowPerfDevice ? "" : "animate-fade-in-down"}`}
+              className="text-7xl xl:text-8xl mb-2 bg-clip-text text-transparent py-6 bg-gradient-to-r from-primary via-purple-400 to-pink-500 font-black tracking-tight
+                hover:scale-105 transition-all duration-500 ease-out animate-fade-in-down"
               style={{
                 textShadow: `
                   inset 0 1px 0 rgba(255,255,255,0.2),
@@ -103,13 +81,7 @@ export default function Home() {
             >
               FinTech Calgary
             </h1>
-            <p
-              className={`text-xl md:text-2xl xl:text-3xl mb-12 text-gray-300 font-light leading-relaxed ${
-                isLowPerfDevice
-                  ? ""
-                  : "animate-fade-in-down animation-delay-300"
-              }`}
-            >
+            <p className="text-xl md:text-2xl xl:text-3xl mb-12 text-gray-300 font-light leading-relaxed animate-fade-in-down animation-delay-300">
               Innovating the future of finance
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 sm:px-0 max-w-[280px] sm:max-w-none mx-auto animate-fade-in-up animation-delay-600">

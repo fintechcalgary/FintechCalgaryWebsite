@@ -22,6 +22,14 @@ export default withAuth(
       (req.nextUrl.pathname.startsWith("/api/subscribe") &&
         req.method === "POST");
 
+    // Allow GET requests to /api/settings without authentication
+    if (
+      req.nextUrl.pathname.startsWith("/api/settings") &&
+      req.method === "GET"
+    ) {
+      return NextResponse.next();
+    }
+
     // If it's a protected API route with a protected method (but not public POST endpoints), check authentication
     if (isProtectedApiRoute && isProtectedMethod && !isPublicPostEndpoint) {
       const token = req.nextauth.token;
@@ -54,8 +62,12 @@ export default withAuth(
       }
     }
 
-    // For GET requests to protected API routes, also check authentication
-    if (isProtectedApiRoute && req.method === "GET") {
+    // For GET requests to protected API routes (except /api/settings), also check authentication
+    if (
+      isProtectedApiRoute &&
+      req.method === "GET" &&
+      !req.nextUrl.pathname.startsWith("/api/settings")
+    ) {
       const token = req.nextauth.token;
 
       // If no token or user is not authenticated, return 401
@@ -69,7 +81,6 @@ export default withAuth(
       // For admin-only operations, check if user has admin role
       const adminOnlyRoutes = [
         "/api/executive-application",
-        "/api/settings",
         "/api/members",
         "/api/subscribers",
       ];

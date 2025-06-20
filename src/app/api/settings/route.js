@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function GET() {
   try {
@@ -18,40 +16,19 @@ export async function GET() {
   }
 }
 
-export async function PUT(req) {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+// Catch-all handler for any other HTTP methods
+export async function POST() {
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+}
 
-    const db = await connectToDatabase();
-    const updates = await req.json();
+export async function PUT() {
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+}
 
-    // Validate the updates
-    if (typeof updates.executiveApplicationsOpen !== "boolean") {
-      return NextResponse.json(
-        { error: "Invalid executiveApplicationsOpen value" },
-        { status: 400 }
-      );
-    }
+export async function DELETE() {
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+}
 
-    // Upsert settings (create if doesn't exist, update if exists)
-    const result = await db.collection("settings").updateOne(
-      {}, // empty filter to match any document
-      { $set: updates },
-      { upsert: true }
-    );
-
-    return NextResponse.json({
-      success: true,
-      updated: result.modifiedCount > 0,
-    });
-  } catch (error) {
-    console.error("Error updating settings:", error);
-    return NextResponse.json(
-      { error: "Failed to update settings" },
-      { status: 500 }
-    );
-  }
+export async function PATCH() {
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
 }
