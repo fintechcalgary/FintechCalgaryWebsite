@@ -10,12 +10,14 @@ import Contact from "@/components/landing/Contact";
 import { FiArrowRight } from "react-icons/fi";
 import MissionStatement from "@/components/landing/MissionStatement";
 import Partners from "@/components/landing/Partners";
+import ExecutiveApplications from "@/components/landing/ExecutiveApplications";
 import Image from "next/image";
 
 export default function Home() {
   const [events, setEvents] = useState([]);
   const [executiveApplicationsOpen, setExecutiveApplicationsOpen] =
     useState(false);
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
 
   useEffect(() => {
     document.title = "FinTech Calgary";
@@ -43,10 +45,14 @@ export default function Home() {
   useEffect(() => {
     fetch("/api/settings")
       .then((res) => res.json())
-      .then((data) =>
-        setExecutiveApplicationsOpen(!!data.executiveApplicationsOpen)
-      )
-      .catch(() => setExecutiveApplicationsOpen(false));
+      .then((data) => {
+        setExecutiveApplicationsOpen(!!data.executiveApplicationsOpen);
+        setSettingsLoaded(true);
+      })
+      .catch(() => {
+        setExecutiveApplicationsOpen(false);
+        setSettingsLoaded(true);
+      });
   }, []);
 
   return (
@@ -103,19 +109,15 @@ export default function Home() {
                 Become an Associate
                 <FiArrowRight className="ml-2 transform transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
-              {executiveApplicationsOpen && (
-                <Link
-                  href="/executive-application"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium rounded-full 
-                    border-2 border-primary/60 hover:border-primary text-primary hover:text-white bg-primary/10 hover:bg-primary/20 transition-all duration-300 
-                    hover:shadow-lg hover:shadow-primary/20 transform hover:-translate-y-0.5 backdrop-blur-sm"
-                >
-                  Apply for Executive
-                </Link>
-              )}
             </div>
           </div>
         </section>
+      </div>
+
+      <div className="relative">
+        {settingsLoaded && executiveApplicationsOpen && (
+          <ExecutiveApplications />
+        )}
       </div>
 
       <div className="relative">
