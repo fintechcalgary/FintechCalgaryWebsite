@@ -94,35 +94,18 @@ export default function EventsPageClient({ initialEvents }) {
 
         {/* Filter Dropdown - Enhanced styling */}
         <div className="flex mb-8" style={{ animationDelay: "200ms" }}>
-          <div className="relative">
-            <select
-              value={filter}
-              onChange={handleFilterChange}
-              className="appearance-none px-6 py-3 w-64 bg-gray-800/50 text-white rounded-lg border border-gray-600 
-              focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
-              shadow-lg backdrop-blur-sm
-              pl-6 pr-12 hover:bg-gray-700/50"
-            >
-              <option value="all">All Events</option>
-              <option value="upcoming">Upcoming Events</option>
-              <option value="past">Past Events</option>
-            </select>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-              <svg
-                className="h-5 w-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          </div>
+          <select
+            value={filter}
+            onChange={handleFilterChange}
+            className="px-6 py-3 w-64 bg-gray-800/50 text-white rounded-lg border border-gray-600 
+            focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
+            shadow-lg backdrop-blur-sm
+            pl-6 pr-12 hover:bg-gray-700/50"
+          >
+            <option value="all">All Events</option>
+            <option value="upcoming">Upcoming Events</option>
+            <option value="past">Past Events</option>
+          </select>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -155,7 +138,7 @@ export default function EventsPageClient({ initialEvents }) {
 
                   {/* Status Badge */}
                   <span
-                    className={`absolute top-4 right-4 px-4 py-1.5 text-xs font-semibold rounded-full 
+                    className={`absolute top-4 right-4 px-4 py-1.5 text-xs font-semibold rounded-full z-20
                     ${
                       isUpcoming
                         ? "bg-purple-600/60 text-purple-100 border border-purple-500 backdrop-blur-md"

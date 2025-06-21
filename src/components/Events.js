@@ -12,6 +12,7 @@ import {
   FiUser,
 } from "react-icons/fi";
 import Modal from "./Modal";
+import PortalModal from "./PortalModal";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -197,192 +198,172 @@ export default function Events() {
         </button>
       </div>
 
-      <AnimatePresence>
-        {showForm && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-2xl z-[9999]"
-              onClick={resetForm}
-            />
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed inset-0 flex items-center justify-center z-[9999] p-4"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="w-full max-w-2xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-gray-700/50 shadow-xl overflow-y-auto max-h-[85vh]">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <h2 className="text-xl font-semibold text-white">
-                    {editingEvent ? "Edit Event" : "Create Event"}
-                  </h2>
-
-                  <div className="flex items-start space-x-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
-                    <div className="flex-shrink-0 pt-0.5">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-primary"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-200">
-                        <span className="font-medium">Important:</span> Please
-                        use high-resolution images for the best display quality.
-                        When specifying time, ensure to include{" "}
-                        <span className="font-medium">AM / PM</span> for
-                        clarity.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <input
-                      type="text"
-                      placeholder="Event Title"
-                      value={formData.title}
-                      onChange={(e) =>
-                        setFormData({ ...formData, title: e.target.value })
-                      }
-                      className="form-input"
-                      required
-                    />
-
-                    <textarea
-                      placeholder="Event Description"
-                      value={formData.description}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          description: e.target.value,
-                        })
-                      }
-                      className="form-input min-h-[80px]"
-                      required
-                    />
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <input
-                        type="date"
-                        value={formData.date}
-                        onChange={(e) =>
-                          setFormData({ ...formData, date: e.target.value })
-                        }
-                        className="form-input"
-                        required
-                      />
-                      <input
-                        type="text"
-                        placeholder="Event Time"
-                        value={formData.time}
-                        onChange={(e) =>
-                          setFormData({ ...formData, time: e.target.value })
-                        }
-                        className="form-input"
-                        required
-                      />
-                    </div>
-
-                    <div className="flex flex-col space-y-4">
-                      <div className="flex items-center gap-4">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                          id="imageUpload"
-                          multiple
-                          required={formData.images.length === 0}
-                        />
-                        <label
-                          htmlFor="imageUpload"
-                          className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700"
-                        >
-                          <FiImage />
-                          {uploading ? "Uploading..." : "Choose Images"}
-                        </label>
-                      </div>
-
-                      {formData.images.length > 0 && (
-                        <div className="relative">
-                          <div className="flex gap-4 overflow-x-auto pt-3 pb-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900/50">
-                            {formData.images.map((imageUrl, index) => (
-                              <div
-                                key={index}
-                                className="relative w-40 h-40 flex-shrink-0 mt-2"
-                              >
-                                <Image
-                                  src={imageUrl}
-                                  alt={`Preview ${index + 1}`}
-                                  className="object-cover rounded-lg border border-gray-700"
-                                  fill
-                                  sizes="160px"
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    setFormData((prev) => ({
-                                      ...prev,
-                                      images: prev.images.filter(
-                                        (_, i) => i !== index
-                                      ),
-                                      imageUrl:
-                                        index === 0
-                                          ? prev.images[1] || ""
-                                          : prev.imageUrl,
-                                    }))
-                                  }
-                                  className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg"
-                                >
-                                  <FiX size={12} />
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end gap-3 pt-4 border-t border-gray-700">
-                    <button
-                      type="button"
-                      onClick={resetForm}
-                      className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg"
-                      disabled={uploading}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={uploading}
-                      className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg"
-                    >
-                      {editingEvent ? <FiEdit2 /> : <FiPlus />}
-                      {uploading
-                        ? "Please wait..."
-                        : editingEvent
-                        ? "Update Event"
-                        : "Add Event"}
-                    </button>
-                  </div>
-                </form>
+      <PortalModal
+        isOpen={showForm}
+        onClose={resetForm}
+        title={editingEvent ? "Edit Event" : "Create Event"}
+        maxWidth="max-w-2xl"
+      >
+        <div className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="flex items-start space-x-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+              <div className="flex-shrink-0 pt-0.5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-primary"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              <div>
+                <p className="text-sm text-gray-200">
+                  <span className="font-medium">Important:</span> Please use
+                  high-resolution images for the best display quality. When
+                  specifying time, ensure to include{" "}
+                  <span className="font-medium">AM / PM</span> for clarity.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="Event Title"
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                className="form-input"
+                required
+              />
+
+              <textarea
+                placeholder="Event Description"
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    description: e.target.value,
+                  })
+                }
+                className="form-input min-h-[80px]"
+                required
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                <input
+                  type="date"
+                  value={formData.date}
+                  onChange={(e) =>
+                    setFormData({ ...formData, date: e.target.value })
+                  }
+                  className="form-input"
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Event Time"
+                  value={formData.time}
+                  onChange={(e) =>
+                    setFormData({ ...formData, time: e.target.value })
+                  }
+                  className="form-input"
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col space-y-4">
+                <div className="flex items-center gap-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="imageUpload"
+                    multiple
+                    required={formData.images.length === 0}
+                  />
+                  <label
+                    htmlFor="imageUpload"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700"
+                  >
+                    <FiImage />
+                    {uploading ? "Uploading..." : "Choose Images"}
+                  </label>
+                </div>
+
+                {formData.images.length > 0 && (
+                  <div className="relative">
+                    <div className="flex gap-4 overflow-x-auto pt-3 pb-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900/50">
+                      {formData.images.map((imageUrl, index) => (
+                        <div
+                          key={index}
+                          className="relative w-40 h-40 flex-shrink-0 mt-2"
+                        >
+                          <Image
+                            src={imageUrl}
+                            alt={`Preview ${index + 1}`}
+                            className="object-cover rounded-lg border border-gray-700"
+                            fill
+                            sizes="160px"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                images: prev.images.filter(
+                                  (_, i) => i !== index
+                                ),
+                                imageUrl:
+                                  index === 0
+                                    ? prev.images[1] || ""
+                                    : prev.imageUrl,
+                              }))
+                            }
+                            className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg"
+                          >
+                            <FiX size={12} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4 border-t border-gray-700">
+              <button
+                type="button"
+                onClick={resetForm}
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg"
+                disabled={uploading}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={uploading}
+                className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg"
+              >
+                {editingEvent ? <FiEdit2 /> : <FiPlus />}
+                {uploading
+                  ? "Please wait..."
+                  : editingEvent
+                  ? "Update Event"
+                  : "Add Event"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </PortalModal>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {events.map((event) => (
