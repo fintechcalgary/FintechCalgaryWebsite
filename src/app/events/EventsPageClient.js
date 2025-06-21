@@ -148,7 +148,7 @@ export default function EventsPageClient({ initialEvents }) {
                       alt={event.title}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      priority
+                      loading="lazy"
                       className="object-cover"
                     />
                   )}

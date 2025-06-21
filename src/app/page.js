@@ -23,22 +23,35 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchEvents = async () => {
-      const response = await fetch("/api/events");
-      if (response.ok) {
-        const data = await response.json();
+      try {
+        const response = await fetch("/api/events");
+        if (response.ok && isMounted) {
+          const data = await response.json();
 
-        const currentDate = new Date();
+          const currentDate = new Date();
 
-        // Filter only upcoming events
-        const upcomingEvents = data.filter(
-          (event) => new Date(event.date) >= currentDate
-        );
+          // Filter only upcoming events
+          const upcomingEvents = data.filter(
+            (event) => new Date(event.date) >= currentDate
+          );
 
-        setEvents(upcomingEvents.slice(0, 4)); // Only show first 4 events
+          if (isMounted) {
+            setEvents(upcomingEvents.slice(0, 4)); // Only show first 4 events
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
       }
     };
+
     fetchEvents();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
