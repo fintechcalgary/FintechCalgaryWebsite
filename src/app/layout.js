@@ -1,5 +1,7 @@
 import "./globals.css";
 import { DM_Sans } from "next/font/google";
+import ClientSessionProvider from "@/components/ClientSessionProvider";
+import { SettingsProvider } from "@/contexts/SettingsContext";
 
 // Add multiple weights for DM Sans
 const dmSans = DM_Sans({
@@ -43,9 +45,6 @@ export const metadata = {
   },
 };
 
-// Create a client component wrapper for SessionProvider
-import ClientSessionProvider from "@/components/ClientSessionProvider";
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -59,7 +58,9 @@ export default function RootLayout({ children }) {
         <div className="absolute inset-0 bg-black/20 z-0 pointer-events-none min-h-full"></div>
         {/* Main content wrapper */}
         <div className="relative z-10 min-h-screen">
-          <ClientSessionProvider>{children}</ClientSessionProvider>
+          <SettingsProvider>
+            <ClientSessionProvider>{children}</ClientSessionProvider>
+          </SettingsProvider>
         </div>
       </body>
     </html>

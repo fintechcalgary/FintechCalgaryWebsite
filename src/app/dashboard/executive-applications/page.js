@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
-import { FiTrash2, FiDownload, FiX, FiEye } from "react-icons/fi";
+import { FiTrash2, FiDownload, FiX, FiEye, FiArrowLeft } from "react-icons/fi";
 
 export default function ExecutiveApplicationsPage() {
   const { data: session, status } = useSession();
@@ -223,40 +223,43 @@ export default function ExecutiveApplicationsPage() {
   return (
     <div className="min-h-screen relative">
       <Navbar />
-      <main className="container mx-auto px-6 py-8 max-w-7xl relative animate-fadeIn">
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl relative animate-fadeIn">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
           <div className="space-y-1">
-            <h1 className="text-4xl font-bold text-white">
+            <h1 className="text-2xl sm:text-4xl font-bold text-white">
               Executive Applications
             </h1>
-            <p className="text-gray-400">
+            <p className="text-gray-400 text-sm sm:text-base">
               Review and manage executive team applications
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+            >
+              <FiArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Back to Dashboard</span>
+              <span className="sm:hidden">Back</span>
+            </Link>
             {applications.length > 0 && (
               <button
                 onClick={exportToCSV}
-                className="px-4 py-2 rounded-lg bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 transition-all duration-300 flex items-center gap-2"
+                className="px-4 py-2 rounded-lg bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
               >
                 <FiDownload className="w-4 h-4" />
-                Export CSV
+                <span className="hidden sm:inline">Export CSV</span>
+                <span className="sm:hidden">Export</span>
               </button>
             )}
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300"
-            >
-              Back to Dashboard
-            </Link>
           </div>
         </div>
 
         {/* Executive Applications Toggle */}
-        <div className="mb-8 p-6 rounded-xl bg-gray-800/70 border border-primary/30 max-w-md">
+        <div className="mb-6 sm:mb-8 p-4 sm:p-6 rounded-xl bg-gray-800/70 border border-primary/30 max-w-md">
           <div className="flex items-center justify-between">
-            <span className="text-white font-medium text-lg">
+            <span className="text-white font-medium text-base sm:text-lg">
               Executive Applications
             </span>
             <button
@@ -275,143 +278,220 @@ export default function ExecutiveApplicationsPage() {
               ></span>
             </button>
           </div>
-          <div className="text-gray-400 text-sm mt-2">
+          <div className="text-gray-400 text-xs sm:text-sm mt-2">
             {executiveApplicationsOpen
               ? "Executive applications are open."
               : "Executive applications are closed."}
           </div>
           {settingsError && (
-            <div className="text-red-400 text-sm mt-2">{settingsError}</div>
+            <div className="text-red-400 text-xs sm:text-sm mt-2">
+              {settingsError}
+            </div>
           )}
         </div>
 
-        {/* Applications Table */}
+        {/* Applications Table - Mobile Cards vs Desktop Table */}
         <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
           {error ? (
-            <div className="p-8 text-center">
-              <p className="text-red-400">{error}</p>
+            <div className="p-6 sm:p-8 text-center">
+              <p className="text-red-400 text-sm sm:text-base">{error}</p>
               <button
                 onClick={fetchApplications}
-                className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm"
               >
                 Try Again
               </button>
             </div>
           ) : applications.length === 0 ? (
-            <div className="p-8 text-center">
-              <p className="text-gray-400">No applications found.</p>
+            <div className="p-6 sm:p-8 text-center">
+              <p className="text-gray-400 text-sm sm:text-base">
+                No applications found.
+              </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-800/50 border-b border-gray-700/50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Applicant
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Role
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Program & Year
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Contact
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Applied
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-700/50">
-                  {applications.map((application, index) => (
-                    <tr
-                      key={application._id || index}
-                      className="hover:bg-gray-800/30 transition-colors"
-                    >
-                      <td className="px-6 py-4">
-                        <div>
-                          <div className="text-sm font-medium text-white">
-                            {application.name}
+            <>
+              {/* Desktop Table */}
+              <div className="hidden lg:block overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-800/50 border-b border-gray-700/50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        Applicant
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        Role
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        Program & Year
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        Contact
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        Applied
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-700/50">
+                    {applications.map((application, index) => (
+                      <tr
+                        key={application._id || index}
+                        className="hover:bg-gray-800/30 transition-colors"
+                      >
+                        <td className="px-6 py-4">
+                          <div>
+                            <div className="text-sm font-medium text-white">
+                              {application.name}
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary">
-                          {application.role}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-300">
-                        <div>{application.program}</div>
-                        <div className="text-gray-400">
-                          Year {application.year}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-300">
-                        <div>{application.email}</div>
-                        {application.phone && (
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary">
+                            {application.role}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-300">
+                          <div>{application.program}</div>
                           <div className="text-gray-400">
-                            {application.phone}
+                            Year {application.year}
                           </div>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-300">
-                        {formatDate(application.createdAt)}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex gap-2">
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-300">
+                          <div>{application.email}</div>
+                          {application.phone && (
+                            <div className="text-gray-400">
+                              {application.phone}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-300">
+                          {formatDate(application.createdAt)}
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => openDetailsModal(application)}
+                              className="text-primary hover:text-primary/80 text-sm font-medium flex items-center gap-1"
+                            >
+                              <FiEye className="w-4 h-4" />
+                              View
+                            </button>
+                            <button
+                              onClick={() => openDeleteModal(application)}
+                              disabled={deletingId === application._id}
+                              className="text-red-400 hover:text-red-300 text-sm font-medium flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <FiTrash2 className="w-4 h-4" />
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Cards */}
+              <div className="lg:hidden">
+                <div className="p-4 sm:p-6 space-y-4">
+                  {applications.map((application, index) => (
+                    <div
+                      key={application._id || index}
+                      className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/30 hover:border-gray-600/50 transition-all duration-300"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h3 className="text-white font-medium text-base mb-1">
+                            {application.name}
+                          </h3>
+                          <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary">
+                            {application.role}
+                          </span>
+                        </div>
+                        <div className="flex gap-2 ml-3">
                           <button
                             onClick={() => openDetailsModal(application)}
-                            className="text-primary hover:text-primary/80 text-sm font-medium flex items-center gap-1"
+                            className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-lg transition-colors"
+                            title="View Details"
                           >
                             <FiEye className="w-4 h-4" />
-                            View
                           </button>
                           <button
                             onClick={() => openDeleteModal(application)}
                             disabled={deletingId === application._id}
-                            className="text-red-400 hover:text-red-300 text-sm font-medium flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="p-2 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Delete Application"
                           >
                             <FiTrash2 className="w-4 h-4" />
-                            Delete
                           </button>
                         </div>
-                      </td>
-                    </tr>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <span className="text-gray-400">Program:</span>
+                          <div className="text-white">
+                            {application.program}
+                          </div>
+                          <div className="text-gray-400">
+                            Year {application.year}
+                          </div>
+                        </div>
+                        <div>
+                          <span className="text-gray-400">Contact:</span>
+                          <div className="text-white break-all">
+                            {application.email}
+                          </div>
+                          {application.phone && (
+                            <div className="text-gray-400">
+                              {application.phone}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="mt-3 pt-3 border-t border-gray-700/30">
+                        <span className="text-gray-400 text-xs">Applied:</span>
+                        <div className="text-white text-sm">
+                          {formatDate(application.createdAt)}
+                        </div>
+                      </div>
+                    </div>
                   ))}
-                </tbody>
-              </table>
-            </div>
+                </div>
+              </div>
+            </>
           )}
         </div>
 
         {/* Summary */}
-        <div className="mt-6 text-sm text-gray-400">
+        <div className="mt-6 text-sm text-gray-400 text-center sm:text-left">
           Total Applications: {applications.length}
         </div>
       </main>
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
-          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-6 max-w-md w-full mx-4 animate-slideInUp">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4">
+          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Delete Application
               </h3>
               <button
                 onClick={closeDeleteModal}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white transition-colors p-1"
               >
                 <FiX className="w-5 h-5" />
               </button>
             </div>
 
             <div className="mb-6">
-              <p className="text-gray-300 mb-4">
+              <p className="text-gray-300 mb-4 text-sm sm:text-base">
                 Are you sure you want to delete the application for{" "}
                 <span className="text-white font-medium">
                   {applicationToDelete?.name}
@@ -429,22 +509,22 @@ export default function ExecutiveApplicationsPage() {
                   <strong>Email:</strong> {applicationToDelete?.email}
                 </div>
               </div>
-              <p className="text-red-400 text-sm mt-3">
+              <p className="text-red-400 text-xs sm:text-sm mt-3">
                 This action cannot be undone.
               </p>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={closeDeleteModal}
-                className="flex-1 px-4 py-2 rounded-lg bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300"
+                className="flex-1 px-4 py-2 rounded-lg bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300 text-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteApplication}
                 disabled={deletingId === applicationToDelete?._id}
-                className="flex-1 px-4 py-2 rounded-lg bg-red-600/20 border border-red-500/30 text-red-400 hover:bg-red-600/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="flex-1 px-4 py-2 rounded-lg bg-red-600/20 border border-red-500/30 text-red-400 hover:bg-red-600/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
               >
                 <FiTrash2 className="w-4 h-4" />
                 {deletingId === applicationToDelete?._id
@@ -458,26 +538,26 @@ export default function ExecutiveApplicationsPage() {
 
       {/* Application Details Modal */}
       {showDetailsModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
-          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-slideInUp">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4">
+          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-slideInUp">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Application Details
               </h3>
               <button
                 onClick={closeDetailsModal}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white transition-colors p-1"
               >
                 <FiX className="w-5 h-5" />
               </button>
             </div>
 
             {selectedApplication && (
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Basic Information */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div className="bg-gray-800/50 rounded-lg p-4">
-                    <h4 className="text-primary font-medium mb-3">
+                    <h4 className="text-primary font-medium mb-3 text-sm sm:text-base">
                       Personal Information
                     </h4>
                     <div className="space-y-2 text-sm">
@@ -489,7 +569,7 @@ export default function ExecutiveApplicationsPage() {
                       </div>
                       <div>
                         <span className="text-gray-400">Email:</span>{" "}
-                        <span className="text-white">
+                        <span className="text-white break-all">
                           {selectedApplication.email}
                         </span>
                       </div>
@@ -503,7 +583,7 @@ export default function ExecutiveApplicationsPage() {
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
-                    <h4 className="text-primary font-medium mb-3">
+                    <h4 className="text-primary font-medium mb-3 text-sm sm:text-base">
                       Academic Information
                     </h4>
                     <div className="space-y-2 text-sm">
@@ -531,7 +611,9 @@ export default function ExecutiveApplicationsPage() {
 
                 {/* Links */}
                 <div className="bg-gray-800/50 rounded-lg p-4">
-                  <h4 className="text-primary font-medium mb-3">Links</h4>
+                  <h4 className="text-primary font-medium mb-3 text-sm sm:text-base">
+                    Links
+                  </h4>
                   <div className="space-y-2 text-sm">
                     <div>
                       <span className="text-gray-400">LinkedIn:</span>{" "}
@@ -540,7 +622,7 @@ export default function ExecutiveApplicationsPage() {
                           href={selectedApplication.linkedin}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:text-primary/80"
+                          className="text-primary hover:text-primary/80 break-all"
                         >
                           {selectedApplication.linkedin}
                         </a>
@@ -555,7 +637,7 @@ export default function ExecutiveApplicationsPage() {
                           href={selectedApplication.resume}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:text-primary/80"
+                          className="text-primary hover:text-primary/80 break-all"
                         >
                           {selectedApplication.resume}
                         </a>
@@ -568,7 +650,7 @@ export default function ExecutiveApplicationsPage() {
 
                 {/* Why Executive */}
                 <div className="bg-gray-800/50 rounded-lg p-4">
-                  <h4 className="text-primary font-medium mb-3">
+                  <h4 className="text-primary font-medium mb-3 text-sm sm:text-base">
                     Why do you want to be an executive?
                   </h4>
                   <div className="bg-gray-900/50 rounded-lg p-4 text-sm text-gray-300 whitespace-pre-wrap">
@@ -578,7 +660,7 @@ export default function ExecutiveApplicationsPage() {
 
                 {/* Application Date */}
                 <div className="bg-gray-800/50 rounded-lg p-4">
-                  <h4 className="text-primary font-medium mb-3">
+                  <h4 className="text-primary font-medium mb-3 text-sm sm:text-base">
                     Application Information
                   </h4>
                   <div className="text-sm">
@@ -594,7 +676,7 @@ export default function ExecutiveApplicationsPage() {
             <div className="mt-6 flex justify-end">
               <button
                 onClick={closeDetailsModal}
-                className="px-4 py-2 rounded-lg bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300"
+                className="px-4 py-2 rounded-lg bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300 text-sm"
               >
                 Close
               </button>

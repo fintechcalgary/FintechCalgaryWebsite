@@ -12,12 +12,11 @@ import MissionStatement from "@/components/landing/MissionStatement";
 import Partners from "@/components/landing/Partners";
 import ExecutiveApplications from "@/components/landing/ExecutiveApplications";
 import Image from "next/image";
+import { useSettings } from "@/contexts/SettingsContext";
 
 export default function Home() {
   const [events, setEvents] = useState([]);
-  const [executiveApplicationsOpen, setExecutiveApplicationsOpen] =
-    useState(false);
-  const [settingsLoaded, setSettingsLoaded] = useState(false);
+  const { executiveApplicationsOpen, settingsLoaded } = useSettings();
 
   useEffect(() => {
     document.title = "FinTech Calgary";
@@ -40,19 +39,6 @@ export default function Home() {
       }
     };
     fetchEvents();
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/settings")
-      .then((res) => res.json())
-      .then((data) => {
-        setExecutiveApplicationsOpen(!!data.executiveApplicationsOpen);
-        setSettingsLoaded(true);
-      })
-      .catch(() => {
-        setExecutiveApplicationsOpen(false);
-        setSettingsLoaded(true);
-      });
   }, []);
 
   return (

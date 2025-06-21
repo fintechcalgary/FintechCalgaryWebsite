@@ -3,9 +3,16 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import { FiMail, FiCalendar, FiDownload, FiTrash2 } from "react-icons/fi";
+import {
+  FiMail,
+  FiCalendar,
+  FiDownload,
+  FiTrash2,
+  FiArrowLeft,
+} from "react-icons/fi";
 import Navbar from "@/components/Navbar";
 import Modal from "@/components/Modal";
+import Link from "next/link";
 
 export default function SubscribersPage() {
   const [subscribers, setSubscribers] = useState([]);
@@ -96,15 +103,26 @@ export default function SubscribersPage() {
       <Navbar />
 
       <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
           <h1 className="text-3xl font-bold text-white">Subscribers</h1>
-          <button
-            onClick={downloadCSV}
-            className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg transition-colors"
-          >
-            <FiDownload />
-            Export CSV
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+            >
+              <FiArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Back to Dashboard</span>
+              <span className="sm:hidden">Back</span>
+            </Link>
+            <button
+              onClick={downloadCSV}
+              className="px-4 py-2 rounded-lg bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+            >
+              <FiDownload className="w-4 h-4" />
+              <span className="hidden sm:inline">Export CSV</span>
+              <span className="sm:hidden">Export</span>
+            </button>
+          </div>
         </div>
 
         <div className="grid gap-4">

@@ -110,8 +110,8 @@ export default function ExecutiveApplications() {
                 title: "Benefits & Opportunities",
                 description:
                   "Gain valuable leadership experience, expand your professional network, and contribute to the growth of Calgary's fintech ecosystem. Access exclusive events, mentorship opportunities, and industry connections.",
-                link: "/about",
-                linkText: "View benefits",
+                link: "/partners",
+                linkText: "View partners",
               },
             ].map((card, index) => (
               <div

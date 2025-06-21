@@ -17,11 +17,13 @@ import {
   FiTrash2,
   FiEdit2,
   FiExternalLink,
+  FiArrowLeft,
 } from "react-icons/fi";
 import { SiLinkedin, SiFacebook, SiX } from "react-icons/si";
 import Navbar from "@/components/Navbar";
 import Modal from "@/components/Modal";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function AssociateMembersPage() {
   const [associateMembers, setAssociateMembers] = useState([]);
@@ -322,7 +324,7 @@ export default function AssociateMembersPage() {
       <Navbar />
       <main className="container mx-auto px-6 py-8 max-w-7xl">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">
               Associate Members
@@ -332,14 +334,23 @@ export default function AssociateMembersPage() {
             </p>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+            >
+              <FiArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Back to Dashboard</span>
+              <span className="sm:hidden">Back</span>
+            </Link>
             <button
               onClick={downloadCSV}
               disabled={associateMembers.length === 0}
-              className="flex items-center gap-2 bg-primary/20 hover:bg-primary/30 text-primary px-4 py-2 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 rounded-lg bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <FiDownload className="w-4 h-4" />
-              Export CSV
+              <span className="hidden sm:inline">Export CSV</span>
+              <span className="sm:hidden">Export</span>
             </button>
           </div>
         </div>
