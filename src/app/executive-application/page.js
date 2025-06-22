@@ -22,13 +22,17 @@ export default function ExecutiveApplicationPage() {
     program: "",
     year: "",
     linkedin: "",
-    resume: "",
+    resumeFile: null,
     role: "",
     why: "",
+    fintechVision: "",
+    otherCommitments: "",
   });
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState(null);
   const [errors, setErrors] = useState({});
+  const [resumeFileName, setResumeFileName] = useState("");
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const validate = () => {
     const errs = {};
@@ -38,11 +42,86 @@ export default function ExecutiveApplicationPage() {
     if (!form.program) errs.program = "Program/Major is required";
     if (!form.year) errs.year = "Year is required";
     if (!form.why) errs.why = "This field is required";
+    if (!form.fintechVision) errs.fintechVision = "This field is required";
+    if (!form.otherCommitments)
+      errs.otherCommitments = "This field is required";
+
+    // Resume file validation
+    if (!form.resumeFile) {
+      errs.resumeFile = "Resume file is required";
+    } else {
+      const allowedTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
+      if (!allowedTypes.includes(form.resumeFile.type)) {
+        errs.resumeFile = "Please upload a PDF, DOC, or DOCX file";
+      }
+      if (form.resumeFile.size > 5 * 1024 * 1024) {
+        // 5MB limit
+        errs.resumeFile = "File size must be less than 5MB";
+      }
+    }
+
     return errs;
   };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      handleFile(file);
+    }
+  };
+
+  const handleFile = (file) => {
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    if (file && allowedTypes.includes(file.type)) {
+      setForm({ ...form, resumeFile: file });
+      setResumeFileName(file.name);
+      // Clear error when user selects a file
+      if (errors.resumeFile) {
+        setErrors({ ...errors, resumeFile: null });
+      }
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      handleFile(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -53,10 +132,37 @@ export default function ExecutiveApplicationPage() {
     if (Object.keys(errs).length > 0) return;
     setSubmitting(true);
     try {
+      // Upload resume file first
+      let resumeUrl = "";
+      if (form.resumeFile) {
+        const formData = new FormData();
+        formData.append("file", form.resumeFile);
+        formData.append("folder", "resumes");
+
+        const uploadResponse = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error("Failed to upload resume");
+        }
+
+        const uploadResult = await uploadResponse.json();
+        resumeUrl = uploadResult.url;
+      }
+
+      // Submit application with resume URL
+      const applicationData = {
+        ...form,
+        resume: resumeUrl, // Store the URL in the resume field
+      };
+      delete applicationData.resumeFile; // Remove the file object
+
       const res = await fetch("/api/executive-application", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(applicationData),
       });
       if (res.ok) {
         setStatus("success");
@@ -67,10 +173,13 @@ export default function ExecutiveApplicationPage() {
           program: "",
           year: "",
           linkedin: "",
-          resume: "",
+          resumeFile: null,
           role: "",
           why: "",
+          fintechVision: "",
+          otherCommitments: "",
         });
+        setResumeFileName("");
       } else {
         setStatus("error");
       }
@@ -245,13 +354,89 @@ export default function ExecutiveApplicationPage() {
                     )}
 
                     <div className="mb-5">
+                      <label
+                        htmlFor="resumeFile"
+                        className="block text-sm font-medium text-gray-300 mb-2"
+                      >
+                        Resume/CV
+                      </label>
                       <input
-                        name="resume"
-                        value={form.resume}
-                        onChange={handleChange}
-                        placeholder="Resume Link (Google Drive, etc)"
-                        className={inputClassName}
+                        id="resume-upload"
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        onChange={handleFileChange}
+                        className="hidden"
                       />
+
+                      <label
+                        htmlFor="resume-upload"
+                        className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:border-primary/60 transition-all duration-200 ${
+                          isDragOver ? "border-primary/60" : ""
+                        }`}
+                        onDragOver={handleDragOver}
+                        onDragEnter={handleDragEnter}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                      >
+                        {resumeFileName ? (
+                          <div className="relative w-full h-full p-4 flex items-center justify-center">
+                            <div className="text-center">
+                              <svg
+                                className="w-8 h-8 mb-2 text-primary mx-auto"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                ></path>
+                              </svg>
+                              <p className="text-white text-sm font-medium">
+                                {resumeFileName}
+                              </p>
+                              <p className="text-gray-400 text-xs">
+                                Click to change file
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg
+                              className="w-8 h-8 mb-4 text-gray-400"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 20 16"
+                            >
+                              <path
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                              />
+                            </svg>
+                            <p className="mb-2 text-sm text-gray-400">
+                              <span className="font-semibold">
+                                Click to upload
+                              </span>{" "}
+                              or drag and drop
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              PDF, DOC, or DOCX (max 5MB)
+                            </p>
+                          </div>
+                        )}
+                      </label>
+                      {errors.resumeFile && (
+                        <p className="mt-1 text-sm text-red-400">
+                          {errors.resumeFile}
+                        </p>
+                      )}
                     </div>
 
                     <div className="text-xl font-semibold">
@@ -260,23 +445,97 @@ export default function ExecutiveApplicationPage() {
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
 
                     <div className="flex gap-x-2 mb-2">
-                      <textarea
-                        name="why"
-                        value={form.why}
-                        onChange={handleChange}
-                        placeholder="Why do you want to be an executive?"
-                        rows={4}
-                        className={`${inputClassName} min-h-40 resize-none ${
-                          errors.why
-                            ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                            : ""
-                        }`}
-                        required
-                      />
+                      <div className="w-full">
+                        <label
+                          htmlFor="why"
+                          className="block text-sm font-medium text-gray-300 mb-2"
+                        >
+                          Why do you want to be an executive?
+                        </label>
+                        <textarea
+                          id="why"
+                          name="why"
+                          value={form.why}
+                          onChange={handleChange}
+                          placeholder="Please share your motivation for joining the executive team..."
+                          rows={4}
+                          className={`${inputClassName} min-h-40 resize-none ${
+                            errors.why
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                              : ""
+                          }`}
+                          required
+                        />
+                      </div>
                     </div>
 
                     {errors.why && (
                       <p className="mt-1 text-sm text-red-400">{errors.why}</p>
+                    )}
+
+                    <div className="flex gap-x-2 mb-2">
+                      <div className="w-full">
+                        <label
+                          htmlFor="fintechVision"
+                          className="block text-sm font-medium text-gray-300 mb-2"
+                        >
+                          What does 'fintech' mean to you, and how do you see
+                          its role in the future of business and innovation?
+                        </label>
+                        <textarea
+                          id="fintechVision"
+                          name="fintechVision"
+                          value={form.fintechVision}
+                          onChange={handleChange}
+                          placeholder="Please share your understanding of fintech and your vision for its future..."
+                          rows={4}
+                          className={`${inputClassName} min-h-40 resize-none ${
+                            errors.fintechVision
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                              : ""
+                          }`}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    {errors.fintechVision && (
+                      <p className="mt-1 text-sm text-red-400">
+                        {errors.fintechVision}
+                      </p>
+                    )}
+
+                    <div className="flex gap-x-2 mb-2">
+                      <div className="w-full">
+                        <label
+                          htmlFor="otherCommitments"
+                          className="block text-sm font-medium text-gray-300 mb-2"
+                        >
+                          Are you currently involved with any other clubs or
+                          commitments? How do you plan to balance your
+                          responsibilities?
+                        </label>
+                        <textarea
+                          id="otherCommitments"
+                          name="otherCommitments"
+                          value={form.otherCommitments}
+                          onChange={handleChange}
+                          placeholder="Please describe your current commitments and how you plan to manage your time..."
+                          rows={4}
+                          className={`${inputClassName} min-h-40 resize-none ${
+                            errors.otherCommitments
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                              : ""
+                          }`}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    {errors.otherCommitments && (
+                      <p className="mt-1 text-sm text-red-400">
+                        {errors.otherCommitments}
+                      </p>
                     )}
 
                     <button

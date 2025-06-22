@@ -161,6 +161,8 @@ export default function ExecutiveApplicationsPage() {
       "LinkedIn",
       "Resume",
       "Why Executive",
+      "Fintech Vision",
+      "Other Commitments",
       "Applied Date",
     ];
 
@@ -174,6 +176,8 @@ export default function ExecutiveApplicationsPage() {
       app.linkedin || "",
       app.resume || "",
       app.why || "",
+      app.fintechVision || "",
+      app.otherCommitments || "",
       formatDate(app.createdAt),
     ]);
 
@@ -637,9 +641,10 @@ export default function ExecutiveApplicationsPage() {
                           href={selectedApplication.resume}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:text-primary/80 break-all"
+                          className="text-primary hover:text-primary/80 break-all flex items-center gap-1"
                         >
-                          {selectedApplication.resume}
+                          <FiEye className="w-4 h-4" />
+                          View Resume
                         </a>
                       ) : (
                         <span className="text-gray-500">Not provided</span>
@@ -655,6 +660,29 @@ export default function ExecutiveApplicationsPage() {
                   </h4>
                   <div className="bg-gray-900/50 rounded-lg p-4 text-sm text-gray-300 whitespace-pre-wrap">
                     {selectedApplication.why}
+                  </div>
+                </div>
+
+                {/* Fintech Vision */}
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <h4 className="text-primary font-medium mb-3 text-sm sm:text-base">
+                    What does 'fintech' mean to you, and how do you see its role
+                    in the future of business and innovation?
+                  </h4>
+                  <div className="bg-gray-900/50 rounded-lg p-4 text-sm text-gray-300 whitespace-pre-wrap">
+                    {selectedApplication.fintechVision}
+                  </div>
+                </div>
+
+                {/* Other Commitments */}
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <h4 className="text-primary font-medium mb-3 text-sm sm:text-base">
+                    Are you currently involved with any other clubs or
+                    commitments? How do you plan to balance your
+                    responsibilities?
+                  </h4>
+                  <div className="bg-gray-900/50 rounded-lg p-4 text-sm text-gray-300 whitespace-pre-wrap">
+                    {selectedApplication.otherCommitments}
                   </div>
                 </div>
 

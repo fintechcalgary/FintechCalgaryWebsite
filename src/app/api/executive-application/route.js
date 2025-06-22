@@ -12,7 +12,9 @@ export async function POST(req) {
       !data.program ||
       !data.year ||
       !data.why ||
-      !data.role
+      !data.role ||
+      !data.fintechVision ||
+      !data.otherCommitments
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },

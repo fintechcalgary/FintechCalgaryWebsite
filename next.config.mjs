@@ -44,7 +44,6 @@ const nextConfig = {
   // Additional performance optimizations
   experimental: {
     optimizePackageImports: ["@icons/react", "lucide-react"],
-    memoryBasedWorkers: true,
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
@@ -53,8 +52,6 @@ const nextConfig = {
   compress: true,
   // Enable static optimization
   trailingSlash: false,
-  // Optimize bundle
-  swcMinify: true,
   // Memory optimizations
   onDemandEntries: {
     maxInactiveAge: 25 * 1000,

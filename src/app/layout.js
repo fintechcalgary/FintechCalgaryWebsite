@@ -54,7 +54,6 @@ export default function RootLayout({ children }) {
           backgroundImage: "url(/bg-image.jpg)",
           backgroundSize: "cover",
           backgroundPosition: "top center",
-          backgroundAttachment: "fixed",
         }}
       >
         <div className="absolute inset-0 bg-black/20 z-0 pointer-events-none min-h-full"></div>
