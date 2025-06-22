@@ -666,8 +666,8 @@ export default function ExecutiveApplicationsPage() {
                 {/* Fintech Vision */}
                 <div className="bg-gray-800/50 rounded-lg p-4">
                   <h4 className="text-primary font-medium mb-3 text-sm sm:text-base">
-                    What does 'fintech' mean to you, and how do you see its role
-                    in the future of business and innovation?
+                    What does &apos;fintech&apos; mean to you, and how do you
+                    see its role in the future of business and innovation?
                   </h4>
                   <div className="bg-gray-900/50 rounded-lg p-4 text-sm text-gray-300 whitespace-pre-wrap">
                     {selectedApplication.fintechVision}

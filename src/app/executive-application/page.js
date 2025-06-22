@@ -479,8 +479,9 @@ export default function ExecutiveApplicationPage() {
                           htmlFor="fintechVision"
                           className="block text-sm font-medium text-gray-300 mb-2"
                         >
-                          What does 'fintech' mean to you, and how do you see
-                          its role in the future of business and innovation?
+                          What does &apos;fintech&apos; mean to you, and how do
+                          you see its role in the future of business and
+                          innovation?
                         </label>
                         <textarea
                           id="fintechVision"

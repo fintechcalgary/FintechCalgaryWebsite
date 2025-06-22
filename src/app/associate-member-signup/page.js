@@ -325,6 +325,7 @@ export default function AssociateMemberSignupPage() {
                       >
                         {previewUrl ? (
                           <div className="relative w-full h-full p-4 flex items-center justify-center">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={previewUrl}
                               alt="Logo preview"
