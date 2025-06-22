@@ -55,7 +55,7 @@ export default function ExecutiveApplicationBanner() {
         visibility: isLoading ? "hidden" : "visible",
       }}
     >
-      <div className="bg-gray-900/95 backdrop-blur-xl border border-primary/30 rounded-xl p-3 sm:p-4 shadow-2xl max-w-md mx-auto relative">
+      <div className="bg-gray-900/95 backdrop-blur-xl border border-primary/30 rounded-xl p-3 sm:p-4 shadow-2xl max-w-md sm:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto relative">
         {/* Close button in top right */}
         <button
           onClick={handleClose}
@@ -73,22 +73,26 @@ export default function ExecutiveApplicationBanner() {
           </div>
 
           <div className="flex-1 min-w-0">
-            <h3 className="text-white font-semibold text-xs sm:text-sm mb-1">
-              Join Our Executive Team!
-            </h3>
-            <p className="text-gray-300 text-xs mb-2 sm:mb-3 leading-relaxed">
-              Executive applications are now open. Apply to be part of our
-              leadership team.
-            </p>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-white font-semibold text-xs sm:text-sm mb-1">
+                  Join Our Executive Team!
+                </h3>
+                <p className="text-gray-300 text-xs leading-relaxed">
+                  Executive applications are now open. Apply to be part of our
+                  leadership team.
+                </p>
+              </div>
 
-            <div className="flex items-center">
-              <Link
-                href="/executive-application"
-                className="inline-flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-primary hover:bg-primary/90 text-white text-xs font-medium rounded-lg transition-all duration-200"
-              >
-                Apply Now
-                <FiArrowRight className="w-3 h-3" />
-              </Link>
+              <div className="flex-shrink-0">
+                <Link
+                  href="/executive-application"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-primary hover:bg-primary/90 text-white text-xs font-medium rounded-lg transition-all duration-200"
+                >
+                  Apply Now
+                  <FiArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
