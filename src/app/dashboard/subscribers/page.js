@@ -16,6 +16,7 @@ import Link from "next/link";
 
 export default function SubscribersPage() {
   const [subscribers, setSubscribers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [subscriberToDelete, setSubscriberToDelete] = useState(null);
   const { data: session } = useSession();
@@ -23,16 +24,21 @@ export default function SubscribersPage() {
   useEffect(() => {
     const fetchSubscribers = async () => {
       try {
+        setLoading(true);
         const response = await fetch("/api/subscribers");
         const data = await response.json();
         setSubscribers(data);
       } catch (error) {
         console.error("Failed to fetch subscribers:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     if (session?.user?.role === "admin") {
       fetchSubscribers();
+    } else if (session && session.user.role !== "admin") {
+      setLoading(false);
     }
   }, [session]);
 
@@ -84,6 +90,17 @@ export default function SubscribersPage() {
     a.download = `subscribers-${new Date().toISOString().split("T")[0]}.csv`;
     a.click();
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
+        </div>
+      </div>
+    );
+  }
 
   if (session?.user?.role !== "admin") {
     return (
