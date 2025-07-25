@@ -116,12 +116,19 @@ export default function SubscribersPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
       <Navbar />
-
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
-          <h1 className="text-3xl font-bold text-white">Subscribers</h1>
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl relative animate-fadeIn">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+          <div className="space-y-1">
+            <h1 className="text-2xl sm:text-4xl font-bold text-white">
+              Subscribers
+            </h1>
+            <p className="text-gray-400 text-sm sm:text-base">
+              Manage and view all newsletter subscribers
+            </p>
+          </div>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/dashboard"
@@ -186,7 +193,7 @@ export default function SubscribersPage() {
         {subscribers.length === 0 && (
           <p className="text-center text-gray-400 mt-8">No subscribers yet.</p>
         )}
-      </div>
+      </main>
 
       <Modal
         isOpen={showDeleteModal}
