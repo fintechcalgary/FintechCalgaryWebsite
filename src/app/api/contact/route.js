@@ -126,7 +126,7 @@ export async function POST(req) {
 
     const response = await mg.messages.create(MAILGUN_DOMAIN, {
       from: `FinTech Calgary <contact@${MAILGUN_DOMAIN}>`,
-      to: ["rojnovyotam@gmail.com"],
+      to: ["rojnovyotam@gmail.com", "fintech.calgary@gmail.com"],
       subject: `New Contact Form Submission: ${subject}`,
       html: htmlContent,
       "h:Reply-To": email,
