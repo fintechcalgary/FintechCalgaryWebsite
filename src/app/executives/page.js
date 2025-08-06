@@ -1,6 +1,7 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
+import ExecutiveApplicationBanner from "@/components/ExecutiveApplicationBanner";
 import { SiLinkedin } from "react-icons/si";
 import { FiMail } from "react-icons/fi";
 import Image from "next/image";
@@ -165,6 +166,7 @@ export default async function ExecutivesPage() {
         </section>
       </div>
 
+      <ExecutiveApplicationBanner />
       <Footer />
     </main>
   );

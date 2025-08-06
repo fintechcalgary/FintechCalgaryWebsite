@@ -101,7 +101,7 @@ export default function InfoPage() {
                   <li>Node.js (v18 or higher) installed</li>
                   <li>Git installed on your machine</li>
                   <li>A GitHub account</li>
-                  <li>Your SSH keys configured</li>
+                  <li>Your .env file configured</li>
                 </ul>
                 <p className="text-sm text-gray-400 mt-4">
                   For detailed setup instructions, please contact the team lead.

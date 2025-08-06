@@ -10,53 +10,49 @@ import Contact from "@/components/landing/Contact";
 import { FiArrowRight } from "react-icons/fi";
 import MissionStatement from "@/components/landing/MissionStatement";
 import Partners from "@/components/landing/Partners";
+import ExecutiveApplications from "@/components/landing/ExecutiveApplications";
+import ExecutiveApplicationBanner from "@/components/ExecutiveApplicationBanner";
 import Image from "next/image";
+import { useSettings } from "@/contexts/SettingsContext";
 
 export default function Home() {
   const [events, setEvents] = useState([]);
-  const [isLowPerfDevice, setIsLowPerfDevice] = useState(false);
+  const { executiveApplicationsOpen, settingsLoaded } = useSettings();
 
   useEffect(() => {
     document.title = "FinTech Calgary";
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchEvents = async () => {
-      const response = await fetch("/api/events");
-      if (response.ok) {
-        const data = await response.json();
+      try {
+        const response = await fetch("/api/events");
+        if (response.ok && isMounted) {
+          const data = await response.json();
 
-        const currentDate = new Date();
+          const currentDate = new Date();
 
-        // Filter only upcoming events
-        const upcomingEvents = data.filter(
-          (event) => new Date(event.date) >= currentDate
-        );
+          // Filter only upcoming events
+          const upcomingEvents = data.filter(
+            (event) => new Date(event.date) >= currentDate
+          );
 
-        setEvents(upcomingEvents.slice(0, 4)); // Only show first 4 events
+          if (isMounted) {
+            setEvents(upcomingEvents.slice(0, 4)); // Only show first 4 events
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
       }
     };
+
     fetchEvents();
-  }, []);
 
-  useEffect(() => {
-    // Check for low performance devices
-    const checkPerformance = () => {
-      // Check if device is mobile
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-      // Check if device has low memory (if available)
-      const hasLowMemory = navigator.deviceMemory && navigator.deviceMemory < 4;
-
-      // Check if device has low CPU cores (if available)
-      const hasLowCPU =
-        navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
-
-      // Set as low performance if any conditions are true
-      setIsLowPerfDevice(isMobile || hasLowMemory || hasLowCPU);
+    return () => {
+      isMounted = false;
     };
-
-    checkPerformance();
   }, []);
 
   return (
@@ -76,9 +72,8 @@ export default function Home() {
           </div>
           <div className="text-center z-10 px-6 max-w-5xl mx-auto relative">
             <h1
-              className={`text-7xl xl:text-8xl mb-2 bg-clip-text text-transparent py-6 bg-gradient-to-r from-primary via-purple-400 to-pink-500 font-black tracking-tight
-                hover:scale-105 transition-all duration-500 ease-out
-                ${isLowPerfDevice ? "" : "animate-fade-in-down"}`}
+              className="text-7xl xl:text-8xl mb-2 bg-clip-text text-transparent py-6 bg-gradient-to-r from-primary via-purple-400 to-pink-500 font-black tracking-tight
+                hover:scale-105 transition-all duration-500 ease-out animate-fade-in-down"
               style={{
                 textShadow: `
                   inset 0 1px 0 rgba(255,255,255,0.2),
@@ -92,13 +87,7 @@ export default function Home() {
             >
               FinTech Calgary
             </h1>
-            <p
-              className={`text-xl md:text-2xl xl:text-3xl mb-12 text-gray-300 font-light leading-relaxed ${
-                isLowPerfDevice
-                  ? ""
-                  : "animate-fade-in-down animation-delay-300"
-              }`}
-            >
+            <p className="text-xl md:text-2xl xl:text-3xl mb-12 text-gray-300 font-light leading-relaxed animate-fade-in-down animation-delay-300">
               Innovating the future of finance
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 sm:px-0 max-w-[280px] sm:max-w-none mx-auto animate-fade-in-up animation-delay-600">
@@ -126,6 +115,12 @@ export default function Home() {
       </div>
 
       <div className="relative">
+        {settingsLoaded && executiveApplicationsOpen && (
+          <ExecutiveApplications />
+        )}
+      </div>
+
+      <div className="relative">
         <AboutUs />
       </div>
 
@@ -143,6 +138,10 @@ export default function Home() {
 
       <div className="relative">
         <Contact />
+      </div>
+
+      <div className="relative">
+        <ExecutiveApplicationBanner />
       </div>
 
       <Footer />

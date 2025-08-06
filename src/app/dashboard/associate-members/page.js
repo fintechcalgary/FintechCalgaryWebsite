@@ -17,11 +17,17 @@ import {
   FiTrash2,
   FiEdit2,
   FiExternalLink,
+  FiArrowLeft,
+  FiCheck,
+  FiX,
+  FiBuilding,
 } from "react-icons/fi";
 import { SiLinkedin, SiFacebook, SiX } from "react-icons/si";
 import Navbar from "@/components/Navbar";
 import Modal from "@/components/Modal";
+import PortalModal from "@/components/PortalModal";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function AssociateMembersPage() {
   const [associateMembers, setAssociateMembers] = useState([]);
@@ -322,7 +328,7 @@ export default function AssociateMembersPage() {
       <Navbar />
       <main className="container mx-auto px-6 py-8 max-w-7xl">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">
               Associate Members
@@ -332,14 +338,23 @@ export default function AssociateMembersPage() {
             </p>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+            >
+              <FiArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Back to Dashboard</span>
+              <span className="sm:hidden">Back</span>
+            </Link>
             <button
               onClick={downloadCSV}
               disabled={associateMembers.length === 0}
-              className="flex items-center gap-2 bg-primary/20 hover:bg-primary/30 text-primary px-4 py-2 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 rounded-lg bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <FiDownload className="w-4 h-4" />
-              Export CSV
+              <span className="hidden sm:inline">Export CSV</span>
+              <span className="sm:hidden">Export</span>
             </button>
           </div>
         </div>
@@ -660,355 +675,340 @@ export default function AssociateMembersPage() {
         )}
 
         {/* Edit Modal */}
-        {showEditModal && (
-          <div
-            className="fixed inset-0 bg-black/80 z-[99999] animate-fadeIn overflow-y-auto"
-            onClick={() => setShowEditModal(false)}
-          >
-            <div className="min-h-screen py-8 px-4">
-              <div
-                className="relative w-full max-w-4xl mx-auto bg-gray-800 rounded-lg border border-gray-700/50 shadow-xl flex flex-col my-8 animate-slideInUp"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="sticky top-0 z-10 bg-gray-800 p-6 border-b border-gray-700 rounded-t-lg">
-                  <h2 className="text-2xl font-semibold text-white">
-                    Edit Associate Member
-                  </h2>
+        <PortalModal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          title="Edit Associate Member"
+          maxWidth="max-w-4xl"
+        >
+          <div className="p-6">
+            <form
+              id="editMemberForm"
+              onSubmit={handleEditSubmit}
+              className="space-y-6"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Organization Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
+                    Organization
+                  </h3>
+                  <input
+                    type="text"
+                    placeholder="Organization Name"
+                    value={editFormData.organizationName}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        organizationName: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Username"
+                    value={editFormData.username}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        username: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                    required
+                  />
+                  <input
+                    type="email"
+                    placeholder="Organization Email"
+                    value={editFormData.organizationEmail}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        organizationEmail: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Organization Phone"
+                    value={editFormData.organizationPhoneNumber}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        organizationPhoneNumber: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  />
+                  <input
+                    type="url"
+                    placeholder="Website"
+                    value={editFormData.website}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        website: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  />
                 </div>
 
-                <div className="p-6 overflow-y-auto">
-                  <form
-                    id="editMemberForm"
-                    onSubmit={handleEditSubmit}
-                    className="space-y-6"
-                  >
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {/* Organization Information */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                          Organization
-                        </h3>
-                        <input
-                          type="text"
-                          placeholder="Organization Name"
-                          value={editFormData.organizationName}
-                          onChange={(e) =>
-                            setEditFormData({
-                              ...editFormData,
-                              organizationName: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                          required
-                        />
-                        <input
-                          type="text"
-                          placeholder="Username"
-                          value={editFormData.username}
-                          onChange={(e) =>
-                            setEditFormData({
-                              ...editFormData,
-                              username: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                          required
-                        />
-                        <input
-                          type="email"
-                          placeholder="Organization Email"
-                          value={editFormData.organizationEmail}
-                          onChange={(e) =>
-                            setEditFormData({
-                              ...editFormData,
-                              organizationEmail: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                        />
-                        <input
-                          type="tel"
-                          placeholder="Organization Phone"
-                          value={editFormData.organizationPhoneNumber}
-                          onChange={(e) =>
-                            setEditFormData({
-                              ...editFormData,
-                              organizationPhoneNumber: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                        />
-                        <input
-                          type="url"
-                          placeholder="Website"
-                          value={editFormData.website}
-                          onChange={(e) =>
-                            setEditFormData({
-                              ...editFormData,
-                              website: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                        />
-                      </div>
-
-                      {/* Contact Information */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                          Contact Person
-                        </h3>
-                        <input
-                          type="text"
-                          placeholder="Title"
-                          value={editFormData.title}
-                          onChange={(e) =>
-                            setEditFormData({
-                              ...editFormData,
-                              title: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                        />
-                        <div className="grid grid-cols-2 gap-3">
-                          <input
-                            type="text"
-                            placeholder="First Name"
-                            value={editFormData.firstName}
-                            onChange={(e) =>
-                              setEditFormData({
-                                ...editFormData,
-                                firstName: e.target.value,
-                              })
-                            }
-                            className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Last Name"
-                            value={editFormData.lastName}
-                            onChange={(e) =>
-                              setEditFormData({
-                                ...editFormData,
-                                lastName: e.target.value,
-                              })
-                            }
-                            className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                          />
-                        </div>
-                        <input
-                          type="email"
-                          placeholder="Contact Email"
-                          value={editFormData.contactEmail}
-                          onChange={(e) =>
-                            setEditFormData({
-                              ...editFormData,
-                              contactEmail: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                        />
-                        <input
-                          type="tel"
-                          placeholder="Contact Phone"
-                          value={editFormData.contactPhoneNumber}
-                          onChange={(e) =>
-                            setEditFormData({
-                              ...editFormData,
-                              contactPhoneNumber: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                        />
-                      </div>
-
-                      {/* Address & Social */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                          Address & Social
-                        </h3>
-                        <input
-                          type="text"
-                          placeholder="Address"
-                          value={editFormData.address}
-                          onChange={(e) =>
-                            setEditFormData({
-                              ...editFormData,
-                              address: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                        />
-                        <div className="grid grid-cols-2 gap-3">
-                          <input
-                            type="text"
-                            placeholder="City"
-                            value={editFormData.city}
-                            onChange={(e) =>
-                              setEditFormData({
-                                ...editFormData,
-                                city: e.target.value,
-                              })
-                            }
-                            className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Province"
-                            value={editFormData.province}
-                            onChange={(e) =>
-                              setEditFormData({
-                                ...editFormData,
-                                province: e.target.value,
-                              })
-                            }
-                            className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                          />
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          <input
-                            type="text"
-                            placeholder="Country"
-                            value={editFormData.country}
-                            onChange={(e) =>
-                              setEditFormData({
-                                ...editFormData,
-                                country: e.target.value,
-                              })
-                            }
-                            className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Postal Code"
-                            value={editFormData.postalCode}
-                            onChange={(e) =>
-                              setEditFormData({
-                                ...editFormData,
-                                postalCode: e.target.value,
-                              })
-                            }
-                            className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                          />
-                        </div>
-                        <input
-                          type="url"
-                          placeholder="LinkedIn URL"
-                          value={editFormData.linkedin}
-                          onChange={(e) =>
-                            setEditFormData({
-                              ...editFormData,
-                              linkedin: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                        />
-                        <input
-                          type="url"
-                          placeholder="Facebook URL"
-                          value={editFormData.facebook}
-                          onChange={(e) =>
-                            setEditFormData({
-                              ...editFormData,
-                              facebook: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                        />
-                        <input
-                          type="url"
-                          placeholder="X (Twitter) URL"
-                          value={editFormData.twitter}
-                          onChange={(e) =>
-                            setEditFormData({
-                              ...editFormData,
-                              twitter: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                        />
-                      </div>
-                    </div>
-
-                    {/* About Us */}
-                    <div className="mt-6">
-                      <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2 mb-4">
-                        About Us
-                      </h3>
-                      <textarea
-                        placeholder="About Us Description"
-                        value={editFormData.aboutUs}
-                        onChange={(e) =>
-                          setEditFormData({
-                            ...editFormData,
-                            aboutUs: e.target.value,
-                          })
-                        }
-                        rows={6}
-                        className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                      />
-                    </div>
-
-                    {/* Approval Status */}
-                    <div className="mt-6">
-                      <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2 mb-4">
-                        Approval Status
-                      </h3>
-                      <select
-                        value={editFormData.approvalStatus}
-                        onChange={(e) =>
-                          setEditFormData({
-                            ...editFormData,
-                            approvalStatus: e.target.value,
-                            approvedAt:
-                              e.target.value === "accepted" ? new Date() : null,
-                          })
-                        }
-                        className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                      >
-                        <option value="pending">Pending</option>
-                        <option value="accepted">Accepted</option>
-                        <option value="rejected">Rejected</option>
-                      </select>
-                      {editFormData.approvalStatus === "accepted" &&
-                        editFormData.approvedAt && (
-                          <p className="mt-2 text-sm text-gray-400">
-                            Approved on{" "}
-                            {new Date(
-                              editFormData.approvedAt
-                            ).toLocaleDateString()}
-                          </p>
-                        )}
-                    </div>
-                  </form>
-                </div>
-
-                <div className="sticky bottom-0 z-10 bg-gray-800/90 backdrop-blur-sm p-6 border-t border-gray-700 rounded-b-lg">
-                  <div className="flex justify-end items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setShowEditModal(false)}
-                      className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
-                      disabled={submitting}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      form="editMemberForm"
-                      disabled={submitting}
-                      className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 ${
-                        submitting ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
-                    >
-                      <FiEdit2 className="w-4 h-4" />
-                      {submitting ? "Updating..." : "Update Member"}
-                    </button>
+                {/* Contact Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
+                    Contact Person
+                  </h3>
+                  <input
+                    type="text"
+                    placeholder="Title"
+                    value={editFormData.title}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        title: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      placeholder="First Name"
+                      value={editFormData.firstName}
+                      onChange={(e) =>
+                        setEditFormData({
+                          ...editFormData,
+                          firstName: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Last Name"
+                      value={editFormData.lastName}
+                      onChange={(e) =>
+                        setEditFormData({
+                          ...editFormData,
+                          lastName: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                    />
                   </div>
+                  <input
+                    type="email"
+                    placeholder="Contact Email"
+                    value={editFormData.contactEmail}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        contactEmail: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Contact Phone"
+                    value={editFormData.contactPhoneNumber}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        contactPhoneNumber: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  />
+                </div>
+
+                {/* Address & Social */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
+                    Address & Social
+                  </h3>
+                  <input
+                    type="text"
+                    placeholder="Address"
+                    value={editFormData.address}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        address: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      placeholder="City"
+                      value={editFormData.city}
+                      onChange={(e) =>
+                        setEditFormData({
+                          ...editFormData,
+                          city: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Province"
+                      value={editFormData.province}
+                      onChange={(e) =>
+                        setEditFormData({
+                          ...editFormData,
+                          province: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      placeholder="Country"
+                      value={editFormData.country}
+                      onChange={(e) =>
+                        setEditFormData({
+                          ...editFormData,
+                          country: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Postal Code"
+                      value={editFormData.postalCode}
+                      onChange={(e) =>
+                        setEditFormData({
+                          ...editFormData,
+                          postalCode: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                    />
+                  </div>
+                  <input
+                    type="url"
+                    placeholder="LinkedIn URL"
+                    value={editFormData.linkedin}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        linkedin: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  />
+                  <input
+                    type="url"
+                    placeholder="Facebook URL"
+                    value={editFormData.facebook}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        facebook: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  />
+                  <input
+                    type="url"
+                    placeholder="X (Twitter) URL"
+                    value={editFormData.twitter}
+                    onChange={(e) =>
+                      setEditFormData({
+                        ...editFormData,
+                        twitter: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  />
                 </div>
               </div>
+
+              {/* About Us */}
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2 mb-4">
+                  About Us
+                </h3>
+                <textarea
+                  placeholder="About Us Description"
+                  value={editFormData.aboutUs}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      aboutUs: e.target.value,
+                    })
+                  }
+                  rows={6}
+                  className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                />
+              </div>
+
+              {/* Approval Status */}
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2 mb-4">
+                  Approval Status
+                </h3>
+                <select
+                  value={editFormData.approvalStatus}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      approvalStatus: e.target.value,
+                      approvedAt:
+                        e.target.value === "accepted" ? new Date() : null,
+                    })
+                  }
+                  className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+                {editFormData.approvalStatus === "accepted" &&
+                  editFormData.approvedAt && (
+                    <p className="mt-2 text-sm text-gray-400">
+                      Approved on{" "}
+                      {new Date(editFormData.approvedAt).toLocaleDateString()}
+                    </p>
+                  )}
+              </div>
+            </form>
+          </div>
+
+          <div className="sticky bottom-0 z-10 bg-gray-800/90 backdrop-blur-sm p-6 border-t border-gray-700/50">
+            <div className="flex justify-end items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowEditModal(false)}
+                className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
+                disabled={submitting}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                form="editMemberForm"
+                disabled={submitting}
+                className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 ${
+                  submitting ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                <FiEdit2 className="w-4 h-4" />
+                {submitting ? "Updating..." : "Update Member"}
+              </button>
             </div>
           </div>
-        )}
+        </PortalModal>
 
         {/* Delete Confirmation Modal */}
         <Modal
