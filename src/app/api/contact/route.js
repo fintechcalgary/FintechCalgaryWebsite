@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
-import sgMail from "@sendgrid/mail";
+import Mailgun from "mailgun.js";
+import formData from "form-data";
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const mailgun = new Mailgun(formData);
+const mg = mailgun.client({
+  username: "api",
+  key: process.env.MAILGUN_API_KEY,
+});
+
+const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN;
 
 export async function POST(req) {
   try {
@@ -22,11 +29,7 @@ export async function POST(req) {
       );
     }
 
-    const msg = {
-      to: "rojnovyotam@gmail.com", // Your verified email for receiving messages
-      from: "rojnovyotam@gmail.com", // Verified sender email
-      subject: `New Contact Form Submission: ${subject}`,
-      html: `
+    const htmlContent = `
         <html>
           <head>
             <title>New Contact Form Submission</title>
@@ -119,12 +122,17 @@ export async function POST(req) {
             </div>
           </body>
         </html>
-      `,
-      replyTo: email, // Sets the reply-to header so responses go to the sender
-    };
+      `;
 
-    const response = await sgMail.send(msg);
-    console.log("SendGrid response:", response); // Log response for debugging
+    const response = await mg.messages.create(MAILGUN_DOMAIN, {
+      from: `FinTech Calgary <contact@${MAILGUN_DOMAIN}>`,
+      to: ["rojnovyotam@gmail.com"],
+      subject: `New Contact Form Submission: ${subject}`,
+      html: htmlContent,
+      "h:Reply-To": email,
+    });
+
+    console.log("Mailgun response:", response); // Log response for debugging
 
     return NextResponse.json({ success: true });
   } catch (error) {
