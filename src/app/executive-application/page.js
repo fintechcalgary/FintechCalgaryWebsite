@@ -1,18 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { FiCheck, FiAlertCircle } from "react-icons/fi";
-
-const ROLES = [
-  "President",
-  "VP Finance",
-  "VP Marketing",
-  "VP Events",
-  "VP Technology",
-  "VP Partnerships",
-  "Other",
-];
 
 export default function ExecutiveApplicationPage() {
   const [form, setForm] = useState({
@@ -33,6 +23,41 @@ export default function ExecutiveApplicationPage() {
   const [errors, setErrors] = useState({});
   const [resumeFileName, setResumeFileName] = useState("");
   const [isDragOver, setIsDragOver] = useState(false);
+  const [availableRoles, setAvailableRoles] = useState([]);
+  const [rolesLoading, setRolesLoading] = useState(true);
+  const [applicationsOpen, setApplicationsOpen] = useState(false);
+
+  useEffect(() => {
+    fetchRoles();
+    fetchSettings();
+  }, []);
+
+  const fetchRoles = async () => {
+    try {
+      setRolesLoading(true);
+      const response = await fetch("/api/executive-roles");
+      if (response.ok) {
+        const data = await response.json();
+        setAvailableRoles(data);
+      }
+    } catch (err) {
+      console.error("Error fetching roles:", err);
+    } finally {
+      setRolesLoading(false);
+    }
+  };
+
+  const fetchSettings = async () => {
+    try {
+      const response = await fetch("/api/settings");
+      if (response.ok) {
+        const data = await response.json();
+        setApplicationsOpen(!!data.executiveApplicationsOpen);
+      }
+    } catch (err) {
+      console.error("Error fetching settings:", err);
+    }
+  };
 
   const validate = () => {
     const errs = {};
@@ -212,7 +237,20 @@ export default function ExecutiveApplicationPage() {
 
           <div className="flex justify-center items-center">
             <div className="container mx-auto px-4 py-16 max-w-4xl">
-              {status === "success" ? (
+              {!applicationsOpen ? (
+                <div className="text-center py-8 animate-fadeIn">
+                  <div className="w-16 h-16 bg-gray-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <FiAlertCircle className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-white mb-2">
+                    Applications Currently Closed
+                  </h2>
+                  <p className="text-gray-300">
+                    Executive applications are not currently open. Please check
+                    back later for new opportunities.
+                  </p>
+                </div>
+              ) : status === "success" ? (
                 <div className="text-center py-8 animate-fadeIn">
                   <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <FiCheck className="w-8 h-8 text-primary" />
@@ -234,24 +272,76 @@ export default function ExecutiveApplicationPage() {
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
 
                     <div className="mb-5">
-                      <input
-                        name="role"
-                        value={form.role}
-                        onChange={handleChange}
-                        placeholder="Role You Are Applying For"
-                        className={`${inputClassName} ${
-                          errors.role
-                            ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                            : ""
-                        }`}
-                        required
-                      />
+                      {rolesLoading ? (
+                        <div className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-gray-400">
+                          Loading available roles...
+                        </div>
+                      ) : availableRoles.length === 0 ? (
+                        <div className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-gray-400">
+                          No roles currently available
+                        </div>
+                      ) : (
+                        <select
+                          name="role"
+                          value={form.role}
+                          onChange={handleChange}
+                          className={`${inputClassName} ${
+                            errors.role
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                              : ""
+                          }`}
+                          required
+                        >
+                          <option value="">Select a role to apply for</option>
+                          {availableRoles.map((role) => (
+                            <option key={role._id} value={role.title}>
+                              {role.title}
+                            </option>
+                          ))}
+                        </select>
+                      )}
                       {errors.role && (
                         <p className="mt-1 text-sm text-red-400">
                           {errors.role}
                         </p>
                       )}
                     </div>
+
+                    {/* Role Responsibilities Display */}
+                    {form.role && availableRoles.length > 0 && (
+                      <div className="mb-5">
+                        {(() => {
+                          const selectedRole = availableRoles.find(
+                            (role) => role.title === form.role
+                          );
+                          return selectedRole ? (
+                            <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/30">
+                              <h4 className="text-white font-medium mb-3">
+                                {selectedRole.title} - Responsibilities
+                              </h4>
+                              <div className="relative group">
+                                <img
+                                  src={selectedRole.responsibilitiesImageUrl}
+                                  alt={`${selectedRole.title} responsibilities`}
+                                  className="w-full max-h-64 object-contain rounded-lg border border-gray-600/50 cursor-pointer transition-transform group-hover:scale-105"
+                                  onClick={() =>
+                                    window.open(
+                                      selectedRole.responsibilitiesImageUrl,
+                                      "_blank"
+                                    )
+                                  }
+                                />
+                                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center pointer-events-none">
+                                  <span className="text-white text-sm font-medium">
+                                    Click to view full size
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          ) : null;
+                        })()}
+                      </div>
+                    )}
 
                     <div className="text-xl font-semibold">
                       Personal Information

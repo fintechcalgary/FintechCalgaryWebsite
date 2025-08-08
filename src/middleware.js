@@ -6,6 +6,7 @@ export default withAuth(
     // Check if the request is for a protected API endpoint
     const isProtectedApiRoute =
       req.nextUrl.pathname.startsWith("/api/executive-application") ||
+      req.nextUrl.pathname.startsWith("/api/executive-roles") ||
       req.nextUrl.pathname.startsWith("/api/settings") ||
       req.nextUrl.pathname.startsWith("/api/associateMember") ||
       req.nextUrl.pathname.startsWith("/api/members") ||
@@ -30,6 +31,14 @@ export default withAuth(
       return NextResponse.next();
     }
 
+    // Allow GET requests to /api/executive-roles without authentication
+    if (
+      req.nextUrl.pathname.startsWith("/api/executive-roles") &&
+      req.method === "GET"
+    ) {
+      return NextResponse.next();
+    }
+
     // If it's a protected API route with a protected method (but not public POST endpoints), check authentication
     if (isProtectedApiRoute && isProtectedMethod && !isPublicPostEndpoint) {
       const token = req.nextauth.token;
@@ -45,6 +54,7 @@ export default withAuth(
       // For admin-only operations, check if user has admin role
       const adminOnlyRoutes = [
         "/api/executive-application",
+        "/api/executive-roles",
         "/api/settings",
         "/api/members",
         "/api/subscribers",
@@ -81,6 +91,7 @@ export default withAuth(
       // For admin-only operations, check if user has admin role
       const adminOnlyRoutes = [
         "/api/executive-application",
+        "/api/executive-roles",
         "/api/members",
         "/api/subscribers",
       ];
@@ -117,6 +128,7 @@ export const config = {
   matcher: [
     // Protect API routes
     "/api/executive-application/:path*",
+    "/api/executive-roles/:path*",
     "/api/settings/:path*",
     "/api/associateMember/:path*",
     "/api/members/:path*",
