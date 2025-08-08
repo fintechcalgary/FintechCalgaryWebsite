@@ -29,7 +29,8 @@ select {
     text-white placeholder-gray-400
     focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary
     transition-all duration-200
-    shadow-sm shadow-black/10;
+    shadow-sm shadow-black/10
+    scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -76,7 +77,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .form-input {
-  @apply w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all;
+  @apply w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80;
 }
 
 /* Safari-specific input resets */

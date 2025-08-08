@@ -685,7 +685,7 @@ export default function ExecutiveApplicationsPage() {
           ) : (
             <>
               {/* Desktop Table */}
-              <div className="hidden lg:block overflow-x-auto">
+              <div className="hidden lg:block overflow-x-auto scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
                 <table className="w-full">
                   <thead className="bg-gray-800/50 border-b border-gray-700/50">
                     <tr>
@@ -851,7 +851,7 @@ export default function ExecutiveApplicationsPage() {
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4">
-          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp">
+          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Delete Application
@@ -913,7 +913,7 @@ export default function ExecutiveApplicationsPage() {
       {/* Application Details Modal */}
       {showDetailsModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4">
-          <div className="bg-gray-900/95 border border-gray-700/50 rounded-2xl p-6 sm:p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-slideInUp">
+          <div className="bg-gray-900/95 border border-gray-700/50 rounded-2xl p-6 sm:p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
@@ -1322,7 +1322,7 @@ export default function ExecutiveApplicationsPage() {
       {/* Add Role Modal */}
       {showAddRoleModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4">
-          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp">
+          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Add Executive Role
@@ -1445,7 +1445,7 @@ export default function ExecutiveApplicationsPage() {
       {/* Edit Role Modal */}
       {showEditRoleModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4">
-          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp">
+          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Edit Executive Role
@@ -1568,7 +1568,7 @@ export default function ExecutiveApplicationsPage() {
       {/* Delete Role Modal */}
       {showDeleteRoleModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4">
-          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp">
+          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Delete Role

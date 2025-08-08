@@ -252,7 +252,7 @@ export default function Events() {
                     description: e.target.value,
                   })
                 }
-                className="form-input min-h-[80px]"
+                className="form-input min-h-[80px] scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
                 required
               />
 
