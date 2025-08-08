@@ -15,6 +15,7 @@ import {
   FiEdit2,
   FiUpload,
 } from "react-icons/fi";
+import Image from "next/image";
 
 export default function ExecutiveApplicationsPage() {
   const { data: session, status } = useSession();
@@ -638,9 +639,11 @@ export default function ExecutiveApplicationsPage() {
                         Responsibilities
                       </h4>
                       <div className="relative group">
-                        <img
+                        <Image
                           src={role.responsibilitiesImageUrl}
                           alt={`${role.title} responsibilities`}
+                          width={400}
+                          height={128}
                           className="w-full h-32 object-cover rounded-lg border border-gray-700/50 cursor-pointer transition-transform group-hover:scale-105"
                           onClick={() =>
                             window.open(role.responsibilitiesImageUrl, "_blank")
@@ -1361,9 +1364,11 @@ export default function ExecutiveApplicationsPage() {
                 </label>
                 {imagePreview ? (
                   <div className="relative">
-                    <img
+                    <Image
                       src={imagePreview}
                       alt="Preview"
+                      width={400}
+                      height={128}
                       className="w-full h-32 object-cover rounded-lg border border-gray-600/50"
                     />
                     <button
@@ -1484,9 +1489,11 @@ export default function ExecutiveApplicationsPage() {
                 </label>
                 {imagePreview ? (
                   <div className="relative">
-                    <img
+                    <Image
                       src={imagePreview}
                       alt="Preview"
+                      width={400}
+                      height={128}
                       className="w-full h-32 object-cover rounded-lg border border-gray-600/50"
                     />
                     <button

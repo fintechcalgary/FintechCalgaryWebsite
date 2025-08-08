@@ -13,13 +13,14 @@ export default function AboutUs() {
         {/* Title */}
         <h2 className="text-6xl font-bold mb-20 text-center">
           <Link href="/about" className="group inline-block relative">
-            <div className="flex items-center justify-center gap-4 hover:gap-6 transition-all duration-300">
-              <div className="relative">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-primary">
-                  About Us
-                </span>
-                <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-28 h-1 bg-gradient-to-r from-primary to-purple-500 rounded-full"></div>
-              </div>
+            <div className="relative inline-block">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
+                About Us
+              </span>
+              <div
+                className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"
+                style={{ width: "100%" }}
+              />
             </div>
           </Link>
         </h2>

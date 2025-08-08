@@ -9,14 +9,20 @@ export default function UpcomingEvents({ events }) {
   return (
     <section id="events" className="py-24">
       <div className="container mx-auto px-4">
-        {/* Simplified title */}
-        <Link href="/events">
-          <h2 className="text-6xl font-bold mb-20 text-center hover:opacity-90 transition-opacity">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">
-              Upcoming Events
-            </span>
-          </h2>
-        </Link>
+        {/* Title */}
+        <h2 className="text-6xl font-bold mb-20 text-center">
+          <Link href="/events" className="group inline-block relative">
+            <div className="relative inline-block">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
+                Upcoming Events
+              </span>
+              <div
+                className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"
+                style={{ width: "100%" }}
+              />
+            </div>
+          </Link>
+        </h2>
 
         {events.length > 0 ? (
           <div

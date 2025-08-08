@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { FiCheck, FiAlertCircle } from "react-icons/fi";
+import Image from "next/image";
 
 export default function ExecutiveApplicationPage() {
   const [form, setForm] = useState({
@@ -320,9 +321,11 @@ export default function ExecutiveApplicationPage() {
                                 {selectedRole.title} - Responsibilities
                               </h4>
                               <div className="relative group">
-                                <img
+                                <Image
                                   src={selectedRole.responsibilitiesImageUrl}
                                   alt={`${selectedRole.title} responsibilities`}
+                                  width={600}
+                                  height={400}
                                   className="w-full max-h-64 object-contain rounded-lg border border-gray-600/50 cursor-pointer transition-transform group-hover:scale-105"
                                   onClick={() =>
                                     window.open(
