@@ -2,6 +2,7 @@ import "./globals.css";
 import { DM_Sans } from "next/font/google";
 import ClientSessionProvider from "@/components/ClientSessionProvider";
 import { SettingsProvider } from "@/contexts/SettingsContext";
+import { Analytics } from "@vercel/analytics/next";
 
 // Add multiple weights for DM Sans
 const dmSans = DM_Sans({
@@ -63,6 +64,7 @@ export default function RootLayout({ children }) {
             <ClientSessionProvider>{children}</ClientSessionProvider>
           </SettingsProvider>
         </div>
+        <Analytics />
       </body>
     </html>
   );
