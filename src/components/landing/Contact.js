@@ -139,7 +139,7 @@ export default function Contact() {
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           <ContactCard icon={FiMail} title="Email Us">
             <p className="text-gray-300 mb-4">
-              Have questions? We'd love to hear from you.
+              Have questions? We&apos;d love to hear from you.
             </p>
             <a
               href="mailto:info@fintechcalgary.com"
@@ -151,7 +151,7 @@ export default function Contact() {
 
           <ContactCard icon={FiMapPin} title="Location">
             <p className="text-gray-300 mb-4">
-              Based in the heart of Calgary's tech community.
+              Based in the heart of Calgary&apos;s tech community.
             </p>
             <p className="text-primary font-medium">Calgary, Alberta, Canada</p>
           </ContactCard>
