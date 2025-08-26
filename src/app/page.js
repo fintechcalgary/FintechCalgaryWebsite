@@ -23,9 +23,7 @@ const normalizeDate = (dateString) => {
 
 export default function Home() {
   const [events, setEvents] = useState([]);
-  const { settings, settingsLoaded } = useSettings();
-  const executiveApplicationsOpen =
-    settings?.executiveApplicationsOpen || false;
+  const { executiveApplicationsOpen, settingsLoaded } = useSettings();
 
   useEffect(() => {
     document.title = "FinTech Calgary";

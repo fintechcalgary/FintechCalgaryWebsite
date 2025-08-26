@@ -18,7 +18,7 @@ const ContactCard = ({ children, icon: Icon, title }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-10 rounded-2xl 
-                 border border-gray-700/50 hover:border-primary/50 transition-all duration-500"
+                 border border-gray-700/50 hover:border-primary/50 transition-all duration-500 overflow-hidden"
     >
       {/* Animated background gradient */}
       <div
@@ -56,7 +56,7 @@ const ContactCard = ({ children, icon: Icon, title }) => {
             transform: `scale(${isHovered ? 1.1 : 1})`,
             transition: "transform 0.3s",
           }}
-          className="w-20 h-20 mb-8 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+          className="w-20 h-20 mb-8 bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-all duration-300 border border-primary/30"
         >
           <Icon className="w-10 h-10 text-primary" />
         </div>
@@ -91,75 +91,91 @@ const SocialIcon = ({ href, icon: Icon, className = "" }) => (
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className={`text-gray-400 hover:text-primary transition-colors hover:scale-110 active:scale-90 ${className}`}
-    style={{ display: "inline-block", transition: "transform 0.2s" }}
+    className={`relative p-3 rounded-xl bg-gray-800/50 backdrop-blur-sm border border-gray-700/30 text-gray-400 hover:text-primary transition-all duration-300 hover:scale-110 active:scale-90 hover:bg-gray-700/50 hover:border-primary/30 group ${className}`}
+    style={{ display: "inline-block" }}
   >
-    <Icon className="w-6 h-6" />
+    {/* Hover background effect */}
+    <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+    {/* Icon with relative positioning */}
+    <Icon className="w-6 h-6 relative z-10" />
   </a>
 );
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-24 relative overflow-hidden">
-      <div className="container mx-auto px-4">
-        {/* Title */}
-        <h2 className="text-6xl font-bold mb-20 text-center group cursor-pointer relative">
-          <Link
-            href="/contact"
-            className="flex items-center justify-center gap-4 hover:gap-6 transition-all duration-300"
-          >
-            <div className="relative inline-block">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
-                Contact Us
-              </span>
-              <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 h-1 w-full bg-gradient-to-r from-primary to-purple-400 rounded-full"></div>
-            </div>
-          </Link>
+    <section id="contact" className="py-24 relative">
+      <div className="container mx-auto px-6 relative">
+        {/* Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+          <div
+            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"
+            style={{ animationDelay: "1s" }}
+          ></div>
+        </div>
+
+        {/* Animated title */}
+        <h2
+          className="text-6xl font-bold mb-20 text-center group relative"
+          style={{
+            opacity: 1,
+            transform: "translateY(0)",
+            transition: "opacity 0.5s, transform 0.5s",
+          }}
+        >
+          <div className="relative inline-block">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
+              Get In Touch
+            </span>
+            <div
+              className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"
+              style={{ width: "100%" }}
+            />
+          </div>
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-          <ContactCard icon={FiMail} title="Email">
+        {/* Contact Cards Grid */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <ContactCard icon={FiMail} title="Email Us">
+            <p className="text-gray-300 mb-4">
+              Have questions? We'd love to hear from you.
+            </p>
             <a
-              href="mailto:fintech.calgary@gmail.com"
-              className="text-lg text-gray-300 hover:text-primary transition-colors duration-300"
+              href="mailto:info@fintechcalgary.com"
+              className="text-primary hover:text-purple-400 transition-colors duration-300 font-medium"
             >
-              fintech.calgary@gmail.com
+              info@fintechcalgary.com
             </a>
           </ContactCard>
 
           <ContactCard icon={FiMapPin} title="Location">
-            <div className="text-lg text-gray-300 space-y-2">
-              <p>University of Calgary</p>
-              <p>2500 University Dr NW</p>
-              <p>Calgary, AB T2N 1N4</p>
-            </div>
+            <p className="text-gray-300 mb-4">
+              Based in the heart of Calgary's tech community.
+            </p>
+            <p className="text-primary font-medium">Calgary, Alberta, Canada</p>
           </ContactCard>
 
-          <ContactCard icon={FiMessageSquare} title="Social Media">
-            <p className="text-lg text-gray-300 mb-6">
-              Follow us for the latest updates
+          <ContactCard icon={FiMessageSquare} title="Connect">
+            <p className="text-gray-300 mb-4">
+              Follow us on social media for updates and insights.
             </p>
-            <div className="flex justify-center space-x-6">
+            <div className="flex justify-center space-x-3">
               <SocialIcon
-                href="https://www.linkedin.com/company/fintechcalgary/"
+                href="https://linkedin.com/company/fintechcalgary"
                 icon={FiLinkedin}
               />
               <SocialIcon
-                href="https://www.instagram.com/fintech.calgary/"
+                href="https://instagram.com/fintechcalgary"
                 icon={FiInstagram}
               />
               <SocialIcon
-                href="mailto:fintechcalgary@gmail.com"
-                icon={FiMail}
-              />
-              <SocialIcon
-                href="https://github.com/fintech-calgary"
+                href="https://github.com/fintechcalgary"
                 icon={FiGithub}
               />
               <SocialIcon
-                href="https://www.tiktok.com/@fintech.calgary"
+                href="https://tiktok.com/@fintechcalgary"
                 icon={FaTiktok}
-                className="w-5 h-5"
               />
             </div>
           </ContactCard>

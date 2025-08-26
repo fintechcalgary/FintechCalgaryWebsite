@@ -11,6 +11,7 @@ export default function RegisterEventForm({ eventId }) {
   const [formData, setFormData] = useState({
     email: "",
     name: "",
+    ucid: "",
     comments: "",
   });
   const [loading, setLoading] = useState(true);
@@ -180,6 +181,18 @@ export default function RegisterEventForm({ eventId }) {
                 }
                 required
                 placeholder="Your email address"
+              />
+            </div>
+
+            <div className="input-group">
+              <label>UCID (Optional)</label>
+              <input
+                type="text"
+                value={formData.ucid}
+                onChange={(e) =>
+                  setFormData({ ...formData, ucid: e.target.value })
+                }
+                placeholder="Your UCID (e.g., 12345678)"
               />
             </div>
 

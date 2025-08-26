@@ -3,13 +3,12 @@ import { FiArrowRight, FiUsers, FiAward, FiTrendingUp } from "react-icons/fi";
 
 export default function ExecutiveApplications() {
   return (
-    <section id="executive-applications" className="py-24 relative">
-      {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[128px] -translate-x-1/2 opacity-20"></div>
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/30 rounded-full blur-[96px] translate-x-1/2 opacity-20"></div>
-
+    <section
+      id="executive-applications"
+      className="py-24 relative overflow-hidden"
+    >
       <div className="container mx-auto px-6 relative">
-        {/* Title */}
+        {/* Enhanced Title */}
         <h2 className="text-6xl font-bold mb-20 text-center">
           <div className="group inline-block relative">
             <div className="flex items-center justify-center gap-4">
@@ -24,19 +23,17 @@ export default function ExecutiveApplications() {
         </h2>
 
         <div className="max-w-6xl mx-auto">
-          {/* Main CTA Card */}
+          {/* Enhanced Main CTA Card */}
           <div
-            className="group bg-gradient-to-br from-primary/20 via-purple-500/20 to-primary/20 rounded-3xl p-12 lg:p-16 
-            shadow-2xl border border-primary/30 hover:border-primary/50 
-            transition-all duration-500 backdrop-blur-xl relative overflow-hidden mb-12"
+            className="group bg-gray-900/40 backdrop-blur-2xl rounded-3xl p-12 lg:p-16 
+            shadow-2xl border border-white/10 hover:border-primary/30 
+            transition-all duration-700 relative overflow-hidden mb-12
+            hover:shadow-primary/20 hover:scale-[1.02]"
           >
-            {/* Animated background gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-purple-400/10 to-primary/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
             <div className="relative z-10 text-center">
               <div className="mb-8">
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-purple-600 rounded-full mb-6 shadow-lg">
-                  <FiAward className="w-10 h-10 text-white" />
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary/20 to-purple-600/20 backdrop-blur-xl rounded-full mb-6 shadow-lg border border-primary/30 hover:border-primary/50 transition-all duration-300 hover:scale-110">
+                  <FiAward className="w-10 h-10 text-primary" />
                 </div>
                 <h3 className="text-4xl lg:text-5xl font-bold text-white mb-6">
                   Join Our Executive Team
@@ -70,8 +67,8 @@ export default function ExecutiveApplications() {
                       "Make a real difference in the fintech community",
                   },
                 ].map((item, index) => (
-                  <div key={index} className="text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-800/50 rounded-full mb-4 border border-gray-700/50">
+                  <div key={index} className="text-center group/item">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-800/30 backdrop-blur-xl rounded-full mb-4 border border-white/10 hover:border-primary/30 transition-all duration-300 group-hover/item:scale-110 group-hover/item:shadow-lg group-hover/item:shadow-primary/20">
                       <item.icon className="w-8 h-8 text-primary" />
                     </div>
                     <h4 className="text-xl font-semibold text-white mb-2">
@@ -85,10 +82,10 @@ export default function ExecutiveApplications() {
               <Link
                 href="/executive-application"
                 className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold rounded-full 
-                  bg-gradient-to-r from-primary to-purple-600 hover:from-primary hover:to-purple-700 
+                  bg-gradient-to-r from-primary/20 to-purple-600/20 backdrop-blur-xl
                   text-white transition-all duration-300 
                   hover:shadow-xl hover:shadow-primary/30 transform hover:-translate-y-1
-                  border border-primary/50 hover:border-primary group"
+                  border border-primary/30 hover:border-primary/50 group hover:scale-105"
               >
                 Apply Now
                 <FiArrowRight className="ml-2 transform transition-transform duration-300 group-hover:translate-x-1" />
@@ -96,7 +93,7 @@ export default function ExecutiveApplications() {
             </div>
           </div>
 
-          {/* Additional Info Cards */}
+          {/* Enhanced Additional Info Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               {
@@ -116,12 +113,11 @@ export default function ExecutiveApplications() {
             ].map((card, index) => (
               <div
                 key={index}
-                className="group bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-3xl p-8 
-                  shadow-xl hover:shadow-2xl border border-gray-700/50 hover:border-primary/50 
-                  transition-all duration-500 backdrop-blur-xl relative overflow-hidden
-                  border-l-4 border-l-purple-500"
+                className="group bg-gray-900/40 backdrop-blur-2xl rounded-3xl p-8 
+                  shadow-xl hover:shadow-2xl border border-white/10 hover:border-primary/30 
+                  transition-all duration-700 relative overflow-hidden
+                  hover:scale-[1.02] hover:shadow-primary/20"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
                 <div className="relative z-10 h-full flex flex-col">
                   <h3 className="text-2xl font-bold text-white mb-4">
                     {card.title}
@@ -131,10 +127,10 @@ export default function ExecutiveApplications() {
                   </p>
                   <Link
                     href={card.link}
-                    className="inline-flex items-center gap-2 text-purple-400 hover:text-primary transition-colors duration-300"
+                    className="inline-flex items-center gap-2 text-primary hover:text-purple-400 transition-colors duration-300 group/link"
                   >
                     <span className="font-semibold">{card.linkText}</span>
-                    <FiArrowRight className="transform transition-transform duration-300 group-hover:translate-x-1" />
+                    <FiArrowRight className="transform transition-transform duration-300 group-hover/link:translate-x-1" />
                   </Link>
                 </div>
               </div>

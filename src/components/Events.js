@@ -190,8 +190,11 @@ export default function Events() {
           Your Events
         </h3>
         <button
-          onClick={() => (showForm ? resetForm() : setShowForm(true))}
-          className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            showForm ? resetForm() : setShowForm(true);
+          }}
+          className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
         >
           {showForm ? <FiX /> : <FiPlus />}
           {showForm ? "Cancel" : "Add"}
@@ -406,15 +409,21 @@ export default function Events() {
                 </h4>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => handleEdit(event)}
-                    className="text-gray-400 hover:text-primary transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(event);
+                    }}
+                    className="text-gray-400 hover:text-primary transition-all duration-200 p-2 rounded-lg hover:bg-primary/10 hover:scale-105 relative z-20 border border-transparent hover:border-primary/20"
                     title="Edit"
                   >
                     <FiEdit2 />
                   </button>
                   <button
-                    onClick={() => handleDelete(event._id)}
-                    className="text-gray-400 hover:text-red-500 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(event._id);
+                    }}
+                    className="text-gray-400 hover:text-red-500 transition-all duration-200 p-2 rounded-lg hover:bg-red-500/10 hover:scale-105 relative z-20 border border-transparent hover:border-red-500/20"
                     title="Delete"
                   >
                     <FiTrash2 />
@@ -447,7 +456,8 @@ export default function Events() {
                   {!isDashboard && (
                     <Link
                       href={`/events/register/${event._id}`}
-                      className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg transition-colors text-sm font-medium"
+                      onClick={(e) => e.stopPropagation()}
+                      className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg transition-all duration-200 text-sm font-medium hover:scale-105"
                     >
                       Register for Event
                     </Link>
@@ -457,7 +467,8 @@ export default function Events() {
                   <div className="mt-3">
                     <Link
                       href={`/events/${event._id}/registrations`}
-                      className="text-sm text-primary hover:text-primary/80 transition-colors inline-flex items-center gap-2"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-sm text-primary hover:text-primary/80 transition-all duration-200 inline-flex items-center gap-2 hover:scale-105 relative z-20"
                     >
                       <FiUser className="w-4 h-4" />
                       View {event.registrations.length} Registration

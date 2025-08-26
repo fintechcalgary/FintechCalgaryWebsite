@@ -55,15 +55,21 @@ function DraggableMember({
         <p className="text-gray-400 mb-4">{member.major}</p>
         <div className="flex gap-2">
           <button
-            onClick={() => handleEdit(member)}
-            className="text-gray-400 hover:text-primary transition-colors p-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit(member);
+            }}
+            className="text-gray-400 hover:text-primary transition-all duration-200 p-2 rounded-lg hover:bg-primary/10 hover:scale-105 relative z-20 border border-transparent hover:border-primary/20"
             title="Edit"
           >
             <FiEdit2 />
           </button>
           <button
-            onClick={() => handleDelete(member._id)}
-            className="text-gray-400 hover:text-red-500 transition-colors p-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(member._id);
+            }}
+            className="text-gray-400 hover:text-red-500 transition-all duration-200 p-2 rounded-lg hover:bg-red-500/10 hover:scale-105 relative z-20 border border-transparent hover:border-red-500/20"
             disabled={session?.user?.username == member.username}
             title="Delete"
           >

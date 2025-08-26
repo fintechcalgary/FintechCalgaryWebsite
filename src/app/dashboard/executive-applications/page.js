@@ -495,14 +495,14 @@ export default function ExecutiveApplicationsPage() {
   return (
     <div className="min-h-screen relative">
       <Navbar />
-      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl relative animate-fadeIn">
+      <main className="container mx-auto px-6 py-8 max-w-7xl relative animate-fadeIn">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
-          <div className="space-y-1">
-            <h1 className="text-2xl sm:text-4xl font-bold text-white">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold text-white">
               Executive Applications
             </h1>
-            <p className="text-gray-400 text-sm sm:text-base">
+            <p className="text-gray-400 text-lg">
               Review and manage executive team applications
             </p>
           </div>
@@ -529,47 +529,45 @@ export default function ExecutiveApplicationsPage() {
         </div>
 
         {/* Executive Applications Toggle */}
-        <div className="mb-6 sm:mb-8 p-4 sm:p-6 rounded-xl bg-gray-800/70 border border-primary/30 max-w-md">
-          <div className="flex items-center justify-between">
-            <span className="text-white font-medium text-base sm:text-lg">
+        <div className="mb-8 p-6 rounded-2xl bg-gray-900/60 backdrop-blur-xl border border-primary/30 max-w-md hover:border-primary/50 transition-all duration-300">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-white font-semibold text-lg">
               Executive Applications
             </span>
             <button
               type="button"
               onClick={handleToggleExecutiveApplications}
               disabled={settingsLoading}
-              className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none border-2 border-primary/40 ${
+              className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none border-2 border-primary/40 ${
                 executiveApplicationsOpen ? "bg-primary" : "bg-gray-600"
               }`}
               aria-pressed={executiveApplicationsOpen}
             >
               <span
-                className={`inline-block h-6 w-6 transform rounded-full bg-white shadow transition-transform ${
-                  executiveApplicationsOpen ? "translate-x-7" : "translate-x-1"
+                className={`inline-block h-7 w-7 transform rounded-full bg-white shadow transition-transform ${
+                  executiveApplicationsOpen ? "translate-x-8" : "translate-x-1"
                 }`}
               ></span>
             </button>
           </div>
-          <div className="text-gray-400 text-xs sm:text-sm mt-2">
+          <div className="text-gray-400 text-sm">
             {executiveApplicationsOpen
-              ? "Executive applications are open."
-              : "Executive applications are closed."}
+              ? "Executive applications are currently open and accepting submissions."
+              : "Executive applications are currently closed."}
           </div>
           {settingsError && (
-            <div className="text-red-400 text-xs sm:text-sm mt-2">
-              {settingsError}
-            </div>
+            <div className="text-red-400 text-sm mt-2">{settingsError}</div>
           )}
         </div>
 
         {/* Role Management Section */}
-        <div className="mb-6 sm:mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
+        <div className="mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div className="space-y-2">
+              <h2 className="text-2xl font-semibold text-white">
                 Executive Roles
               </h2>
-              <p className="text-gray-400 text-sm sm:text-base">
+              <p className="text-gray-400 text-lg">
                 Manage available executive positions and their responsibilities
               </p>
             </div>
@@ -586,18 +584,18 @@ export default function ExecutiveApplicationsPage() {
 
           {/* Roles Grid */}
           {rolesLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-primary"></div>
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary"></div>
             </div>
           ) : roles.length === 0 ? (
-            <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-white/10 p-8 text-center">
-              <p className="text-gray-400 text-sm sm:text-base mb-4">
+            <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-white/10 p-12 text-center">
+              <p className="text-gray-400 text-lg mb-6">
                 No executive roles have been created yet.
               </p>
               {executiveApplicationsOpen && (
                 <button
                   onClick={openAddRoleModal}
-                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium mx-auto"
+                  className="px-6 py-3 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium mx-auto"
                 >
                   <FiPlus className="w-4 h-4" />
                   Create First Role
@@ -605,27 +603,27 @@ export default function ExecutiveApplicationsPage() {
               )}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {roles.map((role) => (
                 <div
                   key={role._id}
-                  className="bg-gray-900/60 backdrop-blur-xl rounded-xl border border-white/10 p-4 sm:p-6 hover:border-gray-600/50 transition-all duration-300"
+                  className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-white/10 p-6 hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <h3 className="text-white font-semibold text-lg">
+                  <div className="flex items-start justify-between mb-6">
+                    <h3 className="text-white font-semibold text-xl">
                       {role.title}
                     </h3>
                     <div className="flex gap-2">
                       <button
                         onClick={() => openEditRoleModal(role)}
-                        className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-lg transition-colors"
+                        className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-lg transition-all duration-200 hover:scale-105"
                         title="Edit Role"
                       >
                         <FiEdit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => openDeleteRoleModal(role)}
-                        className="p-2 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors"
+                        className="p-2 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-all duration-200 hover:scale-105"
                         title="Delete Role"
                       >
                         <FiTrash2 className="w-4 h-4" />
@@ -633,9 +631,9 @@ export default function ExecutiveApplicationsPage() {
                     </div>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div>
-                      <h4 className="text-gray-300 font-medium text-sm mb-2">
+                      <h4 className="text-gray-300 font-medium text-sm mb-3">
                         Responsibilities
                       </h4>
                       <div className="relative group">
@@ -657,7 +655,7 @@ export default function ExecutiveApplicationsPage() {
                       </div>
                     </div>
 
-                    <div className="text-xs text-gray-400">
+                    <div className="text-xs text-gray-400 pt-2 border-t border-gray-800">
                       Created: {formatDate(role.createdAt)}
                     </div>
                   </div>
@@ -853,8 +851,14 @@ export default function ExecutiveApplicationsPage() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4">
-          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4"
+          onClick={closeDeleteModal}
+        >
+          <div
+            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Delete Application
@@ -915,8 +919,14 @@ export default function ExecutiveApplicationsPage() {
 
       {/* Application Details Modal */}
       {showDetailsModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4">
-          <div className="bg-gray-900/95 border border-gray-700/50 rounded-2xl p-6 sm:p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4"
+          onClick={closeDetailsModal}
+        >
+          <div
+            className="bg-gray-900/95 border border-gray-700/50 rounded-2xl p-6 sm:p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
@@ -1324,8 +1334,14 @@ export default function ExecutiveApplicationsPage() {
 
       {/* Add Role Modal */}
       {showAddRoleModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4">
-          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4"
+          onClick={closeAddRoleModal}
+        >
+          <div
+            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Add Executive Role
@@ -1449,8 +1465,14 @@ export default function ExecutiveApplicationsPage() {
 
       {/* Edit Role Modal */}
       {showEditRoleModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4">
-          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4"
+          onClick={closeEditRoleModal}
+        >
+          <div
+            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Edit Executive Role
@@ -1574,8 +1596,14 @@ export default function ExecutiveApplicationsPage() {
 
       {/* Delete Role Modal */}
       {showDeleteRoleModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4">
-          <div className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4"
+          onClick={closeDeleteRoleModal}
+        >
+          <div
+            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Delete Role

@@ -2,6 +2,8 @@ import { connectToDatabase } from "@/lib/mongodb";
 import { registerForEvent, isUserRegistered } from "@/lib/models/event";
 import sgMail from "@sendgrid/mail";
 import { ObjectId } from "mongodb";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -183,6 +185,68 @@ export async function POST(req, { params }) {
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
     console.error("POST /api/events/[eventId]/register - Error:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+    });
+  }
+}
+
+export async function DELETE(req, { params }) {
+  try {
+    // Check authentication
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== "admin") {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
+
+    const { eventId } = await params;
+    const { registrationIndex } = await req.json();
+    const db = await connectToDatabase();
+
+    const event = await getEventById(db, eventId);
+    if (!event) {
+      return new Response(JSON.stringify({ error: "Event not found" }), {
+        status: 404,
+      });
+    }
+
+    // Check if registration index is valid
+    if (
+      !event.registrations ||
+      registrationIndex < 0 ||
+      registrationIndex >= event.registrations.length
+    ) {
+      return new Response(
+        JSON.stringify({ error: "Invalid registration index" }),
+        {
+          status: 400,
+        }
+      );
+    }
+
+    // Remove the registration at the specified index
+    const updatedRegistrations = event.registrations.filter(
+      (_, index) => index !== registrationIndex
+    );
+
+    const result = await db
+      .collection("events")
+      .updateOne(
+        { _id: new ObjectId(eventId) },
+        { $set: { registrations: updatedRegistrations } }
+      );
+
+    if (result.matchedCount === 0) {
+      return new Response(JSON.stringify({ error: "Event not found" }), {
+        status: 404,
+      });
+    }
+
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
+  } catch (error) {
+    console.error("DELETE /api/events/[eventId]/register - Error:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });

@@ -5,7 +5,7 @@ import EventsPageClient from "./EventsPageClient";
 async function getEvents() {
   try {
     const db = await connectToDatabase();
-    
+
     const events = await db
       .collection("events")
       .find({})

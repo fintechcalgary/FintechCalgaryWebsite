@@ -124,8 +124,7 @@ export default function MissionStatement() {
             <Link
               href="/join"
               className="group inline-flex items-center gap-3 px-8 py-4 text-lg font-medium rounded-full 
-                       bg-primary hover:bg-primary/90 text-white transition-all duration-300 
-                       hover:shadow-xl hover:shadow-primary/25"
+                       bg-primary hover:bg-primary/90 text-white transition-all duration-300"
             >
               Join Now
               <div

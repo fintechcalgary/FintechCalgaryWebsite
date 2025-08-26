@@ -131,6 +131,34 @@ export default function AssociateMembersPage() {
     setShowEditModal(true);
   };
 
+  const resetEditForm = () => {
+    setEditFormData({
+      organizationName: "",
+      username: "",
+      title: "",
+      firstName: "",
+      lastName: "",
+      contactEmail: "",
+      contactPhoneNumber: "",
+      organizationEmail: "",
+      organizationPhoneNumber: "",
+      website: "",
+      facebook: "",
+      twitter: "",
+      linkedin: "",
+      address: "",
+      country: "",
+      province: "",
+      city: "",
+      postalCode: "",
+      aboutUs: "",
+      approvalStatus: "pending",
+      approvedAt: null,
+    });
+    setEditingMember(null);
+    setShowEditModal(false);
+  };
+
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     if (submitting) return;
@@ -329,11 +357,9 @@ export default function AssociateMembersPage() {
       <main className="container mx-auto px-6 py-8 max-w-7xl">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-4xl font-bold text-white mb-2">
-              Associate Members
-            </h1>
-            <p className="text-gray-400">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold text-white">Associate Members</h1>
+            <p className="text-gray-400 text-lg">
               Manage and view all associate member organizations
             </p>
           </div>
@@ -361,22 +387,28 @@ export default function AssociateMembersPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Total Organizations</p>
-                <p className="text-2xl font-bold text-white">
+              <div className="space-y-1">
+                <p className="text-gray-400 text-sm font-medium">
+                  Total Organizations
+                </p>
+                <p className="text-3xl font-bold text-white">
                   {associateMembers.length}
                 </p>
               </div>
-              <FiHome className="text-primary text-2xl" />
+              <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
+                <FiHome className="text-primary text-xl" />
+              </div>
             </div>
           </div>
-          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-yellow-500/30 transition-all duration-300">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Pending Approval</p>
-                <p className="text-2xl font-bold text-white">
+              <div className="space-y-1">
+                <p className="text-gray-400 text-sm font-medium">
+                  Pending Approval
+                </p>
+                <p className="text-3xl font-bold text-white">
                   {
                     associateMembers.filter(
                       (m) => m.approvalStatus === "pending"
@@ -384,14 +416,16 @@ export default function AssociateMembersPage() {
                   }
                 </p>
               </div>
-              <FiCalendar className="text-yellow-500 text-2xl" />
+              <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center border border-yellow-500/30">
+                <FiCalendar className="text-yellow-500 text-xl" />
+              </div>
             </div>
           </div>
-          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-green-500/30 transition-all duration-300">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Approved</p>
-                <p className="text-2xl font-bold text-white">
+              <div className="space-y-1">
+                <p className="text-gray-400 text-sm font-medium">Approved</p>
+                <p className="text-3xl font-bold text-white">
                   {
                     associateMembers.filter(
                       (m) => m.approvalStatus === "accepted"
@@ -399,7 +433,9 @@ export default function AssociateMembersPage() {
                   }
                 </p>
               </div>
-              <FiUsers className="text-green-500 text-2xl" />
+              <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center border border-green-500/30">
+                <FiUsers className="text-green-500 text-xl" />
+              </div>
             </div>
           </div>
         </div>
@@ -418,13 +454,17 @@ export default function AssociateMembersPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
+                className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 h-full flex flex-col group cursor-pointer"
+                onClick={() => {
+                  // Navigate to a detail view or open modal
+                  handleEditClick(member);
+                }}
               >
                 {/* Organization Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
                     {member.logo ? (
-                      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-800">
+                      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-800 flex-shrink-0">
                         <Image
                           src={member.logo}
                           alt={`${member.organizationName} logo`}
@@ -433,12 +473,12 @@ export default function AssociateMembersPage() {
                         />
                       </div>
                     ) : (
-                      <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
                         <FiHome className="text-primary text-xl" />
                       </div>
                     )}
-                    <div>
-                      <h3 className="text-lg font-semibold text-white truncate max-w-[200px]">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-lg font-semibold text-white truncate">
                         {member.organizationName}
                       </h3>
                       <p className="text-xs text-gray-400">
@@ -447,17 +487,23 @@ export default function AssociateMembersPage() {
                     </div>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-shrink-0">
                     <button
-                      onClick={() => handleEditClick(member)}
-                      className="text-gray-400 hover:text-primary transition-colors p-1"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditClick(member);
+                      }}
+                      className="text-gray-400 hover:text-primary transition-all duration-200 p-2 rounded-lg hover:bg-primary/10 hover:scale-105 relative z-20 border border-transparent hover:border-primary/20"
                       title="Edit"
                     >
                       <FiEdit2 className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => handleDeleteClick(member)}
-                      className="text-gray-400 hover:text-red-400 transition-colors p-1"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteClick(member);
+                      }}
+                      className="text-gray-400 hover:text-red-400 transition-all duration-200 p-2 rounded-lg hover:bg-red-500/10 hover:scale-105 relative z-20 border border-transparent hover:border-red-500/20"
                       title="Delete"
                     >
                       <FiTrash2 className="w-4 h-4" />
@@ -466,10 +512,10 @@ export default function AssociateMembersPage() {
                 </div>
 
                 {/* Approval Status */}
-                <div className="mb-4">
-                  <div className="flex items-center gap-2">
+                <div className="mb-6">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
                         member.approvalStatus === "pending"
                           ? "bg-yellow-500/20 text-yellow-500"
                           : member.approvalStatus === "accepted"
@@ -487,31 +533,33 @@ export default function AssociateMembersPage() {
                           {new Date(member.approvedAt).toLocaleDateString()}
                         </span>
                       )}
-                    {member.approvalStatus === "pending" && (
-                      <div className="flex gap-2 ml-auto">
-                        <button
-                          onClick={() =>
-                            handleApprovalStatusChange(member._id, "accepted")
-                          }
-                          className="text-xs bg-green-500/20 hover:bg-green-500/30 text-green-500 px-2 py-1 rounded transition-colors"
-                        >
-                          Accept
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleApprovalStatusChange(member._id, "rejected")
-                          }
-                          className="text-xs bg-red-500/20 hover:bg-red-500/30 text-red-500 px-2 py-1 rounded transition-colors"
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    )}
                   </div>
+                  {member.approvalStatus === "pending" && (
+                    <div className="flex gap-2 mt-3">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleApprovalStatusChange(member._id, "accepted");
+                        }}
+                        className="text-xs bg-green-500/20 hover:bg-green-500/30 text-green-500 px-3 py-1 rounded transition-all duration-200 relative z-20 border border-green-500/20 hover:border-green-500/40 hover:scale-105"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleApprovalStatusChange(member._id, "rejected");
+                        }}
+                        className="text-xs bg-red-500/20 hover:bg-red-500/30 text-red-500 px-3 py-1 rounded transition-all duration-200 relative z-20 border border-red-500/20 hover:border-red-500/40 hover:scale-105"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Contact Information */}
-                <div className="space-y-3 mb-4">
+                <div className="space-y-3 mb-6 flex-1">
                   <div className="flex items-center gap-2 text-sm">
                     <FiUser className="text-gray-400 w-4 h-4 flex-shrink-0" />
                     <span className="text-white truncate">
@@ -526,6 +574,7 @@ export default function AssociateMembersPage() {
                     <a
                       href={`mailto:${member.contactEmail}`}
                       className="text-primary hover:text-primary/80 transition-colors truncate"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       {member.contactEmail}
                     </a>
@@ -543,7 +592,7 @@ export default function AssociateMembersPage() {
                 </div>
 
                 {/* Organization Information */}
-                <div className="space-y-3 mb-4 pt-3 border-t border-gray-800">
+                <div className="space-y-3 mb-6 pt-4 border-t border-gray-800">
                   <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
                     Organization
                   </h4>
@@ -554,6 +603,7 @@ export default function AssociateMembersPage() {
                       <a
                         href={`mailto:${member.organizationEmail}`}
                         className="text-primary hover:text-primary/80 transition-colors truncate"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         {member.organizationEmail}
                       </a>
@@ -581,6 +631,7 @@ export default function AssociateMembersPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary hover:text-primary/80 transition-colors truncate flex items-center gap-1"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         {member.website}
                         <FiExternalLink className="w-3 h-3" />
@@ -611,7 +662,7 @@ export default function AssociateMembersPage() {
 
                 {/* Social Links */}
                 {(member.linkedin || member.facebook || member.twitter) && (
-                  <div className="flex items-center gap-3 pt-3 border-t border-gray-800">
+                  <div className="flex items-center gap-3 pt-4 border-t border-gray-800">
                     {member.linkedin && (
                       <a
                         href={
@@ -623,6 +674,7 @@ export default function AssociateMembersPage() {
                         rel="noopener noreferrer"
                         className="text-gray-400 hover:text-blue-500 transition-colors"
                         title="LinkedIn"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <SiLinkedin className="w-4 h-4" />
                       </a>
@@ -638,6 +690,7 @@ export default function AssociateMembersPage() {
                         rel="noopener noreferrer"
                         className="text-gray-400 hover:text-blue-600 transition-colors"
                         title="Facebook"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <SiFacebook className="w-4 h-4" />
                       </a>
@@ -653,6 +706,7 @@ export default function AssociateMembersPage() {
                         rel="noopener noreferrer"
                         className="text-gray-400 hover:text-blue-400 transition-colors"
                         title="X (Twitter)"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <SiX className="w-4 h-4" />
                       </a>
@@ -662,9 +716,11 @@ export default function AssociateMembersPage() {
 
                 {/* About Us Preview */}
                 {member.aboutUs && (
-                  <div className="mt-4 pt-3 border-t border-gray-800">
-                    <p className="text-xs text-gray-400 mb-1">About</p>
-                    <p className="text-sm text-gray-300 line-clamp-3">
+                  <div className="mt-4 pt-4 border-t border-gray-800">
+                    <p className="text-xs text-gray-400 mb-2 font-medium">
+                      About
+                    </p>
+                    <p className="text-sm text-gray-300 line-clamp-3 leading-relaxed">
                       {member.aboutUs}
                     </p>
                   </div>
@@ -677,7 +733,7 @@ export default function AssociateMembersPage() {
         {/* Edit Modal */}
         <PortalModal
           isOpen={showEditModal}
-          onClose={() => setShowEditModal(false)}
+          onClose={resetEditForm}
           title="Edit Associate Member"
           maxWidth="max-w-4xl"
         >
