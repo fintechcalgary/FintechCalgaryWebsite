@@ -18,12 +18,6 @@ export default function EventsPageClient({ initialEvents }) {
   const [filter, setFilter] = useState("all");
   const router = useRouter();
 
-  console.log("🎯 EventsPageClient: Received events:", initialEvents?.length);
-  console.log(
-    "📅 Initial events:",
-    initialEvents?.map((e) => ({ title: e.title, date: e.date }))
-  );
-
   // Memoize the current date to prevent recalculation on every render
   // Normalize to start of day for consistent comparison
   const currentDate = useMemo(() => {
@@ -33,24 +27,16 @@ export default function EventsPageClient({ initialEvents }) {
       now.getMonth(),
       now.getDate()
     );
-    console.log("🕐 Current normalized date:", normalized);
     return normalized;
   }, []);
 
   // Memoize the expensive filtering and sorting operation
   const filteredEvents = useMemo(() => {
-    console.log(`🔍 Filtering events with filter: ${filter}`);
-    console.log(`📊 Total events to filter: ${initialEvents?.length}`);
-
     const filtered = initialEvents
       .filter((event) => {
         const eventDate = normalizeDate(event.date);
         const isUpcoming = eventDate >= currentDate;
         const isPast = eventDate < currentDate;
-
-        console.log(
-          `📅 Event: ${event.title}, Date: ${event.date}, Normalized: ${eventDate}, IsUpcoming: ${isUpcoming}`
-        );
 
         if (filter === "upcoming") return isUpcoming;
         if (filter === "past") return isPast;
@@ -67,12 +53,6 @@ export default function EventsPageClient({ initialEvents }) {
         // For events in the same category (both upcoming or both past), sort by date
         return aDate - bDate;
       });
-
-    console.log(`✅ Filtered events count: ${filtered.length}`);
-    console.log(
-      "📋 Filtered events:",
-      filtered.map((e) => ({ title: e.title, date: e.date }))
-    );
 
     return filtered;
   }, [initialEvents, filter, currentDate]);

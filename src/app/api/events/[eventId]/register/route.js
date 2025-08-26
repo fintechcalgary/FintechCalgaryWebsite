@@ -18,34 +18,19 @@ async function getEventById(db, eventId) {
 
 export async function POST(req, { params }) {
   try {
-    console.log(
-      "POST /api/events/[eventId]/register - Starting registration process"
-    );
-
     const registrationData = await req.json();
-    console.log("Registration data received:", {
-      name: registrationData.name,
-      email: registrationData.email,
-      hasComments: !!registrationData.comments,
-    });
-
     const { eventId } = await params; // Await params as required by Next.js 15
-    console.log("Event ID from params:", eventId);
-
     const db = await connectToDatabase();
-    console.log("Database connected successfully");
 
     registrationData.userEmail = registrationData.email;
     registrationData.registeredAt = new Date().toISOString();
 
     const event = await getEventById(db, eventId);
     if (!event) {
-      console.log("Event not found for ID:", eventId);
       return new Response(JSON.stringify({ error: "Event not found" }), {
         status: 404,
       });
     }
-    console.log("Event found:", event.title);
 
     const alreadyRegistered = await isUserRegistered(
       db,
@@ -53,16 +38,13 @@ export async function POST(req, { params }) {
       registrationData.userEmail
     );
     if (alreadyRegistered) {
-      console.log("User already registered:", registrationData.userEmail);
       return new Response(
         JSON.stringify({ error: "Already registered for this event" }),
         { status: 400 }
       );
     }
-    console.log("User not already registered, proceeding with registration");
 
     const result = await registerForEvent(db, eventId, registrationData);
-    console.log("Registration successful, result:", result);
 
     // Format the date
     const eventDate = new Date(event.date).toLocaleDateString("en-US", {
@@ -73,11 +55,6 @@ export async function POST(req, { params }) {
     });
 
     // Send confirmation email
-    console.log(
-      "Attempting to send confirmation email to:",
-      registrationData.userEmail
-    );
-
     try {
       const msg = {
         to: registrationData.userEmail,
@@ -198,15 +175,11 @@ export async function POST(req, { params }) {
       };
 
       await sgMail.send(msg);
-      console.log("Confirmation email sent successfully");
     } catch (emailError) {
       console.error("Failed to send confirmation email:", emailError);
       // Don't fail the registration if email fails
     }
 
-    console.log(
-      "POST /api/events/[eventId]/register - Registration completed successfully"
-    );
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
     console.error("POST /api/events/[eventId]/register - Error:", error);
