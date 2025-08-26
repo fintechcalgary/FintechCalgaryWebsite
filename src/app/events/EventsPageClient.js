@@ -8,25 +8,57 @@ import Image from "next/image";
 import ImageCarousel from "@/components/ImageCarousel";
 import { useRouter } from "next/navigation";
 
+// Helper function to normalize dates to start of day for consistent comparison
+const normalizeDate = (dateString) => {
+  const date = new Date(dateString);
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+};
+
 export default function EventsPageClient({ initialEvents }) {
   const [filter, setFilter] = useState("all");
   const router = useRouter();
 
+  console.log("🎯 EventsPageClient: Received events:", initialEvents?.length);
+  console.log(
+    "📅 Initial events:",
+    initialEvents?.map((e) => ({ title: e.title, date: e.date }))
+  );
+
   // Memoize the current date to prevent recalculation on every render
-  const currentDate = useMemo(() => new Date(), []);
+  // Normalize to start of day for consistent comparison
+  const currentDate = useMemo(() => {
+    const now = new Date();
+    const normalized = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+    console.log("🕐 Current normalized date:", normalized);
+    return normalized;
+  }, []);
 
   // Memoize the expensive filtering and sorting operation
   const filteredEvents = useMemo(() => {
-    return initialEvents
+    console.log(`🔍 Filtering events with filter: ${filter}`);
+    console.log(`📊 Total events to filter: ${initialEvents?.length}`);
+
+    const filtered = initialEvents
       .filter((event) => {
-        const eventDate = new Date(event.date);
-        if (filter === "upcoming") return eventDate >= currentDate;
-        if (filter === "past") return eventDate < currentDate;
+        const eventDate = normalizeDate(event.date);
+        const isUpcoming = eventDate >= currentDate;
+        const isPast = eventDate < currentDate;
+
+        console.log(
+          `📅 Event: ${event.title}, Date: ${event.date}, Normalized: ${eventDate}, IsUpcoming: ${isUpcoming}`
+        );
+
+        if (filter === "upcoming") return isUpcoming;
+        if (filter === "past") return isPast;
         return true; // "all" filter
       })
       .sort((a, b) => {
-        const aDate = new Date(a.date);
-        const bDate = new Date(b.date);
+        const aDate = normalizeDate(a.date);
+        const bDate = normalizeDate(b.date);
 
         // Sort upcoming events before past events
         if (aDate >= currentDate && bDate < currentDate) return -1;
@@ -35,19 +67,23 @@ export default function EventsPageClient({ initialEvents }) {
         // For events in the same category (both upcoming or both past), sort by date
         return aDate - bDate;
       });
+
+    console.log(`✅ Filtered events count: ${filtered.length}`);
+    console.log(
+      "📋 Filtered events:",
+      filtered.map((e) => ({ title: e.title, date: e.date }))
+    );
+
+    return filtered;
   }, [initialEvents, filter, currentDate]);
 
   // Memoize the event click handler
   const handleEventClick = useCallback(
     (event) => {
-      const isUpcoming = new Date(event.date) >= currentDate;
-      if (isUpcoming) {
-        router.push(`/events/register/${event._id}`);
-      } else {
-        router.push(`/events/${event._id}`);
-      }
+      // Route all events to the individual event page
+      router.push(`/events/${event._id}`);
     },
-    [router, currentDate]
+    [router]
   );
 
   // Memoize the dynamic page heading content
@@ -110,7 +146,7 @@ export default function EventsPageClient({ initialEvents }) {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredEvents.map((event, index) => {
-            const isUpcoming = new Date(event.date) >= currentDate;
+            const isUpcoming = normalizeDate(event.date) >= currentDate;
             return (
               <div
                 key={event._id}

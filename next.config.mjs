@@ -46,7 +46,8 @@ const nextConfig = {
     optimizePackageImports: ["@icons/react", "lucide-react"],
   },
   compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
+    // Temporarily disabled console removal for debugging
+    // removeConsole: process.env.NODE_ENV === "production",
   },
   // Enable compression
   compress: true,

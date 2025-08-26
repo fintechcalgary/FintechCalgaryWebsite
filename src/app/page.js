@@ -15,9 +15,17 @@ import ExecutiveApplicationBanner from "@/components/ExecutiveApplicationBanner"
 import Image from "next/image";
 import { useSettings } from "@/contexts/SettingsContext";
 
+// Helper function to normalize dates to start of day for consistent comparison
+const normalizeDate = (dateString) => {
+  const date = new Date(dateString);
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+};
+
 export default function Home() {
   const [events, setEvents] = useState([]);
-  const { executiveApplicationsOpen, settingsLoaded } = useSettings();
+  const { settings, settingsLoaded } = useSettings();
+  const executiveApplicationsOpen =
+    settings?.executiveApplicationsOpen || false;
 
   useEffect(() => {
     document.title = "FinTech Calgary";
@@ -33,10 +41,15 @@ export default function Home() {
           const data = await response.json();
 
           const currentDate = new Date();
+          const normalizedCurrentDate = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            currentDate.getDate()
+          );
 
           // Filter only upcoming events
           const upcomingEvents = data.filter(
-            (event) => new Date(event.date) >= currentDate
+            (event) => normalizeDate(event.date) >= normalizedCurrentDate
           );
 
           if (isMounted) {

@@ -12,7 +12,7 @@ export async function DELETE(req, { params }) {
       });
     }
 
-    const { subscriberId } = params;
+    const { subscriberId } = await params; // Await params as required by Next.js 15
     const db = await connectToDatabase();
 
     const result = await db
