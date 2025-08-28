@@ -72,12 +72,12 @@ export default function Footer() {
               </li>
               <li className="pt-2">
                 <a
-                  href="mailto:info@fintechcalgary.com"
+                  href="mailto:fintechcalgary@gmail.com"
                   className="text-primary hover:text-purple-400 transition-colors duration-300 inline-flex items-center gap-2 group"
                 >
                   <FiMail className="w-4 h-4" />
                   <span className="group-hover:underline">
-                    info@fintechcalgary.com
+                    fintechcalgary@gmail.com
                   </span>
                 </a>
               </li>

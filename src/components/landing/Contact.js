@@ -142,10 +142,10 @@ export default function Contact() {
               Have questions? We&apos;d love to hear from you.
             </p>
             <a
-              href="mailto:info@fintechcalgary.com"
+              href="mailto:fintechcalgary@gmail.com"
               className="text-primary hover:text-purple-400 transition-colors duration-300 font-medium"
             >
-              info@fintechcalgary.com
+              fintechcalgary@gmail.com
             </a>
           </ContactCard>
 
