@@ -76,13 +76,9 @@ export default function ExecutiveApplicationPage() {
     if (!form.resumeFile) {
       errs.resumeFile = "Resume file is required";
     } else {
-      const allowedTypes = [
-        "application/pdf",
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      ];
+      const allowedTypes = ["application/pdf"];
       if (!allowedTypes.includes(form.resumeFile.type)) {
-        errs.resumeFile = "Please upload a PDF, DOC, or DOCX file";
+        errs.resumeFile = "Please upload a PDF file only";
       }
       if (form.resumeFile.size > 5 * 1024 * 1024) {
         // 5MB limit
@@ -105,11 +101,7 @@ export default function ExecutiveApplicationPage() {
   };
 
   const handleFile = (file) => {
-    const allowedTypes = [
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
+    const allowedTypes = ["application/pdf"];
     if (file && allowedTypes.includes(file.type)) {
       setForm({ ...form, resumeFile: file });
       setResumeFileName(file.name);
@@ -456,7 +448,7 @@ export default function ExecutiveApplicationPage() {
                       <input
                         id="resume-upload"
                         type="file"
-                        accept=".pdf,.doc,.docx"
+                        accept=".pdf"
                         onChange={handleFileChange}
                         className="hidden"
                       />
@@ -520,7 +512,7 @@ export default function ExecutiveApplicationPage() {
                               or drag and drop
                             </p>
                             <p className="text-xs text-gray-400">
-                              PDF, DOC, or DOCX (max 5MB)
+                              PDF only (max 5MB)
                             </p>
                           </div>
                         )}
