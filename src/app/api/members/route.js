@@ -3,6 +3,9 @@ import { createMember, getMembers } from "@/lib/models/member";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
 
+// Prevent caching
+export const dynamic = "force-dynamic";
+
 export async function POST(req) {
   try {
     const session = await getServerSession(authOptions);
@@ -47,10 +50,22 @@ export async function GET() {
   try {
     const db = await connectToDatabase();
     const members = await getMembers(db);
-    return new Response(JSON.stringify(members), { status: 200 });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
+    return new Response(JSON.stringify(members), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store",
+      },
     });
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
+        error: error.message,
+        headers: { "Cache-Control": "no-store" },
+      }),
+      {
+        status: 500,
+      }
+    );
   }
 }
