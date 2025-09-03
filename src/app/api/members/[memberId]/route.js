@@ -5,6 +5,9 @@ import { ObjectId } from "mongodb";
 
 import { updateMember, deleteMember } from "@/lib/models/member";
 
+// Prevent caching
+export const dynamic = "force-dynamic";
+
 export async function GET(req, context) {
   try {
     const { memberId } = await context.params;
@@ -20,12 +23,24 @@ export async function GET(req, context) {
       });
     }
 
-    return new Response(JSON.stringify(member), { status: 200 });
+    return new Response(JSON.stringify(member), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store",
+      },
+    });
   } catch (error) {
     console.error("GET /api/members/[memberId] - Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({
+        error: error.message,
+        headers: { "Cache-Control": "no-store" },
+      }),
+      {
+        status: 500,
+      }
+    );
   }
 }
 
