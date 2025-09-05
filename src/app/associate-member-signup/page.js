@@ -52,6 +52,7 @@ export default function AssociateMemberSignupPage() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [errors, setErrors] = useState({});
+  const [fileError, setFileError] = useState(null);
 
   const validateForm = () => {
     const newErrors = {};
@@ -214,7 +215,31 @@ export default function AssociateMemberSignupPage() {
   };
 
   const handleFile = (file) => {
-    if (file && file.type.startsWith("image/")) {
+    // Clear any previous file errors
+    setFileError(null);
+
+    // Check if file type is supported
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/svg+xml",
+    ];
+    const fileExtension = file.name.toLowerCase().split(".").pop();
+    const allowedExtensions = ["jpg", "jpeg", "png", "svg"];
+
+    if (
+      !allowedTypes.includes(file.type) &&
+      !allowedExtensions.includes(fileExtension)
+    ) {
+      setFileError("Please upload a logo in JPG, PNG, or SVG format only.");
+      return;
+    }
+
+    if (
+      file &&
+      (file.type.startsWith("image/") || file.type === "image/svg+xml")
+    ) {
       setFormData({ ...formData, logo: file });
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -304,10 +329,13 @@ export default function AssociateMemberSignupPage() {
                     </div>
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
                     <div className="mb-5">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Upload your Logo
+                      </label>
                       <input
                         id="logo-upload"
                         type="file"
-                        accept="image/*"
+                        accept=".jpg,.jpeg,.png,.svg,image/jpeg,image/png,image/svg+xml"
                         required
                         onChange={handleFileChange}
                         className="hidden"
@@ -354,16 +382,19 @@ export default function AssociateMemberSignupPage() {
                             </svg>
                             <p className="mb-2 text-sm text-gray-400">
                               <span className="font-semibold">
-                                Click to upload
+                                Click to upload your logo
                               </span>{" "}
                               or drag and drop
                             </p>
                             <p className="text-xs text-gray-400">
-                              SVG, PNG, JPG or GIF
+                              JPG, PNG, or SVG only
                             </p>
                           </div>
                         )}
                       </label>
+                      {fileError && (
+                        <p className="mt-2 text-sm text-red-400">{fileError}</p>
+                      )}
                     </div>
 
                     <div className="mb-5">
