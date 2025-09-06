@@ -3,10 +3,63 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { ObjectId } from "mongodb";
 
+export async function GET(req, context) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
+
+    const { memberId } = await context.params;
+    const db = await connectToDatabase();
+
+    // For associate members, they can only access their own data
+    // For admins, they can access any member's data
+    let query = { _id: new ObjectId(memberId) };
+
+    if (session.user.role === "associate") {
+      // Associate members can only access their own data
+      // We need to find the member by username since that's what we have in the session
+      const member = await db.collection("associateMembers").findOne({
+        username: session.user.username,
+      });
+
+      if (!member) {
+        return new Response(JSON.stringify({ error: "Member not found" }), {
+          status: 404,
+        });
+      }
+
+      // Use the member's actual ID for the query
+      query = { _id: member._id };
+    }
+
+    const member = await db.collection("associateMembers").findOne(query);
+
+    if (!member) {
+      return new Response(JSON.stringify({ error: "Member not found" }), {
+        status: 404,
+      });
+    }
+
+    // Remove sensitive data before sending
+    const { password, ...memberData } = member;
+
+    return new Response(JSON.stringify(memberData), { status: 200 });
+  } catch (error) {
+    console.error("GET /api/associateMember/[memberId] - Error:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+    });
+  }
+}
+
 export async function PUT(req, context) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== "admin") {
+    if (!session) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
@@ -16,10 +69,28 @@ export async function PUT(req, context) {
     const db = await connectToDatabase();
     const updates = await req.json();
 
+    // Determine which member to update based on user role
+    let memberQuery = { _id: new ObjectId(memberId) };
+
+    if (session.user.role === "associate") {
+      // Associate members can only update their own data
+      const member = await db.collection("associateMembers").findOne({
+        username: session.user.username,
+      });
+
+      if (!member) {
+        return new Response(JSON.stringify({ error: "Member not found" }), {
+          status: 404,
+        });
+      }
+
+      memberQuery = { _id: member._id };
+    }
+
     // Validate the member exists
-    const existingMember = await db.collection("associateMembers").findOne({
-      _id: new ObjectId(memberId),
-    });
+    const existingMember = await db
+      .collection("associateMembers")
+      .findOne(memberQuery);
 
     if (!existingMember) {
       return new Response(
@@ -68,15 +139,14 @@ export async function PUT(req, context) {
     }
 
     // Update the associate member
-    const result = await db.collection("associateMembers").updateOne(
-      { _id: new ObjectId(memberId) },
-      {
+    const result = await db
+      .collection("associateMembers")
+      .updateOne(memberQuery, {
         $set: {
           ...updates,
           updatedAt: new Date(),
         },
-      }
-    );
+      });
 
     if (result.matchedCount === 0) {
       return new Response(

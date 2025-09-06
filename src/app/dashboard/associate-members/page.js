@@ -20,7 +20,6 @@ import {
   FiArrowLeft,
   FiCheck,
   FiX,
-  FiBuilding,
 } from "react-icons/fi";
 import { SiLinkedin, SiFacebook, SiX } from "react-icons/si";
 import Navbar from "@/components/Navbar";
