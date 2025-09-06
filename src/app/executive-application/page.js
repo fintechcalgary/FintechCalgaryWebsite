@@ -4,6 +4,7 @@ import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { FiCheck, FiAlertCircle } from "react-icons/fi";
 import Image from "next/image";
+import logger from "@/lib/logger";
 
 export default function ExecutiveApplicationPage() {
   const [form, setForm] = useState({
@@ -22,6 +23,7 @@ export default function ExecutiveApplicationPage() {
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState(null);
   const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState(null);
   const [resumeFileName, setResumeFileName] = useState("");
   const [isDragOver, setIsDragOver] = useState(false);
   const [availableRoles, setAvailableRoles] = useState([]);
@@ -198,11 +200,64 @@ export default function ExecutiveApplicationPage() {
           otherCommitments: "",
         });
         setResumeFileName("");
+        setErrorMessage(null);
       } else {
+        const errorData = await res.json().catch(() => ({}));
         setStatus("error");
+
+        // Log API error
+        logger.logApiError(
+          "/api/executive-application",
+          new Error(errorData.error || "Unknown API error"),
+          {
+            name: form.name,
+            email: form.email,
+            role: form.role,
+            hasResume: !!form.resumeFile,
+          }
+        );
+
+        if (errorData.error) {
+          setErrorMessage(errorData.error);
+        } else {
+          setErrorMessage("Failed to submit application. Please try again.");
+        }
       }
-    } catch {
+    } catch (error) {
       setStatus("error");
+
+      // Log form submission error
+      logger.logFormError("executive_application", error, {
+        name: form.name,
+        email: form.email,
+        role: form.role,
+        hasResume: !!form.resumeFile,
+        resumeSize: form.resumeFile?.size,
+        resumeType: form.resumeFile?.type,
+      });
+
+      if (error.message === "Failed to upload resume") {
+        setErrorMessage(
+          "Failed to upload your resume. Please try again with a different file."
+        );
+        logger.logUploadError(form.resumeFile?.name || "unknown", error, {
+          size: form.resumeFile?.size,
+          type: form.resumeFile?.type,
+        });
+      } else if (
+        error.message.includes("network") ||
+        error.message.includes("fetch")
+      ) {
+        setErrorMessage(
+          "Network error. Please check your internet connection and try again."
+        );
+      } else if (error.message.includes("timeout")) {
+        setErrorMessage("Request timed out. Please try again.");
+      } else {
+        setErrorMessage(
+          "An unexpected error occurred. Please try again or contact support if the problem persists."
+        );
+      }
     } finally {
       setSubmitting(false);
     }
@@ -637,9 +692,38 @@ export default function ExecutiveApplicationPage() {
                     <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start max-w-4xl mx-auto mt-6">
                       <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
                       <div>
-                        <p className="text-red-400">
-                          Failed to submit application. Please check the form
-                          and try again.
+                        <h3 className="text-red-400 font-semibold mb-2">
+                          Application Submission Failed
+                        </h3>
+                        {errorMessage ? (
+                          <p className="text-red-400">{errorMessage}</p>
+                        ) : (
+                          <div>
+                            <p className="text-red-400 mb-2">
+                              Please correct the following issues and try again:
+                            </p>
+                            <ul className="text-red-400 text-sm space-y-1">
+                              <li>
+                                • Check that all required fields are filled out
+                              </li>
+                              <li>• Ensure your resume is in PDF format</li>
+                              <li>• Verify your email address is valid</li>
+                              <li>• Make sure your phone number is correct</li>
+                              <li>
+                                • Ensure all text fields are properly completed
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                        <p className="text-red-300 text-sm mt-3">
+                          If you continue to experience issues, please contact
+                          us at{" "}
+                          <a
+                            href="mailto:fintech.calgary@gmail.com"
+                            className="underline hover:text-red-200"
+                          >
+                            fintech.calgary@gmail.com
+                          </a>
                         </p>
                       </div>
                     </div>

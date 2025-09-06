@@ -6,6 +6,7 @@ import {
 import bcrypt from "bcryptjs";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
+import logger from "@/lib/logger";
 
 export async function POST(req) {
   try {
@@ -91,6 +92,13 @@ export async function POST(req) {
 
     return new Response(JSON.stringify(result), { status: 201 });
   } catch (error) {
+    // Log the error for monitoring
+    logger.logApiError("/api/associateMember", error, {
+      organizationName: organization.organizationName,
+      username: organization.username,
+      contactEmail: organization.contactEmail,
+    });
+
     return new Response(
       JSON.stringify({
         error: error.message || "Failed to create associate member",
@@ -113,6 +121,9 @@ export async function GET() {
     const associateMembers = await getAssociateMembers(db);
     return new Response(JSON.stringify(associateMembers), { status: 200 });
   } catch (error) {
+    // Log the error for monitoring
+    logger.logApiError("/api/associateMember (GET)", error, {});
+
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });

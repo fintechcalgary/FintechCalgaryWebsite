@@ -4,6 +4,7 @@ import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { FaEnvelope } from "react-icons/fa";
 import { FiCheck, FiAlertCircle } from "react-icons/fi";
+import logger from "@/lib/logger";
 
 export default function AssociateMemberSignupPage() {
   useEffect(() => {
@@ -53,6 +54,7 @@ export default function AssociateMemberSignupPage() {
   const [isDragOver, setIsDragOver] = useState(false);
   const [errors, setErrors] = useState({});
   const [fileError, setFileError] = useState(null);
+  const [generalError, setGeneralError] = useState(null);
 
   const validateForm = () => {
     const newErrors = {};
@@ -165,9 +167,21 @@ export default function AssociateMemberSignupPage() {
         password: "",
       });
       setErrors({});
+      setGeneralError(null);
     } catch (error) {
       setSubmitStatus("error");
       const newErrors = {};
+      let errorMessage = null;
+
+      // Log the error for monitoring
+      logger.logFormError("associate_member_signup", error, {
+        organizationName: formData.organizationName,
+        username: formData.username,
+        contactEmail: formData.contactEmail,
+        hasLogo: !!formData.logo,
+        logoSize: formData.logo?.size,
+        logoType: formData.logo?.type,
+      });
 
       if (error.message === "Username already exists") {
         newErrors.username = "This username is already taken";
@@ -182,9 +196,28 @@ export default function AssociateMemberSignupPage() {
         error.message === "Username must be at least 3 characters long"
       ) {
         newErrors.username = "Username must be at least 3 characters long";
+      } else if (error.message === "Upload failed") {
+        errorMessage =
+          "Failed to upload your logo. Please try again with a different file.";
+        logger.logUploadError(formData.logo?.name || "unknown", error, {
+          size: formData.logo?.size,
+          type: formData.logo?.type,
+        });
+      } else if (
+        error.message.includes("network") ||
+        error.message.includes("fetch")
+      ) {
+        errorMessage =
+          "Network error. Please check your internet connection and try again.";
+      } else if (error.message.includes("timeout")) {
+        errorMessage = "Request timed out. Please try again.";
+      } else {
+        errorMessage =
+          "An unexpected error occurred. Please try again or contact support if the problem persists.";
       }
 
       setErrors(newErrors);
+      setGeneralError(errorMessage);
 
       // Scroll to first error if any backend validation errors exist
       if (Object.keys(newErrors).length > 0) {
@@ -735,9 +768,44 @@ export default function AssociateMemberSignupPage() {
                     <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start max-w-4xl mx-auto mt-6">
                       <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
                       <div>
-                        <p className="text-red-400">
-                          Failed to submit application. Please check the form
-                          and try again.
+                        <h3 className="text-red-400 font-semibold mb-2">
+                          Application Submission Failed
+                        </h3>
+                        {generalError ? (
+                          <p className="text-red-400">{generalError}</p>
+                        ) : (
+                          <div>
+                            <p className="text-red-400 mb-2">
+                              Please correct the following issues and try again:
+                            </p>
+                            <ul className="text-red-400 text-sm space-y-1">
+                              <li>
+                                • Check that all required fields are filled out
+                              </li>
+                              <li>
+                                • Ensure your logo is in JPG, PNG, or SVG format
+                              </li>
+                              <li>• Verify your email address is valid</li>
+                              <li>
+                                • Make sure your username is unique and at least
+                                3 characters
+                              </li>
+                              <li>
+                                • Ensure your password is at least 6 characters
+                                long
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                        <p className="text-red-300 text-sm mt-3">
+                          If you continue to experience issues, please contact
+                          us at{" "}
+                          <a
+                            href="mailto:fintech.calgary@gmail.com"
+                            className="underline hover:text-red-200"
+                          >
+                            fintech.calgary@gmail.com
+                          </a>
                         </p>
                       </div>
                     </div>
