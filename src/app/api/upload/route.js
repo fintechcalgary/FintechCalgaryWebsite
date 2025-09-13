@@ -3,12 +3,33 @@ import cloudinary from "@/lib/cloudinary";
 
 export async function POST(req) {
   try {
+    // Check if Cloudinary is configured
+    if (
+      !process.env.CLOUDINARY_CLOUD_NAME ||
+      !process.env.CLOUDINARY_API_KEY ||
+      !process.env.CLOUDINARY_API_SECRET
+    ) {
+      console.error("Cloudinary configuration missing");
+      return NextResponse.json(
+        { error: "File upload service not configured" },
+        { status: 500 }
+      );
+    }
+
     const data = await req.formData();
     const file = data.get("file");
     const folder = data.get("folder"); // currently optional but eventually migrate to folder structure
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    // Validate file size (10MB limit)
+    if (file.size > 10 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: "File too large. Maximum size is 10MB" },
+        { status: 400 }
+      );
     }
 
     // Convert the file to a buffer

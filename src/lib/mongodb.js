@@ -5,6 +5,10 @@ let client;
 let clientPromise;
 
 if (!global._mongoClientPromise) {
+  if (!process.env.MONGODB_URI) {
+    throw new Error("MONGODB_URI environment variable is not set");
+  }
+
   client = new MongoClient(process.env.MONGODB_URI, {
     ssl: true,
     tls: true,

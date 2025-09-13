@@ -13,6 +13,23 @@ export async function POST(req) {
     const db = await connectToDatabase();
     const organization = await req.json();
 
+    // Validate required fields
+    if (
+      !organization.organizationName ||
+      !organization.username ||
+      !organization.password
+    ) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "Missing required fields: organizationName, username, and password are required",
+        }),
+        {
+          status: 400,
+        }
+      );
+    }
+
     // Validate password length
     if (!organization.password || organization.password.length < 6) {
       return new Response(

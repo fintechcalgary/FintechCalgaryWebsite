@@ -21,6 +21,8 @@ export default withAuth(
       (req.nextUrl.pathname.startsWith("/api/contact") &&
         req.method === "POST") ||
       (req.nextUrl.pathname.startsWith("/api/subscribe") &&
+        req.method === "POST") ||
+      (req.nextUrl.pathname.startsWith("/api/associateMember") &&
         req.method === "POST");
 
     // Allow GET requests to /api/settings without authentication
