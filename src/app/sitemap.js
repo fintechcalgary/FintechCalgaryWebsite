@@ -28,6 +28,8 @@ export default async function sitemap() {
     "/partners",
     "/contact",
     "/join",
+    "/terms",
+    "/privacy",
   ].map((route) => ({
     url: `https://fintechcalgary.ca${route}`,
     lastModified: new Date(),

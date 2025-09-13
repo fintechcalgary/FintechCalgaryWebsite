@@ -11,12 +11,14 @@
 /* Add these new styles */
 html {
   @apply scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80;
+  overscroll-behavior: none;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  overscroll-behavior: none;
 }
 
 /* Modern Input Styles */

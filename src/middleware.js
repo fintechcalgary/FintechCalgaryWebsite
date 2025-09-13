@@ -23,7 +23,15 @@ export default withAuth(
       (req.nextUrl.pathname.startsWith("/api/subscribe") &&
         req.method === "POST") ||
       (req.nextUrl.pathname.startsWith("/api/associateMember") &&
-        req.method === "POST");
+        req.method === "POST") ||
+      (req.nextUrl.pathname.startsWith("/api/events/") &&
+        req.nextUrl.pathname.endsWith("/register") &&
+        req.method === "POST") ||
+      (req.nextUrl.pathname.startsWith("/api/upload") &&
+        req.method === "POST") ||
+      (req.nextUrl.pathname.startsWith("/api/auth/register") &&
+        req.method === "POST") ||
+      (req.nextUrl.pathname.startsWith("/api/logs") && req.method === "POST");
 
     // Allow GET requests to /api/settings without authentication
     if (
@@ -135,6 +143,12 @@ export const config = {
     "/api/associateMember/:path*",
     "/api/members/:path*",
     "/api/subscribers/:path*",
+    "/api/events/:path*",
+    "/api/upload/:path*",
+    "/api/auth/:path*",
+    "/api/logs/:path*",
+    "/api/contact/:path*",
+    "/api/subscribe/:path*",
     // Protect dashboard routes
     "/dashboard/:path*",
   ],

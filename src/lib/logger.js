@@ -111,6 +111,9 @@ class Logger {
       // Option 1: Send to your own logging endpoint
       if (process.env.LOGGING_ENDPOINT) {
         await this.sendToLoggingEndpoint(errorInfo);
+      } else {
+        // Default: Send to the built-in logging endpoint
+        await this.sendToLoggingEndpoint(errorInfo);
       }
 
       // Option 2: Send to external service (uncomment and configure as needed)
@@ -127,16 +130,32 @@ class Logger {
    * Send error to custom logging endpoint
    */
   async sendToLoggingEndpoint(errorInfo) {
-    const response = await fetch("/api/logs", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(errorInfo),
-    });
+    try {
+      // For server-side logging, we need to use the full URL
+      const baseUrl =
+        process.env.NEXTAUTH_URL ||
+        process.env.VERCEL_URL ||
+        "http://localhost:3000";
+      const loggingUrl = `${baseUrl}/api/logs`;
 
-    if (!response.ok) {
-      throw new Error(`Logging endpoint returned ${response.status}`);
+      const response = await fetch(loggingUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(errorInfo),
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Logging endpoint returned ${response.status}: ${response.statusText}`
+        );
+      }
+
+      console.log("✅ Error sent to logging endpoint successfully");
+    } catch (fetchError) {
+      console.error("Failed to send error to logging endpoint:", fetchError);
+      throw fetchError;
     }
   }
 

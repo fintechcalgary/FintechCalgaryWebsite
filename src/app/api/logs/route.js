@@ -17,8 +17,11 @@ export async function POST(request) {
       );
     }
 
-    // In production, you might want to store errors in a database
-    if (process.env.NODE_ENV === "production") {
+    // Store errors in database (can be enabled for development testing too)
+    if (
+      process.env.NODE_ENV === "production" ||
+      process.env.ENABLE_DB_LOGGING === "true"
+    ) {
       await logToDatabase(errorData);
     }
 
@@ -47,7 +50,7 @@ export async function POST(request) {
  */
 async function logToDatabase(errorData) {
   try {
-    const { db } = await connectToDatabase();
+    const db = await connectToDatabase();
 
     // Create error log document
     const errorLog = {
@@ -58,6 +61,7 @@ async function logToDatabase(errorData) {
 
     // Store in errors collection
     await db.collection("errorLogs").insertOne(errorLog);
+    console.log("✅ Error logged to database successfully");
   } catch (dbError) {
     console.error("Failed to store error in database:", dbError);
     // Don't throw - we don't want logging failures to break the app
