@@ -44,7 +44,7 @@ export default function ExecutiveApplicationBanner() {
   // Always render the banner, but control visibility with CSS
   return (
     <div
-      className={`fixed bottom-4 sm:bottom-6 left-4 right-4 sm:left-1/2 sm:right-auto sm:transform sm:-translate-x-1/2 z-50 transition-all duration-500 ease-in-out ${
+      className={`fixed bottom-4 sm:bottom-6 left-4 right-4 sm:left-1/2 sm:right-auto sm:transform sm:-translate-x-1/2 z-[60] transition-all duration-500 ease-in-out ${
         isVisible && !isLoading && applicationsOpen
           ? "opacity-100 translate-y-0"
           : "opacity-0 translate-y-4"

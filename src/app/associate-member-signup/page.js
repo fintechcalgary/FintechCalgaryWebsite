@@ -536,7 +536,7 @@ export default function AssociateMemberSignupPage() {
                     <div className="grid grid-cols-1 gap-4 mb-5">
                       <input
                         type="text"
-                        placeholder="Title"
+                        placeholder="Title / Position"
                         value={formData.title}
                         onChange={(e) =>
                           setFormData({ ...formData, title: e.target.value })
