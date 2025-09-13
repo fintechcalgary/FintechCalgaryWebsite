@@ -254,6 +254,37 @@ export default function AssociateMembersPage() {
     }
   };
 
+  const handleDownloadLogo = async (member) => {
+    try {
+      if (!member.logo) {
+        alert("No logo available for this member.");
+        return;
+      }
+
+      // Create a temporary anchor element to trigger download
+      const link = document.createElement("a");
+      link.href = member.logo;
+
+      // Extract filename from URL or create one
+      const urlParts = member.logo.split("/");
+      const filename = urlParts[urlParts.length - 1];
+      const cleanFilename = filename.includes(".")
+        ? filename
+        : `${member.organizationName.replace(/[^a-zA-Z0-9]/g, "_")}_logo.jpg`;
+
+      link.download = cleanFilename;
+      link.target = "_blank";
+
+      // Append to body, click, and remove
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading logo:", error);
+      alert("Failed to download logo. Please try again.");
+    }
+  };
+
   const downloadCSV = () => {
     const headers = [
       "Organization Name",
@@ -487,6 +518,18 @@ export default function AssociateMembersPage() {
                   </div>
 
                   <div className="flex gap-2 flex-shrink-0">
+                    {member.logo && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDownloadLogo(member);
+                        }}
+                        className="text-gray-400 hover:text-blue-400 transition-all duration-200 p-2 rounded-lg hover:bg-blue-500/10 hover:scale-105 relative z-20 border border-transparent hover:border-blue-500/20"
+                        title="Download Logo"
+                      >
+                        <FiDownload className="w-4 h-4" />
+                      </button>
+                    )}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();

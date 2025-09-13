@@ -52,6 +52,24 @@ export default function PartnersPage() {
         "https://www.helcim.com/partners/fintechcalgary/?af=3a785c9580a52b",
       color: "#eab308",
     },
+    {
+      name: "Legal Bridge",
+      logo: "/partners/legal-bridge.png",
+      description:
+        "Legal Bridge is a student-run organization at the University of Calgary aiming to support aspiring law\
+        students navigate the journey from undergraduate studies to law school as well as explore new\
+        advancements in the legal field.",
+      website: "https://www.linkedin.com/company/legal-bridgeuofc/",
+      color: "#104ee6",
+    },
+    {
+      name: "UCFSA",
+      logo: "/partners/ucfsa.png",
+      description:
+        "The University of Calgary Filipino Students' Association (UCFSA) is a student-run organization dedicated to celebrating and promoting Filipino culture within the University of Calgary community.",
+      website: "https://www.facebook.com/UCFSA/",
+      color: "#E8CB47",
+    },
   ];
 
   return (

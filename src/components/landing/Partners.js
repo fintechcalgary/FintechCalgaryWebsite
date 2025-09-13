@@ -32,6 +32,16 @@ export default function Partners() {
       logo: "/partners/helcim.png",
       color: "#eab308",
     },
+    {
+      name: "Legal Bridge",
+      logo: "/partners/legal-bridge.png",
+      color: "#104ee6",
+    },
+    {
+      name: "UCFSA",
+      logo: "/partners/ucfsa.png",
+      color: "#E8CB47",
+    },
   ];
 
   return (
