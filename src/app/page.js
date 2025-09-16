@@ -78,7 +78,7 @@ export default function Home() {
               alt="Globe"
               width={500}
               height={500}
-              className="absolute min-w-[100vw] min-h-[100vh] top-32 -right-32 max-md:min-w-[200vw] max-md:min-h-[200vh] max-md:-top-64 animate-rock opacity-80"
+              className="absolute min-w-[100vw] min-h-[100vh] top-32 -right-32 max-md:min-w-[200vw] max-md:min-h-[200vh] max-md:-top-64 opacity-100"
             />
           </div>
           <div className="text-center z-10 px-6 max-w-5xl mx-auto relative">

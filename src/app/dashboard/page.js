@@ -2,11 +2,12 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  ChartBarIcon,
-  ClockIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/outline";
+  faChartBar,
+  faClock,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import Navbar from "@/components/Navbar";
 import Events from "@/components/Events";
 import { useEffect, useState } from "react";
@@ -279,7 +280,7 @@ export default function DashboardPage() {
                   <p className="text-sm text-gray-400">Manage your schedule</p>
                 </div>
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary backdrop-blur-sm border border-primary/30">
-                  <ChartBarIcon className="h-6 w-6" />
+                  <FontAwesomeIcon icon={faChartBar} className="h-6 w-6" />
                 </span>
               </div>
 
@@ -290,7 +291,7 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center space-x-3">
                   <div className="hidden md:flex h-9 w-9 items-center justify-center rounded-xl bg-purple-700/20 text-purple-300 backdrop-blur-sm border border-purple-500/30">
-                    <ClockIcon className="h-5 w-5" />
+                    <FontAwesomeIcon icon={faClock} className="h-5 w-5" />
                   </div>
                   <div className="space-y-0.5">
                     <h3 className="text-sm font-semibold text-white">
@@ -328,7 +329,7 @@ export default function DashboardPage() {
                   </p>
                 </div>
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary backdrop-blur-sm border border-primary/30">
-                  <UserGroupIcon className="h-6 w-6" />
+                  <FontAwesomeIcon icon={faUsers} className="h-6 w-6" />
                 </span>
               </div>
               <Members />
