@@ -191,7 +191,9 @@ export default async function EventPage({ params }) {
                       <div className="flex items-center text-gray-300">
                         <FiCalendar className="w-6 h-6 mr-4 text-primary flex-shrink-0" />
                         <span className="text-lg">
-                          {new Date(event.date).toLocaleDateString("en-US", {
+                          {new Date(
+                            event.date + "T00:00:00"
+                          ).toLocaleDateString("en-US", {
                             weekday: "long",
                             year: "numeric",
                             month: "long",

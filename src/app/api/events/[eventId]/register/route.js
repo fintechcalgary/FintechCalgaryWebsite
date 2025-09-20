@@ -49,12 +49,15 @@ export async function POST(req, { params }) {
     const result = await registerForEvent(db, eventId, registrationData);
 
     // Format the date
-    const eventDate = new Date(event.date).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    const eventDate = new Date(event.date + "T00:00:00").toLocaleDateString(
+      "en-US",
+      {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }
+    );
 
     // Send confirmation email
     try {
