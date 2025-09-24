@@ -42,6 +42,16 @@ export default function Partners() {
       logo: "/partners/ucfsa.png",
       color: "#E8CB47",
     },
+    {
+      name: "Date with Tech",
+      logo: "/partners/date-with-tech.png",
+      color: "#00bfff",
+    },
+    {
+      name: "Beyond the Lab",
+      logo: "/partners/beyond-the-lab.png",
+      color: "#228b22",
+    },
   ];
 
   return (

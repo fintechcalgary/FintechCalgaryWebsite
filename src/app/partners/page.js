@@ -70,6 +70,22 @@ export default function PartnersPage() {
       website: "https://www.facebook.com/UCFSA/",
       color: "#E8CB47",
     },
+    {
+      name: "Date with Tech",
+      logo: "/partners/date-with-tech.png",
+      description:
+        "A platform dedicated to exploring emerging technologies and future innovations across industries. It brings together visionaries, business leaders, and technology experts to engage in discussions, showcase advancements, and connect with key players shaping the next wave of technological evolution.",
+      website: "https://datewithtech.com/dubai/",
+      color: "#00bfff",
+    },
+    {
+      name: "Beyond the Lab",
+      logo: "/partners/beyond-the-lab.png",
+      description:
+        "A student-led club that empowers science and health students to solve real-world healthcare challenges. Our mission is to give students the tools, networks, and experiences they need to become not just future researchers or clinicians, but problem solvers, innovators, and leaders in the health space and beyond!",
+      website: "https://beyondthelabclub.wixsite.com/beyond-the-lab",
+      color: "#228b22",
+    },
   ];
 
   return (
