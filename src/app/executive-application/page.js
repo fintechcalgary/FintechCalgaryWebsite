@@ -16,9 +16,6 @@ export default function ExecutiveApplicationPage() {
     linkedin: "",
     resumeFile: null,
     role: "",
-    why: "",
-    fintechVision: "",
-    otherCommitments: "",
   });
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState(null);
@@ -29,11 +26,53 @@ export default function ExecutiveApplicationPage() {
   const [availableRoles, setAvailableRoles] = useState([]);
   const [rolesLoading, setRolesLoading] = useState(true);
   const [applicationsOpen, setApplicationsOpen] = useState(false);
+  const [applicationQuestions, setApplicationQuestions] = useState([]);
+  const [selectedRoleQuestions, setSelectedRoleQuestions] = useState([]);
 
   useEffect(() => {
     fetchRoles();
     fetchSettings();
   }, []);
+
+  // Initialize form with dynamic question fields
+  useEffect(() => {
+    if (applicationQuestions.length > 0) {
+      const questionFields = {};
+      applicationQuestions.forEach((question) => {
+        questionFields[question.id] = "";
+      });
+      setForm((prev) => ({
+        ...prev,
+        ...questionFields,
+      }));
+    }
+  }, [applicationQuestions]);
+
+  // Update selected role questions when role changes
+  useEffect(() => {
+    if (form.role && availableRoles.length > 0) {
+      const selectedRole = availableRoles.find(
+        (role) => role.title === form.role
+      );
+      if (selectedRole && selectedRole.questions) {
+        setSelectedRoleQuestions(selectedRole.questions);
+
+        // Initialize form fields for role-specific questions
+        const questionFields = {};
+        selectedRole.questions.forEach((question) => {
+          questionFields[question.id] = form[question.id] || "";
+        });
+        setForm((prev) => ({
+          ...prev,
+          ...questionFields,
+        }));
+      } else {
+        setSelectedRoleQuestions([]);
+      }
+    } else {
+      setSelectedRoleQuestions([]);
+    }
+  }, [form.role, availableRoles]);
 
   const fetchRoles = async () => {
     try {
@@ -56,6 +95,7 @@ export default function ExecutiveApplicationPage() {
       if (response.ok) {
         const data = await response.json();
         setApplicationsOpen(!!data.executiveApplicationsOpen);
+        setApplicationQuestions(data.executiveApplicationQuestions || []);
       }
     } catch (err) {
       console.error("Error fetching settings:", err);
@@ -69,10 +109,17 @@ export default function ExecutiveApplicationPage() {
     if (!form.role) errs.role = "Role is required";
     if (!form.program) errs.program = "Program/Major is required";
     if (!form.year) errs.year = "Year is required";
-    if (!form.why) errs.why = "This field is required";
-    if (!form.fintechVision) errs.fintechVision = "This field is required";
-    if (!form.otherCommitments)
-      errs.otherCommitments = "This field is required";
+
+    // Validate role-specific questions first, then fallback to general questions
+    const questionsToValidate =
+      selectedRoleQuestions.length > 0
+        ? selectedRoleQuestions
+        : applicationQuestions;
+    questionsToValidate.forEach((question) => {
+      if (question.required && !form[question.id]) {
+        errs[question.id] = `${question.label} is required`;
+      }
+    });
 
     // Resume file validation
     if (!form.resumeFile) {
@@ -584,100 +631,161 @@ export default function ExecutiveApplicationPage() {
                     </div>
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
 
-                    <div className="flex gap-x-2 mb-2">
-                      <div className="w-full">
-                        <label
-                          htmlFor="why"
-                          className="block text-sm font-medium text-gray-300 mb-2"
-                        >
-                          Why do you want to be an executive?
-                        </label>
-                        <textarea
-                          id="why"
-                          name="why"
-                          value={form.why}
-                          onChange={handleChange}
-                          placeholder="Please share your motivation for joining the executive team..."
-                          rows={4}
-                          className={`${inputClassName} min-h-40 resize-none ${
-                            errors.why
-                              ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                              : ""
-                          }`}
-                          required
-                        />
-                      </div>
-                    </div>
+                    {selectedRoleQuestions.length > 0 ||
+                    applicationQuestions.length > 0 ? (
+                      (selectedRoleQuestions.length > 0
+                        ? selectedRoleQuestions
+                        : applicationQuestions
+                      ).map((question, index) => (
+                        <div key={question.id} className="flex gap-x-2 mb-2">
+                          <div className="w-full">
+                            <label
+                              htmlFor={question.id}
+                              className="block text-sm font-medium text-gray-300 mb-2"
+                            >
+                              {question.label}
+                              {question.required && (
+                                <span className="text-red-400 ml-1">*</span>
+                              )}
+                            </label>
+                            <textarea
+                              id={question.id}
+                              name={question.id}
+                              value={form[question.id] || ""}
+                              onChange={handleChange}
+                              placeholder={question.placeholder}
+                              rows={4}
+                              className={`${inputClassName} min-h-40 resize-none ${
+                                errors[question.id]
+                                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                                  : ""
+                              }`}
+                              required={question.required}
+                            />
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      // Fallback to default questions if no custom questions are set
+                      <>
+                        <div className="flex gap-x-2 mb-2">
+                          <div className="w-full">
+                            <label
+                              htmlFor="why"
+                              className="block text-sm font-medium text-gray-300 mb-2"
+                            >
+                              Why do you want to be an executive?
+                            </label>
+                            <textarea
+                              id="why"
+                              name="why"
+                              value={form.why || ""}
+                              onChange={handleChange}
+                              placeholder="Please share your motivation for joining the executive team..."
+                              rows={4}
+                              className={`${inputClassName} min-h-40 resize-none ${
+                                errors.why
+                                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                                  : ""
+                              }`}
+                              required
+                            />
+                          </div>
+                        </div>
 
-                    {errors.why && (
-                      <p className="mt-1 text-sm text-red-400">{errors.why}</p>
+                        <div className="flex gap-x-2 mb-2">
+                          <div className="w-full">
+                            <label
+                              htmlFor="fintechVision"
+                              className="block text-sm font-medium text-gray-300 mb-2"
+                            >
+                              What does &apos;fintech&apos; mean to you, and how
+                              do you see its role in the future of business and
+                              innovation?
+                            </label>
+                            <textarea
+                              id="fintechVision"
+                              name="fintechVision"
+                              value={form.fintechVision || ""}
+                              onChange={handleChange}
+                              placeholder="Please share your understanding of fintech and your vision for its future..."
+                              rows={4}
+                              className={`${inputClassName} min-h-40 resize-none ${
+                                errors.fintechVision
+                                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                                  : ""
+                              }`}
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex gap-x-2 mb-2">
+                          <div className="w-full">
+                            <label
+                              htmlFor="otherCommitments"
+                              className="block text-sm font-medium text-gray-300 mb-2"
+                            >
+                              Are you currently involved with any other clubs or
+                              commitments? How do you plan to balance your
+                              responsibilities?
+                            </label>
+                            <textarea
+                              id="otherCommitments"
+                              name="otherCommitments"
+                              value={form.otherCommitments || ""}
+                              onChange={handleChange}
+                              placeholder="Please describe your current commitments and how you plan to manage your time..."
+                              rows={4}
+                              className={`${inputClassName} min-h-40 resize-none ${
+                                errors.otherCommitments
+                                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                                  : ""
+                              }`}
+                              required
+                            />
+                          </div>
+                        </div>
+                      </>
                     )}
 
-                    <div className="flex gap-x-2 mb-2">
-                      <div className="w-full">
-                        <label
-                          htmlFor="fintechVision"
-                          className="block text-sm font-medium text-gray-300 mb-2"
-                        >
-                          What does &apos;fintech&apos; mean to you, and how do
-                          you see its role in the future of business and
-                          innovation?
-                        </label>
-                        <textarea
-                          id="fintechVision"
-                          name="fintechVision"
-                          value={form.fintechVision}
-                          onChange={handleChange}
-                          placeholder="Please share your understanding of fintech and your vision for its future..."
-                          rows={4}
-                          className={`${inputClassName} min-h-40 resize-none ${
-                            errors.fintechVision
-                              ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                              : ""
-                          }`}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    {errors.fintechVision && (
-                      <p className="mt-1 text-sm text-red-400">
-                        {errors.fintechVision}
-                      </p>
+                    {/* Display errors for dynamic questions */}
+                    {(selectedRoleQuestions.length > 0
+                      ? selectedRoleQuestions
+                      : applicationQuestions
+                    ).map(
+                      (question) =>
+                        errors[question.id] && (
+                          <p
+                            key={`error-${question.id}`}
+                            className="mt-1 text-sm text-red-400"
+                          >
+                            {errors[question.id]}
+                          </p>
+                        )
                     )}
 
-                    <div className="flex gap-x-2 mb-2">
-                      <div className="w-full">
-                        <label
-                          htmlFor="otherCommitments"
-                          className="block text-sm font-medium text-gray-300 mb-2"
-                        >
-                          Are you currently involved with any other clubs or
-                          commitments? How do you plan to balance your
-                          responsibilities?
-                        </label>
-                        <textarea
-                          id="otherCommitments"
-                          name="otherCommitments"
-                          value={form.otherCommitments}
-                          onChange={handleChange}
-                          placeholder="Please describe your current commitments and how you plan to manage your time..."
-                          rows={4}
-                          className={`${inputClassName} min-h-40 resize-none ${
-                            errors.otherCommitments
-                              ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                              : ""
-                          }`}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    {errors.otherCommitments && (
-                      <p className="mt-1 text-sm text-red-400">
-                        {errors.otherCommitments}
-                      </p>
-                    )}
+                    {/* Display errors for fallback questions */}
+                    {selectedRoleQuestions.length === 0 &&
+                      applicationQuestions.length === 0 && (
+                        <>
+                          {errors.why && (
+                            <p className="mt-1 text-sm text-red-400">
+                              {errors.why}
+                            </p>
+                          )}
+                          {errors.fintechVision && (
+                            <p className="mt-1 text-sm text-red-400">
+                              {errors.fintechVision}
+                            </p>
+                          )}
+                          {errors.otherCommitments && (
+                            <p className="mt-1 text-sm text-red-400">
+                              {errors.otherCommitments}
+                            </p>
+                          )}
+                        </>
+                      )}
 
                     <button
                       type="submit"

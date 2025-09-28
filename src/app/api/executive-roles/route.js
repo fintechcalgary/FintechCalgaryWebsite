@@ -25,10 +25,31 @@ export async function POST(req) {
       );
     }
 
+    // Validate questions if provided
+    if (data.questions && !Array.isArray(data.questions)) {
+      return NextResponse.json(
+        { error: "Questions must be an array" },
+        { status: 400 }
+      );
+    }
+
+    // Validate each question
+    if (data.questions) {
+      for (const question of data.questions) {
+        if (!question.id || !question.label) {
+          return NextResponse.json(
+            { error: "Each question must have an id and label" },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
     const db = await connectToDatabase();
     const result = await db.collection("executiveRoles").insertOne({
       title: data.title,
       responsibilitiesImageUrl: data.responsibilitiesImageUrl,
+      questions: data.questions || [],
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -77,7 +98,7 @@ export async function PUT(req) {
     }
 
     const data = await req.json();
-    const { id, title, responsibilitiesImageUrl } = data;
+    const { id, title, responsibilitiesImageUrl, questions } = data;
 
     if (!id || !title || !responsibilitiesImageUrl) {
       return NextResponse.json(
@@ -86,15 +107,42 @@ export async function PUT(req) {
       );
     }
 
+    // Validate questions if provided
+    if (questions && !Array.isArray(questions)) {
+      return NextResponse.json(
+        { error: "Questions must be an array" },
+        { status: 400 }
+      );
+    }
+
+    // Validate each question
+    if (questions) {
+      for (const question of questions) {
+        if (!question.id || !question.label) {
+          return NextResponse.json(
+            { error: "Each question must have an id and label" },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
     const db = await connectToDatabase();
+    const updateData = {
+      title,
+      responsibilitiesImageUrl,
+      updatedAt: new Date(),
+    };
+
+    // Only update questions if provided
+    if (questions !== undefined) {
+      updateData.questions = questions;
+    }
+
     const result = await db.collection("executiveRoles").updateOne(
       { _id: new ObjectId(id) },
       {
-        $set: {
-          title,
-          responsibilitiesImageUrl,
-          updatedAt: new Date(),
-        },
+        $set: updateData,
       }
     );
 

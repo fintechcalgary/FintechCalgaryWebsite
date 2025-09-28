@@ -8,7 +8,39 @@ export async function GET() {
     const db = await connectToDatabase();
     const settings = await db.collection("settings").findOne({});
 
-    return NextResponse.json(settings || { executiveApplicationsOpen: false });
+    // Default questions if none exist
+    const defaultQuestions = [
+      {
+        id: "why",
+        label: "Why do you want to be an executive?",
+        placeholder:
+          "Please share your motivation for joining the executive team...",
+        required: true,
+      },
+      {
+        id: "fintechVision",
+        label:
+          "What does 'fintech' mean to you, and how do you see its role in the future of business and innovation?",
+        placeholder:
+          "Please share your understanding of fintech and your vision for its future...",
+        required: true,
+      },
+      {
+        id: "otherCommitments",
+        label:
+          "Are you currently involved with any other clubs or commitments? How do you plan to balance your responsibilities?",
+        placeholder:
+          "Please describe your current commitments and how you plan to manage your time...",
+        required: true,
+      },
+    ];
+
+    return NextResponse.json(
+      settings || {
+        executiveApplicationsOpen: false,
+        executiveApplicationQuestions: defaultQuestions,
+      }
+    );
   } catch (error) {
     console.error("Error fetching settings:", error);
     return NextResponse.json(
@@ -30,23 +62,55 @@ export async function PUT(request) {
     }
 
     const body = await request.json();
-    const { executiveApplicationsOpen } = body;
+    const { executiveApplicationsOpen, executiveApplicationQuestions } = body;
 
     // Validate the input
-    if (typeof executiveApplicationsOpen !== "boolean") {
+    if (
+      executiveApplicationsOpen !== undefined &&
+      typeof executiveApplicationsOpen !== "boolean"
+    ) {
       return NextResponse.json(
         { error: "executiveApplicationsOpen must be a boolean" },
         { status: 400 }
       );
     }
 
+    // Validate questions if provided
+    if (executiveApplicationQuestions !== undefined) {
+      if (!Array.isArray(executiveApplicationQuestions)) {
+        return NextResponse.json(
+          { error: "executiveApplicationQuestions must be an array" },
+          { status: 400 }
+        );
+      }
+
+      // Validate each question
+      for (const question of executiveApplicationQuestions) {
+        if (!question.id || !question.label) {
+          return NextResponse.json(
+            { error: "Each question must have an id and label" },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
     const db = await connectToDatabase();
+
+    // Build update object
+    const updateData = {};
+    if (executiveApplicationsOpen !== undefined) {
+      updateData.executiveApplicationsOpen = executiveApplicationsOpen;
+    }
+    if (executiveApplicationQuestions !== undefined) {
+      updateData.executiveApplicationQuestions = executiveApplicationQuestions;
+    }
 
     // Update or create settings document
     const result = await db.collection("settings").updateOne(
       {}, // Empty filter to match any document
       {
-        $set: { executiveApplicationsOpen },
+        $set: updateData,
         $setOnInsert: { createdAt: new Date() },
       },
       { upsert: true } // Create if doesn't exist
@@ -54,7 +118,7 @@ export async function PUT(request) {
 
     return NextResponse.json({
       success: true,
-      executiveApplicationsOpen,
+      ...updateData,
       message: "Settings updated successfully",
     });
   } catch (error) {

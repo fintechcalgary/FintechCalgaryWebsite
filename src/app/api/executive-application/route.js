@@ -5,23 +5,52 @@ import { ObjectId } from "mongodb";
 export async function POST(req) {
   try {
     const data = await req.json();
-    // Basic validation
-    if (
-      !data.name ||
-      !data.email ||
-      !data.program ||
-      !data.year ||
-      !data.why ||
-      !data.role ||
-      !data.fintechVision ||
-      !data.otherCommitments
-    ) {
+
+    // Get current questions from settings and role
+    const db = await connectToDatabase();
+    const settings = await db.collection("settings").findOne({});
+
+    // Get role-specific questions
+    const selectedRole = await db.collection("executiveRoles").findOne({
+      title: data.role,
+    });
+
+    // Default questions if none exist
+    const defaultQuestions = [
+      { id: "why", required: true },
+      { id: "fintechVision", required: true },
+      { id: "otherCommitments", required: true },
+    ];
+
+    // Use role-specific questions if available, otherwise use general questions
+    const questions =
+      selectedRole?.questions?.length > 0
+        ? selectedRole.questions
+        : settings?.executiveApplicationQuestions || defaultQuestions;
+
+    // Basic validation for required fields
+    const requiredFields = ["name", "email", "program", "year", "role"];
+    const missingFields = requiredFields.filter((field) => !data[field]);
+
+    if (missingFields.length > 0) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: `Missing required fields: ${missingFields.join(", ")}` },
         { status: 400 }
       );
     }
-    const db = await connectToDatabase();
+
+    // Validate dynamic questions
+    const missingQuestions = questions
+      .filter((question) => question.required && !data[question.id])
+      .map((question) => question.label || question.id);
+
+    if (missingQuestions.length > 0) {
+      return NextResponse.json(
+        { error: `Missing required questions: ${missingQuestions.join(", ")}` },
+        { status: 400 }
+      );
+    }
+
     await db.collection("executiveApplications").insertOne({
       ...data,
       createdAt: new Date(),

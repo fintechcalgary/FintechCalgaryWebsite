@@ -49,6 +49,18 @@ export default function ExecutiveApplicationsPage() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
 
+  // Role-specific question management state
+  const [showRoleQuestionModal, setShowRoleQuestionModal] = useState(false);
+  const [roleQuestionForm, setRoleQuestionForm] = useState({
+    id: "",
+    label: "",
+    placeholder: "",
+    required: true,
+  });
+  const [editingRoleQuestion, setEditingRoleQuestion] = useState(null);
+  const [roleQuestionFormErrors, setRoleQuestionFormErrors] = useState({});
+  const [currentRoleForQuestions, setCurrentRoleForQuestions] = useState(null);
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
@@ -56,11 +68,12 @@ export default function ExecutiveApplicationsPage() {
   }, [status, router]);
 
   useEffect(() => {
-    if (session?.user?.role !== "admin") {
+    // Only redirect if session is loaded and user is not admin
+    if (status === "authenticated" && session?.user?.role !== "admin") {
       router.push("/dashboard");
       return;
     }
-  }, [session, router]);
+  }, [session, status, router]);
 
   useEffect(() => {
     document.title = "Executive Applications | FinTech Calgary";
@@ -467,6 +480,216 @@ export default function ExecutiveApplicationsPage() {
     document.body.removeChild(link);
   };
 
+  // Role-specific question management functions
+  const validateRoleQuestionForm = () => {
+    const errors = {};
+    if (!roleQuestionForm.label.trim()) {
+      errors.label = "Question label is required";
+    }
+    if (!roleQuestionForm.placeholder.trim()) {
+      errors.placeholder = "Placeholder text is required";
+    }
+    return errors;
+  };
+
+  const handleRoleQuestionFormChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setRoleQuestionForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+    // Clear error when user starts typing
+    if (roleQuestionFormErrors[name]) {
+      setRoleQuestionFormErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  const openRoleQuestionModal = (role, question = null) => {
+    setCurrentRoleForQuestions(role);
+    if (question) {
+      setEditingRoleQuestion(question);
+      setRoleQuestionForm({
+        id: question.id,
+        label: question.label,
+        placeholder: question.placeholder,
+        required: question.required,
+      });
+    } else {
+      setEditingRoleQuestion(null);
+      setRoleQuestionForm({
+        id: `question_${Date.now()}`, // Auto-generate ID
+        label: "",
+        placeholder: "",
+        required: true,
+      });
+    }
+    setRoleQuestionFormErrors({});
+    setShowRoleQuestionModal(true);
+  };
+
+  const closeRoleQuestionModal = () => {
+    setShowRoleQuestionModal(false);
+    setEditingRoleQuestion(null);
+    setCurrentRoleForQuestions(null);
+    setRoleQuestionForm({
+      id: `question_${Date.now()}`, // Auto-generate ID
+      label: "",
+      placeholder: "",
+      required: true,
+    });
+    setRoleQuestionFormErrors({});
+  };
+
+  const handleAddRoleQuestion = async () => {
+    const errors = validateRoleQuestionForm();
+    if (Object.keys(errors).length > 0) {
+      setRoleQuestionFormErrors(errors);
+      return;
+    }
+
+    // Auto-generate unique ID if needed
+    if (
+      !roleQuestionForm.id ||
+      currentRoleForQuestions.questions?.some(
+        (q) => q.id === roleQuestionForm.id
+      )
+    ) {
+      roleQuestionForm.id = `question_${Date.now()}_${Math.random()
+        .toString(36)
+        .substr(2, 9)}`;
+    }
+
+    try {
+      const newQuestions = [
+        ...(currentRoleForQuestions.questions || []),
+        roleQuestionForm,
+      ];
+      const response = await fetch("/api/executive-roles", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: currentRoleForQuestions._id,
+          title: currentRoleForQuestions.title,
+          responsibilitiesImageUrl:
+            currentRoleForQuestions.responsibilitiesImageUrl,
+          questions: newQuestions,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save role questions");
+      }
+
+      // Update the role in the local state
+      setRoles(
+        roles.map((role) =>
+          role._id === currentRoleForQuestions._id
+            ? { ...role, questions: newQuestions }
+            : role
+        )
+      );
+      closeRoleQuestionModal();
+    } catch (error) {
+      console.error("Error adding role question:", error);
+      setRoleQuestionFormErrors({ general: "Failed to add question" });
+    }
+  };
+
+  const handleEditRoleQuestion = async () => {
+    const errors = validateRoleQuestionForm();
+    if (Object.keys(errors).length > 0) {
+      setRoleQuestionFormErrors(errors);
+      return;
+    }
+
+    // Auto-generate unique ID if needed (for new questions only)
+    if (
+      !editingRoleQuestion &&
+      (!roleQuestionForm.id ||
+        currentRoleForQuestions.questions?.some(
+          (q) => q.id === roleQuestionForm.id
+        ))
+    ) {
+      roleQuestionForm.id = `question_${Date.now()}_${Math.random()
+        .toString(36)
+        .substr(2, 9)}`;
+    }
+
+    try {
+      const newQuestions = (currentRoleForQuestions.questions || []).map((q) =>
+        q === editingRoleQuestion ? roleQuestionForm : q
+      );
+      const response = await fetch("/api/executive-roles", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: currentRoleForQuestions._id,
+          title: currentRoleForQuestions.title,
+          responsibilitiesImageUrl:
+            currentRoleForQuestions.responsibilitiesImageUrl,
+          questions: newQuestions,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save role questions");
+      }
+
+      // Update the role in the local state
+      setRoles(
+        roles.map((role) =>
+          role._id === currentRoleForQuestions._id
+            ? { ...role, questions: newQuestions }
+            : role
+        )
+      );
+      closeRoleQuestionModal();
+    } catch (error) {
+      console.error("Error editing role question:", error);
+      setRoleQuestionFormErrors({ general: "Failed to edit question" });
+    }
+  };
+
+  const handleDeleteRoleQuestion = async (role, questionToDelete) => {
+    try {
+      const newQuestions = (role.questions || []).filter(
+        (q) => q !== questionToDelete
+      );
+      const response = await fetch("/api/executive-roles", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: role._id,
+          title: role.title,
+          responsibilitiesImageUrl: role.responsibilitiesImageUrl,
+          questions: newQuestions,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete role question");
+      }
+
+      // Update the role in the local state
+      setRoles(
+        roles.map((r) =>
+          r._id === role._id ? { ...r, questions: newQuestions } : r
+        )
+      );
+    } catch (error) {
+      console.error("Error deleting role question:", error);
+    }
+  };
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -655,6 +878,84 @@ export default function ExecutiveApplicationsPage() {
                       </div>
                     </div>
 
+                    {/* Role Questions */}
+                    <div className="mt-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="text-gray-300 font-medium text-sm">
+                          Application Questions
+                        </h4>
+                        <button
+                          onClick={() => openRoleQuestionModal(role)}
+                          className="p-1.5 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-lg transition-all duration-200 hover:scale-105"
+                          title="Add Question"
+                        >
+                          <FiPlus className="w-3 h-3" />
+                        </button>
+                      </div>
+
+                      {role.questions && role.questions.length > 0 ? (
+                        <div className="space-y-2">
+                          {role.questions.map((question, index) => (
+                            <div
+                              key={question.id}
+                              className="bg-gray-800/30 rounded-lg p-3 flex items-start justify-between"
+                            >
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className="text-primary font-semibold text-xs">
+                                    Q{index + 1}
+                                  </span>
+                                  {question.required && (
+                                    <span className="px-1.5 py-0.5 text-xs font-semibold rounded-full bg-red-500/20 text-red-400">
+                                      Required
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-gray-300 text-xs font-medium mb-1">
+                                  {question.label}
+                                </p>
+                                <p className="text-gray-400 text-xs">
+                                  ID: {question.id}
+                                </p>
+                              </div>
+                              <div className="flex gap-1 ml-2">
+                                <button
+                                  onClick={() =>
+                                    openRoleQuestionModal(role, question)
+                                  }
+                                  className="p-1 text-primary hover:text-primary/80 hover:bg-primary/10 rounded transition-colors"
+                                  title="Edit Question"
+                                >
+                                  <FiEdit2 className="w-3 h-3" />
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    handleDeleteRoleQuestion(role, question)
+                                  }
+                                  className="p-1 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded transition-colors"
+                                  title="Delete Question"
+                                >
+                                  <FiTrash2 className="w-3 h-3" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="bg-gray-800/30 rounded-lg p-3 text-center">
+                          <p className="text-gray-400 text-xs mb-2">
+                            No custom questions for this role
+                          </p>
+                          <button
+                            onClick={() => openRoleQuestionModal(role)}
+                            className="text-primary hover:text-primary/80 text-xs font-medium"
+                          >
+                            Add first question
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
                     <div className="text-xs text-gray-400 pt-2 border-t border-gray-800">
                       Created: {formatDate(role.createdAt)}
                     </div>
@@ -724,7 +1025,10 @@ export default function ExecutiveApplicationsPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary">
+                          <span
+                            className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary max-w-[200px] truncate"
+                            title={application.role}
+                          >
                             {application.role}
                           </span>
                         </td>
@@ -783,7 +1087,10 @@ export default function ExecutiveApplicationsPage() {
                           <h3 className="text-white font-medium text-base mb-1">
                             {application.name}
                           </h3>
-                          <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary">
+                          <span
+                            className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary max-w-[150px] truncate"
+                            title={application.role}
+                          >
                             {application.role}
                           </span>
                         </div>
@@ -1245,77 +1552,121 @@ export default function ExecutiveApplicationsPage() {
                     Application Questions
                   </h4>
 
-                  {/* Why Executive */}
-                  <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6">
-                    <h5 className="text-primary font-semibold mb-3 flex items-center gap-2">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                        />
-                      </svg>
-                      Why do you want to be an executive?
-                    </h5>
-                    <div className="bg-gray-900/50 rounded-lg p-4 text-gray-300 leading-relaxed">
-                      {selectedApplication.why}
-                    </div>
-                  </div>
+                  {(() => {
+                    // Get questions for the selected role
+                    const selectedRole = roles.find(
+                      (role) => role.title === selectedApplication.role
+                    );
+                    const questionsToShow = selectedRole?.questions || [];
 
-                  {/* Fintech Vision */}
-                  <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6">
-                    <h5 className="text-primary font-semibold mb-3 flex items-center gap-2">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M13 10V3L4 14h7v7l9-11h-7z"
-                        />
-                      </svg>
-                      What does &apos;fintech&apos; mean to you, and how do you
-                      see its role in the future of business and innovation?
-                    </h5>
-                    <div className="bg-gray-900/50 rounded-lg p-4 text-gray-300 leading-relaxed">
-                      {selectedApplication.fintechVision}
-                    </div>
-                  </div>
+                    return questionsToShow.length > 0 ? (
+                      questionsToShow.map((question, index) => (
+                        <div
+                          key={question.id}
+                          className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6"
+                        >
+                          <h5 className="text-primary font-semibold mb-3 flex items-center gap-2">
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                            {question.label}
+                          </h5>
+                          <div className="bg-gray-900/50 rounded-lg p-4 text-gray-300 leading-relaxed">
+                            {selectedApplication[question.id] ||
+                              "No response provided"}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      // Fallback to default questions if no custom questions are set
+                      <>
+                        {/* Why Executive */}
+                        <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6">
+                          <h5 className="text-primary font-semibold mb-3 flex items-center gap-2">
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                              />
+                            </svg>
+                            Why do you want to be an executive?
+                          </h5>
+                          <div className="bg-gray-900/50 rounded-lg p-4 text-gray-300 leading-relaxed">
+                            {selectedApplication.why || "No response provided"}
+                          </div>
+                        </div>
 
-                  {/* Other Commitments */}
-                  <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6">
-                    <h5 className="text-primary font-semibold mb-3 flex items-center gap-2">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      Are you currently involved with any other clubs or
-                      commitments? How do you plan to balance your
-                      responsibilities?
-                    </h5>
-                    <div className="bg-gray-900/50 rounded-lg p-4 text-gray-300 leading-relaxed">
-                      {selectedApplication.otherCommitments}
-                    </div>
-                  </div>
+                        {/* Fintech Vision */}
+                        <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6">
+                          <h5 className="text-primary font-semibold mb-3 flex items-center gap-2">
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"
+                              />
+                            </svg>
+                            What does &apos;fintech&apos; mean to you, and how
+                            do you see its role in the future of business and
+                            innovation?
+                          </h5>
+                          <div className="bg-gray-900/50 rounded-lg p-4 text-gray-300 leading-relaxed">
+                            {selectedApplication.fintechVision ||
+                              "No response provided"}
+                          </div>
+                        </div>
+
+                        {/* Other Commitments */}
+                        <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6">
+                          <h5 className="text-primary font-semibold mb-3 flex items-center gap-2">
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                            Are you currently involved with any other clubs or
+                            commitments? How do you plan to balance your
+                            responsibilities?
+                          </h5>
+                          <div className="bg-gray-900/50 rounded-lg p-4 text-gray-300 leading-relaxed">
+                            {selectedApplication.otherCommitments ||
+                              "No response provided"}
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
             )}
@@ -1653,6 +2004,141 @@ export default function ExecutiveApplicationsPage() {
               >
                 <FiTrash2 className="w-4 h-4" />
                 Delete Role
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Role Question Modal */}
+      {showRoleQuestionModal && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4"
+          onClick={closeRoleQuestionModal}
+        >
+          <div
+            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-2xl w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-white">
+                {editingRoleQuestion ? "Edit Question" : "Add Question"} -{" "}
+                {currentRoleForQuestions?.title}
+              </h3>
+              <button
+                onClick={closeRoleQuestionModal}
+                className="text-gray-400 hover:text-white transition-colors p-1"
+              >
+                <FiX className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {roleQuestionFormErrors.general && (
+                <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
+                  <p className="text-red-400 text-sm">
+                    {roleQuestionFormErrors.general}
+                  </p>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Question Label *
+                </label>
+                <textarea
+                  name="label"
+                  value={roleQuestionForm.label}
+                  onChange={handleRoleQuestionFormChange}
+                  rows={3}
+                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors resize-none"
+                  placeholder="Enter the question text..."
+                />
+                {roleQuestionFormErrors.label && (
+                  <p className="text-red-400 text-xs mt-1">
+                    {roleQuestionFormErrors.label}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Placeholder Text *
+                </label>
+                <textarea
+                  name="placeholder"
+                  value={roleQuestionForm.placeholder}
+                  onChange={handleRoleQuestionFormChange}
+                  rows={2}
+                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors resize-none"
+                  placeholder="Enter placeholder text for the textarea..."
+                />
+                {roleQuestionFormErrors.placeholder && (
+                  <p className="text-red-400 text-xs mt-1">
+                    {roleQuestionFormErrors.placeholder}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gray-800/30 rounded-lg border border-gray-700/30">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="required"
+                    checked={roleQuestionForm.required}
+                    onChange={handleRoleQuestionFormChange}
+                    className="sr-only"
+                    id="role-required-checkbox"
+                  />
+                  <label
+                    htmlFor="role-required-checkbox"
+                    className="flex items-center justify-center w-4 h-4 border-2 border-gray-600 rounded cursor-pointer transition-colors hover:border-primary"
+                    style={{
+                      backgroundColor: roleQuestionForm.required
+                        ? "#8b5cf6"
+                        : "transparent",
+                    }}
+                  >
+                    {roleQuestionForm.required && (
+                      <svg
+                        className="w-3 h-3 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    )}
+                  </label>
+                </div>
+                <label
+                  htmlFor="role-required-checkbox"
+                  className="text-sm font-medium text-gray-300 cursor-pointer"
+                >
+                  Required question
+                </label>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 mt-6">
+              <button
+                onClick={closeRoleQuestionModal}
+                className="flex-1 px-4 py-2 rounded-lg bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300 text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={
+                  editingRoleQuestion
+                    ? handleEditRoleQuestion
+                    : handleAddRoleQuestion
+                }
+                className="flex-1 px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+              >
+                {editingRoleQuestion ? "Update Question" : "Add Question"}
               </button>
             </div>
           </div>
