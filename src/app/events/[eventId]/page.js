@@ -137,6 +137,7 @@ export default async function EventPage({ params }) {
                       <ImageCarousel
                         images={event.images}
                         title={event.title}
+                        recordingUrl={event.recordingUrl}
                       />
                     </div>
                   ) : (
