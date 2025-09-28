@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { FiCheck, FiAlertCircle } from "react-icons/fi";
@@ -28,6 +28,7 @@ export default function ExecutiveApplicationPage() {
   const [applicationsOpen, setApplicationsOpen] = useState(false);
   const [applicationQuestions, setApplicationQuestions] = useState([]);
   const [selectedRoleQuestions, setSelectedRoleQuestions] = useState([]);
+  const previousRoleRef = useRef(null);
 
   useEffect(() => {
     fetchRoles();
@@ -49,30 +50,41 @@ export default function ExecutiveApplicationPage() {
   }, [applicationQuestions]);
 
   // Update selected role questions when role changes
-  useEffect(() => {
-    if (form.role && availableRoles.length > 0) {
-      const selectedRole = availableRoles.find(
-        (role) => role.title === form.role
-      );
-      if (selectedRole && selectedRole.questions) {
-        setSelectedRoleQuestions(selectedRole.questions);
+  const updateRoleQuestions = useCallback(
+    (roleTitle) => {
+      if (roleTitle && availableRoles.length > 0) {
+        const selectedRole = availableRoles.find(
+          (role) => role.title === roleTitle
+        );
+        if (selectedRole && selectedRole.questions) {
+          setSelectedRoleQuestions(selectedRole.questions);
 
-        // Initialize form fields for role-specific questions
-        const questionFields = {};
-        selectedRole.questions.forEach((question) => {
-          questionFields[question.id] = form[question.id] || "";
-        });
-        setForm((prev) => ({
-          ...prev,
-          ...questionFields,
-        }));
+          // Initialize form fields for role-specific questions
+          const questionFields = {};
+          selectedRole.questions.forEach((question) => {
+            questionFields[question.id] = "";
+          });
+          setForm((prev) => ({
+            ...prev,
+            ...questionFields,
+          }));
+        } else {
+          setSelectedRoleQuestions([]);
+        }
       } else {
         setSelectedRoleQuestions([]);
       }
-    } else {
-      setSelectedRoleQuestions([]);
+    },
+    [availableRoles]
+  );
+
+  useEffect(() => {
+    // Only run if the role actually changed
+    if (form.role !== previousRoleRef.current) {
+      previousRoleRef.current = form.role;
+      updateRoleQuestions(form.role);
     }
-  }, [form.role, availableRoles, form]);
+  }, [form.role, updateRoleQuestions]);
 
   const fetchRoles = async () => {
     try {
