@@ -72,7 +72,7 @@ export default function ExecutiveApplicationPage() {
     } else {
       setSelectedRoleQuestions([]);
     }
-  }, [form.role, availableRoles]);
+  }, [form.role, availableRoles, form]);
 
   const fetchRoles = async () => {
     try {
