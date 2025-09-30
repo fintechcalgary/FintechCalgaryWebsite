@@ -41,8 +41,9 @@ export default async function EventsPage() {
   // Fetch events on the server
   const response = await getEvents();
 
-  // Filter out webinars
+  // Filter events and webinars separately
   const events = response.filter((e) => e.eventType === "event");
+  const webinars = response.filter((e) => e.eventType === "webinar");
 
-  return <EventsPageClient initialEvents={events} />;
+  return <EventsPageClient initialEvents={events} initialWebinars={webinars} />;
 }

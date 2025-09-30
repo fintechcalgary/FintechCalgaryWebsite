@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
+import WebinarsSection from "@/components/WebinarsSection";
 import { FiCalendar } from "react-icons/fi";
 import Image from "next/image";
 import ImageCarousel from "@/components/ImageCarousel";
@@ -14,7 +15,7 @@ const normalizeDate = (dateString) => {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 };
 
-export default function EventsPageClient({ initialEvents }) {
+export default function EventsPageClient({ initialEvents, initialWebinars }) {
   const [filter, setFilter] = useState("all");
   const router = useRouter();
 
@@ -202,6 +203,9 @@ export default function EventsPageClient({ initialEvents }) {
             </p>
           </div>
         )}
+
+        {/* Webinars Section - Integrated seamlessly */}
+        <WebinarsSection initialWebinars={initialWebinars || []} />
       </div>
 
       {/* Footer */}
