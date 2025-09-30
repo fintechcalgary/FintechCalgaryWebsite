@@ -276,7 +276,9 @@ export default function DashboardPage() {
             >
               <div className="relative z-10 flex items-center justify-between mb-8">
                 <div className="space-y-1">
-                  <h2 className="text-2xl font-semibold text-white">Events</h2>
+                  <h2 className="text-2xl font-semibold text-white">
+                    Events and Webinars
+                  </h2>
                   <p className="text-sm text-gray-400">Manage your schedule</p>
                 </div>
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary backdrop-blur-sm border border-primary/30">

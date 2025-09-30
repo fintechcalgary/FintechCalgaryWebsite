@@ -23,11 +23,7 @@ const toYouTubeEmbed = (url) => {
   return null;
 };
 
-export default function ImageCarousel({
-  images,
-  title,
-  recordingUrl, // <-- NEW (optional): pass YouTube URL here
-}) {
+export default function ImageCarousel({ images, title, recordingUrl }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 

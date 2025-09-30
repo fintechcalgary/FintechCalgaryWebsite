@@ -14,11 +14,9 @@ import {
 import Modal from "./Modal";
 import PortalModal from "./PortalModal";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
 export default function Events() {
-  const { data: session } = useSession();
   const pathname = usePathname();
   const isDashboard = pathname === "/dashboard";
   const [events, setEvents] = useState([]);
@@ -32,12 +30,13 @@ export default function Events() {
     time: "",
     imageUrl: "",
     images: [],
+    eventType: "event",
+    recordingUrl: "",
   });
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     eventId: null,
   });
-  const [showRegistrations, setShowRegistrations] = useState(null);
 
   useEffect(() => {
     fetchEvents();
@@ -74,6 +73,8 @@ export default function Events() {
         time: "",
         imageUrl: "",
         images: [],
+        eventType: "event",
+        recordingUrl: "",
       });
       setShowForm(false);
       setEditingEvent(null);
@@ -109,6 +110,8 @@ export default function Events() {
       imageUrl: event.imageUrl || "",
       images: event.images || [],
       registrations: event.registrations?.length || 0,
+      eventType: event.eventType || "event",
+      recordingUrl: event.recordingUrl || "",
     });
     setShowForm(true);
   };
@@ -177,6 +180,8 @@ export default function Events() {
       time: "",
       imageUrl: "",
       images: [],
+      eventType: "event",
+      recordingUrl: "",
     });
     setEditingEvent(null);
     setShowForm(false);
@@ -235,50 +240,117 @@ export default function Events() {
             </div>
 
             <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Event Title"
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                className="form-input"
-                required
-              />
+              <div className="grid grid-cols-5 gap-4">
+                <div className="col-span-2">
+                  <label
+                    htmlFor="eventType"
+                    className="block text-sm font-medium text-gray-300 mb-1"
+                  >
+                    Event Type
+                  </label>
+                  <select
+                    value={formData.eventType}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        eventType: e.target.value,
+                      })
+                    }
+                    required
+                  >
+                    <option value="event">Event</option>
+                    <option value="webinar">Webinar</option>
+                  </select>
+                </div>
+                {formData.eventType === "webinar" && (
+                  <div className="col-span-3">
+                    <label
+                      htmlFor="eventType"
+                      className="block text-sm font-medium text-gray-300 mb-1"
+                    >
+                      Webinar Link
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Link"
+                      value={formData.recordingUrl}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          recordingUrl: e.target.value,
+                        })
+                      }
+                      className="form-input"
+                      required
+                    />
+                  </div>
+                )}
+              </div>
 
-              <textarea
-                placeholder="Event Description"
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    description: e.target.value,
-                  })
-                }
-                className="form-input min-h-[80px] scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
-                required
-              />
-
-              <div className="grid grid-cols-2 gap-4">
-                <input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) =>
-                    setFormData({ ...formData, date: e.target.value })
-                  }
-                  className="form-input"
-                  required
-                />
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Title
+                </label>
                 <input
                   type="text"
-                  placeholder="Event Time"
-                  value={formData.time}
+                  placeholder="Event Title"
+                  value={formData.title}
                   onChange={(e) =>
-                    setFormData({ ...formData, time: e.target.value })
+                    setFormData({ ...formData, title: e.target.value })
                   }
                   className="form-input"
                   required
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Description
+                </label>
+                <textarea
+                  placeholder="Event Description"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      description: e.target.value,
+                    })
+                  }
+                  className="form-input min-h-[80px] scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) =>
+                      setFormData({ ...formData, date: e.target.value })
+                    }
+                    className="form-input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Time
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Event Time"
+                    value={formData.time}
+                    onChange={(e) =>
+                      setFormData({ ...formData, time: e.target.value })
+                    }
+                    className="form-input"
+                    required
+                  />
+                </div>
               </div>
 
               <div className="flex flex-col space-y-4">

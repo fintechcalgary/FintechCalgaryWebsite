@@ -39,7 +39,10 @@ export const metadata = {
 // Server Component
 export default async function EventsPage() {
   // Fetch events on the server
-  const events = await getEvents();
+  const response = await getEvents();
+
+  // Filter out webinars
+  const events = response.filter((e) => e.eventType === "event");
 
   return <EventsPageClient initialEvents={events} />;
 }
