@@ -243,7 +243,9 @@ export default async function EventPage({ params }) {
                         href={`/events/register/${event._id}`}
                         className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-primary/25"
                       >
-                        Register Now
+                        {event.eventType === "webinar"
+                          ? "Register for Webinar"
+                          : "Register Now"}
                       </Link>
                     ) : (
                       <div className="w-full text-center py-4">

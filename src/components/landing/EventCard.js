@@ -80,15 +80,25 @@ export default function EventCard({ event, index }) {
 
         <div className="relative h-full p-8 flex flex-col justify-end">
           <div className="space-y-4">
-            {/* Date badge */}
-            <div className="inline-block px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/20 text-sm text-white">
-              {new Date(event.date + "T00:00:00").toLocaleDateString("en-US", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-              {event.time && ` • ${event.time}`}
+            {/* Date badge and webinar indicator */}
+            <div className="flex flex-wrap gap-2">
+              <div className="inline-block px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/20 text-sm text-white">
+                {new Date(event.date + "T00:00:00").toLocaleDateString(
+                  "en-US",
+                  {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }
+                )}
+                {event.time && ` • ${event.time}`}
+              </div>
+              {event.eventType === "webinar" && (
+                <div className="inline-block px-3 py-2 rounded-full bg-blue-600/20 backdrop-blur-sm border border-blue-500/20 text-sm text-blue-100">
+                  Webinar
+                </div>
+              )}
             </div>
 
             {/* Title */}
@@ -99,9 +109,9 @@ export default function EventCard({ event, index }) {
             {/* Description */}
             <p className="text-gray-300 line-clamp-2">{event.description}</p>
 
-            {/* View Event button */}
+            {/* View Event/Webinar button */}
             <div className="inline-flex items-center px-6 py-3 rounded-full bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-105">
-              View Event
+              {event.eventType === "webinar" ? "View Webinar" : "View Event"}
             </div>
           </div>
         </div>

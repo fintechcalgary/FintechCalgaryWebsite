@@ -14,7 +14,7 @@ export default function UpcomingEvents({ events }) {
           <Link href="/events" className="group inline-block relative">
             <div className="relative inline-block">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
-                Upcoming Events
+                Upcoming Events & Webinars
               </span>
               <div
                 className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"
@@ -56,10 +56,10 @@ export default function UpcomingEvents({ events }) {
               <FiCalendar className="w-full h-full" />
             </div>
             <p className="text-3xl text-gray-300 mb-4">
-              No events scheduled yet
+              No events or webinars scheduled yet
             </p>
             <p className="text-xl text-gray-400">
-              Stay tuned for exciting upcoming events and opportunities!
+              Stay tuned for exciting upcoming events and webinars!
             </p>
           </div>
         )}

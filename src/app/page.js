@@ -5,7 +5,6 @@ import PublicNavbar from "@/components/PublicNavbar";
 import Link from "next/link";
 import AboutUs from "@/components/landing/AboutUs";
 import UpcomingEvents from "@/components/landing/UpcomingEvents";
-import Webinars from "@/components/landing/Webinars";
 import Footer from "@/components/landing/Footer";
 import Contact from "@/components/landing/Contact";
 import { FiArrowRight } from "react-icons/fi";
@@ -23,8 +22,7 @@ const normalizeDate = (dateString) => {
 };
 
 export default function Home() {
-  const [events, setEvents] = useState([]);
-  const [webinars, setWebinars] = useState([]);
+  const [allEvents, setAllEvents] = useState([]);
   const { executiveApplicationsOpen, settingsLoaded } = useSettings();
 
   useEffect(() => {
@@ -48,16 +46,14 @@ export default function Home() {
             currentDate.getDate()
           );
 
-          // Filter only upcoming events
-          const upcomingEvents = data
-            .filter((e) => e.eventType === "event")
-            .filter((e) => normalizeDate(e.date) >= normalizedCurrentDate);
-
-          const allWebinars = data.filter((e) => e.eventType === "webinar");
+          // Filter only upcoming events and webinars
+          const upcomingEventsAndWebinars = data
+            .filter((e) => normalizeDate(e.date) >= normalizedCurrentDate)
+            .sort((a, b) => new Date(a.date) - new Date(b.date))
+            .slice(0, 4); // Only show first 4 upcoming events/webinars
 
           if (isMounted) {
-            setEvents(upcomingEvents.slice(0, 4)); // Only show first 4 events
-            setWebinars(allWebinars);
+            setAllEvents(upcomingEventsAndWebinars);
           }
         }
       } catch (error) {
@@ -146,11 +142,7 @@ export default function Home() {
       </div>
 
       <div className="relative">
-        <UpcomingEvents events={events} />
-      </div>
-
-      <div className="relative">
-        <Webinars events={webinars} />
+        <UpcomingEvents events={allEvents} />
       </div>
 
       <div className="relative">

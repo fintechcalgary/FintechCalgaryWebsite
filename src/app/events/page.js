@@ -27,12 +27,13 @@ async function getEvents() {
 
 // Generate metadata on the server
 export const metadata = {
-  title: "Events | FinTech Calgary",
+  title: "Events and Webinars | FinTech Calgary",
   description:
-    "Explore upcoming and past events from FinTech Calgary - Calgary's Premier FinTech Community",
+    "Explore upcoming and past events and webinars from FinTech Calgary - Calgary's Premier FinTech Community",
   openGraph: {
-    title: "Events | FinTech Calgary",
-    description: "Explore upcoming and past events from FinTech Calgary",
+    title: "Events and Webinars | FinTech Calgary",
+    description:
+      "Explore upcoming and past events and webinars from FinTech Calgary",
   },
 };
 
@@ -41,9 +42,8 @@ export default async function EventsPage() {
   // Fetch events on the server
   const response = await getEvents();
 
-  // Filter events and webinars separately
-  const events = response.filter((e) => e.eventType === "event");
-  const webinars = response.filter((e) => e.eventType === "webinar");
+  // Combine all events and webinars into a single list
+  const allEvents = response;
 
-  return <EventsPageClient initialEvents={events} initialWebinars={webinars} />;
+  return <EventsPageClient initialEvents={allEvents} />;
 }

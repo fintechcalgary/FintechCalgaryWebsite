@@ -265,14 +265,14 @@ export default function Events() {
                 {formData.eventType === "webinar" && (
                   <div className="col-span-3">
                     <label
-                      htmlFor="eventType"
+                      htmlFor="recordingUrl"
                       className="block text-sm font-medium text-gray-300 mb-1"
                     >
-                      Webinar Link
+                      Webinar Link (Optional)
                     </label>
                     <input
                       type="text"
-                      placeholder="Link"
+                      placeholder="Webinar link (can be added later)"
                       value={formData.recordingUrl}
                       onChange={(e) =>
                         setFormData({
@@ -281,7 +281,6 @@ export default function Events() {
                         })
                       }
                       className="form-input"
-                      required
                     />
                   </div>
                 )}

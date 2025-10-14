@@ -3,6 +3,13 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   function middleware(req) {
+    console.log(
+      "Middleware called for:",
+      req.nextUrl.pathname,
+      "Method:",
+      req.method
+    );
+
     // Check if the request is for a protected API endpoint
     const isProtectedApiRoute =
       req.nextUrl.pathname.startsWith("/api/executive-application") ||
@@ -10,7 +17,10 @@ export default withAuth(
       req.nextUrl.pathname.startsWith("/api/settings") ||
       req.nextUrl.pathname.startsWith("/api/associateMember") ||
       req.nextUrl.pathname.startsWith("/api/members") ||
-      req.nextUrl.pathname.startsWith("/api/subscribers");
+      req.nextUrl.pathname.startsWith("/api/subscribers") ||
+      (req.nextUrl.pathname.startsWith("/api/events/") &&
+        req.nextUrl.pathname.endsWith("/register") &&
+        req.method === "DELETE");
 
     // For API routes, we want to protect POST, PUT, DELETE methods
     // EXCEPT for public endpoints that should remain accessible without authentication
@@ -51,10 +61,14 @@ export default withAuth(
 
     // If it's a protected API route with a protected method (but not public POST endpoints), check authentication
     if (isProtectedApiRoute && isProtectedMethod && !isPublicPostEndpoint) {
+      console.log("Checking authentication for protected route");
       const token = req.nextauth.token;
+      console.log("Token exists:", !!token);
+      console.log("Token role:", token?.role);
 
       // If no token or user is not authenticated, return 401
       if (!token) {
+        console.log("No token found, returning 401");
         return NextResponse.json(
           { error: "Authentication required" },
           { status: 401 }
@@ -68,6 +82,7 @@ export default withAuth(
         "/api/settings",
         "/api/members",
         "/api/subscribers",
+        "/api/events",
       ];
 
       const isAdminRoute = adminOnlyRoutes.some((route) =>
@@ -104,6 +119,7 @@ export default withAuth(
         "/api/executive-roles",
         "/api/members",
         "/api/subscribers",
+        "/api/events",
       ];
 
       const isAdminRoute = adminOnlyRoutes.some((route) =>

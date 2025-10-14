@@ -151,6 +151,28 @@ export async function POST(req, { params }) {
                   </div>
 
                   ${
+                    event.eventType === "webinar" &&
+                    (registrationData.companyName ||
+                      registrationData.companyRole)
+                      ? `
+                  <div style="background: #f8fafc; border-radius: 12px; padding: 24px; margin-bottom: 32px;">
+                    <h4 style="color: #1a1a1a; font-size: 16px; font-weight: 600; margin: 0 0 12px 0;">Company Information</h4>
+                    ${
+                      registrationData.companyName
+                        ? `<p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin: 0 0 8px 0;"><strong>Company:</strong> ${registrationData.companyName}</p>`
+                        : ""
+                    }
+                    ${
+                      registrationData.companyRole
+                        ? `<p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin: 0;"><strong>Role:</strong> ${registrationData.companyRole}</p>`
+                        : ""
+                    }
+                  </div>
+                  `
+                      : ""
+                  }
+
+                  ${
                     registrationData.comments
                       ? `
                   <div style="background: #f8fafc; border-radius: 12px; padding: 24px; margin-bottom: 32px;">
@@ -196,9 +218,15 @@ export async function POST(req, { params }) {
 
 export async function DELETE(req, { params }) {
   try {
+    console.log("DELETE endpoint called");
+
     // Check authentication
     const session = await getServerSession(authOptions);
+    console.log("Session exists:", !!session);
+    console.log("User role:", session?.user?.role);
+
     if (!session || session.user.role !== "admin") {
+      console.log("Unauthorized - no session or not admin");
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });

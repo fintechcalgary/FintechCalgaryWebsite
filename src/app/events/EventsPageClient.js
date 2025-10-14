@@ -3,7 +3,6 @@
 import { useState, useCallback, useMemo } from "react";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
-import WebinarsSection from "@/components/WebinarsSection";
 import { FiCalendar } from "react-icons/fi";
 import Image from "next/image";
 import ImageCarousel from "@/components/ImageCarousel";
@@ -15,7 +14,7 @@ const normalizeDate = (dateString) => {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 };
 
-export default function EventsPageClient({ initialEvents, initialWebinars }) {
+export default function EventsPageClient({ initialEvents }) {
   const [filter, setFilter] = useState("all");
   const router = useRouter();
 
@@ -71,17 +70,18 @@ export default function EventsPageClient({ initialEvents, initialWebinars }) {
   const pageContent = useMemo(() => {
     const headings = {
       all: {
-        title: "All Events",
-        description: "Explore all our past and upcoming events.",
+        title: "Events and Webinars",
+        description: "Explore all our past and upcoming events and webinars.",
       },
       upcoming: {
-        title: "Upcoming Events",
-        description: "Check out our upcoming events and register now.",
+        title: "Upcoming Events and Webinars",
+        description:
+          "Check out our upcoming events and webinars and register now.",
       },
       past: {
-        title: "Past Events",
+        title: "Past Events and Webinars",
         description:
-          "Take a look at our past events and what we've accomplished.",
+          "Take a look at our past events and webinars and what we've accomplished.",
       },
     };
     return headings[filter];
@@ -119,9 +119,9 @@ export default function EventsPageClient({ initialEvents, initialWebinars }) {
             shadow-lg backdrop-blur-sm
             pl-6 pr-12 hover:bg-gray-700/50"
           >
-            <option value="all">All Events</option>
-            <option value="upcoming">Upcoming Events</option>
-            <option value="past">Past Events</option>
+            <option value="all">All Events & Webinars</option>
+            <option value="upcoming">Upcoming Events & Webinars</option>
+            <option value="past">Past Events & Webinars</option>
           </select>
         </div>
 
@@ -154,16 +154,23 @@ export default function EventsPageClient({ initialEvents, initialWebinars }) {
                   )}
 
                   {/* Status Badge */}
-                  <span
-                    className={`absolute top-4 right-4 px-4 py-1.5 text-xs font-semibold rounded-full z-20
-                    ${
-                      isUpcoming
-                        ? "bg-purple-600/60 text-purple-100 border border-purple-500 backdrop-blur-md"
-                        : "bg-gray-800/60 text-gray-300 border border-gray-700 backdrop-blur-md"
-                    }`}
-                  >
-                    {isUpcoming ? "Upcoming" : "Past"}
-                  </span>
+                  <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
+                    <span
+                      className={`px-4 py-1.5 text-xs font-semibold rounded-full
+                      ${
+                        isUpcoming
+                          ? "bg-purple-600/60 text-purple-100 border border-purple-500 backdrop-blur-md"
+                          : "bg-gray-800/60 text-gray-300 border border-gray-700 backdrop-blur-md"
+                      }`}
+                    >
+                      {isUpcoming ? "Upcoming" : "Past"}
+                    </span>
+                    {event.eventType === "webinar" && (
+                      <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-600/60 text-blue-100 border border-blue-500 backdrop-blur-md">
+                        Webinar
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Event Content */}
@@ -199,13 +206,10 @@ export default function EventsPageClient({ initialEvents, initialWebinars }) {
           <div className="text-center py-12 bg-gray-800/50 rounded-lg min-h-[400px] flex flex-col items-center justify-center mt-12 animate-fadeIn">
             <FiCalendar className="mx-auto text-4xl text-primary mb-4" />
             <p className="text-gray-400">
-              No events available for the selected filter.
+              No events or webinars available for the selected filter.
             </p>
           </div>
         )}
-
-        {/* Webinars Section - Integrated seamlessly */}
-        <WebinarsSection initialWebinars={initialWebinars || []} />
       </div>
 
       {/* Footer */}

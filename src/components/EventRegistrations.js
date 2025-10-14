@@ -46,36 +46,69 @@ export default function EventRegistrations({ eventId }) {
   }, [event?.title]);
 
   const handleDeleteRegistration = async (registrationIndex) => {
+    console.log(
+      "Delete button clicked for registration index:",
+      registrationIndex
+    );
     setRegistrationToDelete(registrationIndex);
     setShowDeleteModal(true);
   };
 
   const confirmDeleteRegistration = async () => {
-    if (!registrationToDelete) return;
+    console.log(
+      "Confirm delete called with registration index:",
+      registrationToDelete
+    );
 
-    setDeletingRegistration(registrationToDelete);
+    // Store the registration index in a local variable to avoid state timing issues
+    const indexToDelete = registrationToDelete;
+
+    if (!indexToDelete && indexToDelete !== 0) {
+      console.log("No registration to delete, returning early");
+      return;
+    }
+
+    console.log("Setting deleting registration and closing modal");
+    setDeletingRegistration(indexToDelete);
     setShowDeleteModal(false);
 
+    console.log("About to enter try block");
     try {
+      console.log(
+        "Making DELETE request to:",
+        `/api/events/${eventId}/register`
+      );
       const response = await fetch(`/api/events/${eventId}/register`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ registrationIndex: registrationToDelete }),
+        body: JSON.stringify({ registrationIndex: indexToDelete }),
       });
 
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
+
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Delete failed with error:", errorText);
         throw new Error("Failed to delete registration");
       }
+
+      console.log("Delete successful, refreshing event data");
 
       // Refresh the event data
       const updatedResponse = await fetch(`/api/events/${eventId}`);
       if (updatedResponse.ok) {
         const updatedEvent = await updatedResponse.json();
+        console.log(
+          "Event data refreshed, new registrations count:",
+          updatedEvent.registrations?.length
+        );
         setEvent(updatedEvent);
       }
     } catch (err) {
+      console.error("Delete error:", err);
       alert("Failed to delete registration: " + err.message);
     } finally {
       setDeletingRegistration(null);
