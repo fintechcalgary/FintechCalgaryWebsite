@@ -52,6 +52,16 @@ export default function Partners() {
       logo: "/partners/beyond-the-lab.png",
       color: "#228b22",
     },
+    {
+      name: "Pakistani Students' Society",
+      logo: "/partners/pakistani-students-society.png",
+      color: "#228b22",
+    },
+    {
+      name: "CeresAI",
+      logo: "/partners/ceresai-xyz.png",
+      color: "#4169e1",
+    },
   ];
 
   return (

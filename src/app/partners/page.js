@@ -86,6 +86,22 @@ export default function PartnersPage() {
       website: "https://beyondthelabclub.wixsite.com/beyond-the-lab",
       color: "#228b22",
     },
+    {
+      name: "Pakistani Students' Society",
+      logo: "/partners/pakistani-students-society.png",
+      description:
+        "The Pakistani Students' Society is a home away from home. We are a charity organization designed to help out with different non-profits in Pakistan. We pride ourselves on culture, respect and a love for Pakistan.",
+      website: "https://www.facebook.com/PakistaniStudentsSocietyUofC/",
+      color: "#228b22",
+    },
+    {
+      name: "CeresAI",
+      logo: "/partners/ceresai-xyz.png",
+      description:
+        "An AI companions platform that turns creator expertise into always-on, personalized conversations. CeresAI builds authentic, safe AI companions for creators and brands.",
+      website: "https://ceresai.xyz/",
+      color: "#4169e1",
+    },
   ];
 
   return (
