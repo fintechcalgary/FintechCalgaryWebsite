@@ -64,7 +64,7 @@ export default function Partners() {
     },
     {
       name: "MaxHR",
-      logo: "/partners/max-hr.jpg",
+      logo: "/partners/max-hr.JPG",
       color: "#00bfff",
     },
   ];
