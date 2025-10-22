@@ -102,6 +102,14 @@ export default function PartnersPage() {
       website: "https://ceresai.xyz/",
       color: "#4169e1",
     },
+    {
+      name: "MaxHR",
+      logo: "/partners/max-hr.jpg",
+      description:
+        "Max is a wholesome work management solution for startups and enterprises seeking to simplify People, Sales, and Finance processes. Our comprehensive, all-in-one work management software simplifies human capital management, supply chain management and accounting all in one place.",
+      website: "https://maxhr.io/fintech/",
+      color: "#00bfff",
+    },
   ];
 
   return (

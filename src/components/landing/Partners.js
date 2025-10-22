@@ -62,6 +62,11 @@ export default function Partners() {
       logo: "/partners/ceresai-xyz.png",
       color: "#4169e1",
     },
+    {
+      name: "MaxHR",
+      logo: "/partners/max-hr.jpg",
+      color: "#00bfff",
+    },
   ];
 
   return (
