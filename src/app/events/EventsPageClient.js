@@ -37,10 +37,17 @@ export default function EventsPageClient({ initialEvents }) {
         const eventDate = normalizeDate(event.date);
         const isUpcoming = eventDate >= currentDate;
         const isPast = eventDate < currentDate;
+        const isPartner = event.isPartner;
+
+        // Hide partner events for all filters except "partner"
+        if (filter !== "partner" && isPartner) return false;
 
         if (filter === "upcoming") return isUpcoming;
-        if (filter === "past") return isPast;
-        return true; // "all" filter
+        else if (filter === "past") return isPast;
+        else if (filter === "partner") return isPartner;
+
+        // "all" filter (show all events except partner)
+        return true;
       })
       .sort((a, b) => {
         const aDate = normalizeDate(a.date);
@@ -83,6 +90,10 @@ export default function EventsPageClient({ initialEvents }) {
         description:
           "Take a look at our past events and webinars and what we've accomplished.",
       },
+      partner: {
+        title: "Partner Events",
+        description: "Explore all of our partner events.",
+      },
     };
     return headings[filter];
   }, [filter]);
@@ -122,6 +133,7 @@ export default function EventsPageClient({ initialEvents }) {
             <option value="all">All Events & Webinars</option>
             <option value="upcoming">Upcoming Events & Webinars</option>
             <option value="past">Past Events & Webinars</option>
+            <option value="partner">Partner Events</option>
           </select>
         </div>
 

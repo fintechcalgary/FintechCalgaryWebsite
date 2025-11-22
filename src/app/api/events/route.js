@@ -1,5 +1,5 @@
 import { connectToDatabase } from "@/lib/mongodb";
-import { createEvent, getEvents } from "@/lib/models/event";
+import { createEvent } from "@/lib/models/event";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
 
@@ -16,8 +16,24 @@ export async function POST(req) {
     const db = await connectToDatabase();
     const event = await req.json();
 
+    event.ownerId = session.user.id;
+    if (!event.ownerId) {
+      return new Response(
+        JSON.stringify({ error: "Invalid session user", session }),
+        {
+          status: 400,
+        }
+      );
+    }
+
     // Validate required fields including time
-    if (!event.title || !event.description || !event.date || !event.time) {
+    if (
+      !event.title ||
+      !event.description ||
+      !event.date ||
+      !event.time ||
+      !event.isPartner
+    ) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         {
@@ -29,7 +45,6 @@ export async function POST(req) {
     console.log("POST /api/events - Creating event:", event);
     const result = await createEvent(db, {
       ...event,
-      userId: session.user.email,
     });
     console.log("POST /api/events - Success:", result);
 
@@ -42,9 +57,10 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
+export async function GET(req) {
   try {
     const db = await connectToDatabase();
+
     console.log("GET /api/events - Fetching all public events");
     const events = await db
       .collection("events")

@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useState, useEffect, useCallback } from "react";
+import { getSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import {
   FiCalendar,
@@ -16,9 +16,10 @@ import PortalModal from "./PortalModal";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function Events() {
+export default function Events({ mode }) {
   const pathname = usePathname();
-  const isDashboard = pathname === "/dashboard";
+  const isDashboard =
+    pathname === "/dashboard" || pathname === "/associate-member-dashboard";
   const [events, setEvents] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -32,21 +33,36 @@ export default function Events() {
     images: [],
     eventType: "event",
     recordingUrl: "",
+    isPartner: mode === "partner" ? true : false,
   });
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     eventId: null,
   });
 
+  const fetchEvents = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/events`);
+      const data = await response.json();
+
+      if (mode === "partner") {
+        const session = await getSession();
+        const userId = session?.user?.id;
+
+        const filteredEvents = data.filter((event) => event.ownerId === userId);
+        setEvents(filteredEvents);
+        return;
+      }
+
+      setEvents(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [mode]);
+
   useEffect(() => {
     fetchEvents();
-  }, []);
-
-  const fetchEvents = async () => {
-    const response = await fetch("/api/events");
-    const data = await response.json();
-    setEvents(data);
-  };
+  }, [fetchEvents]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,6 +91,7 @@ export default function Events() {
         images: [],
         eventType: "event",
         recordingUrl: "",
+        isPartner: mode === "partner" ? true : false,
       });
       setShowForm(false);
       setEditingEvent(null);
