@@ -1,6 +1,9 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import EventsPageClient from "./EventsPageClient";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // Server-side data fetching function
 async function getEvents() {
   try {
