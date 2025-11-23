@@ -3,6 +3,9 @@ import { createEvent } from "@/lib/models/event";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function POST(req) {
   try {
     const session = await getServerSession(authOptions);
