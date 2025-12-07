@@ -74,6 +74,8 @@ const nextConfig = {
     }
     return config;
   },
+  // Turbopack configuration (empty to silence the warning)
+  turbopack: {},
 };
 
 export default nextConfig;
