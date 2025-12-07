@@ -101,12 +101,14 @@ export default function AboutUs() {
                 <h3 className="text-3xl font-bold text-white">Our Mission</h3>
               </div>
               <p className="text-gray-300 leading-relaxed mb-4">
-                FinTech Calgary is a digital marketing platform clientele built
-                for B2B engagement. We specialize in connecting payment
-                processing companies with business decision makers who are ready
-                to evaluate and adopt innovative financial technologies. Our
-                platform goes beyond visibility, we enable meaningful market
-                access and direct connections that drive real business outcomes.
+                FinTech Calgary is a fintech association dedicated to bridging
+                the gap between fintech companies and key business decision
+                makers. Through hands-on projects, industry events, and
+                collaborative initiatives, we create meaningful B2B engagement
+                opportunities for both students and industry partners. Our
+                association goes beyond visibility, we provide practical market
+                access, informed student-driven insights, and direct connections
+                that support real business outcomes.
               </p>
               <Link
                 href="/about"
@@ -133,7 +135,7 @@ export default function AboutUs() {
           <div className="flex flex-col gap-6 h-full">
             <ServiceCard
               title="Our Services"
-              description="We provide payment processing companies with a platform to showcase their solutions to targeted businesses. Through digital marketing and partner features, we connect innovative technologies with decision-makers to drive adoption and growth."
+              description="We provide tech companies with a platform to showcase their solutions to targeted businesses. Through digital marketing and partner features, we connect innovative technologies with decision-makers to drive adoption and growth."
               icon={FiTrendingUp}
               index={0}
             />

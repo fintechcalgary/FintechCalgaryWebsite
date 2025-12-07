@@ -34,12 +34,14 @@ export default function AboutPage() {
                 Who We Are
               </h2>
               <p className="text-base sm:text-lg text-gray-300 leading-relaxed relative">
-                FinTech Calgary is a digital marketing platform clientele built
-                for B2B engagement. We specialize in connecting payment
-                processing companies with business decision makers who are ready
-                to evaluate and adopt innovative financial technologies. Our
-                platform goes beyond visibility, we enable meaningful market
-                access and direct connections that drive real business outcomes.
+                FinTech Calgary is a fintech association dedicated to bridging
+                the gap between fintech companies and key business decision
+                makers. Through hands-on projects, industry events, and
+                collaborative initiatives, we create meaningful B2B engagement
+                opportunities for both students and industry partners. Our
+                association goes beyond visibility, we provide practical market
+                access, informed student-driven insights, and direct connections
+                that support real business outcomes.
               </p>
             </div>
 
@@ -61,13 +63,10 @@ export default function AboutPage() {
                 Our Services
               </h2>
               <p className="text-base sm:text-lg text-gray-300 leading-relaxed relative">
-                We provide payment processing companies with a dedicated
-                platform to market their solutions to a curated audience of
-                businesses across key industries. Through targeted digital
-                marketing campaigns, showcase opportunities, and partner
-                features, we help our clients position their technologies in
-                front of the right stakeholders, accelerating interest,
-                adoption, and growth.
+                We provide tech companies with a platform to showcase their
+                solutions to targeted businesses. Through digital marketing and
+                partner features, we connect innovative technologies with
+                decision-makers to drive adoption and growth.
               </p>
             </div>
 
