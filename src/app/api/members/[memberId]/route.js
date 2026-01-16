@@ -1,100 +1,51 @@
 import { connectToDatabase } from "@/lib/mongodb";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { apiResponse, requireAdmin, withErrorHandler } from "@/lib/api-helpers";
+import { updateMember } from "@/lib/models/member";
 import { ObjectId } from "mongodb";
 
-import { updateMember, deleteMember } from "@/lib/models/member";
-
-// Prevent caching
 export const dynamic = "force-dynamic";
 
-export async function GET(req, context) {
-  try {
-    const { memberId } = await context.params;
-    const db = await connectToDatabase();
+export const GET = withErrorHandler(async (req, context) => {
+  const { memberId } = await context.params;
+  const db = await connectToDatabase();
 
-    const member = await db.collection("members").findOne({
-      _id: new ObjectId(memberId),
-    });
+  const member = await db.collection("members").findOne({
+    _id: new ObjectId(memberId),
+  });
 
-    if (!member) {
-      return new Response(JSON.stringify({ error: "Member not found" }), {
-        status: 404,
-      });
-    }
-
-    return new Response(JSON.stringify(member), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-store",
-      },
-    });
-  } catch (error) {
-    console.error("GET /api/members/[memberId] - Error:", error);
-    return new Response(
-      JSON.stringify({
-        error: error.message,
-        headers: { "Cache-Control": "no-store" },
-      }),
-      {
-        status: 500,
-      }
-    );
+  if (!member) {
+    return apiResponse.notFound("Member not found");
   }
-}
 
-export async function PUT(req, context) {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== "admin") {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-      });
-    }
+  return apiResponse.success(member);
+});
 
-    const { memberId } = await context.params;
-    const db = await connectToDatabase();
-    const updates = await req.json();
+export const PUT = withErrorHandler(async (req, context) => {
+  const { session, error } = await requireAdmin();
+  if (error) return error;
 
-    if (updates.role && !["admin", "member"].includes(updates.role)) {
-      return new Response(JSON.stringify({ error: "Invalid role value" }), {
-        status: 400,
-      });
-    }
+  const { memberId } = await context.params;
+  const db = await connectToDatabase();
+  const updates = await req.json();
 
-    const result = await updateMember(db, memberId, updates);
-    return new Response(JSON.stringify(result), { status: 200 });
-  } catch (error) {
-    console.error("PUT /api/members/[memberId] - Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
+  if (updates.role && !["admin", "member"].includes(updates.role)) {
+    return apiResponse.badRequest("Invalid role value");
   }
-}
 
-export async function DELETE(req, context) {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== "admin") {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-      });
-    }
+  const result = await updateMember(db, memberId, updates);
+  return apiResponse.success(result);
+});
 
-    const { memberId } = await context.params;
-    const db = await connectToDatabase();
+export const DELETE = withErrorHandler(async (req, context) => {
+  const { session, error } = await requireAdmin();
+  if (error) return error;
 
-    // Delete from members collection
-    await db.collection("members").deleteOne({
-      _id: new ObjectId(memberId),
-    });
+  const { memberId } = await context.params;
+  const db = await connectToDatabase();
 
-    return new Response(null, { status: 204 });
-  } catch (error) {
-    console.error("DELETE /api/members/[memberId] - Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
-  }
-}
+  await db.collection("members").deleteOne({
+    _id: new ObjectId(memberId),
+  });
+
+  return new Response(null, { status: 204 });
+});

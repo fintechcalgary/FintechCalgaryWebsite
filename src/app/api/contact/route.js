@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
 import Mailgun from "mailgun.js";
 import formData from "form-data";
+import { apiResponse, validators, withErrorHandler } from "@/lib/api-helpers";
+import logger from "@/lib/logger";
 
 const mailgun = new Mailgun(formData);
 const mg = mailgun.client({
@@ -10,26 +11,25 @@ const mg = mailgun.client({
 
 const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN;
 
-export async function POST(req) {
-  try {
-    const { name, email, subject, message } = await req.json();
+export const POST = withErrorHandler(async (req) => {
+  const { name, email, subject, message } = await req.json();
 
-    // Input validation
-    if (!name || !email || !subject || !message) {
-      return NextResponse.json(
-        { error: "All fields are required" },
-        { status: 400 }
-      );
-    }
+  // Input validation
+  const requiredFields = ["name", "email", "subject", "message"];
+  const validationError = validators.requiredFields(
+    { name, email, subject, message },
+    requiredFields
+  );
+  if (validationError) {
+    return apiResponse.badRequest(validationError);
+  }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json(
-        { error: "Invalid email format" },
-        { status: 400 }
-      );
-    }
+  const emailError = validators.email(email);
+  if (emailError) {
+    return apiResponse.badRequest(emailError);
+  }
 
-    const htmlContent = `
+  const htmlContent = `
         <html>
           <head>
             <title>New Contact Form Submission</title>
@@ -124,22 +124,14 @@ export async function POST(req) {
         </html>
       `;
 
-    const response = await mg.messages.create(MAILGUN_DOMAIN, {
-      from: `FinTech Calgary <contact@${MAILGUN_DOMAIN}>`,
-      to: ["rojnovyotam@gmail.com", "fintech.calgary@gmail.com"],
-      subject: `New Contact Form Submission: ${subject}`,
-      html: htmlContent,
-      "h:Reply-To": email,
-    });
+  await mg.messages.create(MAILGUN_DOMAIN, {
+    from: `FinTech Calgary <contact@${MAILGUN_DOMAIN}>`,
+    to: ["rojnovyotam@gmail.com", "fintech.calgary@gmail.com"],
+    subject: `New Contact Form Submission: ${subject}`,
+    html: htmlContent,
+    "h:Reply-To": email,
+  });
 
-    console.log("Mailgun response:", response); // Log response for debugging
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Contact form error:", error.response?.body || error);
-    return NextResponse.json(
-      { error: "Failed to send message" },
-      { status: 500 }
-    );
-  }
-}
+  logger.logUserAction("contact_form_submission", { email, subject });
+  return apiResponse.success({ success: true });
+});

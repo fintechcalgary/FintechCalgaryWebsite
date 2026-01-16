@@ -1,137 +1,122 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
+// Constants for route configuration
+const PROTECTED_API_ROUTES = [
+  "/api/executive-application",
+  "/api/executive-roles",
+  "/api/settings",
+  "/api/associateMember",
+  "/api/members",
+  "/api/subscribers",
+];
+
+const ADMIN_ONLY_ROUTES = [
+  "/api/executive-application",
+  "/api/executive-roles",
+  "/api/settings",
+  "/api/members",
+  "/api/subscribers",
+  "/api/events",
+];
+
+const PUBLIC_GET_ROUTES = ["/api/settings", "/api/executive-roles"];
+
+const PUBLIC_POST_ENDPOINTS = [
+  { path: "/api/executive-application", method: "POST" },
+  { path: "/api/contact", method: "POST" },
+  { path: "/api/subscribe", method: "POST" },
+  { path: "/api/associateMember", method: "POST" },
+  { path: "/api/events/", method: "POST", suffix: "/register" },
+  { path: "/api/upload", method: "POST" },
+  { path: "/api/auth/register", method: "POST" },
+  { path: "/api/logs", method: "POST" },
+];
+
+const PROTECTED_METHODS = ["POST", "PUT", "DELETE"];
+
+// Helper functions
+function isProtectedApiRoute(pathname, method) {
+  const isStandardProtectedRoute = PROTECTED_API_ROUTES.some((route) =>
+    pathname.startsWith(route)
+  );
+
+  const isEventDeleteRoute =
+    pathname.startsWith("/api/events/") &&
+    pathname.endsWith("/register") &&
+    method === "DELETE";
+
+  return isStandardProtectedRoute || isEventDeleteRoute;
+}
+
+function isPublicPostEndpoint(pathname, method) {
+  return PUBLIC_POST_ENDPOINTS.some((endpoint) => {
+    if (endpoint.suffix) {
+      return (
+        pathname.startsWith(endpoint.path) &&
+        pathname.endsWith(endpoint.suffix) &&
+        method === endpoint.method
+      );
+    }
+    return (
+      pathname.startsWith(endpoint.path) && method === endpoint.method
+    );
+  });
+}
+
+function isPublicGetRoute(pathname) {
+  return PUBLIC_GET_ROUTES.some((route) => pathname.startsWith(route));
+}
+
+function isAdminRoute(pathname) {
+  return ADMIN_ONLY_ROUTES.some((route) => pathname.startsWith(route));
+}
+
+function checkAuthAndRole(token, pathname) {
+  if (!token) {
+    return NextResponse.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
+  }
+
+  if (isAdminRoute(pathname) && token.role !== "admin") {
+    return NextResponse.json(
+      { error: "Admin access required" },
+      { status: 403 }
+    );
+  }
+
+  return null;
+}
+
 export default withAuth(
   function middleware(req) {
-    console.log(
-      "Middleware called for:",
-      req.nextUrl.pathname,
-      "Method:",
-      req.method
-    );
+    const { pathname, method } = req.nextUrl;
 
-    // Check if the request is for a protected API endpoint
-    const isProtectedApiRoute =
-      req.nextUrl.pathname.startsWith("/api/executive-application") ||
-      req.nextUrl.pathname.startsWith("/api/executive-roles") ||
-      req.nextUrl.pathname.startsWith("/api/settings") ||
-      req.nextUrl.pathname.startsWith("/api/associateMember") ||
-      req.nextUrl.pathname.startsWith("/api/members") ||
-      req.nextUrl.pathname.startsWith("/api/subscribers") ||
-      (req.nextUrl.pathname.startsWith("/api/events/") &&
-        req.nextUrl.pathname.endsWith("/register") &&
-        req.method === "DELETE");
-
-    // For API routes, we want to protect POST, PUT, DELETE methods
-    // EXCEPT for public endpoints that should remain accessible without authentication
-    const isProtectedMethod = ["POST", "PUT", "DELETE"].includes(req.method);
-    const isPublicPostEndpoint =
-      (req.nextUrl.pathname.startsWith("/api/executive-application") &&
-        req.method === "POST") ||
-      (req.nextUrl.pathname.startsWith("/api/contact") &&
-        req.method === "POST") ||
-      (req.nextUrl.pathname.startsWith("/api/subscribe") &&
-        req.method === "POST") ||
-      (req.nextUrl.pathname.startsWith("/api/associateMember") &&
-        req.method === "POST") ||
-      (req.nextUrl.pathname.startsWith("/api/events/") &&
-        req.nextUrl.pathname.endsWith("/register") &&
-        req.method === "POST") ||
-      (req.nextUrl.pathname.startsWith("/api/upload") &&
-        req.method === "POST") ||
-      (req.nextUrl.pathname.startsWith("/api/auth/register") &&
-        req.method === "POST") ||
-      (req.nextUrl.pathname.startsWith("/api/logs") && req.method === "POST");
-
-    // Allow GET requests to /api/settings without authentication
-    if (
-      req.nextUrl.pathname.startsWith("/api/settings") &&
-      req.method === "GET"
-    ) {
+    // Allow public GET routes
+    if (method === "GET" && isPublicGetRoute(pathname)) {
       return NextResponse.next();
     }
 
-    // Allow GET requests to /api/executive-roles without authentication
-    if (
-      req.nextUrl.pathname.startsWith("/api/executive-roles") &&
-      req.method === "GET"
-    ) {
+    // Check if route needs protection
+    if (!isProtectedApiRoute(pathname, method)) {
       return NextResponse.next();
     }
 
-    // If it's a protected API route with a protected method (but not public POST endpoints), check authentication
-    if (isProtectedApiRoute && isProtectedMethod && !isPublicPostEndpoint) {
-      console.log("Checking authentication for protected route");
-      const token = req.nextauth.token;
-      console.log("Token exists:", !!token);
-      console.log("Token role:", token?.role);
+    const isProtectedMethod = PROTECTED_METHODS.includes(method);
+    const isPublicPost = isPublicPostEndpoint(pathname, method);
 
-      // If no token or user is not authenticated, return 401
-      if (!token) {
-        console.log("No token found, returning 401");
-        return NextResponse.json(
-          { error: "Authentication required" },
-          { status: 401 }
-        );
-      }
-
-      // For admin-only operations, check if user has admin role
-      const adminOnlyRoutes = [
-        "/api/executive-application",
-        "/api/executive-roles",
-        "/api/settings",
-        "/api/members",
-        "/api/subscribers",
-        "/api/events",
-      ];
-
-      const isAdminRoute = adminOnlyRoutes.some((route) =>
-        req.nextUrl.pathname.startsWith(route)
-      );
-
-      if (isAdminRoute && token.role !== "admin") {
-        return NextResponse.json(
-          { error: "Admin access required" },
-          { status: 403 }
-        );
-      }
+    // Handle protected methods (POST, PUT, DELETE) except public POST endpoints
+    if (isProtectedMethod && !isPublicPost) {
+      const authError = checkAuthAndRole(req.nextauth.token, pathname);
+      if (authError) return authError;
     }
 
-    // For GET requests to protected API routes (except /api/settings), also check authentication
-    if (
-      isProtectedApiRoute &&
-      req.method === "GET" &&
-      !req.nextUrl.pathname.startsWith("/api/settings")
-    ) {
-      const token = req.nextauth.token;
-
-      // If no token or user is not authenticated, return 401
-      if (!token) {
-        return NextResponse.json(
-          { error: "Authentication required" },
-          { status: 401 }
-        );
-      }
-
-      // For admin-only operations, check if user has admin role
-      const adminOnlyRoutes = [
-        "/api/executive-application",
-        "/api/executive-roles",
-        "/api/members",
-        "/api/subscribers",
-        "/api/events",
-      ];
-
-      const isAdminRoute = adminOnlyRoutes.some((route) =>
-        req.nextUrl.pathname.startsWith(route)
-      );
-
-      if (isAdminRoute && token.role !== "admin") {
-        return NextResponse.json(
-          { error: "Admin access required" },
-          { status: 403 }
-        );
-      }
+    // Handle GET requests to protected routes (except public GET routes)
+    if (method === "GET" && !isPublicGetRoute(pathname)) {
+      const authError = checkAuthAndRole(req.nextauth.token, pathname);
+      if (authError) return authError;
     }
 
     return NextResponse.next();
@@ -139,12 +124,12 @@ export default withAuth(
   {
     callbacks: {
       authorized: ({ token, req }) => {
-        // For API routes, we handle authentication in the middleware function above
+        // For API routes, authentication is handled in the middleware function above
         // For non-API routes (like dashboard), require authentication
         if (req.nextUrl.pathname.startsWith("/dashboard")) {
           return !!token;
         }
-        return true; // Allow all other routes to pass through
+        return true;
       },
     },
   }

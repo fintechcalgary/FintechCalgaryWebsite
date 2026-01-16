@@ -1,82 +1,43 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { createEvent } from "@/lib/models/event";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { apiResponse, requireAuth, validators, withErrorHandler } from "@/lib/api-helpers";
+import logger from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function POST(req) {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      console.log("POST /api/events - Unauthorized request");
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-      });
-    }
+export const POST = withErrorHandler(async (req) => {
+  const { session, error } = await requireAuth();
+  if (error) return error;
 
-    const db = await connectToDatabase();
-    const event = await req.json();
+  const db = await connectToDatabase();
+  const event = await req.json();
 
-    event.ownerId = session.user.id;
-    if (!event.ownerId) {
-      return new Response(
-        JSON.stringify({ error: "Invalid session user", session }),
-        {
-          status: 400,
-        }
-      );
-    }
-
-    // Validate required fields including time
-    if (
-      !event.title ||
-      !event.description ||
-      !event.date ||
-      !event.time ||
-      !event.isPartner
-    ) {
-      return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
-        {
-          status: 400,
-        }
-      );
-    }
-
-    console.log("POST /api/events - Creating event:", event);
-    const result = await createEvent(db, {
-      ...event,
-    });
-    console.log("POST /api/events - Success:", result);
-
-    return new Response(JSON.stringify(result), { status: 201 });
-  } catch (error) {
-    console.error("POST /api/events - Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
+  event.ownerId = session.user.id;
+  if (!event.ownerId) {
+    return apiResponse.badRequest("Invalid session user");
   }
-}
 
-export async function GET(req) {
-  try {
-    const db = await connectToDatabase();
-
-    console.log("GET /api/events - Fetching all public events");
-    const events = await db
-      .collection("events")
-      .find({})
-      .sort({ date: 1 })
-      .toArray();
-    console.log("GET /api/events - Found events:", events.length);
-
-    return new Response(JSON.stringify(events), { status: 200 });
-  } catch (error) {
-    console.error("GET /api/events - Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
+  // Validate required fields
+  const requiredFields = ["title", "description", "date", "time", "isPartner"];
+  const validationError = validators.requiredFields(event, requiredFields);
+  if (validationError) {
+    return apiResponse.badRequest(validationError);
   }
-}
+
+  logger.logUserAction("create_event", { eventTitle: event.title });
+  const result = await createEvent(db, event);
+
+  return apiResponse.success(result, 201);
+});
+
+export const GET = withErrorHandler(async () => {
+  const db = await connectToDatabase();
+  const events = await db
+    .collection("events")
+    .find({})
+    .sort({ date: 1 })
+    .toArray();
+
+  return apiResponse.success(events);
+});

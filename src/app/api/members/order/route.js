@@ -1,35 +1,23 @@
-import { connectToDatabase } from "@/lib/mongodb"; // To connect to the MongoDB database
-import { updateMemberOrder } from "@/lib/models/member"; // Function to update the order of members
-import { getServerSession } from "next-auth/next"; // To get the session for authentication
-import { authOptions } from "../../auth/[...nextauth]/route"; // NextAuth options for session handling
+import { connectToDatabase } from "@/lib/mongodb";
+import { updateMemberOrder } from "@/lib/models/member";
+import { apiResponse, requireAdmin, validators, withErrorHandler } from "@/lib/api-helpers";
+import logger from "@/lib/logger";
 
-export async function PUT(req) {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== "admin") {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-      });
-    }
+export const PUT = withErrorHandler(async (req) => {
+  const { session, error } = await requireAdmin();
+  if (error) return error;
 
-    const db = await connectToDatabase();
-    const { orderedMemberIds } = await req.json();
+  const db = await connectToDatabase();
+  const { orderedMemberIds } = await req.json();
 
-    // Validate the input
-    if (!Array.isArray(orderedMemberIds) || orderedMemberIds.length === 0) {
-      return new Response(JSON.stringify({ error: "Invalid data" }), {
-        status: 400,
-      });
-    }
-
-    // Call function to update the order
-    await updateMemberOrder(db, orderedMemberIds);
-
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
-  } catch (error) {
-    console.error("Error updating member order:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
+  // Validate the input
+  const arrayError = validators.array(orderedMemberIds, "orderedMemberIds");
+  if (arrayError || orderedMemberIds.length === 0) {
+    return apiResponse.badRequest("Invalid data: orderedMemberIds must be a non-empty array");
   }
-}
+
+  await updateMemberOrder(db, orderedMemberIds);
+
+  logger.logUserAction("update_member_order", { count: orderedMemberIds.length });
+  return apiResponse.success({ success: true });
+});

@@ -1,49 +1,6 @@
-import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
-
-/**
- * API endpoint for logging errors
- * POST /api/logs
- */
-export async function POST(request) {
-  try {
-    const errorData = await request.json();
-
-    // Validate the error data
-    if (!errorData.message && !errorData.timestamp) {
-      return NextResponse.json(
-        { error: "Invalid error data" },
-        { status: 400 }
-      );
-    }
-
-    // Store errors in database (can be enabled for development testing too)
-    if (
-      process.env.NODE_ENV === "production" ||
-      process.env.ENABLE_DB_LOGGING === "true"
-    ) {
-      await logToDatabase(errorData);
-    }
-
-    // Always log to console for immediate visibility
-    console.error("🚨 Application Error:", {
-      timestamp: errorData.timestamp,
-      message: errorData.message,
-      stack: errorData.stack,
-      url: errorData.url,
-      context: errorData.context,
-      level: errorData.level,
-    });
-
-    // You can also send to external services here
-    // await sendToExternalService(errorData);
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Failed to process error log:", error);
-    return NextResponse.json({ error: "Failed to log error" }, { status: 500 });
-  }
-}
+import { apiResponse, withErrorHandler } from "@/lib/api-helpers";
+import logger from "@/lib/logger";
 
 /**
  * Store error in database (optional)
@@ -51,22 +8,43 @@ export async function POST(request) {
 async function logToDatabase(errorData) {
   try {
     const db = await connectToDatabase();
-
-    // Create error log document
     const errorLog = {
       ...errorData,
       createdAt: new Date(),
-      // Add any additional fields you want to track
     };
-
-    // Store in errors collection
     await db.collection("errorLogs").insertOne(errorLog);
-    console.log("✅ Error logged to database successfully");
   } catch (dbError) {
-    console.error("Failed to store error in database:", dbError);
+    logger.logApiError("/api/logs", dbError);
     // Don't throw - we don't want logging failures to break the app
   }
 }
+
+export const POST = withErrorHandler(async (request) => {
+  const errorData = await request.json();
+
+  // Validate the error data
+  if (!errorData.message && !errorData.timestamp) {
+    return apiResponse.badRequest("Invalid error data");
+  }
+
+  // Store errors in database (can be enabled for development testing too)
+  if (
+    process.env.NODE_ENV === "production" ||
+    process.env.ENABLE_DB_LOGGING === "true"
+  ) {
+    await logToDatabase(errorData);
+  }
+
+  // Log the error using the logger utility
+  logger.log(errorData.message || "Unknown error", {
+    ...errorData.context,
+    stack: errorData.stack,
+    url: errorData.url,
+    level: errorData.level,
+  });
+
+  return apiResponse.success({ success: true });
+});
 
 /**
  * Send to external logging service (optional)

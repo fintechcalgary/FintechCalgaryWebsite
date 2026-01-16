@@ -1,87 +1,50 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { updateEvent, deleteEvent } from "@/lib/models/event";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { apiResponse, requireAuth, withErrorHandler } from "@/lib/api-helpers";
+import logger from "@/lib/logger";
 import { ObjectId } from "mongodb";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function GET(req, context) {
-  try {
-    const { eventId } = await context.params;
-    const db = await connectToDatabase();
+export const GET = withErrorHandler(async (req, context) => {
+  const { eventId } = await context.params;
+  const db = await connectToDatabase();
 
-    const event = await db.collection("events").findOne({
-      _id: new ObjectId(eventId),
-    });
+  const event = await db.collection("events").findOne({
+    _id: new ObjectId(eventId),
+  });
 
-    if (!event) {
-      return new Response(JSON.stringify({ error: "Event not found" }), {
-        status: 404,
-      });
-    }
-
-    return new Response(JSON.stringify(event), { status: 200 });
-  } catch (error) {
-    console.error("GET /api/events/[eventId] - Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
+  if (!event) {
+    return apiResponse.notFound("Event not found");
   }
-}
 
-export async function PUT(req, context) {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      console.log("PUT /api/events/[eventId] - Unauthorized request");
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-      });
-    }
+  return apiResponse.success(event);
+});
 
-    const { eventId } = await context.params;
-    const db = await connectToDatabase();
-    const updates = await req.json();
-    console.log(
-      "PUT /api/events/[eventId] - Updating event:",
-      eventId,
-      updates
-    );
-    const result = await updateEvent(db, eventId, updates);
-    console.log("PUT /api/events/[eventId] - Success:", result);
+export const PUT = withErrorHandler(async (req, context) => {
+  const { session, error } = await requireAuth();
+  if (error) return error;
 
-    return new Response(JSON.stringify(result), { status: 200 });
-  } catch (error) {
-    console.error("PUT /api/events/[eventId] - Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
-  }
-}
+  const { eventId } = await context.params;
+  const db = await connectToDatabase();
+  const updates = await req.json();
 
-export async function DELETE(req, context) {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      console.log("DELETE /api/events/[eventId] - Unauthorized request");
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-      });
-    }
+  logger.logUserAction("update_event", { eventId });
+  const result = await updateEvent(db, eventId, updates);
 
-    const { eventId } = await context.params;
-    const db = await connectToDatabase();
-    console.log("DELETE /api/events/[eventId] - Deleting event:", eventId);
-    const result = await deleteEvent(db, eventId);
-    console.log("DELETE /api/events/[eventId] - Success:", result);
+  return apiResponse.success(result);
+});
 
-    return new Response(JSON.stringify(result), { status: 200 });
-  } catch (error) {
-    console.error("DELETE /api/events/[eventId] - Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
-  }
-}
+export const DELETE = withErrorHandler(async (req, context) => {
+  const { session, error } = await requireAuth();
+  if (error) return error;
+
+  const { eventId } = await context.params;
+  const db = await connectToDatabase();
+
+  logger.logUserAction("delete_event", { eventId });
+  const result = await deleteEvent(db, eventId);
+
+  return apiResponse.success(result);
+});

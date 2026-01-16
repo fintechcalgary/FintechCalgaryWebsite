@@ -1,201 +1,139 @@
-import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { apiResponse, requireAdmin, validators, withErrorHandler } from "@/lib/api-helpers";
+import logger from "@/lib/logger";
 
-export async function POST(req) {
-  try {
-    // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== "admin") {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 }
-      );
-    }
+export const POST = withErrorHandler(async (req) => {
+  const { session, error } = await requireAdmin();
+  if (error) return error;
 
-    const data = await req.json();
+  const data = await req.json();
 
-    // Basic validation
-    if (!data.title || !data.responsibilitiesImageUrl) {
-      return NextResponse.json(
-        { error: "Title and responsibilities image are required" },
-        { status: 400 }
-      );
-    }
+  // Basic validation
+  if (!data.title || !data.responsibilitiesImageUrl) {
+    return apiResponse.badRequest(
+      "Title and responsibilities image are required"
+    );
+  }
 
-    // Validate questions if provided
-    if (data.questions && !Array.isArray(data.questions)) {
-      return NextResponse.json(
-        { error: "Questions must be an array" },
-        { status: 400 }
-      );
+  // Validate questions if provided
+  if (data.questions) {
+    const arrayError = validators.array(data.questions, "questions");
+    if (arrayError) {
+      return apiResponse.badRequest(arrayError);
     }
 
     // Validate each question
-    if (data.questions) {
-      for (const question of data.questions) {
-        if (!question.id || !question.label) {
-          return NextResponse.json(
-            { error: "Each question must have an id and label" },
-            { status: 400 }
-          );
-        }
+    for (const question of data.questions) {
+      if (!question.id || !question.label) {
+        return apiResponse.badRequest(
+          "Each question must have an id and label"
+        );
       }
     }
+  }
 
-    const db = await connectToDatabase();
-    const result = await db.collection("executiveRoles").insertOne({
-      title: data.title,
-      responsibilitiesImageUrl: data.responsibilitiesImageUrl,
-      questions: data.questions || [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+  const db = await connectToDatabase();
+  const result = await db.collection("executiveRoles").insertOne({
+    title: data.title,
+    responsibilitiesImageUrl: data.responsibilitiesImageUrl,
+    questions: data.questions || [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
 
-    return NextResponse.json({
-      success: true,
-      roleId: result.insertedId,
-    });
-  } catch (error) {
-    console.error("Failed to create executive role:", error);
-    return NextResponse.json(
-      { error: "Failed to create role" },
-      { status: 500 }
+  return apiResponse.success({
+    success: true,
+    roleId: result.insertedId,
+  });
+});
+
+export const GET = withErrorHandler(async () => {
+  const db = await connectToDatabase();
+  const roles = await db
+    .collection("executiveRoles")
+    .find({})
+    .sort({ createdAt: -1 })
+    .toArray();
+
+  return apiResponse.success(roles);
+});
+
+export const PUT = withErrorHandler(async (req) => {
+  const { session, error } = await requireAdmin();
+  if (error) return error;
+
+  const data = await req.json();
+  const { id, title, responsibilitiesImageUrl, questions } = data;
+
+  if (!id || !title || !responsibilitiesImageUrl) {
+    return apiResponse.badRequest(
+      "ID, title, and responsibilities image are required"
     );
   }
-}
 
-export async function GET(req) {
-  try {
-    const db = await connectToDatabase();
-    const roles = await db
-      .collection("executiveRoles")
-      .find({})
-      .sort({ createdAt: -1 })
-      .toArray();
-
-    return NextResponse.json(roles);
-  } catch (error) {
-    console.error("Failed to fetch executive roles:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch roles" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function PUT(req) {
-  try {
-    // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== "admin") {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 }
-      );
-    }
-
-    const data = await req.json();
-    const { id, title, responsibilitiesImageUrl, questions } = data;
-
-    if (!id || !title || !responsibilitiesImageUrl) {
-      return NextResponse.json(
-        { error: "ID, title, and responsibilities image are required" },
-        { status: 400 }
-      );
-    }
-
-    // Validate questions if provided
-    if (questions && !Array.isArray(questions)) {
-      return NextResponse.json(
-        { error: "Questions must be an array" },
-        { status: 400 }
-      );
+  // Validate questions if provided
+  if (questions) {
+    const arrayError = validators.array(questions, "questions");
+    if (arrayError) {
+      return apiResponse.badRequest(arrayError);
     }
 
     // Validate each question
-    if (questions) {
-      for (const question of questions) {
-        if (!question.id || !question.label) {
-          return NextResponse.json(
-            { error: "Each question must have an id and label" },
-            { status: 400 }
-          );
-        }
+    for (const question of questions) {
+      if (!question.id || !question.label) {
+        return apiResponse.badRequest(
+          "Each question must have an id and label"
+        );
       }
     }
-
-    const db = await connectToDatabase();
-    const updateData = {
-      title,
-      responsibilitiesImageUrl,
-      updatedAt: new Date(),
-    };
-
-    // Only update questions if provided
-    if (questions !== undefined) {
-      updateData.questions = questions;
-    }
-
-    const result = await db.collection("executiveRoles").updateOne(
-      { _id: new ObjectId(id) },
-      {
-        $set: updateData,
-      }
-    );
-
-    if (result.matchedCount === 0) {
-      return NextResponse.json({ error: "Role not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Failed to update executive role:", error);
-    return NextResponse.json(
-      { error: "Failed to update role" },
-      { status: 500 }
-    );
   }
-}
 
-export async function DELETE(req) {
-  try {
-    // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== "admin") {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 }
-      );
-    }
+  const db = await connectToDatabase();
+  const updateData = {
+    title,
+    responsibilitiesImageUrl,
+    updatedAt: new Date(),
+  };
 
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
-
-    if (!id) {
-      return NextResponse.json(
-        { error: "Role ID is required" },
-        { status: 400 }
-      );
-    }
-
-    const db = await connectToDatabase();
-    const result = await db.collection("executiveRoles").deleteOne({
-      _id: new ObjectId(id),
-    });
-
-    if (result.deletedCount === 0) {
-      return NextResponse.json({ error: "Role not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Failed to delete executive role:", error);
-    return NextResponse.json(
-      { error: "Failed to delete role" },
-      { status: 500 }
-    );
+  // Only update questions if provided
+  if (questions !== undefined) {
+    updateData.questions = questions;
   }
-}
+
+  const result = await db.collection("executiveRoles").updateOne(
+    { _id: new ObjectId(id) },
+    {
+      $set: updateData,
+    }
+  );
+
+  if (result.matchedCount === 0) {
+    return apiResponse.notFound("Role not found");
+  }
+
+  return apiResponse.success({ success: true });
+});
+
+export const DELETE = withErrorHandler(async (req) => {
+  const { session, error } = await requireAdmin();
+  if (error) return error;
+
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return apiResponse.badRequest("Role ID is required");
+  }
+
+  const db = await connectToDatabase();
+  const result = await db.collection("executiveRoles").deleteOne({
+    _id: new ObjectId(id),
+  });
+
+  if (result.deletedCount === 0) {
+    return apiResponse.notFound("Role not found");
+  }
+
+  return apiResponse.success({ success: true });
+});
