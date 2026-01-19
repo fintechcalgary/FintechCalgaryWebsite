@@ -82,7 +82,7 @@ export default function EventCard({ event, index }) {
           <div className="space-y-4">
             {/* Date badge and webinar indicator */}
             <div className="flex flex-wrap gap-2">
-              <div className="inline-block px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/20 text-sm text-white">
+              <div className="inline-block px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/20 text-sm font-medium text-white">
                 {new Date(event.date + "T00:00:00").toLocaleDateString(
                   "en-US",
                   {
@@ -95,22 +95,22 @@ export default function EventCard({ event, index }) {
                 {event.time && ` • ${event.time}`}
               </div>
               {event.eventType === "webinar" && (
-                <div className="inline-block px-3 py-2 rounded-full bg-blue-600/20 backdrop-blur-sm border border-blue-500/20 text-sm text-blue-100">
+                <div className="inline-block px-3 py-2 rounded-full bg-purple-500/20 backdrop-blur-sm border border-purple-500/20 text-sm font-medium text-purple-200">
                   Webinar
                 </div>
               )}
             </div>
 
             {/* Title */}
-            <h3 className="text-2xl font-bold text-white transition-colors duration-300">
+            <h3 className="text-2xl font-bold text-white group-hover:text-primary transition-colors duration-300">
               {event.title}
             </h3>
 
             {/* Description */}
-            <p className="text-gray-300 line-clamp-2">{event.description}</p>
+            <p className="text-gray-300 line-clamp-2 leading-relaxed">{event.description}</p>
 
             {/* View Event/Webinar button */}
-            <div className="inline-flex items-center px-6 py-3 rounded-full bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-105">
+            <div className="inline-flex items-center px-6 py-3 rounded-full bg-primary/90 hover:bg-primary text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/25">
               {event.eventType === "webinar" ? "View Webinar" : "View Event"}
             </div>
           </div>

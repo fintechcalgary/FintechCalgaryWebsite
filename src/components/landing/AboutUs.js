@@ -72,19 +72,24 @@ export default function AboutUs() {
 
       <div className="container mx-auto px-6 relative">
         {/* Title */}
-        <h2 className="text-6xl font-bold mb-20 text-center">
+        <div className="mb-16 md:mb-20 text-center">
           <Link href="/about" className="group inline-block relative">
-            <div className="relative inline-block">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
-                About Us
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 md:mb-6">
+              <span className="relative inline-block">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500 animate-gradient">
+                  About Us
+                </span>
+                <span className="absolute inset-0 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300">
+                  About Us
+                </span>
               </span>
-              <div
-                className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"
-                style={{ width: "100%" }}
-              />
+            </h2>
+            <div className="relative h-1 w-full max-w-xs mx-auto mt-2 md:mt-3">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50 blur-sm"></div>
+              <div className="relative h-full bg-gradient-to-r from-primary via-purple-400 to-pink-500 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
             </div>
           </Link>
-        </h2>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {/* Enhanced Left Section (Large Card) */}

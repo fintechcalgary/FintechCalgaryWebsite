@@ -81,22 +81,24 @@ export default function Partners() {
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/30 rounded-full blur-[96px] -translate-x-1/2 opacity-20"></div>
 
       <div className="container mx-auto px-6 relative">
-        <Link href="/partners">
-          <h2 className="text-6xl font-bold mb-20 text-center group cursor-pointer relative">
-            <div className="relative inline-block">
-              <div
-                className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary 
-                         flex items-center justify-center gap-4 group-hover:gap-6 transition-all duration-300"
-              >
-                Our Partners
-              </div>
-              <div
-                className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 h-1 bg-gradient-to-r from-primary to-purple-400 rounded-full"
-                style={{ width: "100%" }}
-              />
+        <div className="mb-16 md:mb-20 text-center">
+          <Link href="/partners" className="group inline-block relative">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 md:mb-6 cursor-pointer">
+              <span className="relative inline-block">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500 animate-gradient">
+                  Our Partners
+                </span>
+                <span className="absolute inset-0 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300">
+                  Our Partners
+                </span>
+              </span>
+            </h2>
+            <div className="relative h-1 w-full max-w-xs mx-auto mt-2 md:mt-3">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50 blur-sm"></div>
+              <div className="relative h-full bg-gradient-to-r from-primary via-purple-400 to-pink-500 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
             </div>
-          </h2>
-        </Link>
+          </Link>
+        </div>
 
         <div className="max-w-7xl mx-auto">
           <div className="relative h-48 overflow-hidden mb-12">

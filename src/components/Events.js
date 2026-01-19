@@ -129,6 +129,7 @@ export default function Events({ mode }) {
       registrations: event.registrations?.length || 0,
       eventType: event.eventType || "event",
       recordingUrl: event.recordingUrl || "",
+      isPartner: event.isPartner || false,
     });
     setShowForm(true);
   };

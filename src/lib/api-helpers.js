@@ -77,7 +77,7 @@ export const validators = {
   },
 
   requiredFields: (data, fields) => {
-    const missing = fields.filter((field) => !data[field]);
+    const missing = fields.filter((field) => data[field] === undefined || data[field] === null);
     if (missing.length > 0) {
       return `Missing required fields: ${missing.join(", ")}`;
     }
