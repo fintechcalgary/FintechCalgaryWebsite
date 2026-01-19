@@ -5,6 +5,16 @@ import Footer from "@/components/landing/Footer";
 import { FaEnvelope } from "react-icons/fa";
 import { FiCheck, FiAlertCircle } from "react-icons/fi";
 import logger from "@/lib/logger";
+import {
+  createDragHandlers,
+  validateFile,
+  uploadFile,
+  scrollToFirstError,
+  createFormChangeHandler,
+  validatePassword,
+  validateUsername,
+} from "@/lib/frontend-helpers";
+import { API_ENDPOINTS, UPLOAD_FOLDERS, FILE_TYPES, ERROR_MESSAGES } from "@/lib/constants";
 
 export default function AssociateMemberSignupPage() {
   useEffect(() => {
@@ -60,32 +70,22 @@ export default function AssociateMemberSignupPage() {
     const newErrors = {};
 
     // Password validation
-    if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters long";
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      newErrors.password = passwordError;
     }
 
     // Username validation
-    if (formData.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters long";
+    const usernameError = validateUsername(formData.username);
+    if (usernameError) {
+      newErrors.username = usernameError;
     }
 
     setErrors(newErrors);
 
     // Scroll to first error if any exist
     if (Object.keys(newErrors).length > 0) {
-      const firstErrorField = Object.keys(newErrors)[0];
-      setTimeout(() => {
-        const errorElement = document.querySelector(
-          `[data-error="${firstErrorField}"]`
-        );
-        if (errorElement) {
-          errorElement.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-          errorElement.focus();
-        }
-      }, 100);
+      scrollToFirstError(newErrors);
     }
 
     return Object.keys(newErrors).length === 0;
@@ -107,21 +107,7 @@ export default function AssociateMemberSignupPage() {
       let logoUrl = "";
 
       if (formData.logo) {
-        const logoData = new FormData();
-        logoData.append("file", formData.logo);
-        logoData.append("folder", "associateMemberLogos");
-
-        const response = await fetch("/api/upload", {
-          method: "POST",
-          body: logoData,
-        });
-
-        if (!response.ok) {
-          throw new Error("Upload failed");
-        }
-
-        const logoResult = await response.json();
-        logoUrl = logoResult.url;
+        logoUrl = await uploadFile(formData.logo, UPLOAD_FOLDERS.ASSOCIATE_MEMBER_LOGOS);
       }
 
       const memberData = {
@@ -129,7 +115,7 @@ export default function AssociateMemberSignupPage() {
         logo: logoUrl,
       };
 
-      const response = await fetch("/api/associateMember", {
+      const response = await fetch(API_ENDPOINTS.ASSOCIATE_MEMBER, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -183,22 +169,16 @@ export default function AssociateMemberSignupPage() {
         logoType: formData.logo?.type,
       });
 
-      if (error.message === "Username already exists") {
-        newErrors.username = "This username is already taken";
-      } else if (error.message === "Organization already exists") {
-        newErrors.organizationName =
-          "This organization name is already registered";
-      } else if (
-        error.message === "Password must be at least 6 characters long"
-      ) {
-        newErrors.password = "Password must be at least 6 characters long";
-      } else if (
-        error.message === "Username must be at least 3 characters long"
-      ) {
-        newErrors.username = "Username must be at least 3 characters long";
-      } else if (error.message === "Upload failed") {
-        errorMessage =
-          "Failed to upload your logo. Please try again with a different file.";
+      if (error.message === ERROR_MESSAGES.USERNAME_EXISTS) {
+        newErrors.username = ERROR_MESSAGES.USERNAME_EXISTS_DETAILED;
+      } else if (error.message === ERROR_MESSAGES.ORGANIZATION_EXISTS) {
+        newErrors.organizationName = ERROR_MESSAGES.ORGANIZATION_EXISTS_DETAILED;
+      } else if (error.message === ERROR_MESSAGES.PASSWORD_MIN_LENGTH) {
+        newErrors.password = ERROR_MESSAGES.PASSWORD_MIN_LENGTH;
+      } else if (error.message === ERROR_MESSAGES.USERNAME_MIN_LENGTH) {
+        newErrors.username = ERROR_MESSAGES.USERNAME_MIN_LENGTH;
+      } else if (error.message === "Upload failed" || error.message.includes("upload")) {
+        errorMessage = ERROR_MESSAGES.LOGO_UPLOAD_FAILED;
         logger.logUploadError(formData.logo?.name || "unknown", error, {
           size: formData.logo?.size,
           type: formData.logo?.type,
@@ -207,13 +187,11 @@ export default function AssociateMemberSignupPage() {
         error.message.includes("network") ||
         error.message.includes("fetch")
       ) {
-        errorMessage =
-          "Network error. Please check your internet connection and try again.";
+        errorMessage = ERROR_MESSAGES.NETWORK_ERROR;
       } else if (error.message.includes("timeout")) {
-        errorMessage = "Request timed out. Please try again.";
+        errorMessage = ERROR_MESSAGES.TIMEOUT_ERROR;
       } else {
-        errorMessage =
-          "An unexpected error occurred. Please try again or contact support if the problem persists.";
+        errorMessage = ERROR_MESSAGES.GENERIC_ERROR;
       }
 
       setErrors(newErrors);
@@ -221,19 +199,7 @@ export default function AssociateMemberSignupPage() {
 
       // Scroll to first error if any backend validation errors exist
       if (Object.keys(newErrors).length > 0) {
-        const firstErrorField = Object.keys(newErrors)[0];
-        setTimeout(() => {
-          const errorElement = document.querySelector(
-            `[data-error="${firstErrorField}"]`
-          );
-          if (errorElement) {
-            errorElement.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-            errorElement.focus();
-          }
-        }, 100);
+        scrollToFirstError(newErrors);
       }
     } finally {
       setIsSubmitting(false);
@@ -251,28 +217,17 @@ export default function AssociateMemberSignupPage() {
     // Clear any previous file errors
     setFileError(null);
 
-    // Check if file type is supported
-    const allowedTypes = [
-      "image/jpeg",
-      "image/jpg",
-      "image/png",
-      "image/svg+xml",
-    ];
-    const fileExtension = file.name.toLowerCase().split(".").pop();
-    const allowedExtensions = ["jpg", "jpeg", "png", "svg"];
+    const validation = validateFile(file, {
+      allowedTypes: FILE_TYPES.IMAGE.MIME_TYPES,
+      allowedExtensions: FILE_TYPES.IMAGE.EXTENSIONS,
+    });
 
-    if (
-      !allowedTypes.includes(file.type) &&
-      !allowedExtensions.includes(fileExtension)
-    ) {
-      setFileError("Please upload a logo in JPG, PNG, or SVG format only.");
+    if (!validation.valid) {
+      setFileError(validation.error);
       return;
     }
 
-    if (
-      file &&
-      (file.type.startsWith("image/") || file.type === "image/svg+xml")
-    ) {
+    if (file && (file.type.startsWith("image/") || file.type === "image/svg+xml")) {
       setFormData({ ...formData, logo: file });
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -282,35 +237,7 @@ export default function AssociateMemberSignupPage() {
     }
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(true);
-  };
-
-  const handleDragEnter = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(false);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(false);
-
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      const file = files[0];
-      handleFile(file);
-    }
-  };
+  const dragHandlers = createDragHandlers(handleFile, setIsDragOver);
 
   // Update the base input class styling
   const inputClassName =
@@ -379,10 +306,10 @@ export default function AssociateMemberSignupPage() {
                         className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:border-primary/60 transition-all duration-200 ${
                           isDragOver ? "border-primary/60" : ""
                         }`}
-                        onDragOver={handleDragOver}
-                        onDragEnter={handleDragEnter}
-                        onDragLeave={handleDragLeave}
-                        onDrop={handleDrop}
+                        onDragOver={dragHandlers.onDragOver}
+                        onDragEnter={dragHandlers.onDragEnter}
+                        onDragLeave={dragHandlers.onDragLeave}
+                        onDrop={dragHandlers.onDrop}
                       >
                         {previewUrl ? (
                           <div className="relative w-full h-full p-4 flex items-center justify-center">

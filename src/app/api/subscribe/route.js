@@ -3,6 +3,7 @@ import { createSubscriber } from "@/lib/models/subscriber";
 import { apiResponse, validators, withErrorHandler } from "@/lib/api-helpers";
 import logger from "@/lib/logger";
 import sgMail from "@sendgrid/mail";
+import { EMAIL } from "@/lib/constants";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -10,14 +11,12 @@ export const POST = withErrorHandler(async (req) => {
   const { email, name } = await req.json();
 
   // Input validation
-  const nameError = validators.required(name, "Name");
-  if (nameError) {
-    return apiResponse.badRequest(nameError);
-  }
-
-  const emailError = validators.email(email);
-  if (emailError) {
-    return apiResponse.badRequest(emailError);
+  const validationError = validators.validateRequiredAndEmail(
+    { email, name },
+    ["name", "email"]
+  );
+  if (validationError) {
+    return apiResponse.badRequest(validationError);
   }
 
   const db = await connectToDatabase();
@@ -26,8 +25,8 @@ export const POST = withErrorHandler(async (req) => {
   // Send welcome email
   const msg = {
     to: email,
-    from: "rojnovyotam@gmail.com",
-    subject: "Welcome to FinTech Calgary!",
+    from: EMAIL.SENDGRID_FROM,
+    subject: EMAIL.SUBJECTS.WELCOME,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #6d28d9;">Welcome to FinTech Calgary!</h1>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import logger from "@/lib/logger";
+import { VALIDATION, ERROR_MESSAGES } from "@/lib/constants";
 
 /**
  * Standard API response helpers
@@ -63,15 +64,15 @@ export async function requireAdmin() {
  */
 export const validators = {
   email: (email) => {
-    if (!email) return "Email is required";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return "Invalid email format";
+    if (!email) return ERROR_MESSAGES.EMAIL_REQUIRED;
+    if (!VALIDATION.EMAIL_REGEX.test(email)) {
+      return ERROR_MESSAGES.EMAIL_INVALID;
     }
     return null;
   },
 
   required: (value, fieldName) => {
-    if (!value) return `${fieldName} is required`;
+    if (!value) return ERROR_MESSAGES.REQUIRED_FIELD(fieldName);
     return null;
   },
 
@@ -87,6 +88,42 @@ export const validators = {
     if (value !== undefined && !Array.isArray(value)) {
       return `${fieldName} must be an array`;
     }
+    return null;
+  },
+
+  minLength: (value, minLength, fieldName) => {
+    if (value && value.length < minLength) {
+      return `${fieldName} must be at least ${minLength} characters long`;
+    }
+    return null;
+  },
+
+  password: (password) => {
+    if (!password) return ERROR_MESSAGES.EMAIL_REQUIRED.replace("Email", "Password");
+    if (password.length < VALIDATION.PASSWORD_MIN_LENGTH) {
+      return ERROR_MESSAGES.PASSWORD_MIN_LENGTH;
+    }
+    return null;
+  },
+
+  username: (username) => {
+    if (!username) return ERROR_MESSAGES.REQUIRED_FIELD("Username");
+    if (username.length < VALIDATION.USERNAME_MIN_LENGTH) {
+      return ERROR_MESSAGES.USERNAME_MIN_LENGTH;
+    }
+    return null;
+  },
+
+  // Helper to validate required fields and email in one call
+  validateRequiredAndEmail: (data, requiredFields, emailField = "email") => {
+    const requiredError = validators.requiredFields(data, requiredFields);
+    if (requiredError) return requiredError;
+
+    if (requiredFields.includes(emailField)) {
+      const emailError = validators.email(data[emailField]);
+      if (emailError) return emailError;
+    }
+
     return null;
   },
 };

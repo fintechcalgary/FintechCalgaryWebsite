@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
+import { API_ENDPOINTS, ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/lib/constants";
 import { motion } from "framer-motion";
 import { FiCheck, FiArrowLeft, FiAlertCircle } from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
@@ -24,7 +25,7 @@ export default function JoinPage() {
     setErrorMessage(""); // Clear any previous error messages
 
     try {
-      const response = await fetch("/api/subscribe", {
+      const response = await fetch(API_ENDPOINTS.SUBSCRIBE, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +36,7 @@ export default function JoinPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to subscribe");
+        throw new Error(data.error || ERROR_MESSAGES.SUBSCRIBE_FAILED);
       }
 
       setSubmitStatus("success");
@@ -43,7 +44,7 @@ export default function JoinPage() {
     } catch (error) {
       setSubmitStatus("error");
       setErrorMessage(error.message);
-      console.log("Subscription error:", error);
+      // Error logged by API
     } finally {
       setIsSubmitting(false);
     }

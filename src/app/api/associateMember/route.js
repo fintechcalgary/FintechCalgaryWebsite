@@ -3,6 +3,7 @@ import { getAssociateMembers } from "@/lib/models/associateMember";
 import bcrypt from "bcryptjs";
 import { apiResponse, requireAdmin, validators, withErrorHandler } from "@/lib/api-helpers";
 import logger from "@/lib/logger";
+import { COLLECTIONS, ERROR_MESSAGES, VALIDATION } from "@/lib/constants";
 
 export const POST = withErrorHandler(async (req) => {
   const db = await connectToDatabase();
@@ -15,37 +16,37 @@ export const POST = withErrorHandler(async (req) => {
     requiredFields
   );
   if (validationError) {
-    return apiResponse.badRequest(
-      `${validationError}: organizationName, username, and password are required`
-    );
+    return apiResponse.badRequest(validationError);
   }
 
   // Validate password length
-  if (organization.password.length < 6) {
-    return apiResponse.badRequest("Password must be at least 6 characters long");
+  const passwordError = validators.password(organization.password);
+  if (passwordError) {
+    return apiResponse.badRequest(passwordError);
   }
 
   // Validate username length
-  if (organization.username.length < 3) {
-    return apiResponse.badRequest("Username must be at least 3 characters long");
+  const usernameError = validators.username(organization.username);
+  if (usernameError) {
+    return apiResponse.badRequest(usernameError);
   }
 
   // Check if organization already exists
   const existingMember = await db
-    .collection("associateMembers")
+    .collection(COLLECTIONS.ASSOCIATE_MEMBERS)
     .findOne({ organizationName: organization.organizationName });
 
   if (existingMember) {
-    return apiResponse.badRequest("Organization already exists");
+    return apiResponse.badRequest(ERROR_MESSAGES.ORGANIZATION_EXISTS);
   }
 
   // Check if username already exists in users collection
   const existingUser = await db
-    .collection("users")
+    .collection(COLLECTIONS.USERS)
     .findOne({ username: organization.username });
 
   if (existingUser) {
-    return apiResponse.badRequest("Username already exists");
+    return apiResponse.badRequest(ERROR_MESSAGES.USERNAME_EXISTS);
   }
 
   // Hash the password
@@ -62,10 +63,10 @@ export const POST = withErrorHandler(async (req) => {
   };
 
   // Create associate member
-  const result = await db.collection("associateMembers").insertOne(memberDoc);
+  const result = await db.collection(COLLECTIONS.ASSOCIATE_MEMBERS).insertOne(memberDoc);
 
   // Also create a user account for authentication
-  await db.collection("users").insertOne({
+  await db.collection(COLLECTIONS.USERS).insertOne({
     username: organization.username,
     email: organization.organizationEmail,
     password: hashedPassword,

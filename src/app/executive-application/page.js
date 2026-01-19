@@ -1,10 +1,20 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { FiCheck, FiAlertCircle } from "react-icons/fi";
 import Image from "next/image";
 import logger from "@/lib/logger";
+import {
+  createDragHandlers,
+  validateFile,
+  uploadFile,
+  scrollToFirstError,
+  createFormChangeHandler,
+  validateRequiredFields,
+  validateEmail,
+} from "@/lib/frontend-helpers";
+import { API_ENDPOINTS, UPLOAD_FOLDERS, FILE_TYPES, ERROR_MESSAGES } from "@/lib/constants";
 
 export default function ExecutiveApplicationPage() {
   const [form, setForm] = useState({
@@ -103,7 +113,7 @@ export default function ExecutiveApplicationPage() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch("/api/settings");
+      const response = await fetch(API_ENDPOINTS.SETTINGS);
       if (response.ok) {
         const data = await response.json();
         setApplicationsOpen(!!data.executiveApplicationsOpen);
@@ -115,12 +125,19 @@ export default function ExecutiveApplicationPage() {
   };
 
   const validate = () => {
-    const errs = {};
-    if (!form.name) errs.name = "Name is required";
-    if (!form.email) errs.email = "Email is required";
-    if (!form.role) errs.role = "Role is required";
-    if (!form.program) errs.program = "Program/Major is required";
-    if (!form.year) errs.year = "Year is required";
+    const errs = validateRequiredFields(form, [
+      "name",
+      "email",
+      "role",
+      "program",
+      "year",
+    ]);
+
+    // Validate email format
+    const emailError = validateEmail(form.email);
+    if (emailError) {
+      errs.email = emailError;
+    }
 
     // Validate role-specific questions first, then fallback to general questions
     const questionsToValidate =
@@ -135,24 +152,21 @@ export default function ExecutiveApplicationPage() {
 
     // Resume file validation
     if (!form.resumeFile) {
-      errs.resumeFile = "Resume file is required";
+      errs.resumeFile = ERROR_MESSAGES.FILE_REQUIRED("Resume");
     } else {
-      const allowedTypes = ["application/pdf"];
-      if (!allowedTypes.includes(form.resumeFile.type)) {
-        errs.resumeFile = "Please upload a PDF file only";
-      }
-      if (form.resumeFile.size > 5 * 1024 * 1024) {
-        // 5MB limit
-        errs.resumeFile = "File size must be less than 5MB";
+      const validation = validateFile(form.resumeFile, {
+        allowedTypes: FILE_TYPES.PDF.MIME_TYPES,
+        maxSize: FILE_TYPES.PDF.MAX_SIZE,
+      });
+      if (!validation.valid) {
+        errs.resumeFile = validation.error;
       }
     }
 
     return errs;
   };
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = createFormChangeHandler(setForm);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -162,73 +176,40 @@ export default function ExecutiveApplicationPage() {
   };
 
   const handleFile = (file) => {
-    const allowedTypes = ["application/pdf"];
-    if (file && allowedTypes.includes(file.type)) {
+    const validation = validateFile(file, {
+      allowedTypes: FILE_TYPES.PDF.MIME_TYPES,
+      maxSize: FILE_TYPES.PDF.MAX_SIZE,
+    });
+
+    if (validation.valid) {
       setForm({ ...form, resumeFile: file });
       setResumeFileName(file.name);
       // Clear error when user selects a file
       if (errors.resumeFile) {
         setErrors({ ...errors, resumeFile: null });
       }
+    } else {
+      setErrors({ ...errors, resumeFile: validation.error });
     }
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(true);
-  };
-
-  const handleDragEnter = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(false);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(false);
-
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      const file = files[0];
-      handleFile(file);
-    }
-  };
+  const dragHandlers = createDragHandlers(handleFile, setIsDragOver);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus(null);
     const errs = validate();
     setErrors(errs);
-    if (Object.keys(errs).length > 0) return;
+    if (Object.keys(errs).length > 0) {
+      scrollToFirstError(errs);
+      return;
+    }
     setSubmitting(true);
     try {
       // Upload resume file first
       let resumeUrl = "";
       if (form.resumeFile) {
-        const formData = new FormData();
-        formData.append("file", form.resumeFile);
-        formData.append("folder", "resumes");
-
-        const uploadResponse = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error("Failed to upload resume");
-        }
-
-        const uploadResult = await uploadResponse.json();
-        resumeUrl = uploadResult.url;
+        resumeUrl = await uploadFile(form.resumeFile, UPLOAD_FOLDERS.RESUMES);
       }
 
       // Submit application with resume URL
@@ -238,7 +219,7 @@ export default function ExecutiveApplicationPage() {
       };
       delete applicationData.resumeFile; // Remove the file object
 
-      const res = await fetch("/api/executive-application", {
+      const res = await fetch(API_ENDPOINTS.EXECUTIVE_APPLICATION, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(applicationData),
@@ -266,7 +247,7 @@ export default function ExecutiveApplicationPage() {
 
         // Log API error
         logger.logApiError(
-          "/api/executive-application",
+          API_ENDPOINTS.EXECUTIVE_APPLICATION,
           new Error(errorData.error || "Unknown API error"),
           {
             name: form.name,
@@ -279,7 +260,7 @@ export default function ExecutiveApplicationPage() {
         if (errorData.error) {
           setErrorMessage(errorData.error);
         } else {
-          setErrorMessage("Failed to submit application. Please try again.");
+          setErrorMessage(ERROR_MESSAGES.APPLICATION_SUBMIT_FAILED);
         }
       }
     } catch (error) {
@@ -295,10 +276,8 @@ export default function ExecutiveApplicationPage() {
         resumeType: form.resumeFile?.type,
       });
 
-      if (error.message === "Failed to upload resume") {
-        setErrorMessage(
-          "Failed to upload your resume. Please try again with a different file."
-        );
+      if (error.message === "Failed to upload resume" || error.message.includes("upload")) {
+        setErrorMessage(ERROR_MESSAGES.RESUME_UPLOAD_FAILED);
         logger.logUploadError(form.resumeFile?.name || "unknown", error, {
           size: form.resumeFile?.size,
           type: form.resumeFile?.type,
@@ -572,10 +551,10 @@ export default function ExecutiveApplicationPage() {
                         className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:border-primary/60 transition-all duration-200 ${
                           isDragOver ? "border-primary/60" : ""
                         }`}
-                        onDragOver={handleDragOver}
-                        onDragEnter={handleDragEnter}
-                        onDragLeave={handleDragLeave}
-                        onDrop={handleDrop}
+                        onDragOver={dragHandlers.onDragOver}
+                        onDragEnter={dragHandlers.onDragEnter}
+                        onDragLeave={dragHandlers.onDragLeave}
+                        onDrop={dragHandlers.onDrop}
                       >
                         {resumeFileName ? (
                           <div className="relative w-full h-full p-4 flex items-center justify-center">

@@ -1,15 +1,17 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { apiResponse, validators, withErrorHandler, DEFAULT_EXECUTIVE_QUESTIONS } from "@/lib/api-helpers";
 import logger from "@/lib/logger";
+import { ObjectId } from "mongodb";
+import { COLLECTIONS, ERROR_MESSAGES } from "@/lib/constants";
 
 export const POST = withErrorHandler(async (req) => {
   const data = await req.json();
 
   const db = await connectToDatabase();
-  const settings = await db.collection("settings").findOne({});
+  const settings = await db.collection(COLLECTIONS.SETTINGS).findOne({});
 
   // Get role-specific questions
-  const selectedRole = await db.collection("executiveRoles").findOne({
+  const selectedRole = await db.collection(COLLECTIONS.EXECUTIVE_ROLES).findOne({
     title: data.role,
   });
 
@@ -19,17 +21,11 @@ export const POST = withErrorHandler(async (req) => {
       ? selectedRole.questions
       : settings?.executiveApplicationQuestions || DEFAULT_EXECUTIVE_QUESTIONS;
 
-  // Basic validation for required fields
+  // Basic validation for required fields and email
   const requiredFields = ["name", "email", "program", "year", "role"];
-  const validationError = validators.requiredFields(data, requiredFields);
+  const validationError = validators.validateRequiredAndEmail(data, requiredFields);
   if (validationError) {
     return apiResponse.badRequest(validationError);
-  }
-
-  // Validate email format
-  const emailError = validators.email(data.email);
-  if (emailError) {
-    return apiResponse.badRequest(emailError);
   }
 
   // Validate dynamic questions
@@ -43,7 +39,7 @@ export const POST = withErrorHandler(async (req) => {
     );
   }
 
-  await db.collection("executiveApplications").insertOne({
+  await db.collection(COLLECTIONS.EXECUTIVE_APPLICATIONS).insertOne({
     ...data,
     createdAt: new Date(),
   });
@@ -52,55 +48,33 @@ export const POST = withErrorHandler(async (req) => {
   return apiResponse.success({ success: true });
 });
 
-export async function GET(req) {
-  try {
-    const db = await connectToDatabase();
-    const applications = await db
-      .collection("executiveApplications")
-      .find({})
-      .sort({ createdAt: -1 })
-      .toArray();
+export const GET = withErrorHandler(async () => {
+  const db = await connectToDatabase();
+  const applications = await db
+    .collection(COLLECTIONS.EXECUTIVE_APPLICATIONS)
+    .find({})
+    .sort({ createdAt: -1 })
+    .toArray();
 
-    return NextResponse.json(applications);
-  } catch (error) {
-    console.error("Failed to fetch executive applications:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch applications" },
-      { status: 500 }
-    );
+  return apiResponse.success(applications);
+});
+
+export const DELETE = withErrorHandler(async (req) => {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return apiResponse.badRequest(ERROR_MESSAGES.REQUIRED_FIELD("Application ID"));
   }
-}
 
-export async function DELETE(req) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
+  const db = await connectToDatabase();
+  const result = await db.collection(COLLECTIONS.EXECUTIVE_APPLICATIONS).deleteOne({
+    _id: new ObjectId(id),
+  });
 
-    if (!id) {
-      return NextResponse.json(
-        { error: "Application ID is required" },
-        { status: 400 }
-      );
-    }
-
-    const db = await connectToDatabase();
-    const result = await db.collection("executiveApplications").deleteOne({
-      _id: new ObjectId(id),
-    });
-
-    if (result.deletedCount === 0) {
-      return NextResponse.json(
-        { error: "Application not found" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Failed to delete executive application:", error);
-    return NextResponse.json(
-      { error: "Failed to delete application" },
-      { status: 500 }
-    );
+  if (result.deletedCount === 0) {
+    return apiResponse.notFound("Application not found");
   }
-}
+
+  return apiResponse.success({ success: true });
+});

@@ -6,15 +6,13 @@ import logger from "@/lib/logger";
 export const POST = withErrorHandler(async (req) => {
   const subscriber = await req.json();
 
-  // Validate required fields
-  const emailError = validators.email(subscriber.email);
-  if (emailError) {
-    return apiResponse.badRequest(emailError);
-  }
-
-  const nameError = validators.required(subscriber.name, "Name");
-  if (nameError) {
-    return apiResponse.badRequest(nameError);
+  // Validate required fields and email
+  const validationError = validators.validateRequiredAndEmail(
+    subscriber,
+    ["name", "email"]
+  );
+  if (validationError) {
+    return apiResponse.badRequest(validationError);
   }
 
   const db = await connectToDatabase();

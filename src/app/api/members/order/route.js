@@ -12,8 +12,11 @@ export const PUT = withErrorHandler(async (req) => {
 
   // Validate the input
   const arrayError = validators.array(orderedMemberIds, "orderedMemberIds");
-  if (arrayError || orderedMemberIds.length === 0) {
-    return apiResponse.badRequest("Invalid data: orderedMemberIds must be a non-empty array");
+  if (arrayError) {
+    return apiResponse.badRequest(arrayError);
+  }
+  if (!orderedMemberIds || orderedMemberIds.length === 0) {
+    return apiResponse.badRequest("orderedMemberIds must be a non-empty array");
   }
 
   await updateMemberOrder(db, orderedMemberIds);

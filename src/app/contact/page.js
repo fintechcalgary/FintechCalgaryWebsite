@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   FiGithub,
   FiInstagram,
@@ -13,6 +13,8 @@ import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import { FaTiktok } from "react-icons/fa";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { createFormChangeHandler } from "@/lib/frontend-helpers";
+import { API_ENDPOINTS, ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/lib/constants";
 
 export default function ContactPage() {
   useEffect(() => {
@@ -28,13 +30,15 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
+  const handleChange = createFormChangeHandler(setFormData);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(API_ENDPOINTS.CONTACT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +47,7 @@ export default function ContactPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to send message");
+        throw new Error(ERROR_MESSAGES.CONTACT_FAILED);
       }
 
       setSubmitStatus("success");
@@ -142,11 +146,10 @@ export default function ContactPage() {
                   <div>
                     <input
                       type="text"
+                      name="name"
                       placeholder="Your Name"
                       value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
+                      onChange={handleChange}
                       required
                       className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
                     />
@@ -154,11 +157,10 @@ export default function ContactPage() {
                   <div>
                     <input
                       type="email"
+                      name="email"
                       placeholder="Your Email"
                       value={formData.email}
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
+                      onChange={handleChange}
                       required
                       className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
                     />
@@ -167,22 +169,20 @@ export default function ContactPage() {
                 <div>
                   <input
                     type="text"
+                    name="subject"
                     placeholder="Subject"
                     value={formData.subject}
-                    onChange={(e) =>
-                      setFormData({ ...formData, subject: e.target.value })
-                    }
+                    onChange={handleChange}
                     required
                     className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
                   />
                 </div>
                 <div>
                   <textarea
+                    name="message"
                     placeholder="Your Message"
                     value={formData.message}
-                    onChange={(e) =>
-                      setFormData({ ...formData, message: e.target.value })
-                    }
+                    onChange={handleChange}
                     required
                     rows={6}
                     className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
@@ -206,12 +206,12 @@ export default function ContactPage() {
                 </div>
                 {submitStatus === "success" && (
                   <p className="text-green-400 text-center">
-                    Message sent successfully!
+                    {SUCCESS_MESSAGES.CONTACT_SENT}
                   </p>
                 )}
                 {submitStatus === "error" && (
                   <p className="text-red-400 text-center">
-                    Failed to send message. Please try again.
+                    {ERROR_MESSAGES.CONTACT_FAILED}
                   </p>
                 )}
               </form>
