@@ -1,36 +1,94 @@
 "use client";
 
 import { useState } from "react";
-import { API_ENDPOINTS, ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/lib/constants";
+import { API_ENDPOINTS, ERROR_MESSAGES, SUCCESS_MESSAGES, UPLOAD_FOLDERS, FILE_TYPES } from "@/lib/constants";
 import { motion } from "framer-motion";
-import { FiCheck, FiArrowLeft, FiAlertCircle } from "react-icons/fi";
+import { FiCheck, FiArrowLeft, FiAlertCircle, FiUpload, FiX } from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import Link from "next/link";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { uploadFile, validateFile, createDragHandlers } from "@/lib/frontend-helpers";
 
 export default function JoinPage() {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
+    ucid: "",
     email: "",
   });
+  const [resumeFile, setResumeFile] = useState(null);
+  const [resumeFileName, setResumeFileName] = useState("");
+  const [isDragOver, setIsDragOver] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [membershipType, setMembershipType] = useState("free");
+
+  const handleFile = (file) => {
+    const validation = validateFile(file, {
+      allowedTypes: FILE_TYPES.PDF.MIME_TYPES,
+      allowedExtensions: FILE_TYPES.PDF.EXTENSIONS,
+      maxSize: FILE_TYPES.PDF.MAX_SIZE,
+    });
+
+    if (!validation.valid) {
+      setErrorMessage(validation.error);
+      return;
+    }
+
+    setResumeFile(file);
+    setResumeFileName(file.name);
+    setErrorMessage("");
+  };
+
+  const dragHandlers = createDragHandlers(handleFile, setIsDragOver);
+
+  const handleRemoveResume = () => {
+    setResumeFile(null);
+    setResumeFileName("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMessage(""); // Clear any previous error messages
 
+    // Validate required fields
+    if (!formData.firstName || !formData.lastName || !formData.ucid || !formData.email) {
+      setErrorMessage("Please fill in all required fields.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validate resume is required
+    if (!resumeFile) {
+      setErrorMessage("Resume is required. Please upload your resume.");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
+      // Upload resume file
+      let resumeUrl = "";
+      try {
+        resumeUrl = await uploadFile(resumeFile, UPLOAD_FOLDERS.RESUMES);
+      } catch (uploadError) {
+        throw new Error(ERROR_MESSAGES.RESUME_UPLOAD_FAILED);
+      }
+
+      // Submit form data
       const response = await fetch(API_ENDPOINTS.SUBSCRIBE, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          membershipType,
+          hasPaid: false, // Set to false for now, will be updated when payment is processed
+          resume: resumeUrl,
+        }),
       });
 
       const data = await response.json();
@@ -40,7 +98,9 @@ export default function JoinPage() {
       }
 
       setSubmitStatus("success");
-      setFormData({ name: "", email: "" });
+      setFormData({ firstName: "", lastName: "", ucid: "", email: "" });
+      setResumeFile(null);
+      setResumeFileName("");
     } catch (error) {
       setSubmitStatus("error");
       setErrorMessage(error.message);
@@ -50,9 +110,6 @@ export default function JoinPage() {
     }
   };
 
-  const handlePremiumRedirect = () => {
-    window.location.href = "https://www.google.com";
-  };
 
   return (
     <main className="flex flex-col min-h-screen">
@@ -237,99 +294,172 @@ export default function JoinPage() {
                       </div>
                     </div>
 
-                    {membershipType === "free" ? (
-                      <div className="mt-6">
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                          {errorMessage && (
-                            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start">
-                              <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
-                              <div>
-                                <p className="text-red-400">{errorMessage}</p>
-                                {errorMessage.includes(
-                                  "already subscribed"
-                                ) && (
-                                  <p className="text-gray-400 text-sm mt-1">
-                                    Please use a different email address or
-                                    check your inbox for previous
-                                    communications.
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          )}
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Name input - commented out
+                    <div className="mt-6">
+                      <form onSubmit={handleSubmit} className="space-y-4">
+                        {errorMessage && (
+                          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start">
+                            <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
                             <div>
-                              <label className="text-sm font-medium text-gray-300 mb-1 block">
-                                Name
-                              </label>
-                              <input
-                                type="text"
-                                value={formData.name}
-                                onChange={(e) =>
-                                  setFormData({
-                                    ...formData,
-                                    name: e.target.value,
-                                  })
-                                }
-                                required
-                                className="w-full px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
-                                placeholder="Your full name"
-                              />
+                              <p className="text-red-400">{errorMessage}</p>
+                              {errorMessage.includes(
+                                "already subscribed"
+                              ) && (
+                                <p className="text-gray-400 text-sm mt-1">
+                                  Please use a different email address or
+                                  check your inbox for previous
+                                  communications.
+                                </p>
+                              )}
                             </div>
+                          </div>
+                        )}
 
-                            <div>
-                              <label className="block text-sm font-medium text-gray-300 mb-1">
-                                Email
-                              </label>
-                              <input
-                                type="email"
-                                value={formData.email}
-                                onChange={(e) =>
-                                  setFormData({
-                                    ...formData,
-                                    email: e.target.value,
-                                  })
-                                }
-                                required
-                                className="w-full px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
-                                placeholder="Your email address"
-                              />
-                            </div>
-                            */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium text-gray-300 mb-1 block">
+                              First Name <span className="text-red-400">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.firstName}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  firstName: e.target.value,
+                                })
+                              }
+                              required
+                              className="w-full px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                              placeholder="Your first name"
+                            />
                           </div>
 
-                          <button
-                            type="submit"
-                            disabled={true}
-                            className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-                          >
-                            {isSubmitting
-                              ? "Joining..."
-                              : "Coming in September"}
-                          </button>
-                        </form>
-                      </div>
-                    ) : (
-                      <div className="space-y-4 mt-6">
-                        <p className="text-gray-300">
-                          Get exclusive access to premium events, networking
-                          opportunities, and member-only resources.
-                        </p>
+                          <div>
+                            <label className="text-sm font-medium text-gray-300 mb-1 block">
+                              Last Name <span className="text-red-400">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.lastName}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  lastName: e.target.value,
+                                })
+                              }
+                              required
+                              className="w-full px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                              placeholder="Your last name"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="text-sm font-medium text-gray-300 mb-1 block">
+                              UCID <span className="text-red-400">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.ucid}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  ucid: e.target.value,
+                                })
+                              }
+                              required
+                              className="w-full px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                              placeholder="Your UCID"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="text-sm font-medium text-gray-300 mb-1 block">
+                              Email <span className="text-red-400">*</span>
+                            </label>
+                            <input
+                              type="email"
+                              value={formData.email}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  email: e.target.value,
+                                })
+                              }
+                              required
+                              className="w-full px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                              placeholder="Your email address"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Resume Upload */}
+                        <div>
+                          <label className="text-sm font-medium text-gray-300 mb-1 block">
+                            Resume (PDF, max 5MB) <span className="text-red-400">*</span>
+                          </label>
+                          {resumeFileName ? (
+                            <div className="flex items-center justify-between p-3 bg-gray-900/50 border border-gray-700 rounded-lg">
+                              <div className="flex items-center gap-2">
+                                <FiUpload className="text-primary" />
+                                <span className="text-white text-sm">{resumeFileName}</span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={handleRemoveResume}
+                                className="text-red-400 hover:text-red-300 transition-colors"
+                              >
+                                <FiX className="w-5 h-5" />
+                              </button>
+                            </div>
+                          ) : (
+                            <div
+                              {...dragHandlers}
+                              className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                                isDragOver
+                                  ? "border-primary bg-primary/10"
+                                  : "border-gray-700 bg-gray-900/30 hover:border-gray-600"
+                              }`}
+                            >
+                              <input
+                                type="file"
+                                id="resume-upload"
+                                accept=".pdf"
+                                onChange={(e) => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    handleFile(e.target.files[0]);
+                                  }
+                                }}
+                                className="hidden"
+                              />
+                              <label
+                                htmlFor="resume-upload"
+                                className="cursor-pointer flex flex-col items-center gap-2"
+                              >
+                                <FiUpload className="w-8 h-8 text-gray-400" />
+                                <span className="text-gray-300 text-sm">
+                                  Click to upload or drag and drop
+                                </span>
+                                <span className="text-gray-500 text-xs">
+                                  PDF only, max 5MB
+                                </span>
+                              </label>
+                            </div>
+                          )}
+                        </div>
+
                         <button
-                          onClick={handlePremiumRedirect}
-                          className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-                          disabled
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                         >
-                          Premium Sign Up Available in September
+                          {isSubmitting
+                            ? "Joining..."
+                            : membershipType === "premium"
+                            ? "Join Premium"
+                            : "Join Free"}
                         </button>
-                        <p className="text-xs text-gray-400 text-center">
-                          Our premium membership option is coming soon. Check
-                          back in September!
-                        </p>
-                      </div>
-                    )}
+                      </form>
+                    </div>
                   </>
                 )}
               </div>

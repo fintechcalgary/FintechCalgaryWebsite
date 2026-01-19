@@ -99,16 +99,20 @@ export default withAuth(
       return NextResponse.next();
     }
 
+    // Allow public POST endpoints (must check before protected route check)
+    if (isPublicPostEndpoint(pathname, method)) {
+      return NextResponse.next();
+    }
+
     // Check if route needs protection
     if (!isProtectedApiRoute(pathname, method)) {
       return NextResponse.next();
     }
 
     const isProtectedMethod = PROTECTED_METHODS.includes(method);
-    const isPublicPost = isPublicPostEndpoint(pathname, method);
 
-    // Handle protected methods (POST, PUT, DELETE) except public POST endpoints
-    if (isProtectedMethod && !isPublicPost) {
+    // Handle protected methods (POST, PUT, DELETE)
+    if (isProtectedMethod) {
       const authError = checkAuthAndRole(req.nextauth.token, pathname);
       if (authError) return authError;
     }
@@ -124,11 +128,25 @@ export default withAuth(
   {
     callbacks: {
       authorized: ({ token, req }) => {
+        const { pathname, method } = req.nextUrl;
+        
+        // Allow public POST endpoints without authentication
+        if (isPublicPostEndpoint(pathname, method)) {
+          return true;
+        }
+        
+        // Allow public GET routes without authentication
+        if (method === "GET" && isPublicGetRoute(pathname)) {
+          return true;
+        }
+        
         // For API routes, authentication is handled in the middleware function above
         // For non-API routes (like dashboard), require authentication
         if (req.nextUrl.pathname.startsWith("/dashboard")) {
           return !!token;
         }
+        
+        // Allow other routes (authentication will be checked in middleware function if needed)
         return true;
       },
     },
@@ -149,7 +167,7 @@ export const config = {
     "/api/auth/:path*",
     "/api/logs/:path*",
     "/api/contact/:path*",
-    "/api/subscribe/:path*",
+    // Note: /api/subscribe is excluded from matcher as it's a public endpoint
     // Protect dashboard routes
     "/dashboard/:path*",
   ],

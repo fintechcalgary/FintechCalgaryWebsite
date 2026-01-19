@@ -70,17 +70,30 @@ export default function SubscribersPage() {
     }
   };
 
+  const getSubscriberName = (subscriber) => {
+    if (subscriber.firstName && subscriber.lastName) {
+      return `${subscriber.firstName} ${subscriber.lastName}`;
+    }
+    // Fallback for old records that might have "name" field
+    return subscriber.name || "N/A";
+  };
+
   const downloadCSV = () => {
-    const headers = ["Name", "Email", "Joined Date"];
+    const headers = ["First Name", "Last Name", "UCID", "Email", "Membership Type", "Has Paid", "Resume", "Joined Date"];
     const csvData = subscribers.map((sub) => [
-      sub.name,
-      sub.email,
+      sub.firstName || sub.name || "",
+      sub.lastName || "",
+      sub.ucid || "",
+      sub.email || "",
+      sub.membership_type || sub.membershipType || "free",
+      sub.has_paid === true ? "Yes" : "No",
+      sub.resume || "",
       new Date(sub.createdAt).toLocaleDateString(),
     ]);
 
     const csvContent = [
       headers.join(","),
-      ...csvData.map((row) => row.join(",")),
+      ...csvData.map((row) => row.map(cell => `"${cell}"`).join(",")),
     ].join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv" });
@@ -205,7 +218,19 @@ export default function SubscribersPage() {
                       Name
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      UCID
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                       Email
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      Membership
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      Has Paid
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      Resume
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                       Joined Date
@@ -226,12 +251,55 @@ export default function SubscribersPage() {
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-white">
-                          {subscriber.name}
+                          {getSubscriberName(subscriber)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-300">
+                          {subscriber.ucid || "N/A"}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-300">
                           {subscriber.email}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            (subscriber.membership_type || subscriber.membershipType) === "premium"
+                              ? "bg-primary/20 text-primary"
+                              : "bg-gray-700/50 text-gray-300"
+                          }`}>
+                            {subscriber.membership_type || subscriber.membershipType || "free"}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            subscriber.has_paid === true
+                              ? "bg-green-500/20 text-green-400"
+                              : "bg-gray-700/50 text-gray-300"
+                          }`}>
+                            {subscriber.has_paid === true ? "Yes" : "No"}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-300">
+                          {subscriber.resume ? (
+                            <a
+                              href={subscriber.resume}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary hover:text-primary/80 underline"
+                            >
+                              View
+                            </a>
+                          ) : (
+                            <span className="text-gray-500">No resume</span>
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -265,7 +333,7 @@ export default function SubscribersPage() {
         }}
         onConfirm={handleDeleteConfirm}
         title="Confirm Delete"
-        message={`Are you sure you want to remove ${subscriberToDelete?.name} from the subscribers list?`}
+        message={`Are you sure you want to remove ${subscriberToDelete ? getSubscriberName(subscriberToDelete) : ""} from the subscribers list?`}
         confirmText="Delete"
         cancelText="Cancel"
         type="danger"
