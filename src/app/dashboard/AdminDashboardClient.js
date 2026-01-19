@@ -241,8 +241,8 @@ export default function AdminDashboardClient() {
                   />
 
                   <AdminCard
-                    title="Subscribers"
-                    description="Manage newsletter subscribers, mailing lists, and export subscriber data"
+                    title="Members"
+                    description="Manage general members, mailing lists, and export member data"
                     icon={(props) => (
                       <svg
                         {...props}
@@ -258,7 +258,7 @@ export default function AdminDashboardClient() {
                         />
                       </svg>
                     )}
-                    href="/dashboard/subscribers"
+                    href="/dashboard/members"
                     color="green"
                     index={2}
                   />

@@ -15,7 +15,7 @@ export const API_ENDPOINTS = {
   EVENTS: "/api/events",
   EXECUTIVES: "/api/executives",
   EXECUTIVES_ORDER: "/api/executives/order",
-  SUBSCRIBERS: "/api/subscribers",
+  MEMBERS: "/api/members",
   EXECUTIVE_ROLES: "/api/executive-roles",
 };
 
@@ -28,7 +28,7 @@ export const COLLECTIONS = {
   EXECUTIVE_APPLICATIONS: "executiveApplications",
   EXECUTIVE_ROLES: "executiveRoles",
   SETTINGS: "settings",
-  SUBSCRIBERS: "subscribers",
+  MEMBERS: "generalMembers",
   LOGS: "logs",
 };
 

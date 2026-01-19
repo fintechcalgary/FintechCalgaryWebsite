@@ -1,5 +1,3 @@
-import { connectToDatabase } from "@/lib/mongodb";
-import { createSubscriber } from "@/lib/models/subscriber";
 import { apiResponse, validators, withErrorHandler } from "@/lib/api-helpers";
 import logger from "@/lib/logger";
 import sgMail from "@sendgrid/mail";
@@ -23,21 +21,6 @@ export const POST = withErrorHandler(async (req) => {
   if (!resume) {
     return apiResponse.badRequest("Resume is required");
   }
-
-  const db = await connectToDatabase();
-  
-  // Create subscriber with new fields
-  const subscriberData = {
-    email,
-    firstName,
-    lastName,
-    ucid,
-    membership_type: membershipType || "free",
-    has_paid: hasPaid === true || false, // Explicitly set to boolean
-    resume: resume || null,
-  };
-  
-  await createSubscriber(db, subscriberData);
 
   // Send welcome email (don't fail the request if email fails)
   try {
@@ -70,6 +53,6 @@ export const POST = withErrorHandler(async (req) => {
     logger.log(emailError, { type: "email_error", endpoint: "/api/subscribe" });
   }
 
-  logger.logUserAction("subscribe", { email, firstName, lastName, ucid, membership_type: subscriberData.membership_type, has_paid: subscriberData.has_paid });
+  logger.logUserAction("subscribe", { email, firstName, lastName, ucid, membership_type: membershipType || "free", has_paid: hasPaid || false });
   return apiResponse.success({ success: true });
 });

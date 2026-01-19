@@ -95,7 +95,7 @@ export default function Navbar() {
                   ["Info", "/info"],
                   ...(session?.user?.role === "admin"
                     ? [
-                        ["Subscribers", "/dashboard/subscribers"],
+                        ["Members", "/dashboard/members"],
                         ["Partners", "/dashboard/partners"],
                       ]
                     : []),
@@ -191,7 +191,7 @@ export default function Navbar() {
                 { href: "/info", label: "Info" },
                 ...(session?.user?.role === "admin"
                   ? [
-                      { href: "/dashboard/subscribers", label: "Subscribers" },
+                      { href: "/dashboard/members", label: "Members" },
                       {
                         href: "/dashboard/partners",
                         label: "Associates",
