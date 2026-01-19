@@ -1,7 +1,7 @@
-const MEMBER_COLLECTION = "generalMembers";
+const MEMBER_COLLECTION = "members";
 
 /**
- * Retrieve all members from the generalMembers collection
+ * Retrieve all members from the members collection
  * @param {Object} db - Database connection
  * @returns {Array} - List of members sorted by creation date
  */

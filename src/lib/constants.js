@@ -28,7 +28,7 @@ export const COLLECTIONS = {
   EXECUTIVE_APPLICATIONS: "executiveApplications",
   EXECUTIVE_ROLES: "executiveRoles",
   SETTINGS: "settings",
-  MEMBERS: "generalMembers",
+  MEMBERS: "members",
   LOGS: "logs",
 };
 

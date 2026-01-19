@@ -16,7 +16,7 @@ export async function DELETE(req, { params }) {
     const db = await connectToDatabase();
 
     const result = await db
-      .collection("generalMembers")
+      .collection("members")
       .deleteOne({ _id: new ObjectId(memberId) });
 
     if (result.deletedCount === 0) {
