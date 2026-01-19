@@ -16,9 +16,9 @@ import {
 } from "@/lib/frontend-helpers";
 import { API_ENDPOINTS, UPLOAD_FOLDERS, FILE_TYPES, ERROR_MESSAGES } from "@/lib/constants";
 
-export default function AssociateMemberSignupPage() {
+export default function PartnerSignupPage() {
   useEffect(() => {
-    document.title = "Associate Member | FinTech Calgary";
+    document.title = "Partner | FinTech Calgary";
   }, []);
 
   const [formData, setFormData] = useState({
@@ -107,7 +107,7 @@ export default function AssociateMemberSignupPage() {
       let logoUrl = "";
 
       if (formData.logo) {
-        logoUrl = await uploadFile(formData.logo, UPLOAD_FOLDERS.ASSOCIATE_MEMBER_LOGOS);
+        logoUrl = await uploadFile(formData.logo, UPLOAD_FOLDERS.PARTNER_LOGOS);
       }
 
       const memberData = {
@@ -115,7 +115,7 @@ export default function AssociateMemberSignupPage() {
         logo: logoUrl,
       };
 
-      const response = await fetch(API_ENDPOINTS.ASSOCIATE_MEMBER, {
+      const response = await fetch(API_ENDPOINTS.PARTNER, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -160,7 +160,7 @@ export default function AssociateMemberSignupPage() {
       let errorMessage = null;
 
       // Log the error for monitoring
-      logger.logFormError("associate_member_signup", error, {
+      logger.logFormError("partner_signup", error, {
         organizationName: formData.organizationName,
         username: formData.username,
         contactEmail: formData.contactEmail,
@@ -251,10 +251,10 @@ export default function AssociateMemberSignupPage() {
         <div className="container mx-auto px-6 pt-24 relative z-10">
           <div className="text-center animate-fadeIn">
             <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
-              Associate Sign Up
+              Partner Sign Up
             </h1>
             <p className="text-xl text-gray-300 mx-auto">
-              Interested in learning more about Associate Membership before
+              Interested in learning more about Partnership before
               applying? Contact us at{" "}
               <a
                 href="mailto:fintech.calgary@gmail.com"
@@ -274,7 +274,7 @@ export default function AssociateMemberSignupPage() {
                     <FiCheck className="w-8 h-8 text-primary" />
                   </div>
                   <h2 className="text-2xl font-bold text-white mb-2">
-                    Thank you for your interest in becoming an Associate Member!
+                    Thank you for your interest in becoming a Partner!
                   </h2>
                   <p className="text-gray-300">
                     We will be in contact with you shortly to discuss the next

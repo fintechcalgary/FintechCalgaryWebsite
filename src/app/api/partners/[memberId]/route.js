@@ -2,6 +2,7 @@ import { connectToDatabase } from "@/lib/mongodb";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { ObjectId } from "mongodb";
+import { COLLECTIONS } from "@/lib/constants";
 
 export async function GET(req, context) {
   try {
@@ -15,14 +16,14 @@ export async function GET(req, context) {
     const { memberId } = await context.params;
     const db = await connectToDatabase();
 
-    // For associate members, they can only access their own data
+    // For partners, they can only access their own data
     // For admins, they can access any member's data
     let query = { _id: new ObjectId(memberId) };
 
     if (session.user.role === "associate") {
-      // Associate members can only access their own data
+      // Partners can only access their own data
       // We need to find the member by username since that's what we have in the session
-      const member = await db.collection("associateMembers").findOne({
+      const member = await db.collection(COLLECTIONS.PARTNERS).findOne({
         username: session.user.username,
       });
 
@@ -36,7 +37,7 @@ export async function GET(req, context) {
       query = { _id: member._id };
     }
 
-    const member = await db.collection("associateMembers").findOne(query);
+    const member = await db.collection(COLLECTIONS.PARTNERS).findOne(query);
 
     if (!member) {
       return new Response(JSON.stringify({ error: "Member not found" }), {
@@ -49,7 +50,7 @@ export async function GET(req, context) {
 
     return new Response(JSON.stringify(memberData), { status: 200 });
   } catch (error) {
-    console.error("GET /api/associateMember/[memberId] - Error:", error);
+    console.error("GET /api/partners/[memberId] - Error:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });
@@ -73,8 +74,8 @@ export async function PUT(req, context) {
     let memberQuery = { _id: new ObjectId(memberId) };
 
     if (session.user.role === "associate") {
-      // Associate members can only update their own data
-      const member = await db.collection("associateMembers").findOne({
+      // Partners can only update their own data
+      const member = await db.collection(COLLECTIONS.PARTNERS).findOne({
         username: session.user.username,
       });
 
@@ -89,12 +90,12 @@ export async function PUT(req, context) {
 
     // Validate the member exists
     const existingMember = await db
-      .collection("associateMembers")
+      .collection(COLLECTIONS.PARTNERS)
       .findOne(memberQuery);
 
     if (!existingMember) {
       return new Response(
-        JSON.stringify({ error: "Associate member not found" }),
+        JSON.stringify({ error: "Partner not found" }),
         {
           status: 404,
         }
@@ -138,9 +139,9 @@ export async function PUT(req, context) {
         );
     }
 
-    // Update the associate member
+    // Update the partner
     const result = await db
-      .collection("associateMembers")
+      .collection(COLLECTIONS.PARTNERS)
       .updateOne(memberQuery, {
         $set: {
           ...updates,
@@ -150,7 +151,7 @@ export async function PUT(req, context) {
 
     if (result.matchedCount === 0) {
       return new Response(
-        JSON.stringify({ error: "Associate member not found" }),
+        JSON.stringify({ error: "Partner not found" }),
         {
           status: 404,
         }
@@ -159,7 +160,7 @@ export async function PUT(req, context) {
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (error) {
-    console.error("PUT /api/associateMember/[memberId] - Error:", error);
+    console.error("PUT /api/partners/[memberId] - Error:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });
@@ -178,22 +179,22 @@ export async function DELETE(req, context) {
     const { memberId } = await context.params;
     const db = await connectToDatabase();
 
-    // First get the associate member's details
-    const member = await db.collection("associateMembers").findOne({
+    // First get the partner's details
+    const member = await db.collection("partners").findOne({
       _id: new ObjectId(memberId),
     });
 
     if (!member) {
       return new Response(
-        JSON.stringify({ error: "Associate member not found" }),
+        JSON.stringify({ error: "Partner not found" }),
         {
           status: 404,
         }
       );
     }
 
-    // Delete from associateMembers collection
-    await db.collection("associateMembers").deleteOne({
+    // Delete from partners collection
+    await db.collection(COLLECTIONS.PARTNERS).deleteOne({
       _id: new ObjectId(memberId),
     });
 
@@ -204,7 +205,7 @@ export async function DELETE(req, context) {
 
     return new Response(null, { status: 204 });
   } catch (error) {
-    console.error("DELETE /api/associateMember/[memberId] - Error:", error);
+    console.error("DELETE /api/partners/[memberId] - Error:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });

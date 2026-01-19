@@ -91,12 +91,12 @@ export default function Navbar() {
               >
                 {[
                   ["Events", "/dashboard#events"],
-                  ["Members", "/dashboard#members"],
+                  ["Executives", "/dashboard#executives"],
                   ["Info", "/info"],
                   ...(session?.user?.role === "admin"
                     ? [
                         ["Subscribers", "/dashboard/subscribers"],
-                        ["Associates", "/dashboard/associate-members"],
+                        ["Partners", "/dashboard/partners"],
                       ]
                     : []),
                 ].map(([title, path]) => (
@@ -187,13 +187,13 @@ export default function Navbar() {
             <div className="bg-gray-800/90 p-4 rounded-lg mt-2 backdrop-blur-sm border border-gray-700/30">
               {[
                 { href: "/dashboard#events", label: "Events" },
-                { href: "/dashboard#members", label: "Members" },
+                { href: "/dashboard#executives", label: "Executives" },
                 { href: "/info", label: "Info" },
                 ...(session?.user?.role === "admin"
                   ? [
                       { href: "/dashboard/subscribers", label: "Subscribers" },
                       {
-                        href: "/dashboard/associate-members",
+                        href: "/dashboard/partners",
                         label: "Associates",
                       },
                     ]

@@ -1,5 +1,5 @@
 import { connectToDatabase } from "@/lib/mongodb";
-import { getAssociateMembers } from "@/lib/models/associateMember";
+import { getPartners } from "@/lib/models/partner";
 import bcrypt from "bcryptjs";
 import { apiResponse, requireAdmin, validators, withErrorHandler } from "@/lib/api-helpers";
 import logger from "@/lib/logger";
@@ -33,7 +33,7 @@ export const POST = withErrorHandler(async (req) => {
 
   // Check if organization already exists
   const existingMember = await db
-    .collection(COLLECTIONS.ASSOCIATE_MEMBERS)
+    .collection(COLLECTIONS.PARTNERS)
     .findOne({ organizationName: organization.organizationName });
 
   if (existingMember) {
@@ -52,7 +52,7 @@ export const POST = withErrorHandler(async (req) => {
   // Hash the password
   const hashedPassword = await bcrypt.hash(organization.password, 10);
 
-  // Create associate member document
+  // Create partner document
   const memberDoc = {
     ...organization,
     password: hashedPassword,
@@ -62,8 +62,8 @@ export const POST = withErrorHandler(async (req) => {
     approvedAt: null,
   };
 
-  // Create associate member
-  const result = await db.collection(COLLECTIONS.ASSOCIATE_MEMBERS).insertOne(memberDoc);
+  // Create partner
+  const result = await db.collection(COLLECTIONS.PARTNERS).insertOne(memberDoc);
 
   // Also create a user account for authentication
   await db.collection(COLLECTIONS.USERS).insertOne({
@@ -74,7 +74,7 @@ export const POST = withErrorHandler(async (req) => {
     createdAt: new Date(),
   });
 
-  logger.logUserAction("create_associate_member", {
+  logger.logUserAction("create_partner", {
     organizationName: organization.organizationName,
   });
 
@@ -86,6 +86,6 @@ export const GET = withErrorHandler(async () => {
   if (error) return error;
 
   const db = await connectToDatabase();
-  const associateMembers = await getAssociateMembers(db);
-  return apiResponse.success(associateMembers);
+  const partners = await getPartners(db);
+  return apiResponse.success(partners);
 });

@@ -1,5 +1,5 @@
 import { connectToDatabase } from "@/lib/mongodb";
-import { updateMemberOrder } from "@/lib/models/member";
+import { updateExecutiveOrder } from "@/lib/models/executive";
 import { apiResponse, requireAdmin, validators, withErrorHandler } from "@/lib/api-helpers";
 import logger from "@/lib/logger";
 
@@ -8,19 +8,20 @@ export const PUT = withErrorHandler(async (req) => {
   if (error) return error;
 
   const db = await connectToDatabase();
-  const { orderedMemberIds } = await req.json();
+  const { orderedExecutiveIds } = await req.json();
 
   // Validate the input
-  const arrayError = validators.array(orderedMemberIds, "orderedMemberIds");
+  const arrayError = validators.array(orderedExecutiveIds, "orderedExecutiveIds");
   if (arrayError) {
     return apiResponse.badRequest(arrayError);
   }
-  if (!orderedMemberIds || orderedMemberIds.length === 0) {
-    return apiResponse.badRequest("orderedMemberIds must be a non-empty array");
+  if (!orderedExecutiveIds || orderedExecutiveIds.length === 0) {
+    return apiResponse.badRequest("orderedExecutiveIds must be a non-empty array");
   }
 
-  await updateMemberOrder(db, orderedMemberIds);
+  await updateExecutiveOrder(db, orderedExecutiveIds);
 
-  logger.logUserAction("update_member_order", { count: orderedMemberIds.length });
+  logger.logUserAction("update_executive_order", { count: orderedExecutiveIds.length });
   return apiResponse.success({ success: true });
 });
+

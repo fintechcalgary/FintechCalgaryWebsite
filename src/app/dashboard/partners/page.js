@@ -28,8 +28,8 @@ import PortalModal from "@/components/PortalModal";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function AssociateMembersPage() {
-  const [associateMembers, setAssociateMembers] = useState([]);
+export default function PartnersPage() {
+  const [partners, setPartners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState(null);
@@ -69,29 +69,29 @@ export default function AssociateMembersPage() {
   }, [status, router]);
 
   useEffect(() => {
-    document.title = "Associate Members | FinTech Calgary";
+    document.title = "Partners | FinTech Calgary";
   }, []);
 
   useEffect(() => {
-    const fetchAssociateMembers = async () => {
+    const fetchPartners = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/associateMember");
+        const response = await fetch("/api/partners");
         if (response.ok) {
           const data = await response.json();
-          setAssociateMembers(data);
+          setPartners(data);
         } else if (response.status === 401) {
           router.push("/login");
         }
       } catch (error) {
-        console.error("Failed to fetch associate members:", error);
+        console.error("Failed to fetch partners:", error);
       } finally {
         setLoading(false);
       }
     };
 
     if (session?.user?.role === "admin") {
-      fetchAssociateMembers();
+      fetchPartners();
     } else if (session && session.user.role !== "admin") {
       setLoading(false);
     }
@@ -165,7 +165,7 @@ export default function AssociateMembersPage() {
     try {
       setSubmitting(true);
       const response = await fetch(
-        `/api/associateMember/${editingMember._id}`,
+        `/api/partners/${editingMember._id}`,
         {
           method: "PUT",
           headers: {
@@ -181,21 +181,21 @@ export default function AssociateMembersPage() {
           alert("Username already exists. Please choose a different username.");
           return;
         }
-        throw new Error(data.error || "Failed to update associate member");
+        throw new Error(data.error || "Failed to update partner");
       }
 
       // Refresh the members list
-      const fetchResponse = await fetch("/api/associateMember");
+      const fetchResponse = await fetch("/api/partners");
       if (fetchResponse.ok) {
         const data = await fetchResponse.json();
-        setAssociateMembers(data);
+        setPartners(data);
       }
 
       setShowEditModal(false);
       setEditingMember(null);
     } catch (error) {
-      console.error("Error updating associate member:", error);
-      alert("Failed to update associate member. Please try again.");
+      console.error("Error updating partner:", error);
+      alert("Failed to update partner. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -203,7 +203,7 @@ export default function AssociateMembersPage() {
 
   const handleApprovalStatusChange = async (memberId, newStatus) => {
     try {
-      const response = await fetch(`/api/associateMember/${memberId}`, {
+      const response = await fetch(`/api/partners/${memberId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -219,10 +219,10 @@ export default function AssociateMembersPage() {
       }
 
       // Refresh the members list
-      const fetchResponse = await fetch("/api/associateMember");
+      const fetchResponse = await fetch("/api/partners");
       if (fetchResponse.ok) {
         const data = await fetchResponse.json();
-        setAssociateMembers(data);
+        setPartners(data);
       }
     } catch (error) {
       console.error("Error updating approval status:", error);
@@ -233,24 +233,24 @@ export default function AssociateMembersPage() {
   const handleDeleteConfirm = async () => {
     try {
       const response = await fetch(
-        `/api/associateMember/${memberToDelete._id}`,
+        `/api/partners/${memberToDelete._id}`,
         {
           method: "DELETE",
         }
       );
 
       if (!response.ok) {
-        throw new Error("Failed to delete associate member");
+        throw new Error("Failed to delete partner");
       }
 
-      setAssociateMembers(
-        associateMembers.filter((m) => m._id !== memberToDelete._id)
+      setPartners(
+        partners.filter((m) => m._id !== memberToDelete._id)
       );
       setShowDeleteModal(false);
       setMemberToDelete(null);
     } catch (error) {
-      console.error("Error deleting associate member:", error);
-      alert("Failed to delete associate member. Please try again.");
+      console.error("Error deleting partner:", error);
+      alert("Failed to delete partner. Please try again.");
     }
   };
 
@@ -311,7 +311,7 @@ export default function AssociateMembersPage() {
       "Joined Date",
     ];
 
-    const csvData = associateMembers.map((member) => [
+    const csvData = partners.map((member) => [
       member.organizationName || "",
       member.username || "",
       member.title || "",
@@ -345,7 +345,7 @@ export default function AssociateMembersPage() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `associate-members-${
+    a.download = `partners-${
       new Date().toISOString().split("T")[0]
     }.csv`;
     a.click();
@@ -372,7 +372,7 @@ export default function AssociateMembersPage() {
             <div className="text-center">
               <FiUsers className="mx-auto text-4xl text-primary mb-4" />
               <p className="text-gray-400">
-                You don&apos;t have permission to view associate members.
+                You don&apos;t have permission to view partners.
               </p>
             </div>
           </div>
@@ -388,9 +388,9 @@ export default function AssociateMembersPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-white">Associate Members</h1>
+            <h1 className="text-4xl font-bold text-white">Partners</h1>
             <p className="text-gray-400 text-lg">
-              Manage and view all associate member organizations
+              Manage and view all partner organizations
             </p>
           </div>
 
@@ -405,7 +405,7 @@ export default function AssociateMembersPage() {
             </Link>
             <button
               onClick={downloadCSV}
-              disabled={associateMembers.length === 0}
+              disabled={partners.length === 0}
               className="px-4 py-2 rounded-lg bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <FiDownload className="w-4 h-4" />
@@ -424,7 +424,7 @@ export default function AssociateMembersPage() {
                   Total Organizations
                 </p>
                 <p className="text-3xl font-bold text-white">
-                  {associateMembers.length}
+                  {partners.length}
                 </p>
               </div>
               <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
@@ -440,7 +440,7 @@ export default function AssociateMembersPage() {
                 </p>
                 <p className="text-3xl font-bold text-white">
                   {
-                    associateMembers.filter(
+                    partners.filter(
                       (m) => m.approvalStatus === "pending"
                     ).length
                   }
@@ -457,7 +457,7 @@ export default function AssociateMembersPage() {
                 <p className="text-gray-400 text-sm font-medium">Approved</p>
                 <p className="text-3xl font-bold text-white">
                   {
-                    associateMembers.filter(
+                    partners.filter(
                       (m) => m.approvalStatus === "accepted"
                     ).length
                   }
@@ -471,14 +471,14 @@ export default function AssociateMembersPage() {
         </div>
 
         {/* Members List */}
-        {associateMembers.length === 0 ? (
+        {partners.length === 0 ? (
           <div className="text-center py-16 bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-white/10">
             <FiUsers className="mx-auto text-4xl text-primary mb-4" />
-            <p className="text-gray-400 text-lg">No associate members found</p>
+            <p className="text-gray-400 text-lg">No partners found</p>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {associateMembers.map((member, index) => (
+            {partners.map((member, index) => (
               <motion.div
                 key={member._id}
                 initial={{ opacity: 0, y: 20 }}
@@ -776,7 +776,7 @@ export default function AssociateMembersPage() {
         <PortalModal
           isOpen={showEditModal}
           onClose={resetEditForm}
-          title="Edit Associate Member"
+          title="Edit Partner"
           maxWidth="max-w-4xl"
         >
           <div className="p-6">
@@ -1113,7 +1113,7 @@ export default function AssociateMembersPage() {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           onConfirm={handleDeleteConfirm}
-          title="Delete Associate Member"
+          title="Delete Partner"
           message={`Are you sure you want to delete ${memberToDelete?.organizationName}? This action cannot be undone.`}
           confirmText="Delete"
           cancelText="Cancel"

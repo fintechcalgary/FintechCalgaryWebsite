@@ -8,13 +8,13 @@ export const API_ENDPOINTS = {
   CONTACT: "/api/contact",
   SUBSCRIBE: "/api/subscribe",
   EXECUTIVE_APPLICATION: "/api/executive-application",
-  ASSOCIATE_MEMBER: "/api/associateMember",
-  ASSOCIATE_MEMBER_ME: "/api/associateMember/me",
+  PARTNER: "/api/partners",
+  PARTNER_ME: "/api/partners/me",
   UPLOAD: "/api/upload",
   SETTINGS: "/api/settings",
   EVENTS: "/api/events",
-  MEMBERS: "/api/members",
-  MEMBERS_ORDER: "/api/members/order",
+  EXECUTIVES: "/api/executives",
+  EXECUTIVES_ORDER: "/api/executives/order",
   SUBSCRIBERS: "/api/subscribers",
   EXECUTIVE_ROLES: "/api/executive-roles",
 };
@@ -22,8 +22,8 @@ export const API_ENDPOINTS = {
 // MongoDB Collection Names
 export const COLLECTIONS = {
   USERS: "users",
-  MEMBERS: "members",
-  ASSOCIATE_MEMBERS: "associateMembers",
+  EXECUTIVES: "executives",
+  PARTNERS: "partners",
   EVENTS: "events",
   EXECUTIVE_APPLICATIONS: "executiveApplications",
   EXECUTIVE_ROLES: "executiveRoles",
@@ -35,9 +35,9 @@ export const COLLECTIONS = {
 // File Upload Folders
 export const UPLOAD_FOLDERS = {
   RESUMES: "resumes",
-  ASSOCIATE_MEMBER_LOGOS: "associateMemberLogos",
+  PARTNER_LOGOS: "partnerLogos",
   EVENT_IMAGES: "eventImages",
-  MEMBER_IMAGES: "memberImages",
+  EXECUTIVE_IMAGES: "executiveImages",
   ROLE_IMAGES: "roleImages",
 };
 

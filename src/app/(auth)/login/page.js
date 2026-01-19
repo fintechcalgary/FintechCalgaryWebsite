@@ -25,7 +25,7 @@ export default function Login() {
     if (status === "authenticated") {
       const role = session?.user?.role;
       if (role === "associate") {
-        router.push("/associate-member-dashboard");
+        router.push("/partner-dashboard");
       } else if (role === "member" || role === "admin") {
         router.push("/dashboard");
       }
@@ -51,7 +51,7 @@ export default function Login() {
         const role = updatedSession?.user?.role;
 
         if (role === "associate") {
-          router.push("/associate-member-dashboard");
+          router.push("/partner-dashboard");
         } else if (role === "member" || role === "admin") {
           router.push("/dashboard");
         }

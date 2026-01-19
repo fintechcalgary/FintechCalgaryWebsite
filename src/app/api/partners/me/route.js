@@ -1,6 +1,7 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]/route";
+import { COLLECTIONS } from "@/lib/constants";
 
 export async function GET() {
   try {
@@ -13,8 +14,8 @@ export async function GET() {
 
     const db = await connectToDatabase();
 
-    // Find the associate member by username
-    const member = await db.collection("associateMembers").findOne({
+    // Find the partner by username
+    const member = await db.collection(COLLECTIONS.PARTNERS).findOne({
       username: session.user.username,
     });
 
@@ -29,7 +30,7 @@ export async function GET() {
 
     return new Response(JSON.stringify(memberData), { status: 200 });
   } catch (error) {
-    console.error("GET /api/associateMember/me - Error:", error);
+    console.error("GET /api/partners/me - Error:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });

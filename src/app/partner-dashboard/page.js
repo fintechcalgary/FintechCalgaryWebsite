@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-import AssociateDashboardClient from "./AssociateDashboardClient";
+import PartnerDashboardClient from "./PartnerDashboardClient";
 
 export default async function AdminDashboardPage() {
   const session = await getServerSession(authOptions);
@@ -14,5 +14,5 @@ export default async function AdminDashboardPage() {
     redirect("/login");
   }
 
-  return <AssociateDashboardClient />;
+  return <PartnerDashboardClient />;
 }

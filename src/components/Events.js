@@ -19,7 +19,7 @@ import Image from "next/image";
 export default function Events({ mode }) {
   const pathname = usePathname();
   const isDashboard =
-    pathname === "/dashboard" || pathname === "/associate-member-dashboard";
+    pathname === "/dashboard" || pathname === "/partner-dashboard";
   const [events, setEvents] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);

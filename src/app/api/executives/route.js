@@ -1,5 +1,5 @@
 import { connectToDatabase } from "@/lib/mongodb";
-import { createMember, getMembers } from "@/lib/models/member";
+import { createExecutive, getExecutives } from "@/lib/models/executive";
 import { apiResponse, requireAdmin, withErrorHandler } from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
@@ -9,23 +9,24 @@ export const POST = withErrorHandler(async (req) => {
   if (error) return error;
 
   const db = await connectToDatabase();
-  const member = await req.json();
+  const executive = await req.json();
 
   // Check if username already exists
-  const existingMember = await db
-    .collection("members")
-    .findOne({ username: member.username });
+  const existingExecutive = await db
+    .collection("executives")
+    .findOne({ username: executive.username });
 
-  if (existingMember) {
+  if (existingExecutive) {
     return apiResponse.badRequest("Username already exists");
   }
 
-  const result = await db.collection("members").insertOne(member);
+  const result = await db.collection("executives").insertOne(executive);
   return apiResponse.success(result, 201);
 });
 
 export const GET = withErrorHandler(async () => {
   const db = await connectToDatabase();
-  const members = await getMembers(db);
-  return apiResponse.success(members, 200);
+  const executives = await getExecutives(db);
+  return apiResponse.success(executives, 200);
 });
+

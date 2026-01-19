@@ -114,7 +114,7 @@ export default function Home() {
                 Join Us
               </Link>
               <Link
-                href="/associate-member-signup"
+                href="/partner-signup"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium rounded-full 
                          border border-gray-700 hover:border-purple-500/40 text-white transition-all duration-300 
                          hover:shadow-xl hover:bg-gray-800/50 group"

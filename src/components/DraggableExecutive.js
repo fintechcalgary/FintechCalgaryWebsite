@@ -5,24 +5,24 @@ import Image from "next/image";
 
 const DEFAULT_PROFILE_IMAGE = "/default-profile.webp";
 
-function DraggableMember({
-  member,
+function DraggableExecutive({
+  executive,
   index,
-  moveMember,
+  moveExecutive,
   handleEdit,
   handleDelete,
   session,
 }) {
   const [, ref] = useDrag({
-    type: "MEMBER",
+    type: "EXECUTIVE",
     item: { index },
   });
 
   const [, drop] = useDrop({
-    accept: "MEMBER",
+    accept: "EXECUTIVE",
     hover: (draggedItem) => {
       if (draggedItem.index !== index) {
-        moveMember(draggedItem.index, index);
+        moveExecutive(draggedItem.index, index);
         draggedItem.index = index;
       }
     },
@@ -31,7 +31,7 @@ function DraggableMember({
   return (
     <motion.div
       ref={(node) => ref(drop(node))}
-      key={member._id}
+      key={executive._id}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -41,23 +41,23 @@ function DraggableMember({
       <div className="flex flex-col items-center text-center">
         <div className="w-32 h-32 mb-4 relative">
           <Image
-            src={member.imageUrl || DEFAULT_PROFILE_IMAGE}
-            alt={member.name}
+            src={executive.imageUrl || DEFAULT_PROFILE_IMAGE}
+            alt={executive.name}
             fill
             sizes="128px"
             className="object-cover rounded-full"
           />
         </div>
         <h4 className="text-xl font-semibold text-foreground mb-2">
-          {member.name}
+          {executive.name}
         </h4>
-        <p className="text-primary font-medium mb-1">{member.position}</p>
-        <p className="text-gray-400 mb-4">{member.major}</p>
+        <p className="text-primary font-medium mb-1">{executive.position}</p>
+        <p className="text-gray-400 mb-4">{executive.major}</p>
         <div className="flex gap-2">
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleEdit(member);
+              handleEdit(executive);
             }}
             className="text-gray-400 hover:text-primary transition-all duration-200 p-2 rounded-lg hover:bg-primary/10 hover:scale-105 relative z-20 border border-transparent hover:border-primary/20"
             title="Edit"
@@ -67,10 +67,10 @@ function DraggableMember({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleDelete(member._id);
+              handleDelete(executive._id);
             }}
             className="text-gray-400 hover:text-red-500 transition-all duration-200 p-2 rounded-lg hover:bg-red-500/10 hover:scale-105 relative z-20 border border-transparent hover:border-red-500/20"
-            disabled={session?.user?.username == member.username}
+            disabled={session?.user?.username == executive.username}
             title="Delete"
           >
             <FiTrash2 />
@@ -81,4 +81,5 @@ function DraggableMember({
   );
 }
 
-export default DraggableMember;
+export default DraggableExecutive;
+

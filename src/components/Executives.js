@@ -7,17 +7,17 @@ import PortalModal from "./PortalModal";
 import { useSession } from "next-auth/react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import DraggableMember from "./DraggableMember";
+import DraggableExecutive from "./DraggableExecutive";
 import Image from "next/image";
 
 const DEFAULT_PROFILE_IMAGE = "/default-profile.webp";
 
-export default function Members() {
+export default function Executives() {
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === "admin";
-  const [members, setMembers] = useState([]);
+  const [executives, setExecutives] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingMember, setEditingMember] = useState(null);
+  const [editingExecutive, setEditingExecutive] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -32,27 +32,27 @@ export default function Members() {
   });
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
-    memberId: null,
+    executiveId: null,
   });
   const [submitting, setSubmitting] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState("All");
   const [availableTeams, setAvailableTeams] = useState(["All"]);
 
-  const fetchMembers = async () => {
-    const response = await fetch("/api/members");
+  const fetchExecutives = async () => {
+    const response = await fetch("/api/executives");
     const data = await response.json();
-    setMembers(data);
+    setExecutives(data);
 
-    // Extract unique team names from members
+    // Extract unique team names from executives
     const uniqueTeams = [
       "All",
-      ...new Set(data.map((member) => member.team || "General")),
+      ...new Set(data.map((executive) => executive.team || "General")),
     ];
     setAvailableTeams(uniqueTeams);
   };
 
   useEffect(() => {
-    fetchMembers();
+    fetchExecutives();
   }, []);
 
   if (!isAdmin) {
@@ -61,7 +61,7 @@ export default function Members() {
         <div className="text-center">
           <FiUser className="mx-auto text-4xl text-primary mb-4" />
           <p className="text-gray-400">
-            You don&apos;t have permission to manage team members.
+            You don&apos;t have permission to manage team executives.
           </p>
         </div>
       </div>
@@ -82,24 +82,24 @@ export default function Members() {
         imageUrl: formData.imageUrl || DEFAULT_PROFILE_IMAGE,
       };
 
-      if (editingMember) {
-        const response = await fetch(`/api/members/${editingMember._id}`, {
+      if (editingExecutive) {
+        const response = await fetch(`/api/executives/${editingExecutive._id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             ...payload,
-            oldUsername: editingMember.username, // Include old username for reference
+            oldUsername: editingExecutive.username, // Include old username for reference
           }),
         });
 
         if (!response.ok) {
           const data = await response.json();
-          throw new Error(data.error || "Failed to update member");
+          throw new Error(data.error || "Failed to update executive");
         }
       } else {
-        const response = await fetch("/api/members", {
+        const response = await fetch("/api/executives", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -109,13 +109,13 @@ export default function Members() {
 
         if (!response.ok) {
           const data = await response.json();
-          throw new Error(data.error || "Failed to create member");
+          throw new Error(data.error || "Failed to create executive");
         }
       }
 
-      // Reset form and refresh members list
+      // Reset form and refresh executives list
       resetForm();
-      fetchMembers();
+      fetchExecutives();
     } catch (error) {
       console.error("Error:", error);
       alert(error.message); // Display error message
@@ -124,43 +124,43 @@ export default function Members() {
     }
   };
 
-  const handleDelete = async (memberId) => {
-    const memberToDelete = members.find((member) => member._id === memberId);
+  const handleDelete = async (executiveId) => {
+    const executiveToDelete = executives.find((executive) => executive._id === executiveId);
 
-    if (session?.user?.username === memberToDelete.username) {
+    if (session?.user?.username === executiveToDelete.username) {
       console.log("Cannot delete yourself");
       return;
     }
 
     setDeleteModal({
       isOpen: true,
-      memberId,
+      executiveId,
     });
   };
 
   const confirmDelete = async () => {
-    const response = await fetch(`/api/members/${deleteModal.memberId}`, {
+    const response = await fetch(`/api/executives/${deleteModal.executiveId}`, {
       method: "DELETE",
     });
 
     if (response.ok) {
-      fetchMembers();
-      setDeleteModal({ isOpen: false, memberId: null });
+      fetchExecutives();
+      setDeleteModal({ isOpen: false, executiveId: null });
     }
   };
 
-  const handleEdit = (member) => {
-    setEditingMember(member);
+  const handleEdit = (executive) => {
+    setEditingExecutive(executive);
     setFormData({
-      name: member.name || "",
-      team: member.team || "",
-      position: member.position || "",
-      major: member.major || "",
-      imageUrl: member.imageUrl || "",
-      username: member.username || "",
-      role: member.role || "member",
-      linkedinUrl: member.linkedinUrl || "",
-      description: member.description || "",
+      name: executive.name || "",
+      team: executive.team || "",
+      position: executive.position || "",
+      major: executive.major || "",
+      imageUrl: executive.imageUrl || "",
+      username: executive.username || "",
+      role: executive.role || "member",
+      linkedinUrl: executive.linkedinUrl || "",
+      description: executive.description || "",
     });
     setShowForm(true);
   };
@@ -205,36 +205,36 @@ export default function Members() {
       linkedinUrl: "",
       description: "",
     });
-    setEditingMember(null);
+    setEditingExecutive(null);
     setShowForm(false);
   };
 
-  const moveMember = (fromIndex, toIndex) => {
-    // 1️⃣ Get the actual member being moved from the filtered list
-    const movedMember = filteredMembers[fromIndex];
+  const moveExecutive = (fromIndex, toIndex) => {
+    // 1️⃣ Get the actual executive being moved from the filtered list
+    const movedExecutive = filteredExecutives[fromIndex];
 
-    // 2️⃣ Get its index in the full members list
-    const globalFromIndex = members.findIndex((m) => m._id === movedMember._id);
-    const globalToIndex = members.findIndex(
-      (m) => m._id === filteredMembers[toIndex]._id
+    // 2️⃣ Get its index in the full executives list
+    const globalFromIndex = executives.findIndex((e) => e._id === movedExecutive._id);
+    const globalToIndex = executives.findIndex(
+      (e) => e._id === filteredExecutives[toIndex]._id
     );
 
-    // 3️⃣ Swap members in the global list
-    const updatedMembers = [...members];
-    const [movedGlobalMember] = updatedMembers.splice(globalFromIndex, 1);
-    updatedMembers.splice(globalToIndex, 0, movedGlobalMember);
+    // 3️⃣ Swap executives in the global list
+    const updatedExecutives = [...executives];
+    const [movedGlobalExecutive] = updatedExecutives.splice(globalFromIndex, 1);
+    updatedExecutives.splice(globalToIndex, 0, movedGlobalExecutive);
 
-    setMembers(updatedMembers);
-    saveOrder(updatedMembers);
+    setExecutives(updatedExecutives);
+    saveOrder(updatedExecutives);
   };
 
-  const saveOrder = async (updatedMembers) => {
+  const saveOrder = async (updatedExecutives) => {
     try {
-      await fetch("/api/members/order", {
+      await fetch("/api/executives/order", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          orderedMemberIds: updatedMembers.map((m) => m._id),
+          orderedExecutiveIds: updatedExecutives.map((e) => e._id),
         }),
       });
     } catch (error) {
@@ -243,10 +243,10 @@ export default function Members() {
     }
   };
 
-  const filteredMembers =
+  const filteredExecutives =
     selectedTeam === "All"
-      ? members
-      : members.filter((member) => member.team === selectedTeam);
+      ? executives
+      : executives.filter((executive) => executive.team === selectedTeam);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -254,7 +254,7 @@ export default function Members() {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <FiUser className="text-primary" />
-            Team Members
+            Team Executives
           </h3>
           <div className="flex gap-4 items-center">
             <select
@@ -285,11 +285,11 @@ export default function Members() {
         <PortalModal
           isOpen={showForm}
           onClose={resetForm}
-          title={editingMember ? "Edit Member" : "Add Member"}
+          title={editingExecutive ? "Edit Executive" : "Add Executive"}
           maxWidth="max-w-4xl"
         >
           <div className="p-6">
-            <form id="memberForm" onSubmit={handleSubmit} className="space-y-4">
+            <form id="executiveForm" onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="space-y-4">
                   <div>
@@ -298,7 +298,7 @@ export default function Members() {
                     </label>
                     <input
                       type="text"
-                      placeholder="Enter member name"
+                      placeholder="Enter executive name"
                       value={formData.name}
                       onChange={(e) =>
                         setFormData({
@@ -485,7 +485,7 @@ export default function Members() {
                       Description
                     </label>
                     <textarea
-                      placeholder="Enter member description"
+                      placeholder="Enter executive description"
                       value={formData.description}
                       onChange={(e) =>
                         setFormData({
@@ -514,22 +514,22 @@ export default function Members() {
               </button>
               <button
                 type="submit"
-                form="memberForm"
+                form="executiveForm"
                 disabled={uploading || submitting}
                 className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2
                 ${
                   uploading || submitting ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >
-                {editingMember ? (
+                {editingExecutive ? (
                   <>
                     <FiEdit2 className="w-4 h-4" />
-                    {submitting ? "Updating..." : "Update Member"}
+                    {submitting ? "Updating..." : "Update Executive"}
                   </>
                 ) : (
                   <>
                     <FiPlus className="w-4 h-4" />
-                    {submitting ? "Adding..." : "Add Member"}
+                    {submitting ? "Adding..." : "Add Executive"}
                   </>
                 )}
               </button>
@@ -538,12 +538,12 @@ export default function Members() {
         </PortalModal>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredMembers.map((member, index) => (
-            <DraggableMember
-              key={member._id}
-              member={member}
+          {filteredExecutives.map((executive, index) => (
+            <DraggableExecutive
+              key={executive._id}
+              executive={executive}
               index={index}
-              moveMember={moveMember}
+              moveExecutive={moveExecutive}
               handleEdit={handleEdit}
               handleDelete={handleDelete}
               session={session}
@@ -551,22 +551,22 @@ export default function Members() {
           ))}
         </div>
 
-        {members.length === 0 && !showForm && (
+        {executives.length === 0 && !showForm && (
           <div className="text-center py-12 bg-gray-800/50 rounded-lg min-h-[400px] flex flex-col items-center justify-center animate-fadeIn">
             <FiUser className="mx-auto text-4xl text-primary mb-4" />
             <p className="text-gray-400">
-              No team members yet. Add your first member!
+              No team executives yet. Add your first executive!
             </p>
           </div>
         )}
 
         <Modal
           isOpen={deleteModal.isOpen}
-          onClose={() => setDeleteModal({ isOpen: false, memberId: null })}
+          onClose={() => setDeleteModal({ isOpen: false, executiveId: null })}
           onConfirm={confirmDelete}
-          title="Delete Member"
-          message="Are you sure you want to remove this member? This action cannot be undone."
-          confirmText="Remove Member"
+          title="Delete Executive"
+          message="Are you sure you want to remove this executive? This action cannot be undone."
+          confirmText="Remove Executive"
           cancelText="Cancel"
           type="danger"
         />
@@ -574,3 +574,4 @@ export default function Members() {
     </DndProvider>
   );
 }
+

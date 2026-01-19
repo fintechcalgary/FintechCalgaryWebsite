@@ -1,30 +1,30 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { apiResponse, requireAdmin, withErrorHandler } from "@/lib/api-helpers";
-import { updateMember } from "@/lib/models/member";
+import { updateExecutive } from "@/lib/models/executive";
 import { ObjectId } from "mongodb";
 
 export const dynamic = "force-dynamic";
 
 export const GET = withErrorHandler(async (req, context) => {
-  const { memberId } = await context.params;
+  const { executiveId } = await context.params;
   const db = await connectToDatabase();
 
-  const member = await db.collection("members").findOne({
-    _id: new ObjectId(memberId),
+  const executive = await db.collection("executives").findOne({
+    _id: new ObjectId(executiveId),
   });
 
-  if (!member) {
-    return apiResponse.notFound("Member not found");
+  if (!executive) {
+    return apiResponse.notFound("Executive not found");
   }
 
-  return apiResponse.success(member);
+  return apiResponse.success(executive);
 });
 
 export const PUT = withErrorHandler(async (req, context) => {
   const { session, error } = await requireAdmin();
   if (error) return error;
 
-  const { memberId } = await context.params;
+  const { executiveId } = await context.params;
   const db = await connectToDatabase();
   const updates = await req.json();
 
@@ -32,7 +32,7 @@ export const PUT = withErrorHandler(async (req, context) => {
     return apiResponse.badRequest("Invalid role value");
   }
 
-  const result = await updateMember(db, memberId, updates);
+  const result = await updateExecutive(db, executiveId, updates);
   return apiResponse.success(result);
 });
 
@@ -40,12 +40,13 @@ export const DELETE = withErrorHandler(async (req, context) => {
   const { session, error } = await requireAdmin();
   if (error) return error;
 
-  const { memberId } = await context.params;
+  const { executiveId } = await context.params;
   const db = await connectToDatabase();
 
-  await db.collection("members").deleteOne({
-    _id: new ObjectId(memberId),
+  await db.collection("executives").deleteOne({
+    _id: new ObjectId(executiveId),
   });
 
   return new Response(null, { status: 204 });
 });
+

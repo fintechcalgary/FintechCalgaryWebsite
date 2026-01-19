@@ -11,7 +11,7 @@ import {
 import Navbar from "@/components/Navbar";
 import Events from "@/components/Events";
 import { useEffect, useState } from "react";
-import Members from "@/components/Members";
+import Executives from "@/components/Executives";
 import Link from "next/link";
 
 const AdminCard = ({ title, description, icon: Icon, href, color, index }) => {
@@ -195,8 +195,8 @@ export default function AdminDashboardClient() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <AdminCard
-                    title="Associate Members"
-                    description="View and manage associate member organizations, approve applications, and export data"
+                    title="Partners"
+                    description="View and manage partner organizations, approve applications, and export data"
                     icon={(props) => (
                       <svg
                         {...props}
@@ -212,7 +212,7 @@ export default function AdminDashboardClient() {
                         />
                       </svg>
                     )}
-                    href="/dashboard/associate-members"
+                    href="/dashboard/partners"
                     color="purple"
                     index={0}
                   />
@@ -322,7 +322,7 @@ export default function AdminDashboardClient() {
                 <div className="space-y-1">
                   <h2
                     className="text-2xl font-semibold text-white"
-                    id="members"
+                    id="executives"
                   >
                     Team
                   </h2>
@@ -334,7 +334,7 @@ export default function AdminDashboardClient() {
                   <FontAwesomeIcon icon={faUsers} className="h-6 w-6" />
                 </span>
               </div>
-              <Members />
+              <Executives />
             </div>
           </section>
         </div>

@@ -28,7 +28,7 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Events from "@/components/Events";
 
-export default function AssociateDashboardClient() {
+export default function PartnerDashboardClient() {
   const [memberData, setMemberData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -84,14 +84,14 @@ export default function AssociateDashboardClient() {
   }, [status, router, session]);
 
   useEffect(() => {
-    document.title = "Associate Member Dashboard | FinTech Calgary";
+    document.title = "Partner Dashboard | FinTech Calgary";
   }, []);
 
   useEffect(() => {
     const fetchMemberData = async () => {
       if (session?.user?.role === "associate") {
         try {
-          const response = await fetch("/api/associateMember/me");
+          const response = await fetch("/api/partners/me");
           if (response.ok) {
             const data = await response.json();
             setMemberData(data);
@@ -173,7 +173,7 @@ export default function AssociateDashboardClient() {
 
     try {
       setSubmitting(true);
-      const response = await fetch(`/api/associateMember/${memberData._id}`, {
+      const response = await fetch(`/api/partners/${memberData._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -194,7 +194,7 @@ export default function AssociateDashboardClient() {
       }
 
       // Refresh the member data
-      const fetchResponse = await fetch("/api/associateMember/me");
+      const fetchResponse = await fetch("/api/partners/me");
       if (fetchResponse.ok) {
         const data = await fetchResponse.json();
         setMemberData(data);
@@ -398,7 +398,7 @@ export default function AssociateDashboardClient() {
             {/* Header */}
             <div className="text-center mb-16 animate-fadeIn">
               <h1 className="text-5xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
-                Associate Member Dashboard
+                Partner Dashboard
               </h1>
               <div className="flex items-center justify-center gap-6">
                 <p className="text-xl text-gray-300">

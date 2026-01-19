@@ -11,7 +11,7 @@ async function getExecutives() {
   try {
     const db = await connectToDatabase();
     const executives = await db
-      .collection("members")
+      .collection("executives")
       .find({})
       .sort({ order: 1 })
       .toArray();
