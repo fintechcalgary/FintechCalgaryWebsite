@@ -22,7 +22,7 @@ export default function UpcomingEvents({ events }) {
         {/* Header */}
         <div className="mb-16 md:mb-20 text-center">
           <Link href="/events" className="group inline-block relative">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 md:mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 md:mb-6">
               <span className="relative inline-block">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500 animate-gradient">
                   Upcoming Events & Webinars

@@ -9,7 +9,7 @@ export default function ExecutiveApplications() {
     >
       <div className="container mx-auto px-6 relative">
         {/* Enhanced Title */}
-        <h2 className="text-6xl font-bold mb-20 text-center">
+        <h2 className="text-4xl sm:text-5xl font-bold mb-20 text-center">
           <div className="group inline-block relative">
             <div className="flex items-center justify-center gap-4">
               <div className="relative">

@@ -91,7 +91,7 @@ function checkAuthAndRole(token, pathname) {
 }
 
 export default withAuth(
-  function middleware(req) {
+  function proxy(req) {
     const { pathname, method } = req.nextUrl;
 
     // Allow public GET routes
@@ -140,13 +140,13 @@ export default withAuth(
           return true;
         }
         
-        // For API routes, authentication is handled in the middleware function above
+        // For API routes, authentication is handled in the proxy function above
         // For non-API routes (like dashboard), require authentication
         if (req.nextUrl.pathname.startsWith("/dashboard")) {
           return !!token;
         }
         
-        // Allow other routes (authentication will be checked in middleware function if needed)
+        // Allow other routes (authentication will be checked in proxy function if needed)
         return true;
       },
     },

@@ -168,7 +168,7 @@ export default function EventsPageClient({ initialEvents }) {
                   {/* Status Badge */}
                   <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
                     <span
-                      className={`px-4 py-1.5 text-xs font-semibold rounded-full
+                      className={`px-4 py-1.5 text-xs font-semibold rounded-full flex items-center justify-center
                       ${
                         isUpcoming
                           ? "bg-purple-600/60 text-purple-100 border border-purple-500 backdrop-blur-md"
@@ -178,7 +178,7 @@ export default function EventsPageClient({ initialEvents }) {
                       {isUpcoming ? "Upcoming" : "Past"}
                     </span>
                     {event.eventType === "webinar" && (
-                      <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-600/60 text-blue-100 border border-blue-500 backdrop-blur-md">
+                      <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-blue-600/60 text-blue-100 border border-blue-500 backdrop-blur-md flex items-center justify-center">
                         Webinar
                       </span>
                     )}

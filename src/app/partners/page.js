@@ -1,14 +1,15 @@
-import { FiDownload, FiExternalLink, FiArrowRight } from "react-icons/fi";
+"use client";
+
+import { useState } from "react";
+import { FiDownload, FiExternalLink, FiArrowRight, FiChevronDown } from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import Image from "next/image";
 import Link from "next/link";
 
-export const metadata = {
-  title: "Partners & Sponsors | FinTech Calgary",
-};
-
 export default function PartnersPage() {
+  const [showAll, setShowAll] = useState(false);
+  const INITIAL_PARTNERS_COUNT = 6;
   const partners = [
     {
       name: "University of Calgary",
@@ -138,18 +139,24 @@ export default function PartnersPage() {
           </div>
 
           {/* Partners Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-24">
-            {partners.map((partner, index) => (
-              <div
-                key={partner.name}
-                className={`group relative overflow-hidden bg-[#12121a]/80 backdrop-blur-xl p-8 rounded-2xl 
-                           border border-gray-800 hover:border-primary/50 transition-all duration-500 flex flex-col
-                           animate-fadeIn`}
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                  "--partner-color": partner.color,
-                }}
-              >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
+            {partners.map((partner, index) => {
+              const isHidden = !showAll && index >= INITIAL_PARTNERS_COUNT;
+              return (
+                <div
+                  key={partner.name}
+                  className={`group relative bg-[#12121a]/80 backdrop-blur-xl rounded-2xl 
+                             border border-gray-800 hover:border-primary/50 flex flex-col
+                             overflow-hidden transition-all duration-700 ease-in-out ${
+                               isHidden
+                                 ? "hidden"
+                                 : "p-8 animate-fadeIn"
+                             }`}
+                  style={{
+                    animationDelay: isHidden ? "0ms" : `${index * 100}ms`,
+                    "--partner-color": partner.color,
+                  }}
+                >
                 {/* Dynamic background gradient on hover */}
                 <div
                   className="absolute inset-0 rounded-2xl z-0 transition-all duration-500 opacity-0 scale-100 group-hover:opacity-80 group-hover:scale-110"
@@ -189,8 +196,38 @@ export default function PartnersPage() {
                   Visit Website <FiArrowRight className="ml-2" />
                 </a>
               </div>
-            ))}
+              );
+            })}
           </div>
+
+          {/* Show All Button */}
+          {partners.length > INITIAL_PARTNERS_COUNT && (
+            <div className={`flex justify-center transition-all duration-300 ${
+              !showAll ? "mt-8 mb-24" : "mt-12 mb-24"
+            }`}>
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-full 
+                         bg-gradient-to-r from-primary/20 to-purple-600/20 backdrop-blur-xl
+                         text-white transition-all duration-300 
+                         hover:shadow-xl hover:shadow-primary/30 transform hover:-translate-y-1
+                         border border-primary/30 hover:border-primary/50 group hover:scale-105
+                         font-medium text-lg"
+              >
+                {showAll ? (
+                  <>
+                    Show Less
+                    <FiChevronDown className="transform rotate-180 transition-transform duration-300" />
+                  </>
+                ) : (
+                  <>
+                    Show All Partners ({partners.length})
+                    <FiChevronDown className="transform transition-transform duration-300 group-hover:translate-y-1" />
+                  </>
+                )}
+              </button>
+            </div>
+          )}
 
           {/* Sponsorship Package Section */}
           <div className="max-w-4xl mx-auto animate-slideInUp">
