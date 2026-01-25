@@ -23,10 +23,20 @@ const normalizeDate = (dateString) => {
 // Generate metadata for the event
 export async function generateMetadata({ params }) {
   try {
+    const { eventId } = await params;
+    
+    // Validate ObjectId format
+    if (!ObjectId.isValid(eventId)) {
+      return {
+        title: "Event Not Found | FinTech Calgary",
+        description: "The requested event could not be found.",
+      };
+    }
+    
     const db = await connectToDatabase();
     const event = await db
       .collection("events")
-      .findOne({ _id: new ObjectId(params.eventId) });
+      .findOne({ _id: new ObjectId(eventId) });
 
     if (!event) {
       return {
@@ -59,10 +69,39 @@ export async function generateMetadata({ params }) {
 // Server Component
 export default async function EventPage({ params }) {
   try {
+    const { eventId } = await params;
+    
+    // Validate ObjectId format
+    if (!ObjectId.isValid(eventId)) {
+      return (
+        <main className="flex flex-col min-h-screen">
+          <PublicNavbar />
+          <div className="flex-grow flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-white mb-4">
+                Invalid Event ID
+              </h1>
+              <p className="text-gray-400 mb-8">
+                The event ID format is invalid.
+              </p>
+              <Link
+                href="/events"
+                className="inline-flex items-center px-6 py-3 rounded-full bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
+              >
+                <FiArrowLeft className="mr-2" />
+                Back to Events
+              </Link>
+            </div>
+          </div>
+          <Footer />
+        </main>
+      );
+    }
+    
     const db = await connectToDatabase();
     const event = await db
       .collection("events")
-      .findOne({ _id: new ObjectId(params.eventId) });
+      .findOne({ _id: new ObjectId(eventId) });
 
     if (!event) {
       return (
