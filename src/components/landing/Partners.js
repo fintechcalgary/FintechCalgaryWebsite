@@ -72,6 +72,11 @@ export default function Partners() {
       logo: "/partners/apix.webp",
       color: "#ec4899",
     },
+    {
+      name: "Cowboys Dance Hall",
+      logo: "/partners/cowboys.png",
+      color: "#6d1371",
+    },
   ];
 
   return (

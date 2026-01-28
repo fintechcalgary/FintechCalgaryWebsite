@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { FiDownload, FiExternalLink, FiArrowRight, FiChevronDown } from "react-icons/fi";
+import {
+  FiDownload,
+  FiExternalLink,
+  FiArrowRight,
+  FiChevronDown,
+} from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import Image from "next/image";
@@ -119,6 +124,14 @@ export default function PartnersPage() {
       website: "https://apixplatform.com/",
       color: "#ec4899",
     },
+    {
+      name: "Cowboys Dance Hall",
+      logo: "/partners/cowboys.png",
+      description:
+        "Cowboys Dance Hall is one of Calgary's most iconic entertainment destinations, known for bringing together live music and large-scale events in the heart of the city. As an official partner of Fintech, Cowboys leverages innovative payment and financial technology to enhance the guest experience, streamline transactions, and support high-volume event operations.",
+      website: "https://www.cowboysnightclub.com/",
+      color: "#6d1371",
+    },
   ];
 
   return (
@@ -148,63 +161,63 @@ export default function PartnersPage() {
                   className={`group relative bg-[#12121a]/80 backdrop-blur-xl rounded-2xl 
                              border border-gray-800 hover:border-primary/50 flex flex-col
                              overflow-hidden transition-all duration-700 ease-in-out ${
-                               isHidden
-                                 ? "hidden"
-                                 : "p-8 animate-fadeIn"
+                               isHidden ? "hidden" : "p-8 animate-fadeIn"
                              }`}
                   style={{
                     animationDelay: isHidden ? "0ms" : `${index * 100}ms`,
                     "--partner-color": partner.color,
                   }}
                 >
-                {/* Dynamic background gradient on hover */}
-                <div
-                  className="absolute inset-0 rounded-2xl z-0 transition-all duration-500 opacity-0 scale-100 group-hover:opacity-80 group-hover:scale-110"
-                  style={{
-                    background: `radial-gradient(circle at center, ${partner.color}20 0%, transparent 70%)`,
-                  }}
-                />
+                  {/* Dynamic background gradient on hover */}
+                  <div
+                    className="absolute inset-0 rounded-2xl z-0 transition-all duration-500 opacity-0 scale-100 group-hover:opacity-80 group-hover:scale-110"
+                    style={{
+                      background: `radial-gradient(circle at center, ${partner.color}20 0%, transparent 70%)`,
+                    }}
+                  />
 
-                {/* Logo */}
-                <div className="h-40 flex items-center justify-center mb-6 relative z-10">
-                  <div className="relative w-full h-32 flex items-center justify-center transition-transform duration-300 hover:scale-105">
-                    <Image
-                      src={partner.logo}
-                      alt={partner.name}
-                      width={200}
-                      height={100}
-                      className="object-contain max-h-32 drop-shadow-lg"
-                    />
+                  {/* Logo */}
+                  <div className="h-40 flex items-center justify-center mb-6 relative z-10">
+                    <div className="relative w-full h-32 flex items-center justify-center transition-transform duration-300 hover:scale-105">
+                      <Image
+                        src={partner.logo}
+                        alt={partner.name}
+                        width={200}
+                        height={100}
+                        className="object-contain max-h-32 drop-shadow-lg"
+                      />
+                    </div>
                   </div>
+
+                  {/* Content */}
+                  <h3 className="text-2xl font-bold text-white mb-4 relative z-10">
+                    {partner.name}
+                  </h3>
+                  <p className="text-gray-300/90 mb-6 relative z-10 flex-grow">
+                    {partner.description}
+                  </p>
+
+                  {/* Link */}
+                  <a
+                    href={partner.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-primary hover:text-purple-400 transition-colors relative z-10 font-medium"
+                  >
+                    Visit Website <FiArrowRight className="ml-2" />
+                  </a>
                 </div>
-
-                {/* Content */}
-                <h3 className="text-2xl font-bold text-white mb-4 relative z-10">
-                  {partner.name}
-                </h3>
-                <p className="text-gray-300/90 mb-6 relative z-10 flex-grow">
-                  {partner.description}
-                </p>
-
-                {/* Link */}
-                <a
-                  href={partner.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-primary hover:text-purple-400 transition-colors relative z-10 font-medium"
-                >
-                  Visit Website <FiArrowRight className="ml-2" />
-                </a>
-              </div>
               );
             })}
           </div>
 
           {/* Show All Button */}
           {partners.length > INITIAL_PARTNERS_COUNT && (
-            <div className={`flex justify-center transition-all duration-300 ${
-              !showAll ? "mt-8 mb-24" : "mt-12 mb-24"
-            }`}>
+            <div
+              className={`flex justify-center transition-all duration-300 ${
+                !showAll ? "mt-8 mb-24" : "mt-12 mb-24"
+              }`}
+            >
               <button
                 onClick={() => setShowAll(!showAll)}
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-full 
