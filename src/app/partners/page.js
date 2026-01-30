@@ -132,6 +132,22 @@ export default function PartnersPage() {
       website: "https://www.cowboysnightclub.com/",
       color: "#6d1371",
     },
+    {
+      name: "SASE",
+      logo: "/partners/sase.png",
+      description:
+        "Famous for our unique, innovative approach, we host an extraordinary range of events designed to encompass every facet of student success—professional development, personal skill-building, wellness, empowerment, and community service. With 30+ industry and retail sponsors & partners, and a network of 1700+ students from 11+ faculties and all levels of study, we're certain that, with us, you can do ANYTHING.",
+      website: "https://www.saseucalgary.ca/",
+      color: "#2563eb",
+    },
+    {
+      name: "Canada FinTech Symposium",
+      logo: "/partners/cfts.png",
+      description:
+        "Our partnership with Canada FinTech Symposium 2026 will bring together financial institutions, fintech innovators, regulators, investors, and enterprise technology leaders to shape the future of financial services in Canada.",
+      website: "https://canadafintechsymposium.com/",
+      color: "#dc2626",
+    },
   ];
 
   return (

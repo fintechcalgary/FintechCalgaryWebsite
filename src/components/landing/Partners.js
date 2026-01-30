@@ -77,6 +77,16 @@ export default function Partners() {
       logo: "/partners/cowboys.png",
       color: "#6d1371",
     },
+    {
+      name: "SASE",
+      logo: "/partners/sase.png",
+      color: "#2563eb",
+    },
+    {
+      name: "Canada FinTech Symposium",
+      logo: "/partners/cfts.png",
+      color: "#dc2626",
+    },
   ];
 
   return (
