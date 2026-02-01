@@ -267,7 +267,7 @@ export default function AddPartnersPage() {
     );
   }
 
-  const PartnerForm = ({ onSubmit, submitLabel }) => (
+  const renderPartnerForm = (onSubmit, submitLabel) => (
     <form onSubmit={onSubmit} className="space-y-4 sm:space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         <div>
@@ -277,7 +277,7 @@ export default function AddPartnersPage() {
           <input
             type="text"
             value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
             className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
             placeholder="Partner name"
             required
@@ -294,7 +294,7 @@ export default function AddPartnersPage() {
             <input
               type="color"
               value={formData.color?.startsWith("#") ? formData.color : `#${formData.color || "8b5cf6"}`}
-              onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+              onChange={(e) => setFormData((prev) => ({ ...prev, color: e.target.value }))}
               className="w-10 h-10 min-w-[2.5rem] rounded border border-gray-700 cursor-pointer bg-transparent flex-shrink-0"
               title="Pick color"
             />
@@ -304,7 +304,7 @@ export default function AddPartnersPage() {
               onChange={(e) => {
                 let v = e.target.value.trim();
                 if (v && !v.startsWith("#")) v = "#" + v;
-                setFormData({ ...formData, color: v || "#8b5cf6" });
+                setFormData((prev) => ({ ...prev, color: v || "#8b5cf6" }));
               }}
               className="w-full min-w-[11rem] sm:min-w-[14rem] max-w-xs px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder-gray-500 text-sm sm:text-base"
               placeholder="Hexcode"
@@ -320,7 +320,7 @@ export default function AddPartnersPage() {
         <input
           type="url"
           value={formData.website}
-          onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+          onChange={(e) => setFormData((prev) => ({ ...prev, website: e.target.value }))}
           className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
           placeholder="https://..."
         />
@@ -332,7 +332,7 @@ export default function AddPartnersPage() {
         <textarea
           value={formData.description}
           onChange={(e) =>
-            setFormData({ ...formData, description: e.target.value })
+            setFormData((prev) => ({ ...prev, description: e.target.value }))
           }
           rows={4}
           className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
@@ -549,7 +549,7 @@ export default function AddPartnersPage() {
         maxWidth="max-w-[calc(100%-2rem)] sm:max-w-2xl"
       >
         <div className="p-4 sm:p-6">
-          <PartnerForm onSubmit={handleAddSubmit} submitLabel="Create Partner" />
+          {renderPartnerForm(handleAddSubmit, "Create Partner")}
         </div>
       </PortalModal>
 
@@ -560,7 +560,7 @@ export default function AddPartnersPage() {
         maxWidth="max-w-[calc(100%-2rem)] sm:max-w-2xl"
       >
         <div className="p-4 sm:p-6">
-          <PartnerForm onSubmit={handleEditSubmit} submitLabel="Update Partner" />
+          {renderPartnerForm(handleEditSubmit, "Update Partner")}
         </div>
       </PortalModal>
 
