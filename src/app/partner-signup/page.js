@@ -115,7 +115,7 @@ export default function PartnerSignupPage() {
         logo: logoUrl,
       };
 
-      const response = await fetch(API_ENDPOINTS.PARTNER, {
+      const response = await fetch(API_ENDPOINTS.PARTNER_APPLICATIONS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

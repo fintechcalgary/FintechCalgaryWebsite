@@ -7,6 +7,7 @@ const PROTECTED_API_ROUTES = [
   "/api/executive-roles",
   "/api/settings",
   "/api/partners",
+  "/api/partner-applications",
   "/api/executives",
   "/api/members",
 ];
@@ -15,18 +16,20 @@ const ADMIN_ONLY_ROUTES = [
   "/api/executive-application",
   "/api/executive-roles",
   "/api/settings",
+  "/api/partners",
+  "/api/partner-applications",
   "/api/executives",
   "/api/events",
   "/api/members",
 ];
 
-const PUBLIC_GET_ROUTES = ["/api/settings", "/api/executive-roles"];
+const PUBLIC_GET_ROUTES = ["/api/settings", "/api/executive-roles", "/api/partners"];
 
 const PUBLIC_POST_ENDPOINTS = [
   { path: "/api/executive-application", method: "POST" },
   { path: "/api/contact", method: "POST" },
   { path: "/api/subscribe", method: "POST" },
-  { path: "/api/partners", method: "POST" },
+  { path: "/api/partner-applications", method: "POST" },
   { path: "/api/events/", method: "POST", suffix: "/register" },
   { path: "/api/upload", method: "POST" },
   { path: "/api/auth/register", method: "POST" },
@@ -160,6 +163,7 @@ export const config = {
     "/api/executive-roles/:path*",
     "/api/settings/:path*",
     "/api/partners/:path*",
+    "/api/partner-applications/:path*",
     "/api/executives/:path*",
     "/api/members/:path*",
     "/api/events/:path*",

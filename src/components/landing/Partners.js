@@ -1,93 +1,26 @@
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Partners() {
   const [hoveredPartner, setHoveredPartner] = useState(null);
+  const [partners, setPartners] = useState([]);
 
-  const partners = [
-    {
-      name: "University of Calgary",
-      logo: "/partners/ucalgary.png",
-      color: "#dc2626",
-    },
-    {
-      name: "Dubai FinTech Summit",
-      logo: "/partners/dubai-fintech-summit.png",
-      color: "#14b8a6",
-    },
-    {
-      name: "National Payments",
-      logo: "/partners/national-payments.png",
-      color: "#22c55e",
-    },
-    {
-      name: "Trescon",
-      logo: "/partners/trescon.png",
-      color: "#14b8a6",
-    },
-    {
-      name: "Helcim",
-      logo: "/partners/helcim.png",
-      color: "#eab308",
-    },
-    {
-      name: "Legal Bridge",
-      logo: "/partners/legal-bridge.png",
-      color: "#104ee6",
-    },
-    {
-      name: "UCFSA",
-      logo: "/partners/ucfsa.png",
-      color: "#E8CB47",
-    },
-    {
-      name: "Date with Tech",
-      logo: "/partners/date-with-tech.png",
-      color: "#00bfff",
-    },
-    {
-      name: "Beyond the Lab",
-      logo: "/partners/beyond-the-lab.png",
-      color: "#228b22",
-    },
-    {
-      name: "Pakistani Students' Society",
-      logo: "/partners/pakistani-students-society.png",
-      color: "#228b22",
-    },
-    {
-      name: "CeresAI",
-      logo: "/partners/ceresai-xyz.png",
-      color: "#4169e1",
-    },
-    {
-      name: "MaxHR",
-      logo: "/partners/max-hr.png",
-      color: "#a855f7",
-    },
-    {
-      name: "APIX",
-      logo: "/partners/apix.webp",
-      color: "#ec4899",
-    },
-    {
-      name: "Cowboys Dance Hall",
-      logo: "/partners/cowboys.png",
-      color: "#6d1371",
-    },
-    {
-      name: "SASE",
-      logo: "/partners/sase.png",
-      color: "#2563eb",
-    },
-    {
-      name: "Canada FinTech Symposium",
-      logo: "/partners/cfts.png",
-      color: "#dc2626",
-    },
-  ];
+  useEffect(() => {
+    const fetchSponsors = async () => {
+      try {
+        const res = await fetch("/api/partners");
+        if (res.ok) {
+          const data = await res.json();
+          setPartners(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch partners:", err);
+      }
+    };
+    fetchSponsors();
+  }, []);
 
   return (
     <section id="partners" className="py-24 relative">
@@ -126,7 +59,7 @@ export default function Partners() {
                 >
                   {partners.map((partner, index) => (
                     <div
-                      key={`${partner.name}-${sectionIndex}-${index}`}
+                      key={`${partner._id || partner.name}-${sectionIndex}-${index}`}
                       onMouseEnter={() => setHoveredPartner(partner.name)}
                       onMouseLeave={() => setHoveredPartner(null)}
                       className="mx-4"
@@ -139,7 +72,7 @@ export default function Partners() {
                         <div
                           className="absolute inset-0 rounded-2xl z-0"
                           style={{
-                            background: `radial-gradient(circle at center, ${partner.color}20 0%, transparent 70%)`,
+                            background: `radial-gradient(circle at center, ${partner.color || "#8b5cf6"}20 0%, transparent 70%)`,
                             opacity: hoveredPartner === partner.name ? 0.8 : 0,
                             transform: `scale(${
                               hoveredPartner === partner.name ? 1.2 : 1
@@ -158,13 +91,22 @@ export default function Partners() {
                             transition: "transform 0.3s",
                           }}
                         >
-                          <Image
-                            src={partner.logo}
-                            alt={partner.name}
-                            width={180}
-                            height={90}
-                            className="object-contain max-h-28"
-                          />
+                          {partner.logo ? (
+                            <Image
+                              src={partner.logo}
+                              alt={partner.name}
+                              width={180}
+                              height={90}
+                              className="object-contain max-h-28"
+                            />
+                          ) : (
+                            <span
+                              className="text-2xl font-bold text-white/80"
+                              style={{ color: partner.color || "#8b5cf6" }}
+                            >
+                              {(partner.name || "?").charAt(0)}
+                            </span>
+                          )}
                         </div>
 
                         <p

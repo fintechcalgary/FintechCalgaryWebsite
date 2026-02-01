@@ -1,7 +1,10 @@
 const { MongoClient } = require("mongodb");
 require("dotenv").config();
 
-const uri = process.env.NEXT_PUBLIC_MONGODB_URI || process.env.NEXT_MONGODB_URI;
+const uri =
+  process.env.MONGODB_URI ||
+  process.env.NEXT_PUBLIC_MONGODB_URI ||
+  process.env.NEXT_MONGODB_URI;
 const dbName = "fintech-website";
 
 if (!uri) {

@@ -91,7 +91,7 @@ export default function PartnerDashboardClient() {
     const fetchMemberData = async () => {
       if (session?.user?.role === "associate") {
         try {
-          const response = await fetch("/api/partners/me");
+          const response = await fetch("/api/partner-applications/me");
           if (response.ok) {
             const data = await response.json();
             setMemberData(data);
@@ -173,7 +173,7 @@ export default function PartnerDashboardClient() {
 
     try {
       setSubmitting(true);
-      const response = await fetch(`/api/partners/${memberData._id}`, {
+      const response = await fetch(`/api/partner-applications/${memberData._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -194,7 +194,7 @@ export default function PartnerDashboardClient() {
       }
 
       // Refresh the member data
-      const fetchResponse = await fetch("/api/partners/me");
+      const fetchResponse = await fetch("/api/partner-applications/me");
       if (fetchResponse.ok) {
         const data = await fetchResponse.json();
         setMemberData(data);

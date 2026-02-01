@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FiDownload,
   FiExternalLink,
@@ -13,142 +13,29 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function PartnersPage() {
-  const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] = useState(true);
+  const [partners, setPartners] = useState([]);
+  const [loading, setLoading] = useState(true);
   const INITIAL_PARTNERS_COUNT = 6;
-  const partners = [
-    {
-      name: "University of Calgary",
-      logo: "/partners/ucalgary.png",
-      description:
-        "Our foundational partner and home institution. The University of Calgary provides the academic foundation and support that enables FinTech Calgary to thrive as a leading student organization in financial technology innovation.",
-      website:
-        "https://suuofc.campuslabs.ca/engage/organization/fintechcalgary",
-      color: "#dc2626",
-    },
-    {
-      name: "Dubai FinTech Summit",
-      logo: "/partners/dubai-fintech-summit.png",
-      description:
-        "A premier global event bringing together FinTech innovators, investors, and industry leaders to shape the future of financial technology.",
-      website: "https://dubaifintechsummit.com/get-involved/#buy-tickets",
-      color: "#14b8a6",
-    },
-    {
-      name: "National Payments",
-      logo: "/partners/national-payments.png",
-      description:
-        "A leading payment solutions provider offering innovative financial technology services to businesses and institutions.",
-      website: "https://nationalpayments.ca/",
-      color: "#22c55e",
-    },
-    {
-      name: "Trescon",
-      logo: "/partners/trescon.png",
-      description:
-        "A global business events and consulting firm that specializes in producing high-quality B2B events focusing on tech innovation and digital transformation.",
-      website: "https://www.tresconglobal.com/",
-      color: "#14b8a6",
-    },
-    {
-      name: "Helcim",
-      logo: "/partners/helcim.png",
-      description:
-        "An innovative fintech company offering integrated payment solutions and business tools built for modern commerce.",
-      website:
-        "https://www.helcim.com/partners/fintechcalgary/?af=3a785c9580a52b",
-      color: "#eab308",
-    },
-    {
-      name: "Legal Bridge",
-      logo: "/partners/legal-bridge.png",
-      description:
-        "Legal Bridge is a student-run organization at the University of Calgary aiming to support aspiring law\
-        students navigate the journey from undergraduate studies to law school as well as explore new\
-        advancements in the legal field.",
-      website: "https://www.linkedin.com/company/legal-bridgeuofc/",
-      color: "#104ee6",
-    },
-    {
-      name: "UCFSA",
-      logo: "/partners/ucfsa.png",
-      description:
-        "The University of Calgary Filipino Students' Association (UCFSA) is a student-run organization dedicated to celebrating and promoting Filipino culture within the University of Calgary community.",
-      website: "https://www.facebook.com/UCFSA/",
-      color: "#E8CB47",
-    },
-    {
-      name: "Date with Tech",
-      logo: "/partners/date-with-tech.png",
-      description:
-        "A platform dedicated to exploring emerging technologies and future innovations across industries. It brings together visionaries, business leaders, and technology experts to engage in discussions, showcase advancements, and connect with key players shaping the next wave of technological evolution.",
-      website: "https://datewithtech.com/dubai/",
-      color: "#00bfff",
-    },
-    {
-      name: "Beyond the Lab",
-      logo: "/partners/beyond-the-lab.png",
-      description:
-        "A student-led club that empowers science and health students to solve real-world healthcare challenges. Our mission is to give students the tools, networks, and experiences they need to become not just future researchers or clinicians, but problem solvers, innovators, and leaders in the health space and beyond!",
-      website: "https://beyondthelabclub.wixsite.com/beyond-the-lab",
-      color: "#228b22",
-    },
-    {
-      name: "Pakistani Students' Society",
-      logo: "/partners/pakistani-students-society.png",
-      description:
-        "The Pakistani Students' Society is a home away from home. We are a charity organization designed to help out with different non-profits in Pakistan. We pride ourselves on culture, respect and a love for Pakistan.",
-      website: "https://www.facebook.com/PakistaniStudentsSocietyUofC/",
-      color: "#228b22",
-    },
-    {
-      name: "CeresAI",
-      logo: "/partners/ceresai-xyz.png",
-      description:
-        "An AI companions platform that turns creator expertise into always-on, personalized conversations. CeresAI builds authentic, safe AI companions for creators and brands.",
-      website: "https://ceresai.xyz/",
-      color: "#4169e1",
-    },
-    {
-      name: "MaxHR",
-      logo: "/partners/max-hr.png",
-      description:
-        "Max is a wholesome work management solution for startups and enterprises seeking to simplify People, Sales, and Finance processes. Our comprehensive, all-in-one work management software simplifies human capital management, supply chain management and accounting all in one place.",
-      website: "https://maxhr.io/fintech/",
-      color: "#a855f7",
-    },
-    {
-      name: "APIX",
-      logo: "/partners/apix.webp",
-      description:
-        "A Singapore-based cross-border innovation platform that accelerates digital transformation in the financial sector. APIX enables global collaboration between financial institutions, fintechs, and developers through innovation challenges, a digital sandbox, and a marketplace with open API endpoints.",
-      website: "https://apixplatform.com/",
-      color: "#ec4899",
-    },
-    {
-      name: "Cowboys Dance Hall",
-      logo: "/partners/cowboys.png",
-      description:
-        "Cowboys Dance Hall is one of Calgary's most iconic entertainment destinations, known for bringing together live music and large-scale events in the heart of the city. As an official partner of Fintech, Cowboys leverages innovative payment and financial technology to enhance the guest experience, streamline transactions, and support high-volume event operations.",
-      website: "https://www.cowboysnightclub.com/",
-      color: "#6d1371",
-    },
-    {
-      name: "SASE",
-      logo: "/partners/sase.png",
-      description:
-        "Famous for our unique, innovative approach, we host an extraordinary range of events designed to encompass every facet of student success—professional development, personal skill-building, wellness, empowerment, and community service. With 30+ industry and retail sponsors & partners, and a network of 1700+ students from 11+ faculties and all levels of study, we're certain that, with us, you can do ANYTHING.",
-      website: "https://www.saseucalgary.ca/",
-      color: "#2563eb",
-    },
-    {
-      name: "Canada FinTech Symposium",
-      logo: "/partners/cfts.png",
-      description:
-        "Our partnership with Canada FinTech Symposium 2026 will bring together financial institutions, fintech innovators, regulators, investors, and enterprise technology leaders to shape the future of financial services in Canada.",
-      website: "https://canadafintechsymposium.com/",
-      color: "#dc2626",
-    },
-  ];
+
+  useEffect(() => {
+    const fetchSponsors = async () => {
+      try {
+        const res = await fetch("/api/partners");
+        if (res.ok) {
+          const data = await res.json();
+          setPartners(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch partners:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSponsors();
+  }, []);
+
+  /* Partners loaded from DB - see scripts/seed-partners.js */
 
   return (
     <main className="flex flex-col min-h-screen">
@@ -167,13 +54,19 @@ export default function PartnersPage() {
             </p>
           </div>
 
+          {loading ? (
+            <div className="flex justify-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            </div>
+          ) : (
+          <>
           {/* Partners Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
             {partners.map((partner, index) => {
               const isHidden = !showAll && index >= INITIAL_PARTNERS_COUNT;
               return (
                 <div
-                  key={partner.name}
+                  key={partner._id || partner.name}
                   className={`group relative bg-[#12121a]/80 backdrop-blur-xl rounded-2xl 
                              border border-gray-800 hover:border-primary/50 flex flex-col
                              overflow-hidden transition-all duration-700 ease-in-out ${
@@ -195,13 +88,22 @@ export default function PartnersPage() {
                   {/* Logo */}
                   <div className="h-40 flex items-center justify-center mb-6 relative z-10">
                     <div className="relative w-full h-32 flex items-center justify-center transition-transform duration-300 hover:scale-105">
-                      <Image
-                        src={partner.logo}
-                        alt={partner.name}
-                        width={200}
-                        height={100}
-                        className="object-contain max-h-32 drop-shadow-lg"
-                      />
+                      {partner.logo ? (
+                        <Image
+                          src={partner.logo}
+                          alt={partner.name}
+                          width={200}
+                          height={100}
+                          className="object-contain max-h-32 drop-shadow-lg"
+                        />
+                      ) : (
+                        <div
+                          className="w-24 h-24 rounded-xl flex items-center justify-center text-2xl font-bold text-white/80"
+                          style={{ backgroundColor: `${partner.color || "#8b5cf6"}30` }}
+                        >
+                          {(partner.name || "?").charAt(0)}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -214,14 +116,16 @@ export default function PartnersPage() {
                   </p>
 
                   {/* Link */}
-                  <a
-                    href={partner.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-primary hover:text-purple-400 transition-colors relative z-10 font-medium"
-                  >
-                    Visit Website <FiArrowRight className="ml-2" />
-                  </a>
+                  {partner.website ? (
+                    <a
+                      href={partner.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-primary hover:text-purple-400 transition-colors relative z-10 font-medium"
+                    >
+                      Visit Website <FiArrowRight className="ml-2" />
+                    </a>
+                  ) : null}
                 </div>
               );
             })}
@@ -256,6 +160,8 @@ export default function PartnersPage() {
                 )}
               </button>
             </div>
+          )}
+          </>
           )}
 
           {/* Sponsorship Package Section */}

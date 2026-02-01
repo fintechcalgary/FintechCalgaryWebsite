@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed-admin": "node src/scripts/seed-admin.js"
+    "seed-admin": "node src/scripts/seed-admin.js",
+    "seed-partners": "node src/scripts/seed-partners.js",
+    "upload-partner-logos": "node src/scripts/upload-partner-logos.js"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^7.1.0",

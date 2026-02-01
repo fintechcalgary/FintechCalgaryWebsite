@@ -5,60 +5,43 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
-  FiUser,
-  FiMail,
-  FiPhone,
+  FiImage,
   FiGlobe,
-  FiMapPin,
-  FiCalendar,
-  FiHome,
-  FiUsers,
   FiDownload,
   FiTrash2,
-  FiEdit2,
-  FiExternalLink,
   FiArrowLeft,
-  FiCheck,
-  FiX,
+  FiPlus,
+  FiEdit2,
+  FiUpload,
 } from "react-icons/fi";
-import { SiLinkedin, SiFacebook, SiX } from "react-icons/si";
 import Navbar from "@/components/Navbar";
 import Modal from "@/components/Modal";
 import PortalModal from "@/components/PortalModal";
 import Image from "next/image";
 import Link from "next/link";
+import { UPLOAD_FOLDERS } from "@/lib/constants";
 
-export default function PartnersPage() {
+const INITIAL_FORM = {
+  name: "",
+  description: "",
+  website: "",
+  color: "#8b5cf6",
+  logo: "",
+};
+
+export default function AddPartnersPage() {
   const [partners, setPartners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [memberToDelete, setMemberToDelete] = useState(null);
+  const [partnerToDelete, setPartnerToDelete] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editingMember, setEditingMember] = useState(null);
-  const [editFormData, setEditFormData] = useState({
-    organizationName: "",
-    username: "",
-    title: "",
-    firstName: "",
-    lastName: "",
-    contactEmail: "",
-    contactPhoneNumber: "",
-    organizationEmail: "",
-    organizationPhoneNumber: "",
-    website: "",
-    facebook: "",
-    twitter: "",
-    linkedin: "",
-    address: "",
-    country: "",
-    province: "",
-    city: "",
-    postalCode: "",
-    aboutUs: "",
-    approvalStatus: "pending",
-    approvedAt: null,
-  });
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editingPartner, setEditingPartner] = useState(null);
+  const [formData, setFormData] = useState(INITIAL_FORM);
   const [submitting, setSubmitting] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -69,7 +52,7 @@ export default function PartnersPage() {
   }, [status, router]);
 
   useEffect(() => {
-    document.title = "Partners | FinTech Calgary";
+    document.title = "Add Partners | FinTech Calgary";
   }, []);
 
   useEffect(() => {
@@ -80,8 +63,6 @@ export default function PartnersPage() {
         if (response.ok) {
           const data = await response.json();
           setPartners(data);
-        } else if (response.status === 401) {
-          router.push("/login");
         }
       } catch (error) {
         console.error("Failed to fetch partners:", error);
@@ -95,261 +76,166 @@ export default function PartnersPage() {
     } else if (session && session.user.role !== "admin") {
       setLoading(false);
     }
-  }, [session, router]);
+  }, [session]);
 
-  const handleDeleteClick = (member) => {
-    setMemberToDelete(member);
-    setShowDeleteModal(true);
+  const resetForm = () => {
+    setFormData(INITIAL_FORM);
+    setEditingPartner(null);
+    setShowEditModal(false);
+    setShowAddModal(false);
+    setLogoFile(null);
+    setLogoPreview(null);
   };
 
-  const handleEditClick = (member) => {
-    setEditingMember(member);
-    setEditFormData({
-      organizationName: member.organizationName || "",
-      username: member.username || "",
-      title: member.title || "",
-      firstName: member.firstName || "",
-      lastName: member.lastName || "",
-      contactEmail: member.contactEmail || "",
-      contactPhoneNumber: member.contactPhoneNumber || "",
-      organizationEmail: member.organizationEmail || "",
-      organizationPhoneNumber: member.organizationPhoneNumber || "",
-      website: member.website || "",
-      facebook: member.facebook || "",
-      twitter: member.twitter || "",
-      linkedin: member.linkedin || "",
-      address: member.address || "",
-      country: member.country || "",
-      province: member.province || "",
-      city: member.city || "",
-      postalCode: member.postalCode || "",
-      aboutUs: member.aboutUs || "",
-      approvalStatus: member.approvalStatus || "pending",
-      approvedAt: member.approvedAt || null,
+  const openAdd = () => {
+    setFormData(INITIAL_FORM);
+    setLogoFile(null);
+    setLogoPreview(null);
+    setShowAddModal(true);
+  };
+
+  const openEdit = (partner) => {
+    setEditingPartner(partner);
+    setFormData({
+      name: partner.name || "",
+      description: partner.description || "",
+      website: partner.website || "",
+      color: partner.color || "#8b5cf6",
+      logo: partner.logo || "",
     });
+    setLogoFile(null);
+    setLogoPreview(partner.logo || null);
     setShowEditModal(true);
   };
 
-  const resetEditForm = () => {
-    setEditFormData({
-      organizationName: "",
-      username: "",
-      title: "",
-      firstName: "",
-      lastName: "",
-      contactEmail: "",
-      contactPhoneNumber: "",
-      organizationEmail: "",
-      organizationPhoneNumber: "",
-      website: "",
-      facebook: "",
-      twitter: "",
-      linkedin: "",
-      address: "",
-      country: "",
-      province: "",
-      city: "",
-      postalCode: "",
-      aboutUs: "",
-      approvalStatus: "pending",
-      approvedAt: null,
-    });
-    setEditingMember(null);
-    setShowEditModal(false);
+  const handleLogoChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file (PNG, JPG, WebP, etc.).");
+      return;
+    }
+    setLogoFile(file);
+    const url = URL.createObjectURL(file);
+    setLogoPreview(url);
   };
 
-  const handleEditSubmit = async (e) => {
+  const uploadLogoToCloudinary = async () => {
+    if (!logoFile) return formData.logo;
+
+    setUploadingLogo(true);
+    try {
+      const form = new FormData();
+      form.append("file", logoFile);
+      form.append("folder", UPLOAD_FOLDERS.PARTNER_DISPLAY_LOGOS);
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: form,
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Upload failed");
+      }
+      const data = await res.json();
+      return data.url;
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
+
+  const handleAddSubmit = async (e) => {
     e.preventDefault();
     if (submitting) return;
-
     try {
       setSubmitting(true);
-      const response = await fetch(
-        `/api/partners/${editingMember._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editFormData),
-        }
-      );
-
-      if (!response.ok) {
-        const data = await response.json();
-        if (data.error === "Username already exists") {
-          alert("Username already exists. Please choose a different username.");
-          return;
-        }
-        throw new Error(data.error || "Failed to update partner");
+      let logoUrl = formData.logo;
+      if (logoFile) {
+        logoUrl = await uploadLogoToCloudinary();
       }
-
-      // Refresh the members list
-      const fetchResponse = await fetch("/api/partners");
-      if (fetchResponse.ok) {
-        const data = await fetchResponse.json();
-        setPartners(data);
-      }
-
-      setShowEditModal(false);
-      setEditingMember(null);
-    } catch (error) {
-      console.error("Error updating partner:", error);
-      alert("Failed to update partner. Please try again.");
+      const response = await fetch("/api/partners", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          logo: logoUrl || null,
+        }),
+      });
+      if (!response.ok) throw new Error("Failed to create partner");
+      const created = await response.json();
+      setPartners((prev) => [...prev, created]);
+      resetForm();
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Failed to create partner.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleApprovalStatusChange = async (memberId, newStatus) => {
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (submitting || !editingPartner) return;
     try {
-      const response = await fetch(`/api/partners/${memberId}`, {
+      setSubmitting(true);
+      let logoUrl = formData.logo;
+      if (logoFile) {
+        logoUrl = await uploadLogoToCloudinary();
+      }
+      const response = await fetch(`/api/partners/${editingPartner._id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          approvalStatus: newStatus,
-          approvedAt: newStatus === "accepted" ? new Date() : null,
+          ...formData,
+          logo: logoUrl || null,
         }),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to update approval status");
-      }
-
-      // Refresh the members list
-      const fetchResponse = await fetch("/api/partners");
-      if (fetchResponse.ok) {
-        const data = await fetchResponse.json();
-        setPartners(data);
-      }
-    } catch (error) {
-      console.error("Error updating approval status:", error);
-      alert("Failed to update approval status. Please try again.");
+      if (!response.ok) throw new Error("Failed to update partner");
+      const updated = await response.json();
+      setPartners((prev) =>
+        prev.map((p) => (p._id === updated._id ? updated : p))
+      );
+      resetForm();
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Failed to update partner.");
+    } finally {
+      setSubmitting(false);
     }
+  };
+
+  const handleDeleteClick = (partner) => {
+    setPartnerToDelete(partner);
+    setShowDeleteModal(true);
   };
 
   const handleDeleteConfirm = async () => {
+    if (!partnerToDelete) return;
     try {
-      const response = await fetch(
-        `/api/partners/${memberToDelete._id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to delete partner");
-      }
-
-      setPartners(
-        partners.filter((m) => m._id !== memberToDelete._id)
-      );
+      const response = await fetch(`/api/partners/${partnerToDelete._id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete partner");
+      setPartners((prev) => prev.filter((p) => p._id !== partnerToDelete._id));
       setShowDeleteModal(false);
-      setMemberToDelete(null);
-    } catch (error) {
-      console.error("Error deleting partner:", error);
-      alert("Failed to delete partner. Please try again.");
+      setPartnerToDelete(null);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete partner.");
     }
   };
 
-  const handleDownloadLogo = async (member) => {
-    try {
-      if (!member.logo) {
-        alert("No logo available for this member.");
-        return;
-      }
-
-      // Create a temporary anchor element to trigger download
-      const link = document.createElement("a");
-      link.href = member.logo;
-
-      // Extract filename from URL or create one
-      const urlParts = member.logo.split("/");
-      const filename = urlParts[urlParts.length - 1];
-      const cleanFilename = filename.includes(".")
-        ? filename
-        : `${member.organizationName.replace(/[^a-zA-Z0-9]/g, "_")}_logo.jpg`;
-
-      link.download = cleanFilename;
-      link.target = "_blank";
-
-      // Append to body, click, and remove
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error("Error downloading logo:", error);
-      alert("Failed to download logo. Please try again.");
+  const handleDownloadLogo = (partner) => {
+    if (!partner.logo) {
+      alert("No logo available for this partner.");
+      return;
     }
-  };
-
-  const downloadCSV = () => {
-    const headers = [
-      "Organization Name",
-      "Username",
-      "Contact Title",
-      "Contact First Name",
-      "Contact Last Name",
-      "Contact Email",
-      "Contact Phone",
-      "Organization Email",
-      "Organization Phone",
-      "Website",
-      "LinkedIn",
-      "Facebook",
-      "Twitter",
-      "Address",
-      "City",
-      "Province",
-      "Country",
-      "Postal Code",
-      "About Us",
-      "Approval Status",
-      "Approved Date",
-      "Joined Date",
-    ];
-
-    const csvData = partners.map((member) => [
-      member.organizationName || "",
-      member.username || "",
-      member.title || "",
-      member.firstName || "",
-      member.lastName || "",
-      member.contactEmail || "",
-      member.contactPhoneNumber || "",
-      member.organizationEmail || "",
-      member.organizationPhoneNumber || "",
-      member.website || "",
-      member.linkedin || "",
-      member.facebook || "",
-      member.twitter || "",
-      member.address || "",
-      member.city || "",
-      member.province || "",
-      member.country || "",
-      member.postalCode || "",
-      member.aboutUs || "",
-      member.approvalStatus || "pending",
-      member.approvedAt ? new Date(member.approvedAt).toLocaleDateString() : "",
-      new Date(member.createdAt).toLocaleDateString(),
-    ]);
-
-    const csvContent = [
-      headers.join(","),
-      ...csvData.map((row) => row.map((field) => `"${field}"`).join(",")),
-    ].join("\n");
-
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `partners-${
-      new Date().toISOString().split("T")[0]
-    }.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
+    const link = document.createElement("a");
+    link.href = partner.logo;
+    link.download = `${(partner.name || "partner").replace(/[^a-zA-Z0-9]/g, "_")}_logo.jpg`;
+    link.target = "_blank";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   if (status === "loading" || loading) {
@@ -367,12 +253,12 @@ export default function PartnersPage() {
     return (
       <div className="min-h-screen">
         <Navbar />
-        <div className="container mx-auto px-6 py-8">
-          <div className="min-h-[500px] flex items-center justify-center">
-            <div className="text-center">
-              <FiUsers className="mx-auto text-4xl text-primary mb-4" />
+        <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+          <div className="min-h-[400px] sm:min-h-[500px] flex items-center justify-center">
+            <div className="text-center px-4">
+              <FiImage className="mx-auto text-3xl sm:text-4xl text-primary mb-3 sm:mb-4" />
               <p className="text-gray-400">
-                You don&apos;t have permission to view partners.
+                You don&apos;t have permission to view this page.
               </p>
             </div>
           </div>
@@ -381,745 +267,316 @@ export default function PartnersPage() {
     );
   }
 
+  const PartnerForm = ({ onSubmit, submitLabel }) => (
+    <form onSubmit={onSubmit} className="space-y-4 sm:space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Name *
+          </label>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+            placeholder="Partner name"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Accent color
+          </label>
+          <p className="text-xs text-gray-400 mb-2">
+            Used for the partner card highlight on the public page. Pick a color or enter a hex code.
+          </p>
+          <div className="flex items-center gap-2 flex-wrap">
+            <input
+              type="color"
+              value={formData.color?.startsWith("#") ? formData.color : `#${formData.color || "8b5cf6"}`}
+              onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+              className="w-10 h-10 min-w-[2.5rem] rounded border border-gray-700 cursor-pointer bg-transparent flex-shrink-0"
+              title="Pick color"
+            />
+            <input
+              type="text"
+              value={formData.color?.startsWith("#") ? formData.color : formData.color ? `#${formData.color}` : ""}
+              onChange={(e) => {
+                let v = e.target.value.trim();
+                if (v && !v.startsWith("#")) v = "#" + v;
+                setFormData({ ...formData, color: v || "#8b5cf6" });
+              }}
+              className="w-full min-w-[11rem] sm:min-w-[14rem] max-w-xs px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder-gray-500 text-sm sm:text-base"
+              placeholder="Hexcode"
+              aria-label="Accent color hex code"
+            />
+          </div>
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-2">
+          Website
+        </label>
+        <input
+          type="url"
+          value={formData.website}
+          onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+          placeholder="https://..."
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-2">
+          Description
+        </label>
+        <textarea
+          value={formData.description}
+          onChange={(e) =>
+            setFormData({ ...formData, description: e.target.value })
+          }
+          rows={4}
+          className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+          placeholder="Short description of the partner"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-2">
+          Logo
+        </label>
+        <div className="flex flex-col sm:flex-row gap-4 items-start">
+          {(logoPreview || formData.logo) && (
+            <div className="relative w-32 h-32 rounded-lg overflow-hidden bg-gray-800 border border-gray-700 flex-shrink-0">
+              <Image
+                src={logoPreview || formData.logo}
+                alt="Logo preview"
+                fill
+                className="object-contain"
+              />
+            </div>
+          )}
+          <div className="flex flex-col gap-2">
+            <label className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-gray-700/50 cursor-pointer transition-all inline-flex items-center gap-2 w-fit">
+              <FiUpload className="w-4 h-4" />
+              {logoFile ? "Change image" : "Upload image"}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleLogoChange}
+                className="hidden"
+              />
+            </label>
+            {uploadingLogo && (
+              <span className="text-sm text-primary">Uploading...</span>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-4 border-t border-gray-700">
+        <button
+          type="button"
+          onClick={resetForm}
+          className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-all text-sm sm:text-base"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={submitting || uploadingLogo}
+          className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base"
+        >
+          <FiEdit2 className="w-4 h-4 flex-shrink-0" />
+          {submitting ? "Saving..." : submitLabel}
+        </button>
+      </div>
+    </form>
+  );
+
   return (
     <div className="min-h-screen">
       <Navbar />
-      <main className="container mx-auto px-6 py-8 max-w-7xl">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-white">Partners</h1>
-            <p className="text-gray-400 text-lg">
-              Manage and view all partner organizations
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 gap-4">
+          <div className="space-y-1 sm:space-y-2 min-w-0">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white truncate">Add Partners</h1>
+            <p className="text-gray-400 text-sm sm:text-base md:text-lg">
+              Add and manage partners shown on the public partners page
             </p>
           </div>
-
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
             <Link
               href="/dashboard"
-              className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+              className="px-4 py-2.5 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm w-full sm:w-auto"
             >
-              <FiArrowLeft className="w-4 h-4" />
+              <FiArrowLeft className="w-4 h-4 flex-shrink-0" />
               <span className="hidden sm:inline">Back to Dashboard</span>
               <span className="sm:hidden">Back</span>
             </Link>
             <button
-              onClick={downloadCSV}
-              disabled={partners.length === 0}
-              className="px-4 py-2 rounded-lg bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={openAdd}
+              className="px-4 py-2.5 rounded-lg bg-primary/20 border border-primary/30 text-primary hover:bg-primary/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm w-full sm:w-auto"
             >
-              <FiDownload className="w-4 h-4" />
-              <span className="hidden sm:inline">Export CSV</span>
-              <span className="sm:hidden">Export</span>
+              <FiPlus className="w-4 h-4 flex-shrink-0" />
+              Add Partner
             </button>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+          <div className="bg-gray-900/60 backdrop-blur-xl rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/10 hover:border-primary/30 transition-all duration-300">
             <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-gray-400 text-sm font-medium">
-                  Total Organizations
+              <div className="space-y-1 min-w-0">
+                <p className="text-gray-400 text-xs sm:text-sm font-medium">
+                  Total Partners
                 </p>
-                <p className="text-3xl font-bold text-white">
-                  {partners.length}
-                </p>
+                <p className="text-2xl sm:text-3xl font-bold text-white">{partners.length}</p>
               </div>
-              <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
-                <FiHome className="text-primary text-xl" />
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-yellow-500/30 transition-all duration-300">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-gray-400 text-sm font-medium">
-                  Pending Approval
-                </p>
-                <p className="text-3xl font-bold text-white">
-                  {
-                    partners.filter(
-                      (m) => m.approvalStatus === "pending"
-                    ).length
-                  }
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center border border-yellow-500/30">
-                <FiCalendar className="text-yellow-500 text-xl" />
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-green-500/30 transition-all duration-300">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-gray-400 text-sm font-medium">Approved</p>
-                <p className="text-3xl font-bold text-white">
-                  {
-                    partners.filter(
-                      (m) => m.approvalStatus === "accepted"
-                    ).length
-                  }
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center border border-green-500/30">
-                <FiUsers className="text-green-500 text-xl" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/20 rounded-lg sm:rounded-xl flex items-center justify-center border border-primary/30 flex-shrink-0">
+                <FiImage className="text-primary text-lg sm:text-xl" />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Members List */}
         {partners.length === 0 ? (
-          <div className="text-center py-16 bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-white/10">
-            <FiUsers className="mx-auto text-4xl text-primary mb-4" />
-            <p className="text-gray-400 text-lg">No partners found</p>
+          <div className="text-center py-12 sm:py-16 bg-gray-900/60 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/10 px-4">
+            <FiImage className="mx-auto text-3xl sm:text-4xl text-primary mb-3 sm:mb-4" />
+            <p className="text-gray-400 text-base sm:text-lg mb-4">No partners yet</p>
+            <button
+              onClick={openAdd}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm sm:text-base w-full max-w-xs mx-auto justify-center"
+            >
+              <FiPlus className="w-4 h-4 flex-shrink-0" />
+              Add your first partner
+            </button>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {partners.map((member, index) => (
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {partners.map((partner, index) => (
               <motion.div
-                key={member._id}
+                key={partner._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 h-full flex flex-col group cursor-pointer"
-                onClick={() => {
-                  // Navigate to a detail view or open modal
-                  handleEditClick(member);
-                }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                className="bg-gray-900/60 backdrop-blur-xl rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 h-full flex flex-col"
               >
-                {/* Organization Header */}
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
-                    {member.logo ? (
-                      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-800 flex-shrink-0">
+                <div className="flex items-start justify-between gap-2 sm:gap-3 mb-3 sm:mb-4">
+                  <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                    {partner.logo ? (
+                      <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden bg-gray-800 flex-shrink-0">
                         <Image
-                          src={member.logo}
-                          alt={`${member.organizationName} logo`}
+                          src={partner.logo}
+                          alt={partner.name ? `${partner.name} logo` : "Partner logo"}
                           fill
-                          className="object-cover"
+                          className="object-contain"
                         />
                       </div>
                     ) : (
-                      <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-                        <FiHome className="text-primary text-xl" />
+                      <div
+                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg flex items-center justify-center flex-shrink-0"
+                        style={{
+                          backgroundColor: `${partner.color || "#8b5cf6"}20`,
+                          borderColor: `${partner.color || "#8b5cf6"}50`,
+                          borderWidth: "1px",
+                        }}
+                      >
+                        <FiImage
+                          className="text-lg sm:text-xl"
+                          style={{ color: partner.color || "#8b5cf6" }}
+                        />
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-lg font-semibold text-white truncate">
-                        {member.organizationName}
+                      <h3 className="text-base sm:text-lg font-semibold text-white truncate">
+                        {partner.name}
                       </h3>
-                      <p className="text-xs text-gray-400">
-                        {new Date(member.createdAt).toLocaleDateString()}
-                      </p>
+                      {partner.website && (
+                        <a
+                          href={partner.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-primary hover:underline truncate block"
+                        >
+                          <FiGlobe className="inline w-3 h-3 mr-1" />
+                          Website
+                        </a>
+                      )}
                     </div>
                   </div>
-
-                  <div className="flex gap-2 flex-shrink-0">
-                    {member.logo && (
+                  <div className="flex gap-1 sm:gap-2 flex-shrink-0">
+                    {partner.logo && (
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDownloadLogo(member);
-                        }}
-                        className="text-gray-400 hover:text-blue-400 transition-all duration-200 p-2 rounded-lg hover:bg-blue-500/10 hover:scale-105 relative z-20 border border-transparent hover:border-blue-500/20"
-                        title="Download Logo"
+                        type="button"
+                        onClick={() => handleDownloadLogo(partner)}
+                        className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 transition-all touch-manipulation"
+                        title="Download logo"
                       >
                         <FiDownload className="w-4 h-4" />
                       </button>
                     )}
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEditClick(member);
-                      }}
-                      className="text-gray-400 hover:text-primary transition-all duration-200 p-2 rounded-lg hover:bg-primary/10 hover:scale-105 relative z-20 border border-transparent hover:border-primary/20"
+                      type="button"
+                      onClick={() => openEdit(partner)}
+                      className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-primary hover:bg-primary/10 transition-all touch-manipulation"
                       title="Edit"
                     >
                       <FiEdit2 className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteClick(member);
-                      }}
-                      className="text-gray-400 hover:text-red-400 transition-all duration-200 p-2 rounded-lg hover:bg-red-500/10 hover:scale-105 relative z-20 border border-transparent hover:border-red-500/20"
+                      type="button"
+                      onClick={() => handleDeleteClick(partner)}
+                      className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all touch-manipulation"
                       title="Delete"
                     >
                       <FiTrash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
-
-                {/* Approval Status */}
-                <div className="mb-6">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        member.approvalStatus === "pending"
-                          ? "bg-yellow-500/20 text-yellow-500"
-                          : member.approvalStatus === "accepted"
-                          ? "bg-green-500/20 text-green-500"
-                          : "bg-red-500/20 text-red-500"
-                      }`}
-                    >
-                      {member.approvalStatus.charAt(0).toUpperCase() +
-                        member.approvalStatus.slice(1)}
-                    </span>
-                    {member.approvalStatus === "accepted" &&
-                      member.approvedAt && (
-                        <span className="text-xs text-gray-400">
-                          Approved on{" "}
-                          {new Date(member.approvedAt).toLocaleDateString()}
-                        </span>
-                      )}
-                  </div>
-                  {member.approvalStatus === "pending" && (
-                    <div className="flex gap-2 mt-3">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleApprovalStatusChange(member._id, "accepted");
-                        }}
-                        className="text-xs bg-green-500/20 hover:bg-green-500/30 text-green-500 px-3 py-1 rounded transition-all duration-200 relative z-20 border border-green-500/20 hover:border-green-500/40 hover:scale-105"
-                      >
-                        Accept
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleApprovalStatusChange(member._id, "rejected");
-                        }}
-                        className="text-xs bg-red-500/20 hover:bg-red-500/30 text-red-500 px-3 py-1 rounded transition-all duration-200 relative z-20 border border-red-500/20 hover:border-red-500/40 hover:scale-105"
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {/* Contact Information */}
-                <div className="space-y-3 mb-6 flex-1">
-                  <div className="flex items-center gap-2 text-sm">
-                    <FiUser className="text-gray-400 w-4 h-4 flex-shrink-0" />
-                    <span className="text-white truncate">
-                      {[member.title, member.firstName, member.lastName]
-                        .filter(Boolean)
-                        .join(" ")}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-sm">
-                    <FiMail className="text-gray-400 w-4 h-4 flex-shrink-0" />
-                    <a
-                      href={`mailto:${member.contactEmail}`}
-                      className="text-primary hover:text-primary/80 transition-colors truncate"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {member.contactEmail}
-                    </a>
-                  </div>
-
-                  {member.contactPhoneNumber && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <FiPhone className="text-gray-400 w-4 h-4 flex-shrink-0" />
-                      <span className="text-white text-xs">Personal:</span>
-                      <span className="text-white">
-                        {member.contactPhoneNumber}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Organization Information */}
-                <div className="space-y-3 mb-6 pt-4 border-t border-gray-800">
-                  <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
-                    Organization
-                  </h4>
-
-                  {member.organizationEmail && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <FiMail className="text-gray-400 w-4 h-4 flex-shrink-0" />
-                      <a
-                        href={`mailto:${member.organizationEmail}`}
-                        className="text-primary hover:text-primary/80 transition-colors truncate"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {member.organizationEmail}
-                      </a>
-                    </div>
-                  )}
-
-                  {member.organizationPhoneNumber && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <FiPhone className="text-gray-400 w-4 h-4 flex-shrink-0" />
-                      <span className="text-white">
-                        {member.organizationPhoneNumber}
-                      </span>
-                    </div>
-                  )}
-
-                  {member.website && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <FiGlobe className="text-gray-400 w-4 h-4 flex-shrink-0" />
-                      <a
-                        href={
-                          member.website.startsWith("http")
-                            ? member.website
-                            : `https://${member.website}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:text-primary/80 transition-colors truncate flex items-center gap-1"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {member.website}
-                        <FiExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
-                  )}
-
-                  {/* Full Address */}
-                  {(member.address ||
-                    member.city ||
-                    member.province ||
-                    member.country ||
-                    member.postalCode) && (
-                    <div className="flex items-start gap-2 text-sm">
-                      <FiMapPin className="text-gray-400 w-4 h-4 flex-shrink-0 mt-0.5" />
-                      <div className="text-white text-sm leading-relaxed">
-                        {member.address && <div>{member.address}</div>}
-                        <div>
-                          {[member.city, member.province, member.postalCode]
-                            .filter(Boolean)
-                            .join(", ")}
-                        </div>
-                        {member.country && <div>{member.country}</div>}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Social Links */}
-                {(member.linkedin || member.facebook || member.twitter) && (
-                  <div className="flex items-center gap-3 pt-4 border-t border-gray-800">
-                    {member.linkedin && (
-                      <a
-                        href={
-                          member.linkedin.startsWith("http")
-                            ? member.linkedin
-                            : `https://${member.linkedin}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-blue-500 transition-colors"
-                        title="LinkedIn"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <SiLinkedin className="w-4 h-4" />
-                      </a>
-                    )}
-                    {member.facebook && (
-                      <a
-                        href={
-                          member.facebook.startsWith("http")
-                            ? member.facebook
-                            : `https://${member.facebook}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-blue-600 transition-colors"
-                        title="Facebook"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <SiFacebook className="w-4 h-4" />
-                      </a>
-                    )}
-                    {member.twitter && (
-                      <a
-                        href={
-                          member.twitter.startsWith("http")
-                            ? member.twitter
-                            : `https://${member.twitter}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-blue-400 transition-colors"
-                        title="X (Twitter)"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <SiX className="w-4 h-4" />
-                      </a>
-                    )}
-                  </div>
-                )}
-
-                {/* About Us Preview */}
-                {member.aboutUs && (
-                  <div className="mt-4 pt-4 border-t border-gray-800">
-                    <p className="text-xs text-gray-400 mb-2 font-medium">
-                      About
-                    </p>
-                    <p className="text-sm text-gray-300 line-clamp-3 leading-relaxed">
-                      {member.aboutUs}
-                    </p>
-                  </div>
+                {partner.description && (
+                  <p className="text-xs sm:text-sm text-gray-400 line-clamp-3 mb-3 sm:mb-4 flex-grow">
+                    {partner.description}
+                  </p>
                 )}
               </motion.div>
             ))}
           </div>
         )}
-
-        {/* Edit Modal */}
-        <PortalModal
-          isOpen={showEditModal}
-          onClose={resetEditForm}
-          title="Edit Partner"
-          maxWidth="max-w-4xl"
-        >
-          <div className="p-6">
-            <form
-              id="editMemberForm"
-              onSubmit={handleEditSubmit}
-              className="space-y-6"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Organization Information */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                    Organization
-                  </h3>
-                  <input
-                    type="text"
-                    placeholder="Organization Name"
-                    value={editFormData.organizationName}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        organizationName: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    required
-                  />
-                  <input
-                    type="text"
-                    placeholder="Username"
-                    value={editFormData.username}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        username: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    required
-                  />
-                  <input
-                    type="email"
-                    placeholder="Organization Email"
-                    value={editFormData.organizationEmail}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        organizationEmail: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Organization Phone"
-                    value={editFormData.organizationPhoneNumber}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        organizationPhoneNumber: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  />
-                  <input
-                    type="url"
-                    placeholder="Website"
-                    value={editFormData.website}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        website: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  />
-                </div>
-
-                {/* Contact Information */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                    Contact Person
-                  </h3>
-                  <input
-                    type="text"
-                    placeholder="Title"
-                    value={editFormData.title}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        title: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  />
-                  <div className="grid grid-cols-2 gap-3">
-                    <input
-                      type="text"
-                      placeholder="First Name"
-                      value={editFormData.firstName}
-                      onChange={(e) =>
-                        setEditFormData({
-                          ...editFormData,
-                          firstName: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Last Name"
-                      value={editFormData.lastName}
-                      onChange={(e) =>
-                        setEditFormData({
-                          ...editFormData,
-                          lastName: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    />
-                  </div>
-                  <input
-                    type="email"
-                    placeholder="Contact Email"
-                    value={editFormData.contactEmail}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        contactEmail: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Contact Phone"
-                    value={editFormData.contactPhoneNumber}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        contactPhoneNumber: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  />
-                </div>
-
-                {/* Address & Social */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                    Address & Social
-                  </h3>
-                  <input
-                    type="text"
-                    placeholder="Address"
-                    value={editFormData.address}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        address: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  />
-                  <div className="grid grid-cols-2 gap-3">
-                    <input
-                      type="text"
-                      placeholder="City"
-                      value={editFormData.city}
-                      onChange={(e) =>
-                        setEditFormData({
-                          ...editFormData,
-                          city: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Province"
-                      value={editFormData.province}
-                      onChange={(e) =>
-                        setEditFormData({
-                          ...editFormData,
-                          province: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <input
-                      type="text"
-                      placeholder="Country"
-                      value={editFormData.country}
-                      onChange={(e) =>
-                        setEditFormData({
-                          ...editFormData,
-                          country: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Postal Code"
-                      value={editFormData.postalCode}
-                      onChange={(e) =>
-                        setEditFormData({
-                          ...editFormData,
-                          postalCode: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                    />
-                  </div>
-                  <input
-                    type="url"
-                    placeholder="LinkedIn URL"
-                    value={editFormData.linkedin}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        linkedin: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  />
-                  <input
-                    type="url"
-                    placeholder="Facebook URL"
-                    value={editFormData.facebook}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        facebook: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  />
-                  <input
-                    type="url"
-                    placeholder="X (Twitter) URL"
-                    value={editFormData.twitter}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        twitter: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                  />
-                </div>
-              </div>
-
-              {/* About Us */}
-              <div className="mt-6">
-                <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2 mb-4">
-                  About Us
-                </h3>
-                <textarea
-                  placeholder="About Us Description"
-                  value={editFormData.aboutUs}
-                  onChange={(e) =>
-                    setEditFormData({
-                      ...editFormData,
-                      aboutUs: e.target.value,
-                    })
-                  }
-                  rows={6}
-                  className="form-input scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
-                />
-              </div>
-
-              {/* Approval Status */}
-              <div className="mt-6">
-                <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2 mb-4">
-                  Approval Status
-                </h3>
-                <select
-                  value={editFormData.approvalStatus}
-                  onChange={(e) =>
-                    setEditFormData({
-                      ...editFormData,
-                      approvalStatus: e.target.value,
-                      approvedAt:
-                        e.target.value === "accepted" ? new Date() : null,
-                    })
-                  }
-                  className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="accepted">Accepted</option>
-                  <option value="rejected">Rejected</option>
-                </select>
-                {editFormData.approvalStatus === "accepted" &&
-                  editFormData.approvedAt && (
-                    <p className="mt-2 text-sm text-gray-400">
-                      Approved on{" "}
-                      {new Date(editFormData.approvedAt).toLocaleDateString()}
-                    </p>
-                  )}
-              </div>
-            </form>
-          </div>
-
-          <div className="sticky bottom-0 z-10 bg-gray-800/90 backdrop-blur-sm p-6 border-t border-gray-700/50">
-            <div className="flex justify-end items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setShowEditModal(false)}
-                className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
-                disabled={submitting}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                form="editMemberForm"
-                disabled={submitting}
-                className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 ${
-                  submitting ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                <FiEdit2 className="w-4 h-4" />
-                {submitting ? "Updating..." : "Update Member"}
-              </button>
-            </div>
-          </div>
-        </PortalModal>
-
-        {/* Delete Confirmation Modal */}
-        <Modal
-          isOpen={showDeleteModal}
-          onClose={() => setShowDeleteModal(false)}
-          onConfirm={handleDeleteConfirm}
-          title="Delete Partner"
-          message={`Are you sure you want to delete ${memberToDelete?.organizationName}? This action cannot be undone.`}
-          confirmText="Delete"
-          cancelText="Cancel"
-          type="danger"
-        />
       </main>
+
+      <PortalModal
+        isOpen={showAddModal}
+        onClose={resetForm}
+        title="Add Partner"
+        maxWidth="max-w-[calc(100%-2rem)] sm:max-w-2xl"
+      >
+        <div className="p-4 sm:p-6">
+          <PartnerForm onSubmit={handleAddSubmit} submitLabel="Create Partner" />
+        </div>
+      </PortalModal>
+
+      <PortalModal
+        isOpen={showEditModal}
+        onClose={resetForm}
+        title="Edit Partner"
+        maxWidth="max-w-[calc(100%-2rem)] sm:max-w-2xl"
+      >
+        <div className="p-4 sm:p-6">
+          <PartnerForm onSubmit={handleEditSubmit} submitLabel="Update Partner" />
+        </div>
+      </PortalModal>
+
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setPartnerToDelete(null);
+        }}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Partner"
+        message={`Are you sure you want to remove "${partnerToDelete?.name}" from the partners list?`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+      />
     </div>
   );
 }
