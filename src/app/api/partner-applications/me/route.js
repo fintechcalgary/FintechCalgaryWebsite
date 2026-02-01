@@ -1,6 +1,6 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../../auth/[...nextauth]/route";
+import { authOptions } from "../../auth/[...nextauth]/route";
 import { COLLECTIONS } from "@/lib/constants";
 
 export async function GET() {
