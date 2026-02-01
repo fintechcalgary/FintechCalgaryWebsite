@@ -5,8 +5,6 @@ import { FiUser, FiEdit2, FiPlus, FiX, FiImage } from "react-icons/fi";
 import Modal from "./Modal";
 import PortalModal from "./PortalModal";
 import { useSession } from "next-auth/react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import DraggableExecutive from "./DraggableExecutive";
 import Image from "next/image";
 
@@ -249,8 +247,7 @@ export default function Executives() {
       : executives.filter((executive) => executive.team === selectedTeam);
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="min-h-[500px]">
+    <div className="min-h-[500px]">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <FiUser className="text-primary" />
@@ -571,7 +568,6 @@ export default function Executives() {
           type="danger"
         />
       </div>
-    </DndProvider>
   );
 }
 

@@ -499,6 +499,7 @@ export default function PartnerApplicationsPage() {
                           src={member.logo}
                           alt={`${member.organizationName} logo`}
                           fill
+                          sizes="48px"
                           className="object-cover"
                         />
                       </div>

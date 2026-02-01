@@ -187,6 +187,7 @@ export default async function EventPage({ params }) {
                           src={event.imageUrl || "/bg-image.jpg"}
                           alt=""
                           fill
+                          sizes="100vw"
                           className="object-cover blur-md scale-110 opacity-50"
                           priority
                         />

@@ -42,3 +42,14 @@ export async function deleteDisplayPartner(db, partnerId) {
     _id: new ObjectId(partnerId),
   });
 }
+
+export async function updateDisplayPartnerOrder(db, orderedPartnerIds) {
+  const bulkOperations = orderedPartnerIds.map((id, index) => ({
+    updateOne: {
+      filter: { _id: new ObjectId(id) },
+      update: { $set: { order: index, updatedAt: new Date() } },
+    },
+  }));
+  if (bulkOperations.length === 0) return;
+  await db.collection(PARTNERS_COLLECTION).bulkWrite(bulkOperations);
+}
