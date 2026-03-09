@@ -193,10 +193,33 @@ export default function AdminDashboardClient() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   <AdminCard
-                    title="Partners"
-                    description="View and manage partner organizations, approve applications, and export data"
+                    title="Add Partners"
+                    description="Add, edit, and manage partners shown on the public partners page"
+                    icon={(props) => (
+                      <svg
+                        {...props}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                    )}
+                    href="/dashboard/partners"
+                    color="purple"
+                    index={0}
+                  />
+
+                  <AdminCard
+                    title="Partner Applications"
+                    description="View and manage partner organization applications, approve, and export data"
                     icon={(props) => (
                       <svg
                         {...props}
@@ -212,9 +235,9 @@ export default function AdminDashboardClient() {
                         />
                       </svg>
                     )}
-                    href="/dashboard/partners"
+                    href="/dashboard/partner-applications"
                     color="purple"
-                    index={0}
+                    index={1}
                   />
 
                   <AdminCard
@@ -237,7 +260,7 @@ export default function AdminDashboardClient() {
                     )}
                     href="/dashboard/executive-applications"
                     color="orange"
-                    index={1}
+                    index={2}
                   />
 
                   <AdminCard
@@ -260,7 +283,7 @@ export default function AdminDashboardClient() {
                     )}
                     href="/dashboard/members"
                     color="green"
-                    index={2}
+                    index={3}
                   />
                 </div>
               </div>

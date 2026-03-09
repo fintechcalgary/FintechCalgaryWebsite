@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed-admin": "node src/scripts/seed-admin.js"
+    "seed-admin": "node src/scripts/seed-admin.js",
+    "seed-partners": "node src/scripts/seed-partners.js",
+    "upload-partner-logos": "node src/scripts/upload-partner-logos.js"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
@@ -30,6 +32,7 @@
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
+    "baseline-browser-mapping": "^2.9.19",
     "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "^16.0.7",

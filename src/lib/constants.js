@@ -9,7 +9,8 @@ export const API_ENDPOINTS = {
   SUBSCRIBE: "/api/subscribe",
   EXECUTIVE_APPLICATION: "/api/executive-application",
   PARTNER: "/api/partners",
-  PARTNER_ME: "/api/partners/me",
+  PARTNER_APPLICATIONS: "/api/partner-applications",
+  PARTNER_APPLICATIONS_ME: "/api/partner-applications/me",
   UPLOAD: "/api/upload",
   SETTINGS: "/api/settings",
   EVENTS: "/api/events",
@@ -23,7 +24,8 @@ export const API_ENDPOINTS = {
 export const COLLECTIONS = {
   USERS: "users",
   EXECUTIVES: "executives",
-  PARTNERS: "partners",
+  PARTNERS: "partners", // display list on public /partners page
+  PARTNER_APPLICATIONS: "partnerApplications", // org signup applications
   EVENTS: "events",
   EXECUTIVE_APPLICATIONS: "executiveApplications",
   EXECUTIVE_ROLES: "executiveRoles",
@@ -35,7 +37,8 @@ export const COLLECTIONS = {
 // File Upload Folders
 export const UPLOAD_FOLDERS = {
   RESUMES: "resumes",
-  PARTNER_LOGOS: "partnerLogos",
+  PARTNER_LOGOS: "partnerLogos", // partner application org logos
+  PARTNER_DISPLAY_LOGOS: "partner-logos", // display partners on public page
   EVENT_IMAGES: "eventImages",
   EXECUTIVE_IMAGES: "executiveImages",
   ROLE_IMAGES: "roleImages",

@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
-const MEMBER_COLLECTION = "partners";
+import { COLLECTIONS } from "@/lib/constants";
+const MEMBER_COLLECTION = COLLECTIONS.PARTNER_APPLICATIONS;
 
 export async function createPartner(db, member) {
   return await db.collection(MEMBER_COLLECTION).insertOne({

@@ -230,7 +230,7 @@ export default function JoinPage() {
                           </div>
                         </div>
 
-                        {/* Premium Membership Option */}
+                        {/* Resume Submission Option (temporary label; backend still "premium") */}
                         <div
                           className={`p-5 rounded-xl border cursor-pointer transition-all duration-200 ${
                             membershipType === "premium"
@@ -242,10 +242,10 @@ export default function JoinPage() {
                           <div className="flex justify-between items-start mb-3">
                             <div>
                               <h3 className="text-lg font-medium text-white">
-                                Premium Membership
+                                Resume Submission
                               </h3>
                               <span className="inline-block px-2 py-1 bg-primary/20 text-primary text-xs rounded-full mt-1">
-                                Exclusive Benefits
+                                Members only
                               </span>
                             </div>
                             <div
@@ -261,7 +261,7 @@ export default function JoinPage() {
                             </div>
                           </div>
                           <p className="text-gray-400 text-sm mb-3">
-                            Get full access to our community
+                            Submit your resume (members only)
                           </p>
                           <ul className="space-y-1 text-sm text-gray-300">
                             <li className="flex items-start">
@@ -296,6 +296,22 @@ export default function JoinPage() {
 
                     <div className="mt-6">
                       <form onSubmit={handleSubmit} className="space-y-4">
+                        {membershipType === "premium" && (
+                          <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 text-sm text-gray-300">
+                            <p className="font-medium text-white mb-1">Resume submission is for members only.</p>
+                            <p>
+                              Not a member yet? Select{" "}
+                              <button
+                                type="button"
+                                onClick={() => setMembershipType("free")}
+                                className="text-primary hover:underline font-medium"
+                              >
+                                Free Membership
+                              </button>{" "}
+                              above to join first, then return to submit your resume.
+                            </p>
+                          </div>
+                        )}
                         {errorMessage && (
                           <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start">
                             <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
@@ -453,9 +469,9 @@ export default function JoinPage() {
                           className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                         >
                           {isSubmitting
-                            ? "Joining..."
+                            ? "Submitting..."
                             : membershipType === "premium"
-                            ? "Join Premium"
+                            ? "Submit Resume"
                             : "Join Free"}
                         </button>
                       </form>
