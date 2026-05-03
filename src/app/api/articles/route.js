@@ -1,237 +1,156 @@
 import { connectToDatabase } from "@/lib/mongodb";
-import { getArticles, createArticles, getArticleByUrl } from "@/lib/models/article";
+import { getArticles, createArticles, getArticleByUrl, updateArticleSummary } from "@/lib/models/article";
+import { fetchGoogleNewsArticles, isMongoConnectionError } from "@/lib/googleNewsRss";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { exec } from "child_process";
-import { promisify } from "util";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const execAsync = promisify(exec);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export const dynamic = "force-dynamic";
 
-// GET - Fetch articles with optional filters
+// ─── GET /api/articles ────────────────────────────────────────────────────────
+// Fetch articles with optional filters (date, source, url, hasSummary, limit, sortBy)
+// Falls back to live Google News RSS when MongoDB is unreachable.
+
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
-    const date = searchParams.get("date");
-    const source = searchParams.get("source");
-    const url = searchParams.get("url");
-    const hasSummary = searchParams.get("hasSummary");
-    const limit = parseInt(searchParams.get("limit") || "100");
-    const sortBy = searchParams.get("sortBy") || "date_desc";
-
     const db = await connectToDatabase();
 
-    const filters = {
-      date,
-      source,
-      url: url || undefined,
-      hasSummary: hasSummary === "true" ? true : hasSummary === "false" ? false : undefined,
-      limit,
-      sortBy,
-    };
-
-    const articles = await getArticles(db, filters);
+    const articles = await getArticles(db, {
+      date: searchParams.get("date") || undefined,
+      source: searchParams.get("source") || undefined,
+      url: searchParams.get("url") || undefined,
+      weeklyRole: searchParams.get("weeklyRole") || undefined,
+      hasSummary:
+        searchParams.get("hasSummary") === "true"
+          ? true
+          : searchParams.get("hasSummary") === "false"
+          ? false
+          : undefined,
+      limit: parseInt(searchParams.get("limit") || "100", 10),
+      sortBy: searchParams.get("sortBy") || "date_desc",
+    });
 
     return new Response(JSON.stringify(articles), {
       status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-store",
-      },
+      headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
     });
   } catch (error) {
-    console.error("GET /api/articles - Error:", error);
+    console.error("GET /api/articles error:", error);
 
-    const isConnectionError = error.message?.includes("MONGODB_URI") ||
-                             error.message?.includes("connect") ||
-                             error.code === "ECONNREFUSED" ||
-                             error.message?.includes("MongoServerSelectionError");
-
-    if (isConnectionError) {
-      console.warn("MongoDB not available, returning empty articles array");
-      return new Response(JSON.stringify([]), {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          "Cache-Control": "no-store",
-        },
-      });
+    if (isMongoConnectionError(error)) {
+      try {
+        const articles = await fetchGoogleNewsArticles(30);
+        return new Response(JSON.stringify(articles), {
+          status: 200,
+          headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+        });
+      } catch (rssError) {
+        console.error("RSS fallback failed:", rssError.message);
+      }
     }
 
     return new Response(
       JSON.stringify({
         error: error.message,
-        details: process.env.NODE_ENV === "development" ? error.stack : undefined
+        details: process.env.NODE_ENV === "development" ? error.stack : undefined,
       }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 }
 
-// POST - Trigger article fetching or create articles manually
+// ─── POST /api/articles ───────────────────────────────────────────────────────
+// Admin-only: manually create articles from an array.
+
 export async function POST(req) {
   try {
     const session = await getServerSession(authOptions);
-
     if (!session || session.user.role !== "admin") {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        {
-          status: 401,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const body = await req.json();
-    const { action, articles } = body;
+    const { articles } = body;
+
+    if (!Array.isArray(articles) || articles.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "Provide a non-empty 'articles' array" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
     const db = await connectToDatabase();
 
-    if (action === "fetch") {
-      try {
-        const backendDir = path.join(process.cwd(), "backend");
-        const scriptPath = path.join(backendDir, "fetch_finance_news.py");
-
-        const { stdout, stderr } = await execAsync(
-          `python3 "${scriptPath}"`,
-          { cwd: backendDir }
-        );
-
-        console.log("Python script output:", stdout);
-        if (stderr) {
-          console.error("Python script errors:", stderr);
-        }
-
-        const fs = await import("fs");
-        const dataDir = path.join(backendDir, "data");
-
-        const files = fs.readdirSync(dataDir)
-          .filter(f => f.startsWith("finance_news_") && f.endsWith(".json"))
-          .sort()
-          .reverse();
-
-        if (files.length > 0) {
-          const latestFile = path.join(dataDir, files[0]);
-          const fileContent = fs.readFileSync(latestFile, "utf-8");
-          const articlesFromFile = JSON.parse(fileContent);
-
-          let imported = 0;
-          let skipped = 0;
-
-          for (const article of articlesFromFile) {
-            const existing = await getArticleByUrl(db, article.url);
-            if (!existing) {
-              await createArticles(db, [article]);
-              imported++;
-            } else {
-              skipped++;
-            }
-          }
-
-          return new Response(
-            JSON.stringify({
-              success: true,
-              message: `Fetched articles successfully`,
-              imported,
-              skipped,
-              total: articlesFromFile.length,
-            }),
-            {
-              status: 200,
-              headers: { "Content-Type": "application/json" },
-            }
-          );
-        }
-
-        return new Response(
-          JSON.stringify({
-            success: true,
-            message: "Fetch completed but no new articles found",
-          }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-      } catch (error) {
-        console.error("Error running Python script:", error);
-        return new Response(
-          JSON.stringify({
-            error: "Failed to fetch articles",
-            details: error.message,
-          }),
-          {
-            status: 500,
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-      }
+    // Skip articles that already exist (url uniqueness)
+    const newArticles = [];
+    for (const article of articles) {
+      const existing = await getArticleByUrl(db, article.url);
+      if (!existing) newArticles.push(article);
     }
 
-    if (articles && Array.isArray(articles)) {
-      const newArticles = [];
-      for (const article of articles) {
-        const existing = await getArticleByUrl(db, article.url);
-        if (!existing) {
-          newArticles.push(article);
-        }
-      }
-
-      if (newArticles.length === 0) {
-        return new Response(
-          JSON.stringify({
-            success: true,
-            message: "All articles already exist",
-            imported: 0,
-            skipped: articles.length,
-          }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-      }
-
-      const result = await createArticles(db, newArticles);
-
+    if (newArticles.length === 0) {
       return new Response(
-        JSON.stringify({
-          success: true,
-          message: `Created ${result.insertedCount} articles`,
-          imported: result.insertedCount,
-          skipped: articles.length - result.insertedCount,
-        }),
-        {
-          status: 201,
-          headers: { "Content-Type": "application/json" },
-        }
+        JSON.stringify({ success: true, message: "All articles already exist", imported: 0, skipped: articles.length }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const result = await createArticles(db, newArticles);
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: `Created ${result.insertedCount} articles`,
+        imported: result.insertedCount,
+        skipped: articles.length - result.insertedCount,
+      }),
+      { status: 201, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    console.error("POST /api/articles error:", error);
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+}
+
+// ─── PUT /api/articles ────────────────────────────────────────────────────────
+// Update the summary for a single article identified by URL.
+
+export async function PUT(req) {
+  try {
+    const body = await req.json();
+    const { url, summary } = body;
+
+    if (!url || summary === undefined) {
+      return new Response(
+        JSON.stringify({ error: "Missing required fields: url, summary" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const db = await connectToDatabase();
+    const result = await updateArticleSummary(db, url, summary);
+
+    if (result.matchedCount === 0) {
+      return new Response(
+        JSON.stringify({ error: "Article not found" }),
+        { status: 404, headers: { "Content-Type": "application/json" } }
       );
     }
 
     return new Response(
-      JSON.stringify({ error: "Invalid request. Provide 'action: fetch' or 'articles' array" }),
-      {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      }
+      JSON.stringify({ success: true, modifiedCount: result.modifiedCount }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
-    console.error("POST /api/articles - Error:", error);
+    console.error("PUT /api/articles error:", error);
     return new Response(
       JSON.stringify({ error: error.message }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 }

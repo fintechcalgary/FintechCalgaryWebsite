@@ -51,6 +51,10 @@ export async function getArticles(db, filters = {}) {
       }
     }
 
+    if (filters.weeklyRole) {
+      query.weeklyRole = filters.weeklyRole;
+    }
+
     const sortOptions = {};
     if (filters.sortBy === "date_asc") {
       sortOptions.date = 1;
@@ -126,6 +130,28 @@ export async function getArticleStats(db) {
     {
       $group: {
         _id: "$date",
+        count: { $sum: 1 },
+        sources: { $addToSet: "$source" },
+        withSummary: {
+          $sum: {
+            $cond: [{ $ne: ["$summary", null] }, 1, 0]
+          }
+        },
+      },
+    },
+    {
+      $sort: { _id: -1 },
+    },
+  ];
+
+  return await db.collection(ARTICLE_COLLECTION).aggregate(pipeline).toArray();
+}
+
+export async function getWeeklyDigestStats(db) {
+  const pipeline = [
+    {
+      $group: {
+        _id: "$digestWeekStart",
         count: { $sum: 1 },
         sources: { $addToSet: "$source" },
         withSummary: {

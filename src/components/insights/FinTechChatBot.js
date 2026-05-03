@@ -2,9 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiMessageCircle, FiX, FiSend, FiZap, FiMinimize2, FiMaximize2, FiTrendingUp, FiBook, FiBriefcase, FiTarget, FiBarChart2, FiRefreshCw } from "react-icons/fi";
+import { FiMessageCircle, FiX, FiSend, FiZap, FiMinimize2, FiMaximize2, FiTrendingUp, FiBook, FiBriefcase, FiTarget, FiBarChart2, FiRefreshCw, FiAlertTriangle, FiInfo } from "react-icons/fi";
 import { useChatBot } from "@/contexts/ChatBotContext";
 import { useRateLimit } from "@/hooks/useRateLimit";
+import { CostTracker } from "@/lib/costTracker";
 
 const MAX_MESSAGE_LENGTH = 2000;
 const STORAGE_KEY = "fintech_chat_messages";
@@ -19,11 +20,13 @@ export default function FinTechChatBot({ articles = [] }) {
   const [isTyping, setIsTyping] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [costStatus, setCostStatus] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const abortControllerRef = useRef(null);
 
-  const { canSend, retryAfter, recordRequest } = useRateLimit(5, 60000);
+  const { canSend, retryAfter, recordRequest } = useRateLimit(2, 60000);
+  const costTracker = useRef(new CostTracker());
 
   useEffect(() => {
     try {
@@ -75,15 +78,19 @@ export default function FinTechChatBot({ articles = [] }) {
 
   useEffect(() => {
     if (isOpen && !isInitialized) {
+      const welcomeMessage = selectedArticle 
+        ? `Hi! I can help you analyze this article: "${selectedArticle.title}". Ask me any questions about it, and I'll provide detailed insights.`
+        : "Hello! I'm your FinTech AI assistant. To get the most out of our conversation, navigate to an article you'd like to learn about or are curious about, then use the magnifying glass (🔍) to analyze it with AI. This helps me provide more targeted insights about specific articles and build your financial literacy. What would you like to explore?";
+      
       setMessages([
         {
           role: "assistant",
-          content: "Welcome to FinTech Insights AI\n\nI'm your personalized FinTech assistant, powered by Gemini AI. I can help you with:\n\nWeekly Summaries\nGet curated overviews of the most important FinTech news\n\nTrend Analysis\nDiscover emerging technologies and market shifts\n\nStudent Guidance\nCareer advice, learning paths, and exploration opportunities\n\nIndustry Insights\nDeep analysis of developments, funding, and innovations\n\nQ&A\nAsk me anything about FinTech topics\n\nUse the buttons below to get started, or ask me anything directly.",
+          content: welcomeMessage
         },
       ]);
       setIsInitialized(true);
     }
-  }, [isOpen, isInitialized]);
+  }, [isOpen, isInitialized, selectedArticle]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -95,41 +102,27 @@ export default function FinTechChatBot({ articles = [] }) {
     }
   }, [isOpen, isMinimized]);
 
-  const handleSend = async (retryMessage = null) => {
-    const messageToSend = retryMessage || input.trim();
-
-    if (!messageToSend || isLoading) return;
-
-    if (!canSend) {
-      setErrorMessage(`Rate limit exceeded. Please wait ${retryAfter} seconds before sending another message.`);
-      setTimeout(() => setErrorMessage(null), 5000);
-      return;
+  useEffect(() => {
+    if (isOpen) {
+      const status = costTracker.current.getStatus();
+      setCostStatus(status);
     }
+  }, [isOpen]);
 
-    if (messageToSend.length > MAX_MESSAGE_LENGTH) {
-      setErrorMessage(`Message too long. Maximum ${MAX_MESSAGE_LENGTH} characters allowed.`);
-      setTimeout(() => setErrorMessage(null), 5000);
-      setInput(messageToSend.substring(0, MAX_MESSAGE_LENGTH));
-      return;
-    }
-
-    const userMessage = messageToSend.trim();
-    if (!retryMessage) {
-      setInput("");
-    }
+  // ── Shared API call ──────────────────────────────────────────────────────
+  // Both handleSend and sendQuickAction delegate here to avoid duplication.
+  const callChatApi = async ({ userMessage, articlesToSend, onRetry }) => {
     setIsLoading(true);
     setIsTyping(true);
     setErrorMessage(null);
-
     recordRequest();
 
-    const newMessages = [...messages, { role: "user", content: userMessage }];
-    setMessages(newMessages);
+    const updatedMessages = [...messages, { role: "user", content: userMessage }];
+    setMessages(updatedMessages);
 
-    abortControllerRef.current = new AbortController();
-    const timeoutId = setTimeout(() => {
-      abortControllerRef.current?.abort();
-    }, 60000);
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+    const timeoutId = setTimeout(() => controller.abort(), 60000);
 
     try {
       const response = await fetch("/api/chat", {
@@ -137,55 +130,39 @@ export default function FinTechChatBot({ articles = [] }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: userMessage,
-          conversationHistory: newMessages.slice(-10),
-          articles: articles.slice(0, 30),
+          conversationHistory: updatedMessages.slice(-10),
+          articles: articlesToSend,
         }),
-        signal: abortControllerRef.current.signal,
+        signal: controller.signal,
       });
-
       clearTimeout(timeoutId);
 
       const data = await response.json();
 
       if (response.ok && data.response) {
-        setMessages([...newMessages, { role: "assistant", content: data.response }]);
+        costTracker.current.trackChatRequest();
+        setCostStatus(costTracker.current.getStatus());
+        setMessages([...updatedMessages, { role: "assistant", content: data.response }]);
       } else {
-        const errorMsg = data.error || "Unknown error";
-        setMessages([
-          ...newMessages,
-          {
-            role: "assistant",
-            content: `Sorry, I encountered an error: ${errorMsg}. Click to retry.`,
-            error: true,
-            retry: () => handleSend(userMessage),
-          },
-        ]);
+        setMessages([...updatedMessages, {
+          role: "assistant",
+          content: `Sorry, I encountered an error: ${data.error || "Unknown error"}. Click to retry.`,
+          error: true,
+          retry: onRetry,
+        }]);
       }
     } catch (error) {
       clearTimeout(timeoutId);
-
-      if (error.name === 'AbortError') {
-        setMessages([
-          ...newMessages,
-          {
-            role: "assistant",
-            content: "Request timed out. Please try a shorter question or click to retry.",
-            error: true,
-            retry: () => handleSend(userMessage),
-          },
-        ]);
-      } else {
-        console.error("Chat error:", error);
-        setMessages([
-          ...newMessages,
-          {
-            role: "assistant",
-            content: "Connection error. Please check your internet connection and click to retry.",
-            error: true,
-            retry: () => handleSend(userMessage),
-          },
-        ]);
-      }
+      const isTimeout = error.name === "AbortError";
+      if (!isTimeout) console.error("Chat error:", error);
+      setMessages([...updatedMessages, {
+        role: "assistant",
+        content: isTimeout
+          ? "Request timed out. Please try a shorter question or click to retry."
+          : "Connection error. Please check your connection and click to retry.",
+        error: true,
+        retry: onRetry,
+      }]);
     } finally {
       setIsLoading(false);
       setIsTyping(false);
@@ -193,12 +170,54 @@ export default function FinTechChatBot({ articles = [] }) {
     }
   };
 
-  const handleKeyPress = (e) => {
+  const checkLimits = () => {
+    const currentStatus = costTracker.current.getStatus();
+    setCostStatus(currentStatus);
+
+    if (!costTracker.current.canMakeRequest("chat")) {
+      setErrorMessage(
+        currentStatus.isAtLimit
+          ? `Monthly budget reached ($${currentStatus.costSoFar.toFixed(2)} / $${currentStatus.budget.toFixed(2)}). Resets next month.`
+          : `Usage limit approaching. ${currentStatus.remainingChatRequests} requests remaining this month.`
+      );
+      setTimeout(() => setErrorMessage(null), 8000);
+      return false;
+    }
+
+    if (!canSend) {
+      setErrorMessage(`Rate limit: please wait ${retryAfter}s before sending another message.`);
+      setTimeout(() => setErrorMessage(null), 5000);
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSend = async (retryMessage = null) => {
+    const messageToSend = (retryMessage || input).trim();
+    if (!messageToSend || isLoading) return;
+
+    if (messageToSend.length > MAX_MESSAGE_LENGTH) {
+      setErrorMessage(`Message too long. Maximum ${MAX_MESSAGE_LENGTH} characters allowed.`);
+      setTimeout(() => setErrorMessage(null), 3000);
+      setInput(messageToSend.substring(0, MAX_MESSAGE_LENGTH));
+      return;
+    }
+
+    if (!checkLimits()) return;
+    if (!retryMessage) setInput("");
+
+    await callChatApi({
+      userMessage: messageToSend,
+      articlesToSend: articles.slice(0, 30),
+      onRetry: () => handleSend(messageToSend),
+    });
+  };
+
+  const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      if (canSend && !isLoading) {
-        handleSend();
-      }
+      if (canSend && !isLoading) handleSend();
     }
   };
 
@@ -214,83 +233,18 @@ export default function FinTechChatBot({ articles = [] }) {
   };
 
   const sendQuickAction = async (prompt, articleContext = null) => {
-    if (isLoading || !canSend) return;
-
-    setIsLoading(true);
-    setIsTyping(true);
-    recordRequest();
-
-    const newMessages = [...messages, { role: "user", content: prompt }];
-    setMessages(newMessages);
+    if (isLoading) return;
+    if (!checkLimits()) return;
 
     const articlesToSend = articleContext
       ? [articleContext, ...articles.slice(0, 29)]
       : articles.slice(0, 30);
 
-    abortControllerRef.current = new AbortController();
-    const timeoutId = setTimeout(() => {
-      abortControllerRef.current?.abort();
-    }, 60000);
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: prompt,
-          conversationHistory: newMessages.slice(-10),
-          articles: articlesToSend,
-        }),
-        signal: abortControllerRef.current.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      const data = await response.json();
-
-      if (response.ok && data.response) {
-        setMessages([...newMessages, { role: "assistant", content: data.response }]);
-      } else {
-        setMessages([
-          ...newMessages,
-          {
-            role: "assistant",
-            content: `Sorry, I encountered an error: ${data.error || "Unknown error"}. Click to retry.`,
-            error: true,
-            retry: () => sendQuickAction(prompt, articleContext),
-          },
-        ]);
-      }
-    } catch (error) {
-      clearTimeout(timeoutId);
-
-      if (error.name === 'AbortError') {
-        setMessages([
-          ...newMessages,
-          {
-            role: "assistant",
-            content: "Request timed out. Please try again or click to retry.",
-            error: true,
-            retry: () => sendQuickAction(prompt, articleContext),
-          },
-        ]);
-      } else {
-        console.error("Chat error:", error);
-        setMessages([
-          ...newMessages,
-          {
-            role: "assistant",
-            content: "Connection error. Please check your connection and click to retry.",
-            error: true,
-            retry: () => sendQuickAction(prompt, articleContext),
-          },
-        ]);
-      }
-    } finally {
-      setIsLoading(false);
-      setIsTyping(false);
-      abortControllerRef.current = null;
-    }
+    await callChatApi({
+      userMessage: prompt,
+      articlesToSend,
+      onRetry: () => sendQuickAction(prompt, articleContext),
+    });
   };
 
   const quickActions = [
@@ -347,7 +301,7 @@ export default function FinTechChatBot({ articles = [] }) {
                 </div>
                 <div>
                   <h3 className="font-bold text-white text-[15px] tracking-tight">FinTech AI Assistant</h3>
-                  <p className="text-xs text-gray-400 font-medium">Powered by Gemini</p>
+                  <p className="text-xs text-gray-400 font-medium">Powered by Groq</p>
                 </div>
               </div>
               <div className="flex items-center gap-1.5">
@@ -376,6 +330,72 @@ export default function FinTechChatBot({ articles = [] }) {
                 </button>
               </div>
             </div>
+
+            {!isMinimized && costStatus && (
+              <div className={`px-4 py-3 border-b border-gray-800/50 ${
+                costStatus.isAtLimit 
+                  ? 'bg-red-900/30 border-red-500/30' 
+                  : costStatus.isNearLimit 
+                    ? 'bg-yellow-900/30 border-yellow-500/30'
+                    : 'bg-gradient-to-b from-gray-900/50 to-transparent'
+              }`}>
+                <div className="flex items-center gap-2 text-xs">
+                  {costStatus.isAtLimit ? (
+                    <FiAlertTriangle className="w-4 h-4 text-red-400" />
+                  ) : costStatus.isNearLimit ? (
+                    <FiAlertTriangle className="w-4 h-4 text-yellow-400" />
+                  ) : (
+                    <FiInfo className="w-4 h-4 text-gray-400" />
+                  )}
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span className={`font-medium ${
+                        costStatus.isAtLimit 
+                          ? 'text-red-400' 
+                          : costStatus.isNearLimit 
+                            ? 'text-yellow-400'
+                            : 'text-gray-300'
+                      }`}>
+                        {costStatus.chatRequests || 0} / {(costStatus.remainingChatRequests || 0) + (costStatus.chatRequests || 0)} requests
+                      </span>
+                      <span className={`${
+                        costStatus.isAtLimit 
+                          ? 'text-red-400' 
+                          : costStatus.isNearLimit 
+                            ? 'text-yellow-400'
+                            : 'text-gray-400'
+                      }`}>
+                        $${(costStatus.costSoFar || 0).toFixed(3)} / $${(costStatus.budget || 0).toFixed(2)}
+                      </span>
+                    </div>
+                    <div className="mt-1">
+                      <div className="w-full bg-gray-700/50 rounded-full h-1.5">
+                        <div 
+                          className={`h-1.5 rounded-full transition-all duration-300 ${
+                            costStatus.isAtLimit 
+                              ? 'bg-red-400' 
+                              : costStatus.isNearLimit 
+                                ? 'bg-yellow-400'
+                                : 'bg-primary'
+                          }`}
+                          style={{ width: `${Math.min(100, costStatus.budgetUsed || 0)}%` }}
+                        />
+                      </div>
+                    </div>
+                    {costStatus.isNearLimit && (
+                      <p className={`mt-1 text-xs ${
+                        costStatus.isAtLimit ? 'text-red-400' : 'text-yellow-400'
+                      }`}>
+                        {costStatus.isAtLimit 
+                          ? 'Monthly budget reached. Resets next month.'
+                          : `${costStatus.remainingChatRequests || 0} requests remaining this month.`
+                        }
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
 
             {!isMinimized && (
               <>
@@ -436,7 +456,7 @@ export default function FinTechChatBot({ articles = [] }) {
                               Retry
                             </button>
                           )}
-                          {msg.content
+                          {(typeof msg.content === 'string' ? msg.content : String(msg.content || ''))
                             .replace(/\*\*(.*?)\*\*/g, '$1')
                             .replace(/\*(.*?)\*/g, '$1')
                             .split('\n\n')
@@ -519,7 +539,7 @@ export default function FinTechChatBot({ articles = [] }) {
                         ref={inputRef}
                         value={input}
                         onChange={handleInputChange}
-                        onKeyPress={handleKeyPress}
+                        onKeyDown={handleKeyDown}
                         placeholder="Ask me anything about FinTech..."
                         className="w-full bg-gray-900/60 border border-gray-700/50 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 resize-none max-h-32 transition-all duration-200 backdrop-blur-sm"
                         style={{

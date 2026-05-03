@@ -6,70 +6,50 @@ import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import ArticleCard from "@/components/digest/ArticleCard";
 import {
-  FiSearch,
   FiCalendar,
-  FiFilter,
   FiRefreshCw,
-  FiTrendingUp,
   FiGrid,
   FiList,
-  FiClock,
-  FiZap,
   FiArrowLeft,
 } from "react-icons/fi";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState([]);
+  const [weeklyDigestArticles, setWeeklyDigestArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedSource, setSelectedSource] = useState("");
-  const [sources, setSources] = useState([]);
-  const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState("grid");
   const [sortBy, setSortBy] = useState("date_desc");
-  const [quickFilter, setQuickFilter] = useState("");
+  const [scope, setScope] = useState("week");
 
   useEffect(() => {
     document.title = "Finance News Articles | FinTech Calgary";
     fetchArticles();
   }, []);
 
-  useEffect(() => {
-    if (quickFilter) {
-      const today = new Date();
-      let startDate = new Date();
-      switch (quickFilter) {
-        case "today":
-          startDate.setHours(0, 0, 0, 0);
-          break;
-        case "week":
-          startDate.setDate(today.getDate() - 7);
-          break;
-        case "month":
-          startDate.setMonth(today.getMonth() - 1);
-          break;
-      }
-      setSelectedDate(startDate.toISOString().split("T")[0]);
-      fetchArticles();
-    }
-  }, [quickFilter]);
-
   const fetchArticles = async () => {
     try {
       setLoading(true);
-      const params = new URLSearchParams();
-      if (selectedDate) params.append("date", selectedDate);
-      if (selectedSource) params.append("source", selectedSource);
-      params.append("limit", "100");
-      params.append("sortBy", sortBy);
-      const response = await fetch(`/api/articles?${params}`);
-      if (response.ok) {
-        const data = await response.json();
-        setSources([...new Set(data.map((a) => a.source))].sort());
-        setArticles(data);
+      const [archiveResponse, weeklyResponse] = await Promise.all([
+        fetch(`/api/articles?weeklyRole=digest&limit=500&sortBy=${sortBy}`),
+        fetch("/api/insights/current"),
+      ]);
+
+      let archiveArticles = [];
+      let weeklyArticles = [];
+
+      if (archiveResponse.ok) {
+        const data = await archiveResponse.json();
+        archiveArticles = Array.isArray(data) ? data : [];
       }
+
+      if (weeklyResponse.ok) {
+        const weeklyData = await weeklyResponse.json();
+        weeklyArticles = Array.isArray(weeklyData?.articles) ? weeklyData.articles : [];
+      }
+
+      setArticles(archiveArticles);
+      setWeeklyDigestArticles(weeklyArticles);
     } catch (error) {
       console.error("Failed to fetch articles:", error);
     } finally {
@@ -77,13 +57,7 @@ export default function ArticlesPage() {
     }
   };
 
-  const filteredArticles = articles.filter((article) => {
-    const matchesSearch =
-      article.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.summary?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.source?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
-  });
+  const filteredArticles = scope === "week" ? weeklyDigestArticles : articles;
 
   const sortedArticles = [...filteredArticles].sort((a, b) => {
     const aDate = new Date(a.date || a.publishedAt || 0);
@@ -114,19 +88,11 @@ export default function ArticlesPage() {
     });
   };
 
-  const clearAllFilters = () => {
-    setSearchQuery("");
-    setSelectedDate("");
-    setSelectedSource("");
-    setQuickFilter("");
-    fetchArticles();
-  };
-
   return (
     <main className="flex flex-col min-h-screen">
       <PublicNavbar />
 
-      <section className="relative overflow-hidden pt-28 pb-8">
+      <section className="relative overflow-hidden pt-28 pb-3">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
@@ -158,142 +124,90 @@ export default function ArticlesPage() {
               Finance News Articles
             </h1>
             <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-              Browse and search the latest FinTech articles from Insights
+              Browse weekly highlights or the full FinTech archive
             </p>
           </motion.div>
 
-          {/* Search and controls */}
+          {/* Controls */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-6 sticky top-24 z-40 bg-gray-900/80 backdrop-blur-xl rounded-xl p-4 border border-gray-700/50"
+            className="mb-6 sticky top-24 z-40 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.06),transparent_35%),linear-gradient(155deg,rgba(8,8,10,0.98),rgba(18,18,22,0.96)_45%,rgba(10,10,12,0.98))] backdrop-blur-xl rounded-2xl p-5 border border-zinc-600/45 shadow-2xl shadow-black/65"
           >
-            <div className="flex flex-col md:flex-row gap-4 flex-wrap">
-              <div className="relative flex-1 min-w-[200px]">
-                <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search articles..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary"
-                />
+            <div className="grid grid-cols-1 xl:grid-cols-[auto_auto_1fr_auto] gap-4 items-stretch xl:items-end">
+              <div className="space-y-2">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Scope</p>
+                <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
+                  <button
+                    onClick={() => setScope("week")}
+                    className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${scope === "week" ? "bg-gradient-to-r from-primary to-fuchsia-500 text-white shadow-lg shadow-primary/20" : "text-gray-300 hover:text-white"}`}
+                  >
+                    This Week
+                  </button>
+                  <button
+                    onClick={() => setScope("all")}
+                    className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${scope === "all" ? "bg-gradient-to-r from-primary to-fuchsia-500 text-white shadow-lg shadow-primary/20" : "text-gray-300 hover:text-white"}`}
+                  >
+                    Full Archive
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-2 bg-gray-800/50 rounded-lg p-1 border border-gray-700/50">
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={`p-2 rounded transition-all ${viewMode === "grid" ? "bg-primary text-white" : "text-gray-400 hover:text-white"}`}
+
+              <div className="space-y-2">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Layout</p>
+                <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
+                  <button
+                    onClick={() => setViewMode("grid")}
+                    className={`p-2.5 rounded-lg transition-all ${viewMode === "grid" ? "bg-primary text-white" : "text-gray-400 hover:text-white"}`}
+                    aria-label="Grid view"
+                  >
+                    <FiGrid className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`p-2.5 rounded-lg transition-all ${viewMode === "list" ? "bg-primary text-white" : "text-gray-400 hover:text-white"}`}
+                    aria-label="List view"
+                  >
+                    <FiList className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Sort Order</p>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-gray-800/60 border border-gray-700/60 text-white focus:outline-none focus:ring-2 focus:ring-primary/25 min-w-[280px]"
                 >
-                  <FiGrid className="w-5 h-5" />
-                </button>
+                  <option value="date_desc">Newest to Oldest</option>
+                  <option value="date_asc">Oldest to Newest</option>
+                </select>
+              </div>
+
+              <div className="flex items-end justify-end">
                 <button
-                  onClick={() => setViewMode("list")}
-                  className={`p-2 rounded transition-all ${viewMode === "list" ? "bg-primary text-white" : "text-gray-400 hover:text-white"}`}
+                  onClick={fetchArticles}
+                  disabled={loading}
+                  className="inline-flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white hover:shadow-lg hover:shadow-primary/25 disabled:opacity-50"
+                  aria-label="Refresh articles"
                 >
-                  <FiList className="w-5 h-5" />
+                  <FiRefreshCw className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />
                 </button>
               </div>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white focus:outline-none focus:ring-2 focus:ring-primary/25"
-              >
-                <option value="date_desc">Newest first</option>
-                <option value="date_asc">Oldest first</option>
-              </select>
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className={`inline-flex items-center gap-2 px-4 py-3 rounded-lg border transition-all ${showFilters ? "bg-primary/20 border-primary text-primary" : "bg-gray-800/50 border-gray-700/50 text-white hover:border-primary/50"}`}
-              >
-                <FiFilter className="w-5 h-5" />
-                Filters
-              </button>
-              <button
-                onClick={fetchArticles}
-                disabled={loading}
-                className="inline-flex items-center justify-center px-4 py-3 rounded-lg bg-gradient-to-r from-primary to-purple-600 text-white hover:shadow-lg disabled:opacity-50"
-              >
-                <FiRefreshCw className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />
-              </button>
             </div>
-
-            {/* Quick filters */}
-            <div className="flex flex-wrap gap-2 mt-4">
-              {[
-                { id: "today", label: "Today", icon: FiClock },
-                { id: "week", label: "This week", icon: FiCalendar },
-                { id: "month", label: "This month", icon: FiTrendingUp },
-              ].map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => setQuickFilter(quickFilter === id ? "" : id)}
-                  className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${quickFilter === id ? "bg-primary/20 border-primary text-primary" : "bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-primary/50"}`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {label}
-                </button>
-              ))}
-            </div>
-
-            <AnimatePresence>
-              {showFilters && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  className="mt-4 overflow-hidden"
-                >
-                  <div className="p-4 rounded-xl bg-gray-800/30 border border-gray-700/30 flex flex-wrap gap-4">
-                    <div>
-                      <label className="block text-sm text-gray-400 mb-1">Date</label>
-                      <input
-                        type="date"
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                        onBlur={fetchArticles}
-                        className="px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700/50 text-white focus:outline-none focus:ring-2 focus:ring-primary/25"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-gray-400 mb-1">Source</label>
-                      <select
-                        value={selectedSource}
-                        onChange={(e) => {
-                          setSelectedSource(e.target.value);
-                          fetchArticles();
-                        }}
-                        className="px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700/50 text-white focus:outline-none focus:ring-2 focus:ring-primary/25 min-w-[160px]"
-                      >
-                        <option value="">All sources</option>
-                        {sources.map((s) => (
-                          <option key={s} value={s}>{s}</option>
-                        ))}
-                      </select>
-                    </div>
-                    {(selectedDate || selectedSource || quickFilter) && (
-                      <button
-                        onClick={clearAllFilters}
-                        className="self-end text-sm text-primary hover:text-purple-400"
-                      >
-                        Clear filters
-                      </button>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </motion.div>
 
           {!loading && (
-            <p className="text-gray-400 text-sm mb-4">
-              Showing {filteredArticles.length} of {articles.length} articles
+            <p className="text-gray-400 text-sm mb-1">
+              Showing {filteredArticles.length} of {scope === "week" ? 15 : articles.length} articles
             </p>
           )}
         </div>
       </section>
 
-      <div className="container mx-auto px-6 py-6 max-w-7xl flex-1">
+      <div className="container mx-auto px-6 pt-1 pb-6 max-w-7xl flex-1">
         {loading && (
           <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
             {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -306,10 +220,10 @@ export default function ArticlesPage() {
           <>
             {filteredArticles.length === 0 ? (
               <div className="text-center py-16">
-                <FiSearch className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+                <FiCalendar className="w-12 h-12 text-gray-500 mx-auto mb-4" />
                 <p className="text-gray-400 mb-4">
-                  {searchQuery || selectedDate || selectedSource
-                    ? "No articles match your filters."
+                  {scope === "week"
+                    ? "No weekly digest available yet. Trigger Monday refresh to generate the weekly top 15."
                     : "No articles yet. Refresh from Insights or run article refresh."}
                 </p>
                 <Link

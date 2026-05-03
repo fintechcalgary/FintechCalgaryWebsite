@@ -1,19 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { FiExternalLink, FiBookmark, FiTrendingUp, FiTrendingDown, FiMinus, FiZap } from "react-icons/fi";
+import { FiExternalLink, FiTrendingUp, FiTrendingDown, FiMinus, FiZap } from "react-icons/fi";
 import { motion } from "framer-motion";
 
 /**
  * ArticleCard Component
  * Displays an individual article within a digest
  */
-export default function ArticleCard({ article, onBookmark, viewMode = 'grid' }) {
+export default function ArticleCard({ article, viewMode = 'grid' }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const [summaryError, setSummaryError] = useState(null);
   const [currentSummary, setCurrentSummary] = useState(article.summary || null);
+
 
   const getSentimentIcon = (sentiment) => {
     switch (sentiment) {
@@ -55,7 +55,7 @@ export default function ArticleCard({ article, onBookmark, viewMode = 'grid' }) 
     e.preventDefault();
     e.stopPropagation();
 
-    if (isGeneratingSummary || article.summary) return;
+    if (isGeneratingSummary || currentSummary || article.summary) return;
 
     setIsGeneratingSummary(true);
     setSummaryError(null);
@@ -66,7 +66,14 @@ export default function ArticleCard({ article, onBookmark, viewMode = 'grid' }) 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           maxArticles: 1,
-          articleUrl: article.url
+          articleUrl: article.url,
+          article: {
+            title: article.title,
+            url: article.url,
+            source: article.source,
+            date: article.date,
+            publishedAt: article.publishedAt,
+          },
         }),
       });
 
@@ -79,6 +86,28 @@ export default function ArticleCard({ article, onBookmark, viewMode = 'grid' }) 
       }
 
       if (response.ok && responseData.success !== false) {
+        if (responseData.summary) {
+          setCurrentSummary(responseData.summary);
+          
+          // Save the summary to the database
+          try {
+            await fetch("/api/articles", {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                url: article.url,
+                summary: responseData.summary,
+              }),
+            });
+          } catch (saveError) {
+            console.error("Failed to save summary to database:", saveError);
+            // Continue even if save fails - user still gets the summary
+          }
+          
+          setIsGeneratingSummary(false);
+          return;
+        }
+
         let attempts = 0;
         const maxAttempts = 20;
         const pollInterval = setInterval(async () => {
@@ -90,6 +119,22 @@ export default function ArticleCard({ article, onBookmark, viewMode = 'grid' }) 
               const updatedArticle = Array.isArray(articles) ? articles.find(a => a.url === article.url) : articles;
               if (updatedArticle && updatedArticle.summary) {
                 setCurrentSummary(updatedArticle.summary);
+                
+                // Save the summary to the database if it's not already saved
+                try {
+                  await fetch("/api/articles", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      url: article.url,
+                      summary: updatedArticle.summary,
+                    }),
+                  });
+                } catch (saveError) {
+                  console.error("Failed to save summary to database:", saveError);
+                  // Continue even if save fails - user still gets the summary
+                }
+                
                 setIsGeneratingSummary(false);
                 clearInterval(pollInterval);
               } else if (attempts >= maxAttempts) {
@@ -118,6 +163,22 @@ export default function ArticleCard({ article, onBookmark, viewMode = 'grid' }) 
   const displayDate = article.publishedAt || (article.date ? `${article.date} ${article.time || ''}` : '');
   const displayTime = article.time || '';
   const isListView = viewMode === 'list';
+  const normalizedSummary = (() => {
+    // Prioritize existing summaries in this order:
+    // 1. Current summary (from live generation or updated state)
+    // 2. Article's stored summary (from backend/database)
+    // 3. Show pending message only if no summary exists anywhere
+    const raw = (currentSummary || article.summary || "").trim();
+    if (!raw) return "No summary available yet.";
+    const words = raw.split(/\s+/);
+    if (words.length <= 14) {
+      return `${raw} Additional context will be included as updates are processed.`;
+    }
+    if (words.length > 42) {
+      return `${words.slice(0, 42).join(" ")}...`;
+    }
+    return raw;
+  })();
 
   return (
     <motion.div
@@ -130,7 +191,7 @@ export default function ArticleCard({ article, onBookmark, viewMode = 'grid' }) 
     >
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-      <div className={`relative z-10 ${isListView ? 'flex-1 flex flex-row gap-4' : ''} p-5`}>
+      <div className={`relative z-10 ${isListView ? 'flex-1 flex flex-row gap-4 min-h-[198px]' : 'min-h-[252px]'} p-5`}>
         {isListView && article.imageUrl && (
           <div className="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden">
             <img
@@ -171,7 +232,7 @@ export default function ArticleCard({ article, onBookmark, viewMode = 'grid' }) 
             </div>
 
             <div className="flex items-center gap-2 ml-4 flex-shrink-0">
-              {!currentSummary && (
+              {!currentSummary && !article.summary && (
                 <button
                   onClick={handleGenerateSummary}
                   disabled={isGeneratingSummary}
@@ -195,20 +256,6 @@ export default function ArticleCard({ article, onBookmark, viewMode = 'grid' }) 
                   )}
                 </button>
               )}
-              <button
-                onClick={() => {
-                  setIsBookmarked(!isBookmarked);
-                  onBookmark?.(article);
-                }}
-                className={`p-2 rounded-lg transition-colors ${
-                  isBookmarked
-                    ? 'bg-primary/20 text-primary'
-                    : 'text-gray-400 hover:text-primary hover:bg-gray-700/50'
-                }`}
-                aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark article'}
-              >
-                <FiBookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
-              </button>
               <a
                 href={article.url}
                 target="_blank"
@@ -231,7 +278,7 @@ export default function ArticleCard({ article, onBookmark, viewMode = 'grid' }) 
             </div>
           )}
 
-          <div className={isListView ? 'mb-2' : 'mb-3'}>
+          <div className={isListView ? 'mb-2 min-h-[44px]' : 'mb-2 min-h-[48px]'}>
             {summaryError ? (
               <div className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg p-2">
                 {summaryError}
@@ -248,10 +295,10 @@ export default function ArticleCard({ article, onBookmark, viewMode = 'grid' }) 
               </div>
             ) : (
               <>
-                <p className={`text-sm text-gray-300 leading-relaxed ${isExpanded ? '' : isListView ? 'line-clamp-2' : 'line-clamp-3'}`}>
-                  {currentSummary || 'No summary available.'}
+                <p className={`text-sm text-gray-300 leading-relaxed ${isExpanded ? '' : isListView ? 'line-clamp-2' : 'line-clamp-4'}`}>
+                  {normalizedSummary}
                 </p>
-                {currentSummary && currentSummary.length > 150 && (
+                {normalizedSummary && normalizedSummary.length > 170 && (
                   <button
                     onClick={() => setIsExpanded(!isExpanded)}
                     className="mt-2 text-xs text-primary hover:text-purple-400 transition-colors"
@@ -263,7 +310,7 @@ export default function ArticleCard({ article, onBookmark, viewMode = 'grid' }) 
             )}
           </div>
 
-          <div className={`flex items-center justify-between pt-3 border-t border-gray-700/30 ${
+          <div className={`flex items-center justify-between pt-2 border-t border-gray-700/30 ${
             isListView ? 'flex-wrap gap-2' : ''
           }`}>
             <div className="flex flex-wrap gap-2">

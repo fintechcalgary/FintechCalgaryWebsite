@@ -5,8 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import useSWR from "swr";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
-import ArticleCard from "@/components/digest/ArticleCard";
 import FinTechChatBot from "@/components/insights/FinTechChatBot";
+import WeeklyDigestModal from "@/components/insights/WeeklyDigestModal";
+import ArticleDetailModal from "@/components/insights/ArticleDetailModal";
 import { ChatBotProvider, useChatBot } from "@/contexts/ChatBotContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Link from "next/link";
@@ -23,7 +24,52 @@ import {
   FiCalendar,
   FiAlertCircle,
   FiSearch,
+  FiFileText,
 } from "react-icons/fi";
+
+const extractReadableSource = (article) => {
+  const rawSource = (article?.source || "").trim();
+  const rawUrl = (article?.url || "").trim();
+
+  const cleanDomain = (value) => {
+    if (!value) return "";
+    return value
+      .replace(/^https?:\/\//i, "")
+      .replace(/^www\./i, "")
+      .split("/")[0]
+      .toUpperCase();
+  };
+
+  const normalizeTitleSource = (title) => {
+    if (!title || typeof title !== "string") return "";
+    const parts = title.split(" - ").map((p) => p.trim()).filter(Boolean);
+    if (parts.length >= 2) {
+      const candidate = parts[parts.length - 1];
+      if (candidate.length > 1 && candidate.length < 40) {
+        return candidate.toUpperCase();
+      }
+    }
+    return "";
+  };
+
+  if (rawSource && !/news\.google\.com/i.test(rawSource) && !/google news/i.test(rawSource)) {
+    return cleanDomain(rawSource);
+  }
+
+  try {
+    const urlObj = new URL(rawUrl);
+    const redirectUrl = urlObj.searchParams.get("url");
+    if (redirectUrl) {
+      return cleanDomain(redirectUrl);
+    }
+    if (!/news\.google\.com/i.test(urlObj.hostname)) {
+      return cleanDomain(urlObj.hostname);
+    }
+  } catch (e) {}
+
+  const titleSource = normalizeTitleSource(article?.title);
+  return titleSource || "UNKNOWN SOURCE";
+};
 
 // Fetcher function for SWR - matches original behavior exactly
 const fetcher = async (url) => {
@@ -34,13 +80,12 @@ const fetcher = async (url) => {
   return response.json();
 };
 
-export default function InsightsPage() {
+function InsightsPageContent() {
   const pendingArticlesRequest = useRef(null);
-  const pendingStatsRequest = useRef(null);
   const pendingRefreshRequest = useRef(null);
 
-  const { data: articlesData, error: articlesError, isLoading: articlesLoading, mutate: mutateArticles } = useSWR(
-    "/api/articles?limit=50&sortBy=date_desc",
+  const { data: weeklyDigestData, error: articlesError, isLoading: articlesLoading, mutate: mutateArticles } = useSWR(
+    "/api/insights/current",
     fetcher,
     {
       refreshInterval: 15 * 60 * 1000,
@@ -53,6 +98,17 @@ export default function InsightsPage() {
       revalidateOnMount: true,
     }
   );
+
+  const { openChatWithArticle } = useChatBot();
+
+  const handleReadMore = (e, article, summary = null) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Create a new article object with the locally generated summary if available
+    const articleWithSummary = summary ? { ...article, summary } : article;
+    setSelectedArticle(articleWithSummary);
+    setArticleModalOpen(true);
+  };
 
   const { data: statsData, error: statsError, isLoading: statsLoading } = useSWR(
     "/api/articles/stats",
@@ -82,81 +138,39 @@ export default function InsightsPage() {
   const [topStories, setTopStories] = useState([]);
   const [trendingTopics, setTrendingTopics] = useState([]);
   const [keyInsights, setKeyInsights] = useState(null);
-  const [articlesToday, setArticlesToday] = useState(0);
+  const [totalArchiveArticles, setTotalArchiveArticles] = useState(0);
+  const [digestOpen, setDigestOpen] = useState(false);
+  const [articleModalOpen, setArticleModalOpen] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState(null);
 
   const loading = articlesLoading || statsLoading;
-  const articles = articlesData || [];
+  const articles = useMemo(
+    () => Array.isArray(weeklyDigestData?.articles) ? weeklyDigestData.articles : [],
+    [weeklyDigestData?.articles]
+  );
   const stats = statsData?.overall || null;
+  const weeklyStats = weeklyDigestData?.stats || null;
   const lastRefresh = refreshData?.lastRefresh ? new Date(refreshData.lastRefresh) : null;
 
-  const hasConnectionError = (articlesError || statsError) && !articlesData && !statsData;
+  const hasConnectionError = (articlesError || statsError) && !weeklyDigestData && !statsData;
 
   useEffect(() => {
     document.title = "FinTech Insights & Trends | FinTech Calgary";
-
-    const autoFetchIfEmpty = async () => {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      if (!articlesLoading && (!articlesData || articlesData.length === 0)) {
-        console.log("No articles found, attempting to fetch from RSS feeds...");
-        try {
-          const response = await fetch("/api/articles/refresh", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            setTimeout(() => {
-              mutateArticles();
-              mutateRefresh();
-            }, 2000);
-          }
-        } catch (error) {
-          console.warn("Auto-fetch failed (this is normal if not admin):", error.message);
-        }
-      }
-    };
-
-    autoFetchIfEmpty();
-  }, [articlesLoading, articlesData, mutateArticles, mutateRefresh]);
+  }, []);
 
   useEffect(() => {
-    if (!articlesData || !Array.isArray(articlesData)) {
-      if (articlesData === null || articlesData === undefined) {
-        return;
-      }
-      setArticlesToday(0);
+    if (!articles || !Array.isArray(articles)) {
+      // Guard: update archive count from stats even when weekly articles are empty
+      setTotalArchiveArticles(statsData?.overall?.totalArticles || 0);
       setTopStories([]);
       setTrendingTopics([]);
       return;
     }
 
-    const today = new Date().toISOString().split('T')[0];
-    const todayArticles = articlesData.filter(article => {
-      const articleDate = article.date || article.publishedAt;
-      if (!articleDate) return false;
-      const dateStr = typeof articleDate === 'string'
-        ? articleDate.split('T')[0]
-        : new Date(articleDate).toISOString().split('T')[0];
-      return dateStr === today;
-    });
-    setArticlesToday(todayArticles.length);
+    setTotalArchiveArticles(statsData?.overall?.totalArticles || 0);
 
-    const sortedForTopStories = [...articlesData].sort((a, b) => {
-      const aHasSummary = a.summary && a.summary.trim().length > 0;
-      const bHasSummary = b.summary && b.summary.trim().length > 0;
-
-      if (aHasSummary && !bHasSummary) return -1;
-      if (!aHasSummary && bHasSummary) return 1;
-
-      const aDate = new Date(a.date || a.publishedAt || a.createdAt || 0);
-      const bDate = new Date(b.date || b.publishedAt || b.createdAt || 0);
-      return bDate - aDate;
-    });
-
-    const topStoriesList = sortedForTopStories.slice(0, 6);
-    setTopStories(topStoriesList);
+    // Weekly digest already ranks by relevance — use all 15 as-is
+    setTopStories(articles);
 
     const topicCounts = {};
     const topicKeywords = {
@@ -196,7 +210,7 @@ export default function InsightsPage() {
       'regtech': 'RegTech'
     };
 
-    articlesData.forEach(article => {
+    articles.forEach(article => {
       const title = (article.title || '').toLowerCase();
       const source = (article.source || '').toLowerCase();
       const text = `${title} ${source}`;
@@ -224,20 +238,21 @@ export default function InsightsPage() {
       .slice(0, 10)
       .map(([topic]) => topic);
     setTrendingTopics(sortedTopics);
-  }, [articlesData]);
+  }, [articles, statsData]);
 
   useEffect(() => {
-    if (statsData?.overall) {
+    if (statsData?.overall || weeklyStats) {
       setKeyInsights({
-        totalArticles: statsData.overall.totalArticles || 0,
-        withSummaries: statsData.overall.totalWithSummary || 0,
-        uniqueSources: statsData.overall.uniqueSources || 0,
-        coverage: statsData.overall.daysWithArticles || 0,
+        totalArticles: articles.length || 0,
+        withSummaries: articles.filter((a) => a.summary && a.summary.trim()).length || 0,
+        uniqueSources: new Set(articles.map((a) => a.source).filter(Boolean)).size || 0,
+        coverage: 7,
+        totalArchiveArticles: statsData?.overall?.totalArticles || 0,
       });
     } else {
       setKeyInsights(null);
     }
-  }, [statsData]);
+  }, [statsData, weeklyStats, articles]);
 
   const formatLastRefresh = (date) => {
     if (!date) return "Never";
@@ -376,9 +391,33 @@ export default function InsightsPage() {
                 </div>
               )}
             </div>
+
+            {/* Weekly Digest trigger */}
+            {articles.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.35 }}
+                className="flex justify-center mt-6"
+              >
+                <button
+                  onClick={() => setDigestOpen(true)}
+                  className="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-primary/40 bg-gradient-to-r from-primary/10 via-purple-500/10 to-pink-500/10 text-white text-sm font-medium hover:border-primary/70 hover:from-primary/20 hover:via-purple-500/20 hover:to-pink-500/20 transition-all duration-300 shadow-lg shadow-primary/10 hover:shadow-primary/25"
+                >
+                  <div className="w-5 h-5 rounded-md bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center flex-shrink-0">
+                    <FiFileText className="w-3 h-3 text-white" />
+                  </div>
+                  <span>This Week's Full Digest</span>
+                  <span className="px-1.5 py-0.5 rounded bg-primary/20 border border-primary/30 text-primary text-[10px] font-semibold">
+                    {articles.length} stories
+                  </span>
+                  <FiArrowRight className="w-3.5 h-3.5 text-primary group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              </motion.div>
+            )}
           </motion.div>
 
-          {stats && (
+          {keyInsights && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -386,16 +425,16 @@ export default function InsightsPage() {
               className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-0"
             >
               <StatCard
-                label="Total Articles"
-                value={stats.totalArticles || 0}
+                label="Weekly Digest"
+                value={keyInsights.totalArticles || 0}
                 icon={FiBarChart2}
                 color="text-primary"
                 bgGradient="from-primary/20 to-purple-500/20"
                 borderColor="border-primary/30"
               />
               <StatCard
-                label="Articles Today"
-                value={articlesToday}
+                label="Total Articles"
+                value={keyInsights.totalArchiveArticles || totalArchiveArticles}
                 icon={FiCalendar}
                 color="text-purple-400"
                 bgGradient="from-purple-500/20 to-blue-500/20"
@@ -403,7 +442,7 @@ export default function InsightsPage() {
               />
               <StatCard
                 label="News Sources"
-                value={stats.uniqueSources || 0}
+                value={keyInsights.uniqueSources || 0}
                 icon={FiGlobe}
                 color="text-blue-400"
                 bgGradient="from-blue-500/20 to-cyan-500/20"
@@ -411,7 +450,7 @@ export default function InsightsPage() {
               />
               <StatCard
                 label="Days Covered"
-                value={stats.daysWithArticles || 0}
+                value={keyInsights.coverage || 0}
                 icon={FiClock}
                 color="text-cyan-400"
                 bgGradient="from-cyan-500/20 to-teal-500/20"
@@ -436,7 +475,7 @@ export default function InsightsPage() {
                   <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-xl flex items-center justify-center border border-primary/30">
                     <FiTrendingUp className="w-5 h-5 text-primary" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white">Top Stories</h2>
+                  <h2 className="text-2xl font-bold text-white">This Week's Top Stories</h2>
                 </div>
                 <Link
                   href="/articles"
@@ -463,7 +502,7 @@ export default function InsightsPage() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
                       >
-                        <FeaturedArticleCardInner article={article} featured={index === 0} />
+                        <FeaturedArticleCardInner article={article} featured={index === 0} openChatWithArticle={openChatWithArticle} onReadMore={handleReadMore} />
                       </motion.div>
                     ))}
                   </div>
@@ -502,8 +541,8 @@ export default function InsightsPage() {
                       color="text-primary"
                     />
                     <InsightCard
-                      title="Today's Activity"
-                      description={`${articlesToday} articles published today, keeping you up-to-date with the latest FinTech developments`}
+                      title="Archive Growth"
+                      description={`${keyInsights.totalArchiveArticles || totalArchiveArticles} total articles in archive, updated with each weekly digest release`}
                       icon={FiCalendar}
                       color="text-purple-400"
                     />
@@ -622,43 +661,37 @@ export default function InsightsPage() {
           </div>
         </div>
 
-        {articles.length > 0 && (
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-bold text-white">Recent Articles</h2>
-              <Link
-                href="/articles"
-                className="text-sm text-primary hover:text-purple-400 transition-colors flex items-center gap-1"
-              >
-                View All
-                <FiArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {articles.slice(0, 6).map((article, index) => (
-                <motion.div
-                  key={article._id || article.url || index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.8 + index * 0.05 }}
-                >
-                  <ArticleCard article={article} />
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-        )}
       </div>
 
           <Footer />
 
           <FinTechChatBot articles={articles} />
+
+          <WeeklyDigestModal
+            isOpen={digestOpen}
+            onClose={() => setDigestOpen(false)}
+            articles={articles}
+            stats={weeklyStats}
+            weekStart={weeklyDigestData?.weekStart}
+            weekEnd={weeklyDigestData?.weekEnd}
+          />
+          
+          <ArticleDetailModal
+            isOpen={articleModalOpen}
+            onClose={() => setArticleModalOpen(false)}
+            article={selectedArticle}
+          />
         </main>
+      </ChatBotProvider>
+    </ErrorBoundary>
+  );
+}
+
+export default function InsightsPage() {
+  return (
+    <ErrorBoundary>
+      <ChatBotProvider>
+        <InsightsPageContent />
       </ChatBotProvider>
     </ErrorBoundary>
   );
@@ -704,13 +737,12 @@ function StatCard({ label, value, icon: Icon, color, bgGradient, borderColor }) 
   );
 }
 
-function FeaturedArticleCardInner({ article, featured = false }) {
+function FeaturedArticleCardInner({ article, featured = false, onReadMore }) {
   const [isHovered, setIsHovered] = useState(false);
-  const [summary, setSummary] = useState(article.summary || null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generationError, setGenerationError] = useState(null);
-
   const { openChatWithArticle } = useChatBot();
+
+  // Summaries are pre-generated at refresh time — display stored value only.
+  const summary = article.summary || null;
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -722,102 +754,7 @@ function FeaturedArticleCardInner({ article, featured = false }) {
     });
   };
 
-  const handleHover = async () => {
-    setIsHovered(true);
-
-    if (!summary && !isGenerating && !generationError) {
-      setIsGenerating(true);
-      setGenerationError(null);
-      try {
-        const response = await fetch("/api/articles/generate-summaries-simple", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            maxArticles: 1,
-            articleUrl: article.url
-          }),
-        });
-
-        const responseText = await response.text();
-        let responseData;
-        try {
-          responseData = responseText ? JSON.parse(responseText) : {};
-        } catch (e) {
-          responseData = { error: responseText || "Invalid JSON response", parseError: e.message };
-        }
-
-        if (response.ok && responseData.success !== false) {
-          if (responseData.summary) {
-            setSummary(responseData.summary);
-            setGenerationError(null);
-            setIsGenerating(false);
-            return;
-          }
-
-          let attempts = 0;
-          const maxAttempts = 8;
-          let pollDelay = 500;
-
-          const pollForSummary = async () => {
-            if (attempts >= maxAttempts) {
-              setGenerationError("Summary generation timed out. Please try again.");
-              setIsGenerating(false);
-              return;
-            }
-
-            attempts++;
-            try {
-              const controller = new AbortController();
-              const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-              const articleResponse = await fetch(`/api/articles?limit=1000&url=${encodeURIComponent(article.url)}`, {
-                signal: controller.signal
-              });
-
-              clearTimeout(timeoutId);
-
-              if (articleResponse.ok) {
-                const articles = await articleResponse.json();
-                const updatedArticle = Array.isArray(articles)
-                  ? articles.find(a => a.url === article.url)
-                  : articles;
-
-                if (updatedArticle && updatedArticle.summary) {
-                  setSummary(updatedArticle.summary);
-                  setGenerationError(null);
-                  setIsGenerating(false);
-                  return;
-                }
-              }
-
-              pollDelay = Math.min(pollDelay * 2, 4000);
-              setTimeout(pollForSummary, pollDelay);
-            } catch (error) {
-              if (attempts >= maxAttempts) {
-                setGenerationError("Error checking for summary. Please try again.");
-                setIsGenerating(false);
-              } else {
-                pollDelay = Math.min(pollDelay * 2, 4000);
-                setTimeout(pollForSummary, pollDelay);
-              }
-            }
-          };
-
-          setTimeout(pollForSummary, pollDelay);
-        } else {
-          const errorMsg = responseData.error || responseData.details || "Failed to generate summary";
-          const suggestion = responseData.suggestion || "Please check your GEMINI_API key in .env.local";
-          setGenerationError(`${errorMsg} ${suggestion}`);
-          setIsGenerating(false);
-        }
-      } catch (error) {
-        console.error("Error generating summary:", error);
-        setGenerationError("An unexpected error occurred during summary generation.");
-        setIsGenerating(false);
-      }
-    }
-  };
-
+  
   const handleCheckoutToAI = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -826,10 +763,18 @@ function FeaturedArticleCardInner({ article, featured = false }) {
     }
   };
 
+  
+  const truncateWords = (text, maxWords = 42) => {
+    if (!text) return "";
+    const words = text.trim().split(/\s+/);
+    if (words.length <= maxWords) return text;
+    return `${words.slice(0, maxWords).join(" ")}...`;
+  };
+
   return (
     <div
       className="relative group"
-      onMouseEnter={handleHover}
+      onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {openChatWithArticle && (
@@ -849,173 +794,63 @@ function FeaturedArticleCardInner({ article, featured = false }) {
         </motion.button>
       )}
 
-      <div className={`bg-gray-900/30 rounded-xl border border-gray-700/30 overflow-hidden transition-all duration-300 ${
+      <div className={`relative bg-gray-900/30 rounded-xl border border-gray-700/30 overflow-hidden transition-all duration-300 min-h-36 ${
         isHovered ? 'border-primary/50' : ''
       }`}>
-        <AnimatePresence mode="wait">
-          {!isHovered ? (
-            <motion.div
-              key="original"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className={`flex ${featured ? 'flex-col md:flex-row' : 'flex-row'} gap-4 p-4`}
+        <div className={`flex ${featured ? 'flex-col md:flex-row' : 'flex-row'} gap-4 p-4 h-full`}>
+          <div className="flex-1 min-w-0 overflow-hidden flex flex-col">
+            <div className="flex items-center gap-2 mb-1 text-xs text-gray-400 flex-wrap">
+              <span className="font-medium uppercase">{extractReadableSource(article)}</span>
+              <span>•</span>
+              <span>{formatDate(article.date || article.publishedAt)}</span>
+              {featured && (
+                <>
+                  <span>•</span>
+                  <span className="px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30 text-xs">Featured</span>
+                </>
+              )}
+            </div>
+            <h3 className={`font-semibold text-white group-hover:text-primary transition-colors mb-2 text-lg line-clamp-2`}>
+              {article.title}
+            </h3>
+            <button
+              onClick={(e) => onReadMore(e, article, summary)}
+              className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary/10 border border-primary/30 rounded-lg text-xs text-primary hover:bg-primary/20 hover:border-primary/50 transition-all duration-200 w-fit"
             >
-              <Link
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full"
+              Read more
+              <FiArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+
+        <div
+          className={`absolute inset-0 p-4 bg-gray-900/95 transition-opacity duration-150 ${
+            isHovered ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
+        >
+          <div className="flex flex-col h-full">
+            <div className="flex-1 min-h-0 overflow-hidden">
+              {summary ? (
+                <p className="text-gray-300 leading-relaxed line-clamp-3 text-sm">
+                  {truncateWords(summary, 60)}
+                </p>
+              ) : (
+                <p className="text-xs text-gray-500 italic">
+                  Summary will be available after the weekly digest refresh.
+                </p>
+              )}
+            </div>
+            <div className="flex items-center gap-2 text-xs text-primary mt-2 flex-shrink-0">
+              <button
+                onClick={(e) => onReadMore(e, article, summary)}
+                className="flex items-center gap-2 text-primary bg-gradient-to-r from-primary/10 to-purple-500/10 border border-primary/30 hover:border-primary/50 hover:bg-gradient-to-r hover:from-primary/20 hover:to-purple-500/20 px-3 py-1.5 rounded-lg transition-all duration-200 cursor-pointer hover:shadow-lg hover:shadow-primary/20 hover:scale-105 self-start"
               >
-                {featured && article.imageUrl && (
-                  <div className="md:w-40 md:h-28 w-full h-40 flex-shrink-0 rounded-lg overflow-hidden bg-gray-800/50 mb-4 md:mb-0">
-                    <img
-                      src={article.imageUrl}
-                      alt={article.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2 text-xs text-gray-400 flex-wrap">
-                    <span className="font-medium uppercase">{article.source}</span>
-                    <span>•</span>
-                    <span>{formatDate(article.date || article.publishedAt)}</span>
-                    {featured && (
-                      <>
-                        <span>•</span>
-                        <span className="px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30 text-xs">Featured</span>
-                      </>
-                    )}
-                  </div>
-                  <h3 className={`font-semibold text-white group-hover:text-primary transition-colors mb-2 ${
-                    featured ? 'text-lg line-clamp-2' : 'text-base line-clamp-2'
-                  }`}>
-                    {article.title}
-                  </h3>
-                  <div className="flex items-center gap-2 text-xs text-primary">
-                    <span>Read more</span>
-                    <FiArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="summary"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="flex flex-col p-4"
-            >
-            <div className="flex items-center justify-between mb-2 flex-shrink-0">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary/25 to-purple-500/25 rounded-lg flex items-center justify-center border border-primary/40 flex-shrink-0">
-                  <FiZap className="w-4 h-4 text-primary" />
-                </div>
-                <div>
-                  <div className="text-xs font-semibold text-primary uppercase tracking-wider">AI Summary</div>
-                  <div className="text-[10px] text-gray-500 mt-0.5">{article.source}</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-gray-400 flex-shrink-0">
-                <span>{formatDate(article.date || article.publishedAt)}</span>
-                {featured && (
-                  <>
-                    <span>•</span>
-                    <span className="px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30 text-xs">Featured</span>
-                  </>
-                )}
-              </div>
+                <span>Read more</span>
+                <FiArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
+              </button>
             </div>
-
-            <div className="flex-1 min-h-[120px] py-2">
-              <AnimatePresence mode="wait">
-                {isGenerating ? (
-                  <motion.div
-                    key="loading"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="flex flex-col items-center justify-center w-full py-4"
-                  >
-                    <div className="relative w-12 h-12 mb-3">
-                      <div className="absolute inset-0 border-2 border-primary/20 rounded-full"></div>
-                      <div className="absolute inset-0 border-2 border-transparent border-t-primary rounded-full animate-spin"></div>
-                    </div>
-                    <p className="text-sm font-medium text-gray-300">Generating AI summary...</p>
-                    <p className="text-xs text-gray-500 mt-1">This will only take a moment</p>
-                  </motion.div>
-                ) : generationError ? (
-                  <motion.div
-                    key="error"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="flex flex-col items-center justify-center text-center text-red-400 text-sm w-full py-4"
-                  >
-                    <FiAlertCircle className="w-6 h-6 mb-2" />
-                    <p className="px-2">{generationError}</p>
-                  </motion.div>
-                ) : summary ? (
-                  <motion.div
-                    key="summary"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="space-y-3 w-full"
-                  >
-                    <h3 className={`font-semibold text-white leading-snug ${
-                      featured ? 'text-lg' : 'text-base'
-                    }`}>
-                      {article.title}
-                    </h3>
-                    <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-                    <p className={`text-gray-300 leading-relaxed ${
-                      featured ? 'text-sm' : 'text-xs'
-                    }`}>
-                      {summary}
-                    </p>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="default"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="flex flex-col items-center justify-center w-full py-4"
-                  >
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-purple-500/10 rounded-lg flex items-center justify-center mb-3 border border-primary/20">
-                      <FiZap className="w-6 h-6 text-primary/60" />
-                    </div>
-                    <p className="text-sm font-medium text-gray-300 mb-1">AI Summary</p>
-                    <p className="text-xs text-gray-500 text-center">Hover to generate summary</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-              <div className="flex items-center gap-2 text-xs text-primary mt-2 flex-shrink-0">
-                <Link
-                  href={article.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 hover:text-purple-400 transition-colors"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <span>Read more</span>
-                  <FiArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -1073,3 +908,4 @@ function SentimentBar({ label, value, total, color }) {
     </div>
   );
 }
+

@@ -1,22 +1,201 @@
 import { connectToDatabase } from "@/lib/mongodb";
-import { createArticles, getArticleByUrl, getArticles, updateArticleSummary } from "@/lib/models/article";
-import { exec } from "child_process";
-import { promisify } from "util";
-import path from "path";
-import { fileURLToPath } from "url";
-import fs from "fs";
+import { getArticleByUrl, updateArticleSummary } from "@/lib/models/article";
+import { fetchGoogleNewsArticles } from "@/lib/googleNewsRss";
+import {
+  createOrUpdateWeeklyDigest,
+  ensureWeeklyDigestIndexes,
+  getWeekStart,
+  WEEKLY_ARTICLE_TOTAL_LIMIT,
+  WEEKLY_DIGEST_ARTICLE_LIMIT,
+} from "@/lib/models/weeklyDigest";
 import { logError, logInfo, logWarn } from "@/lib/serverLogger";
 import { queueRefreshRequest } from "@/lib/requestQueue";
 
-const execAsync = promisify(exec);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 export const dynamic = "force-dynamic";
 
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+
+// ─── Gemini summary generation ───────────────────────────────────────────────
+
+async function generateSummaryWithGemini({ apiKey, article }) {
+  const prompt = [
+    "Write a concise 2-3 sentence summary of this fintech news article for a professional audience.",
+    "Focus on the key development, its significance, and potential impact on the industry.",
+    "",
+    `Title: ${article.title}`,
+    `Source: ${article.source || "Unknown"}`,
+    "",
+    "Respond with only the summary text. No markdown, no asterisks, no bullet points.",
+  ].join("\n");
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+      signal: AbortSignal.timeout(20000),
+    }
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => "");
+    throw new Error(
+      `Gemini request failed (${response.status})${errorText ? `: ${errorText.slice(0, 200)}` : ""}`
+    );
+  }
+
+  const data = await response.json();
+  const text =
+    data?.candidates?.[0]?.content?.parts?.map((p) => p?.text || "").join("").trim() || "";
+
+  if (!text) throw new Error("Empty response from Gemini");
+  return text.replace(/\*\*/g, "").replace(/\*/g, "").trim();
+}
+
+// ─── Week boundary helpers ────────────────────────────────────────────────────
+
+function getCurrentWeekQuery() {
+  const weekStart = getWeekStart(new Date());
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 7);
+
+  return {
+    weekStart,
+    weekEnd,
+    query: {
+      $or: [
+        {
+          date: {
+            $gte: weekStart.toISOString().split("T")[0],
+            $lt: weekEnd.toISOString().split("T")[0],
+          },
+        },
+        {
+          createdAt: {
+            $gte: weekStart,
+            $lt: weekEnd,
+          },
+        },
+      ],
+    },
+  };
+}
+
+function isMongoConnectionError(error) {
+  const message = error?.message || "";
+  return (
+    message.includes("MONGODB_URI") ||
+    message.includes("connect") ||
+    message.includes("MongoServerSelectionError") ||
+    message.includes("SSL routines") ||
+    message.includes("tlsv1 alert") ||
+    error?.code === "ECONNREFUSED"
+  );
+}
+
+// ─── Import articles from Google News RSS ────────────────────────────────────
+
+async function importWeeklyArticles(db) {
+  const { weekStart, query } = getCurrentWeekQuery();
+  const currentWeekCount = await db.collection("articles").countDocuments(query);
+  const remainingSlots = Math.max(0, WEEKLY_ARTICLE_TOTAL_LIMIT - currentWeekCount);
+
+  if (remainingSlots === 0) {
+    logInfo("Weekly article pool is full, skipping import", {
+      count: currentWeekCount,
+      limit: WEEKLY_ARTICLE_TOTAL_LIMIT,
+    });
+    return { imported: 0, skipped: 0, total: currentWeekCount };
+  }
+
+  // Fetch real articles from Google News RSS feeds
+  let fetched = [];
+  try {
+    fetched = await fetchGoogleNewsArticles(WEEKLY_ARTICLE_TOTAL_LIMIT);
+    logInfo(`Fetched ${fetched.length} articles from Google News RSS`);
+  } catch (error) {
+    logWarn("Google News RSS fetch failed, skipping import this run", {
+      error: error.message,
+    });
+    return { imported: 0, skipped: 0, total: currentWeekCount };
+  }
+
+  let imported = 0;
+  let skipped = 0;
+
+  for (const article of fetched) {
+    if (imported >= remainingSlots) {
+      skipped += 1;
+      continue;
+    }
+
+    const existing = await getArticleByUrl(db, article.url);
+    if (existing) {
+      skipped += 1;
+      continue;
+    }
+
+    await db.collection("articles").insertOne({
+      ...article,
+      digestWeekStart: weekStart,
+      weeklyRole: "archive",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    imported += 1;
+  }
+
+  return {
+    imported,
+    skipped,
+    total: currentWeekCount + imported,
+  };
+}
+
+// ─── Mark digest vs archive roles ────────────────────────────────────────────
+
+async function markWeeklyDigestRoles(db, digestResult) {
+  const { weekStart, query } = getCurrentWeekQuery();
+  const digestUrls = (digestResult?.topArticles || [])
+    .map((article) => article.url)
+    .filter(Boolean);
+
+  // All articles this week default to "archive"
+  await db.collection("articles").updateMany(query, {
+    $set: {
+      digestWeekStart: weekStart,
+      weeklyRole: "archive",
+      updatedAt: new Date(),
+    },
+  });
+
+  // Top 15 digest articles get "digest" role
+  if (digestUrls.length) {
+    await db.collection("articles").updateMany(
+      { url: { $in: digestUrls } },
+      {
+        $set: {
+          digestWeekStart: weekStart,
+          weeklyRole: "digest",
+          updatedAt: new Date(),
+        },
+      }
+    );
+  }
+}
+
+// ─── POST: full weekly refresh ────────────────────────────────────────────────
+
 /**
- * POST: Fetch new articles from RSS, import to DB, optionally generate summaries, update refresh timestamp.
- * GET: Return last refresh time for the insights page.
+ * POST /api/articles/refresh
+ *   • Fetches fresh articles from Google News RSS
+ *   • Inserts new articles into MongoDB (up to 30 per week)
+ *   • Picks top 15 for the weekly digest and generates Gemini summaries
+ *   • Publishes the weekly digest document
+ *
+ * GET /api/articles/refresh
+ *   • Returns timestamp and stats of the last completed refresh
  */
 export async function POST(req) {
   const startTime = Date.now();
@@ -25,25 +204,28 @@ export async function POST(req) {
     const authHeader = req.headers.get("authorization");
     const cronSecret = process.env.CRON_SECRET;
 
+    // Allow unauthenticated access in dev, or when DB is empty (first-run bootstrap)
     let allowPublicFetch = false;
     try {
       const db = await connectToDatabase();
       const articleCount = await db.collection("articles").countDocuments();
       allowPublicFetch = articleCount < 5;
-    } catch (e) {
+    } catch {
       allowPublicFetch = false;
     }
 
-    if (cronSecret) {
+    if (process.env.NODE_ENV === "development") {
+      // Development: always allow
+    } else if (cronSecret) {
       if (authHeader !== `Bearer ${cronSecret}`) {
         const { getServerSession } = await import("next-auth/next");
         const { authOptions } = await import("@/app/api/auth/[...nextauth]/route");
         const session = await getServerSession(authOptions);
         if (!session || (session.user.role !== "admin" && !allowPublicFetch)) {
-          return new Response(
-            JSON.stringify({ error: "Unauthorized" }),
-            { status: 401, headers: { "Content-Type": "application/json" } }
-          );
+          return new Response(JSON.stringify({ error: "Unauthorized" }), {
+            status: 401,
+            headers: { "Content-Type": "application/json" },
+          });
         }
       }
     } else if (!allowPublicFetch) {
@@ -51,165 +233,66 @@ export async function POST(req) {
       const { authOptions } = await import("@/app/api/auth/[...nextauth]/route");
       const session = await getServerSession(authOptions);
       if (!session || session.user.role !== "admin") {
-        return new Response(
-          JSON.stringify({ error: "Unauthorized" }),
-          { status: 401, headers: { "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        });
       }
     }
 
     const result = await queueRefreshRequest(async () => {
       const db = await connectToDatabase();
-      logInfo("Starting article refresh...");
+      logInfo("Starting article refresh from Google News RSS");
 
-      const backendDir = path.join(process.cwd(), "backend");
-      const scriptPath = path.join(backendDir, "fetch_finance_news.py");
+      // Ensure URL uniqueness index exists
+      await db.collection("articles").createIndex({ url: 1 }, { unique: true }).catch(() => {});
 
-      let fetchResult = { imported: 0, skipped: 0, total: 0 };
+      // 1. Pull fresh articles from RSS and persist new ones
+      const fetchResult = await importWeeklyArticles(db);
 
-      try {
-        if (!fs.existsSync(scriptPath)) {
-          logWarn("Fetch script not found; skipping fetch step", { scriptPath });
-        } else {
-          logInfo("Fetching articles from RSS...");
-          const { stdout, stderr } = await execAsync(
-            `python3 "${scriptPath}"`,
-            { cwd: backendDir }
-          );
-          if (stderr) logWarn("Python script warnings", { stderr });
-        }
+      // 2. Build / update the weekly digest document
+      await ensureWeeklyDigestIndexes(db);
+      let digestResult = await createOrUpdateWeeklyDigest(db, { status: "published" });
 
-        const dataDir = path.join(backendDir, "data");
-        if (fs.existsSync(dataDir)) {
-          const files = fs.readdirSync(dataDir)
-            .filter(f => f.startsWith("finance_news_") && f.endsWith(".json"))
-            .sort()
-            .reverse();
-
-          const recentFiles = files.slice(0, 7);
-          let totalImported = 0;
-          let totalSkipped = 0;
-
-          for (const file of recentFiles) {
-            const filePath = path.join(dataDir, file);
-            const fileContent = fs.readFileSync(filePath, "utf-8");
-            const articlesFromFile = JSON.parse(fileContent);
-
-            for (const article of articlesFromFile) {
-              const existing = await getArticleByUrl(db, article.url);
-              if (!existing) {
-                await createArticles(db, [article]);
-                totalImported++;
-              } else {
-                totalSkipped++;
-              }
-            }
-          }
-
-          fetchResult = {
-            imported: totalImported,
-            skipped: totalSkipped,
-            total: totalImported + totalSkipped,
-          };
-        }
-      } catch (error) {
-        logError("Error fetching articles", error);
-        throw new Error(`Failed to fetch articles: ${error.message}`);
-      }
-
+      // 3. Generate Gemini summaries for the 15 digest articles (skip if already summarised)
       let summariesGenerated = 0;
-      const geminiApiKey = process.env.GEMINI_API;
-      if (geminiApiKey && geminiApiKey !== "your_gemini_api_key_here" && fs.existsSync(backendDir)) {
-        try {
-          const articlesWithoutSummaries = await getArticles(db, {
-            hasSummary: false,
-            limit: 30,
-          });
+      const geminiApiKey = process.env.GEMINI_API || process.env.GEMINI_API_KEY;
 
-          if (articlesWithoutSummaries.length > 0) {
-            const pythonCmd = process.platform === "win32" ? "python" : "python3";
-            const scriptFile = path.join(backendDir, "temp_auto_summaries.py");
+      if (geminiApiKey && geminiApiKey !== "your_gemini_api_key_here") {
+        for (const article of digestResult.topArticles.slice(0, WEEKLY_DIGEST_ARTICLE_LIMIT)) {
+          if (!article.url) continue;
 
-            const pythonScript = `
-import sys
-import json
-import os
-from pathlib import Path
-from dotenv import load_dotenv
-import google.generativeai as genai
-
-env_paths = [Path('.env.local'), Path('..') / '.env.local', Path('../..') / '.env.local']
-api_key = os.environ.get('GEMINI_API')
-if not api_key:
-    for p in env_paths:
-        if p.exists():
-            load_dotenv(p)
-            api_key = os.getenv("GEMINI_API")
-            if api_key: break
-if not api_key:
-    print("ERROR: GEMINI_API not set", file=sys.stderr)
-    sys.exit(1)
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-2.0-flash')
-articles = json.loads(sys.stdin.read())
-results = []
-for article in articles:
-    title = article.get("title", "")
-    source = article.get("source", "Unknown")
-    date = article.get("date", "")
-    url = article.get("url", "")
-    try:
-        prompt = f"""You are a financial news analyst. Generate a concise 2-3 sentence summary.
-Title: {title}
-Source: {source}
-Date: {date}
-Summary:"""
-        response = model.generate_content(prompt)
-        summary = response.text.strip().replace('**', '').replace('*', '').strip()
-        if summary.startswith("Summary:"): summary = summary.replace("Summary:", "").strip()
-        if len(summary) < 20: summary = None
-        elif len(summary) > 500: summary = summary[:500] + "..."
-        results.append({"url": url, "summary": summary})
-    except Exception as e:
-        results.append({"url": url, "summary": None})
-print(json.dumps(results))
-`;
-            fs.writeFileSync(scriptFile, pythonScript, "utf-8");
-            try {
-              const articlesJson = JSON.stringify(articlesWithoutSummaries).replace(/'/g, "'\\''");
-              const { stdout, stderr } = await execAsync(
-                `echo '${articlesJson}' | ${pythonCmd} "${scriptFile}"`,
-                {
-                  cwd: backendDir,
-                  shell: true,
-                  maxBuffer: 10 * 1024 * 1024,
-                  env: { ...process.env, GEMINI_API: geminiApiKey },
-                }
-              );
-              if (stderr && !stderr.includes("INFO")) console.error("Summary script stderr:", stderr);
-              const results = JSON.parse(stdout);
-              for (const r of results) {
-                if (r.summary) {
-                  for (let attempt = 1; attempt <= 3; attempt++) {
-                    try {
-                      await updateArticleSummary(db, r.url, r.summary);
-                      summariesGenerated++;
-                      break;
-                    } catch (e) {
-                      if (attempt === 3) logError("Failed to update summary after retries", e, { url: r.url });
-                    }
-                  }
-                }
-              }
-            } finally {
-              if (fs.existsSync(scriptFile)) fs.unlinkSync(scriptFile);
-            }
+          const hasSummary = article.summary && article.summary.trim().length > 20;
+          if (hasSummary) {
+            summariesGenerated += 1;
+            continue;
           }
-        } catch (err) {
-          console.error("Auto-summary generation error:", err);
+
+          try {
+            const summary = await generateSummaryWithGemini({ apiKey: geminiApiKey, article });
+            if (summary) {
+              await updateArticleSummary(db, article.url, summary);
+              summariesGenerated += 1;
+              logInfo("Generated Gemini summary", { url: article.url });
+            }
+          } catch (error) {
+            logWarn("Summary generation failed for article", {
+              url: article.url,
+              error: error.message,
+            });
+          }
         }
+
+        // Re-build digest so it picks up the fresh summaries just written
+        digestResult = await createOrUpdateWeeklyDigest(db, { status: "published" });
+      } else {
+        logWarn("Gemini summaries skipped — GEMINI_API is not configured");
       }
 
+      // 4. Tag every current-week article as archive or digest
+      await markWeeklyDigestRoles(db, digestResult);
+
+      // 5. Write a refresh log entry
       const refreshTimestamp = new Date();
       try {
         await db.collection("refresh_logs").insertOne({
@@ -217,10 +300,13 @@ print(json.dumps(results))
           articlesImported: fetchResult.imported,
           articlesSkipped: fetchResult.skipped,
           summariesGenerated,
+          digestArticles: digestResult?.topArticles?.length || 0,
+          weeklyArticleLimit: WEEKLY_ARTICLE_TOTAL_LIMIT,
           duration: Date.now() - startTime,
+          source: "google-news-rss",
         });
       } catch (e) {
-        logError("Error logging refresh", e);
+        logError("Error writing refresh log", e);
       }
 
       logInfo("Refresh completed", {
@@ -228,6 +314,7 @@ print(json.dumps(results))
         imported: fetchResult.imported,
         skipped: fetchResult.skipped,
         summariesGenerated,
+        digestArticles: digestResult?.topArticles?.length || 0,
       });
 
       return {
@@ -237,6 +324,8 @@ print(json.dumps(results))
           articlesImported: fetchResult.imported,
           articlesSkipped: fetchResult.skipped,
           summariesGenerated,
+          digestArticles: digestResult?.topArticles?.length || 0,
+          weeklyArticleLimit: WEEKLY_ARTICLE_TOTAL_LIMIT,
           refreshTimestamp: refreshTimestamp.toISOString(),
           duration: Date.now() - startTime,
         },
@@ -260,7 +349,9 @@ print(json.dumps(results))
   }
 }
 
-export async function GET(req) {
+// ─── GET: last refresh info ───────────────────────────────────────────────────
+
+export async function GET() {
   try {
     const db = await connectToDatabase();
     const lastRefresh = await db
@@ -272,6 +363,7 @@ export async function GET(req) {
         lastRefresh: lastRefresh?.timestamp || null,
         articlesImported: lastRefresh?.articlesImported || 0,
         summariesGenerated: lastRefresh?.summariesGenerated || 0,
+        weeklyArticleLimit: lastRefresh?.weeklyArticleLimit || WEEKLY_ARTICLE_TOTAL_LIMIT,
       }),
       {
         status: 200,
@@ -283,18 +375,21 @@ export async function GET(req) {
     );
   } catch (error) {
     console.error("Error fetching refresh info:", error);
-    const isConnectionError = error.message?.includes("MONGODB_URI") ||
-                             error.message?.includes("connect") ||
-                             error.code === "ECONNREFUSED" ||
-                             error.message?.includes("MongoServerSelectionError");
-    if (isConnectionError) {
+    if (isMongoConnectionError(error)) {
       return new Response(
         JSON.stringify({
           lastRefresh: null,
           articlesImported: 0,
           summariesGenerated: 0,
+          weeklyArticleLimit: WEEKLY_ARTICLE_TOTAL_LIMIT,
         }),
-        { status: 200, headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=300" } }
+        {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "public, max-age=300",
+          },
+        }
       );
     }
     return new Response(

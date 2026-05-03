@@ -4,11 +4,11 @@ import { apiResponse, validators, withErrorHandler } from "@/lib/api-helpers";
 import logger from "@/lib/logger";
 import { EMAIL } from "@/lib/constants";
 
+// Lazily initialize so the build doesn't throw when env vars aren't available
 const mailgun = new Mailgun(formData);
-const mg = mailgun.client({
-  username: "api",
-  key: process.env.MAILGUN_API_KEY,
-});
+function getMailgunClient() {
+  return mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY });
+}
 
 const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN;
 
@@ -136,6 +136,7 @@ export const POST = withErrorHandler(async (req) => {
 
   const htmlContent = generateContactFormEmail({ name, email, subject, message });
 
+  const mg = getMailgunClient();
   await mg.messages.create(MAILGUN_DOMAIN, {
     from: EMAIL.CONTACT_FROM(MAILGUN_DOMAIN),
     to: EMAIL.CONTACT_TO,
