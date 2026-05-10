@@ -987,7 +987,7 @@ export default function ExecutiveApplicationsPage() {
           ) : (
             <>
               {/* Desktop Table */}
-              <div className="hidden lg:block overflow-x-auto scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
+              <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-800/50 border-b border-gray-700/50">
                     <tr>
@@ -1163,7 +1163,7 @@ export default function ExecutiveApplicationsPage() {
           onClick={closeDeleteModal}
         >
           <div
-            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
@@ -1231,7 +1231,7 @@ export default function ExecutiveApplicationsPage() {
           onClick={closeDetailsModal}
         >
           <div
-            className="bg-gray-900/95 border border-gray-700/50 rounded-2xl p-6 sm:p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+            className="bg-gray-900/95 border border-gray-700/50 rounded-2xl p-6 sm:p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-slideInUp"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -1690,7 +1690,7 @@ export default function ExecutiveApplicationsPage() {
           onClick={closeAddRoleModal}
         >
           <div
-            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
@@ -1821,7 +1821,7 @@ export default function ExecutiveApplicationsPage() {
           onClick={closeEditRoleModal}
         >
           <div
-            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
@@ -1952,7 +1952,7 @@ export default function ExecutiveApplicationsPage() {
           onClick={closeDeleteRoleModal}
         >
           <div
-            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
@@ -2017,7 +2017,7 @@ export default function ExecutiveApplicationsPage() {
           onClick={closeRoleQuestionModal}
         >
           <div
-            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-2xl w-full mx-4 animate-slideInUp scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-2xl w-full mx-4 animate-slideInUp"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">

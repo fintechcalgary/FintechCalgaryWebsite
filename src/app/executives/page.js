@@ -40,10 +40,11 @@ async function getExecutives() {
 export const metadata = {
   title: "Executives | FinTech Calgary",
   description:
-    "Meet the dedicated executives and team members of FinTech Calgary - Calgary's Premier FinTech Community",
+    "Executives and program leads behind FinTech Calgary — Calgary's premier FinTech community.",
   openGraph: {
     title: "Executives | FinTech Calgary",
-    description: "Meet our dedicated team of executives and leaders",
+    description:
+      "Leadership across programs, partnerships, and community initiatives.",
   },
 };
 
@@ -85,7 +86,7 @@ export default async function ExecutivesPage() {
                 Meet Our Executives
               </h1>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Our dedicated team is here to make a difference.
+                Leadership across programs, partnerships, and community initiatives.
               </p>
             </div>
 

@@ -77,7 +77,7 @@ export default function PortalModal({
               )}
 
               {/* Content */}
-              <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80">
+              <div className="flex-1 overflow-y-auto">
                 {children}
               </div>
             </div>

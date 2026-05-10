@@ -333,7 +333,7 @@ export default function Events({ mode }) {
                       description: e.target.value,
                     })
                   }
-                  className="form-input min-h-[80px] scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+                  className="form-input min-h-[80px]"
                   required
                 />
               </div>
@@ -392,7 +392,7 @@ export default function Events({ mode }) {
 
                 {formData.images.length > 0 && (
                   <div className="relative">
-                    <div className="flex gap-4 overflow-x-auto pt-3 pb-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900/50">
+                    <div className="flex gap-4 overflow-x-auto pt-3 pb-4">
                       {formData.images.map((imageUrl, index) => (
                         <div
                           key={index}

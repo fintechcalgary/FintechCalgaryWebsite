@@ -491,7 +491,7 @@ export default function Executives() {
                         })
                       }
                       rows={7}
-                      className="form-input scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80"
+                      className="form-input"
                     />
                   </div>
                 </div>

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiMessageCircle, FiX, FiSend, FiZap, FiMinimize2, FiMaximize2, FiTrendingUp, FiBook, FiBriefcase, FiTarget, FiBarChart2, FiRefreshCw, FiAlertTriangle, FiInfo } from "react-icons/fi";
+import { FiMessageCircle, FiSend, FiZap, FiMinimize2, FiTrendingUp, FiBook, FiBriefcase, FiTarget, FiBarChart2, FiRefreshCw, FiAlertTriangle, FiInfo } from "react-icons/fi";
 import { useChatBot } from "@/contexts/ChatBotContext";
 import { useRateLimit } from "@/hooks/useRateLimit";
 import { CostTracker } from "@/lib/costTracker";
@@ -260,10 +260,11 @@ export default function FinTechChatBot({ articles = [] }) {
     <>
       {!isOpen && (
         <motion.button
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          whileHover={{ scale: 1.05, rotate: 5 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          whileHover={{ y: -2 }}
           whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.18, ease: "easeOut" }}
           onClick={() => {
             setIsOpen(true);
             setContextIsOpen(true);
@@ -280,10 +281,10 @@ export default function FinTechChatBot({ articles = [] }) {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95, rotateX: -10 }}
-            animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
             className={`fixed ${
               isMinimized ? "bottom-8 right-8 w-80 h-20" : "bottom-8 right-8 w-[420px] h-[680px]"
             } bg-gradient-to-br from-gray-900 via-gray-900 to-gray-950/95 backdrop-blur-xl rounded-2xl border border-primary/20 shadow-2xl z-50 flex flex-col overflow-hidden`}
@@ -307,26 +308,15 @@ export default function FinTechChatBot({ articles = [] }) {
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => {
-                    const newMinimized = !isMinimized;
-                    setIsMinimized(newMinimized);
-                    setContextIsMinimized(newMinimized);
-                  }}
-                  className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200 text-gray-400 hover:text-primary hover:scale-110"
-                  title={isMinimized ? "Maximize" : "Minimize"}
-                >
-                  {isMinimized ? <FiMaximize2 className="w-4 h-4" /> : <FiMinimize2 className="w-4 h-4" />}
-                </button>
-                <button
-                  onClick={() => {
                     setIsOpen(false);
                     setIsMinimized(false);
                     setContextIsOpen(false);
                     setContextIsMinimized(false);
                   }}
-                  className="p-2 hover:bg-red-500/20 rounded-xl transition-all duration-200 text-gray-400 hover:text-red-400 hover:scale-110"
+                  className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200 text-gray-400 hover:text-primary hover:scale-110"
                   title="Close"
                 >
-                  <FiX className="w-4 h-4" />
+                  <FiMinimize2 className="w-4 h-4" />
                 </button>
               </div>
             </div>

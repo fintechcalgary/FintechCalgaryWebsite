@@ -216,7 +216,10 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
             </div>
 
             {/* ── Body ── */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto">
+            <div
+              ref={scrollRef}
+              className="flex-1 overflow-y-auto"
+            >
               <div className="flex flex-col lg:flex-row gap-0 h-full">
 
                 {/* Left — article list */}

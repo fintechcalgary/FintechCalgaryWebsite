@@ -2,15 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  /* One scrollbar style for all scroll containers (overflow auto/scroll) */
+  * {
+    @apply scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80;
+  }
+}
+
 :root {
   --background: #171717;
   --foreground: #ededed;
   font-size: 90%;
 }
 
-/* Add these new styles */
 html {
-  @apply scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80;
   overscroll-behavior: none;
 }
 
@@ -31,8 +36,7 @@ select {
     text-white placeholder-gray-400
     focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary
     transition-all duration-200
-    shadow-sm shadow-black/10
-    scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80;
+    shadow-sm shadow-black/10;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -79,7 +83,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .form-input {
-  @apply w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80;
+  @apply w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all;
 }
 
 /* Safari-specific input resets */
