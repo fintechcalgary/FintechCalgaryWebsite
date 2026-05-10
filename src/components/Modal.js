@@ -1,5 +1,8 @@
+"use client";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { FiAlertCircle, FiCheckCircle, FiInfo, FiX } from "react-icons/fi";
+import { useModalBodyEffects } from "@/hooks/useModalBodyEffects";
 
 export default function Modal({
   isOpen,
@@ -12,6 +15,8 @@ export default function Modal({
   showCancel = true,
   type = "info",
 }) {
+  useModalBodyEffects(isOpen, onClose);
+
   const getTypeStyles = () => {
     switch (type) {
       case "danger":

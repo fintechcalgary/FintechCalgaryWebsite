@@ -7,7 +7,6 @@ import {
   FiMapPin,
   FiArrowLeft,
   FiUsers,
-  FiExternalLink,
 } from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
@@ -58,7 +57,7 @@ export async function generateMetadata({ params }) {
         images: event.imageUrl ? [event.imageUrl] : [],
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: "Event | FinTech Calgary",
       description: "FinTech Calgary Event",
@@ -128,12 +127,6 @@ export default async function EventPage({ params }) {
         </main>
       );
     }
-
-    // Convert ObjectId to string for client-side use
-    const eventData = {
-      ...event,
-      _id: event._id.toString(),
-    };
 
     const currentDate = new Date();
     const normalizedCurrentDate = new Date(

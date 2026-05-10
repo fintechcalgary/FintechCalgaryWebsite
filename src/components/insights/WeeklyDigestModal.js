@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useMemo } from "react";
+import { useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FiX,
   FiExternalLink,
-  FiTrendingUp,
-  FiTrendingDown,
-  FiMinus,
   FiZap,
   FiCalendar,
   FiGlobe,
   FiMessageCircle,
 } from "react-icons/fi";
 import { useChatBot } from "@/contexts/ChatBotContext";
+import { useModalBodyEffects } from "@/hooks/useModalBodyEffects";
+import FramerModalBackdrop from "@/components/ui/FramerModalBackdrop";
+import { CompactSentimentBar } from "@/components/insights/SentimentBars";
 
 function getIssueNumber(weekStart) {
   if (!weekStart) return null;
@@ -32,42 +32,11 @@ function formatWeekRange(weekStart, weekEnd) {
     : fmt(weekStart);
 }
 
-function SentimentBar({ label, value, total, colorClass, bgClass }) {
-  const pct = total > 0 ? Math.round((value / total) * 100) : 0;
-  return (
-    <div>
-      <div className="flex justify-between text-xs mb-1">
-        <span className={colorClass}>{label}</span>
-        <span className="text-gray-400">{pct}%</span>
-      </div>
-      <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className={`h-full rounded-full ${bgClass}`}
-        />
-      </div>
-    </div>
-  );
-}
-
 export default function WeeklyDigestModal({ isOpen, onClose, articles = [], weekStart, weekEnd, stats = null }) {
   const scrollRef = useRef(null);
   const { setIsOpen: setChatOpen } = useChatBot();
 
-  // Close on Escape
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === "Escape") onClose(); };
-    if (isOpen) document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [isOpen, onClose]);
-
-  // Lock body scroll when open
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [isOpen]);
+  useModalBodyEffects(isOpen, onClose);
 
   const issueNumber = getIssueNumber(weekStart);
   const weekRange = formatWeekRange(weekStart, weekEnd);
@@ -122,15 +91,10 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
-          <motion.div
-            key="backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
+          <FramerModalBackdrop
+            motionKey="backdrop"
+            onClose={onClose}
+            className="bg-black/70 backdrop-blur-sm"
           />
 
           {/* Modal */}
@@ -247,21 +211,21 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
                         Market Sentiment
                       </h4>
                       <div className="space-y-3">
-                        <SentimentBar
+                        <CompactSentimentBar
                           label="Positive"
                           value={sentiment.positive}
                           total={sentiment.total}
                           colorClass="text-green-400"
                           bgClass="bg-gradient-to-r from-green-500 to-emerald-400"
                         />
-                        <SentimentBar
+                        <CompactSentimentBar
                           label="Neutral"
                           value={sentiment.neutral}
                           total={sentiment.total}
                           colorClass="text-gray-400"
                           bgClass="bg-gray-500"
                         />
-                        <SentimentBar
+                        <CompactSentimentBar
                           label="Negative"
                           value={sentiment.negative}
                           total={sentiment.total}
@@ -287,7 +251,7 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
                   {topics.length > 0 && (
                     <div>
                       <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                        This Week's Topics
+                        This Week&apos;s Topics
                       </h4>
                       <div className="flex flex-wrap gap-1.5">
                         {topics.map(({ topic, count }, i) => (
@@ -315,11 +279,11 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
                       <span className="text-sm font-semibold text-white">Ask the Digest</span>
                     </div>
                     <p className="text-xs text-gray-400 mb-3 leading-relaxed">
-                      Chat with AI about this week's stories — ask questions, get deeper analysis.
+                      Chat with AI about this week&apos;s stories — ask questions, get deeper analysis.
                     </p>
                     <button
                       onClick={handleOpenChat}
-                      className="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-primary to-purple-600 text-white text-xs font-semibold hover:opacity-90 transition-opacity"
+                      className="fc-btn-gradient-primary w-full px-3 py-2 text-xs font-semibold hover:opacity-90"
                     >
                       Open AI Chat →
                     </button>

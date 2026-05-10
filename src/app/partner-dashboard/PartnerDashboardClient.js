@@ -54,9 +54,6 @@ export default function PartnerDashboardClient() {
     aboutUs: "",
   });
   const [submitting, setSubmitting] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [isDragOver, setIsDragOver] = useState(false);
-  const [fileError, setFileError] = useState(null);
   const [errors, setErrors] = useState({});
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const { data: session, status } = useSession();
@@ -95,7 +92,6 @@ export default function PartnerDashboardClient() {
           if (response.ok) {
             const data = await response.json();
             setMemberData(data);
-            setPreviewUrl(data.logo);
           } else if (response.status === 401) {
             router.push("/login");
           }
@@ -162,8 +158,6 @@ export default function PartnerDashboardClient() {
       aboutUs: "",
     });
     setShowEditModal(false);
-    setPreviewUrl(memberData?.logo);
-    setFileError(null);
     setErrors({});
   };
 
@@ -208,75 +202,6 @@ export default function PartnerDashboardClient() {
       });
     } finally {
       setSubmitting(false);
-    }
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      handleFile(file);
-    }
-  };
-
-  const handleFile = (file) => {
-    setFileError(null);
-
-    const allowedTypes = [
-      "image/jpeg",
-      "image/jpg",
-      "image/png",
-      "image/svg+xml",
-    ];
-    const fileExtension = file.name.toLowerCase().split(".").pop();
-    const allowedExtensions = ["jpg", "jpeg", "png", "svg"];
-
-    if (
-      !allowedTypes.includes(file.type) &&
-      !allowedExtensions.includes(fileExtension)
-    ) {
-      setFileError("Please upload a logo in JPG, PNG, or SVG format only.");
-      return;
-    }
-
-    if (
-      file &&
-      (file.type.startsWith("image/") || file.type === "image/svg+xml")
-    ) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(true);
-  };
-
-  const handleDragEnter = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(false);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(false);
-
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      const file = files[0];
-      handleFile(file);
     }
   };
 

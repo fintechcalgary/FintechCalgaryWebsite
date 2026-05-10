@@ -1,5 +1,5 @@
 import EventCard from "./EventCard";
-import { FiCalendar, FiVideo } from "react-icons/fi";
+import { FiVideo } from "react-icons/fi";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -45,7 +45,7 @@ export default function Webinars({ events }) {
                 />
 
                 <div className="relative">
-                  <EventCard event={event} index={index} />
+                  <EventCard event={event} />
                 </div>
               </div>
             ))}

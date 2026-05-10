@@ -6,7 +6,7 @@
     "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --max-warnings 0",
     "seed-admin": "node src/scripts/seed-admin.js",
     "seed-partners": "node src/scripts/seed-partners.js",
     "upload-partner-logos": "node src/scripts/upload-partner-logos.js"

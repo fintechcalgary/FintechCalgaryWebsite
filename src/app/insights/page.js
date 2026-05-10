@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
 import useSWR from "swr";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 import FinTechChatBot from "@/components/insights/FinTechChatBot";
 import WeeklyDigestModal from "@/components/insights/WeeklyDigestModal";
 import ArticleDetailModal from "@/components/insights/ArticleDetailModal";
+import { OverviewSentimentBar } from "@/components/insights/SentimentBars";
 import { ChatBotProvider, useChatBot } from "@/contexts/ChatBotContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Link from "next/link";
@@ -70,7 +71,7 @@ const extractReadableSource = (article) => {
     if (!/news\.google\.com/i.test(urlObj.hostname)) {
       return cleanDomain(urlObj.hostname);
     }
-  } catch (e) {}
+  } catch {}
 
   const titleSource = normalizeTitleSource(article?.title);
   return titleSource || "UNKNOWN SOURCE";
@@ -86,14 +87,10 @@ const fetcher = async (url) => {
 };
 
 function InsightsPageContent() {
-  const pendingArticlesRequest = useRef(null);
-  const pendingRefreshRequest = useRef(null);
-
   const {
     data: weeklyDigestData,
     error: articlesError,
     isLoading: articlesLoading,
-    mutate: mutateArticles,
   } = useSWR("/api/insights/current", fetcher, {
     refreshInterval: 15 * 60 * 1000,
     revalidateOnFocus: false,
@@ -130,7 +127,7 @@ function InsightsPageContent() {
     shouldRetryOnError: false,
   });
 
-  const { data: refreshData, mutate: mutateRefresh } = useSWR(
+  const { data: refreshData } = useSWR(
     "/api/articles/refresh",
     fetcher,
     {
@@ -157,7 +154,6 @@ function InsightsPageContent() {
         : [],
     [weeklyDigestData?.articles],
   );
-  const stats = statsData?.overall || null;
   const weeklyStats = weeklyDigestData?.stats || null;
   const lastRefresh = refreshData?.lastRefresh
     ? new Date(refreshData.lastRefresh)
@@ -471,7 +467,7 @@ function InsightsPageContent() {
                       <div className="w-5 h-5 rounded-md bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center flex-shrink-0">
                         <FiFileText className="w-3 h-3 text-white" />
                       </div>
-                      <span>This Week's Full Digest</span>
+                      <span>This Week&apos;s Full Digest</span>
                       <span className="px-1.5 py-0.5 rounded bg-primary/20 border border-primary/30 text-primary text-[10px] font-semibold">
                         {articles.length} stories
                       </span>
@@ -505,7 +501,7 @@ function InsightsPageContent() {
                         <FiTrendingUp className="w-5 h-5 text-primary" />
                       </div>
                       <h2 className="text-2xl font-bold text-white">
-                        This Week's Top Stories
+                        This Week&apos;s Top Stories
                       </h2>
                     </div>
                     <Link
@@ -678,19 +674,19 @@ function InsightsPageContent() {
                   <div className="flex-1 flex flex-col min-h-0 justify-center">
                     {sentimentData.total > 0 ? (
                       <div className="space-y-4">
-                        <SentimentBar
+                        <OverviewSentimentBar
                           label="Positive"
                           value={sentimentData.positive}
                           total={sentimentData.total}
                           color="green"
                         />
-                        <SentimentBar
+                        <OverviewSentimentBar
                           label="Neutral"
                           value={sentimentData.neutral}
                           total={sentimentData.total}
                           color="gray"
                         />
-                        <SentimentBar
+                        <OverviewSentimentBar
                           label="Negative"
                           value={sentimentData.negative}
                           total={sentimentData.total}
@@ -699,19 +695,19 @@ function InsightsPageContent() {
                       </div>
                     ) : (
                       <div className="space-y-4">
-                        <SentimentBar
+                        <OverviewSentimentBar
                           label="Positive"
                           value={0}
                           total={1}
                           color="green"
                         />
-                        <SentimentBar
+                        <OverviewSentimentBar
                           label="Neutral"
                           value={0}
                           total={1}
                           color="gray"
                         />
-                        <SentimentBar
+                        <OverviewSentimentBar
                           label="Negative"
                           value={0}
                           total={1}
@@ -741,7 +737,7 @@ function InsightsPageContent() {
                     </p>
                     <Link
                       href="/articles"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-primary to-purple-600 text-white text-sm font-medium hover:shadow-xl hover:shadow-primary/30 transition-all"
+                      className="fc-btn-gradient-primary px-5 py-2.5"
                     >
                       Browse All Articles
                       <FiArrowRight className="w-4 h-4" />
@@ -959,7 +955,7 @@ function FeaturedArticleCardInner({ article, featured = false, onReadMore }) {
             <div className="flex items-center gap-2 text-xs text-primary mt-2 flex-shrink-0">
               <button
                 onClick={(e) => onReadMore(e, article, summary)}
-                className="flex items-center gap-2 text-primary bg-gradient-to-r from-primary/10 to-purple-500/10 border border-primary/30 hover:border-primary/50 hover:bg-gradient-to-r hover:from-primary/20 hover:to-purple-500/20 px-3 py-1.5 rounded-lg transition-all duration-200 cursor-pointer hover:shadow-lg hover:shadow-primary/20 hover:scale-105 self-start"
+                className="fc-btn-read-more-subtle"
               >
                 <span>Read more</span>
                 <FiArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
@@ -983,47 +979,6 @@ function InsightCard({ title, description, icon: Icon, color }) {
       <div className="flex-1 min-w-0">
         <h4 className="font-semibold text-white mb-1">{title}</h4>
         <p className="text-sm text-gray-300 leading-relaxed">{description}</p>
-      </div>
-    </div>
-  );
-}
-
-function SentimentBar({ label, value, total, color }) {
-  const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-  const colorClasses = {
-    green: "bg-green-500/20 border-green-500/30 text-green-400",
-    gray: "bg-gray-500/20 border-gray-500/30 text-gray-400",
-    red: "bg-red-500/20 border-red-500/30 text-red-400",
-  };
-
-  return (
-    <div className="w-full">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-300">{label}</span>
-        <div className="flex items-center gap-2">
-          <span
-            className={`text-xs px-2.5 py-1 rounded-md border font-medium ${colorClasses[color]}`}
-          >
-            {value}
-          </span>
-          {total > 0 && (
-            <span className="text-xs text-gray-500">{percentage}%</span>
-          )}
-        </div>
-      </div>
-      <div className="h-2.5 bg-gray-800/50 rounded-full overflow-hidden">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${percentage}%` }}
-          transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
-          className={`h-full ${
-            color === "green"
-              ? "bg-gradient-to-r from-green-500 to-emerald-500"
-              : color === "red"
-                ? "bg-gradient-to-r from-red-500 to-rose-500"
-                : "bg-gradient-to-r from-gray-500 to-gray-400"
-          } rounded-full shadow-sm`}
-        />
       </div>
     </div>
   );

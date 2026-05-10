@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-export default function EventCard({ event, index }) {
+export default function EventCard({ event }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = event.images?.length > 0 ? event.images : [event.imageUrl];
 

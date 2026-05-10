@@ -4,7 +4,7 @@ import { getArticles } from "@/lib/models/article";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(req) {
+export async function POST(_req) {
   try {
     const db = await connectToDatabase();
     

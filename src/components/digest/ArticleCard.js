@@ -46,11 +46,6 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
     });
   };
 
-  const formatTime = (timeString) => {
-    if (!timeString) return "";
-    return timeString;
-  };
-
   const handleGenerateSummary = async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -81,7 +76,7 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
       let responseData;
       try {
         responseData = responseText ? JSON.parse(responseText) : {};
-      } catch (e) {
+      } catch {
         responseData = { error: responseText || "Invalid JSON response" };
       }
 
@@ -143,7 +138,7 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
                 clearInterval(pollInterval);
               }
             }
-          } catch (error) {
+          } catch {
             setSummaryError("Error checking for summary.");
             setIsGeneratingSummary(false);
             clearInterval(pollInterval);
@@ -194,6 +189,7 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
       <div className={`relative z-10 ${isListView ? 'flex-1 flex flex-row gap-4 min-h-[198px]' : 'min-h-[252px]'} p-5`}>
         {isListView && article.imageUrl && (
           <div className="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element -- remote article URLs are arbitrary */}
             <img
               src={article.imageUrl}
               alt={article.title}
@@ -270,6 +266,7 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
 
           {!isListView && article.imageUrl && (
             <div className="mb-3 rounded-lg overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element -- remote article URLs are arbitrary */}
               <img
                 src={article.imageUrl}
                 alt={article.title}

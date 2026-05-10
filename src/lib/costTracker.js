@@ -47,7 +47,7 @@ export class CostTracker {
         }
         return data;
       }
-    } catch (e) {}
+    } catch {}
     return { 
       month: new Date().toISOString().slice(0, 7), 
       chatRequests: 0, 
@@ -59,7 +59,7 @@ export class CostTracker {
   saveUsage() {
     try {
       localStorage.setItem('gemini_usage_tracking', JSON.stringify(this.usage));
-    } catch (e) {}
+    } catch {}
   }
 
   trackChatRequest() {

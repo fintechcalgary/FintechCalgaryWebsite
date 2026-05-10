@@ -627,7 +627,7 @@ export default function ExecutiveApplicationPage() {
                       (selectedRoleQuestions.length > 0
                         ? selectedRoleQuestions
                         : applicationQuestions
-                      ).map((question, index) => (
+                      ).map((question) => (
                         <div key={question.id} className="flex gap-x-2 mb-2">
                           <div className="w-full">
                             <label

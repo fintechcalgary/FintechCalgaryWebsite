@@ -23,7 +23,7 @@ export const GET = withErrorHandler(async (req, context) => {
 });
 
 export const PUT = withErrorHandler(async (req, context) => {
-  const { session, error } = await requireAuth();
+  const { error } = await requireAuth();
   if (error) return error;
 
   const { eventId } = await context.params;
@@ -37,7 +37,7 @@ export const PUT = withErrorHandler(async (req, context) => {
 });
 
 export const DELETE = withErrorHandler(async (req, context) => {
-  const { session, error } = await requireAuth();
+  const { error } = await requireAuth();
   if (error) return error;
 
   const { eventId } = await context.params;

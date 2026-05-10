@@ -74,6 +74,7 @@ export default function FinTechChatBot({ articles = [] }) {
 
       setSelectedArticle(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot handoff; sendQuickAction changes every render
   }, [selectedArticle, contextIsOpen]);
 
   useEffect(() => {

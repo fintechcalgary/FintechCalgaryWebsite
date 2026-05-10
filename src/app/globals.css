@@ -2,6 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Shared dashboard modal shell (see DashboardCenterModal) */
+@layer components {
+  .fc-dashboard-modal-backdrop {
+    @apply fixed inset-0 z-50 flex animate-fadeIn items-center justify-center bg-black/50 p-4 backdrop-blur-sm;
+  }
+
+  .fc-dashboard-modal-panel {
+    @apply mx-4 w-full animate-slideInUp border border-gray-700/50 bg-gray-900/95;
+  }
+
+  /* Icon-only close control inside modals (dashboard forms, etc.) */
+  .fc-modal-icon-close {
+    @apply rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800/50 hover:text-white;
+  }
+
+  /* Dashboard form dialogs — secondary / cancel */
+  .fc-btn-dashboard-cancel {
+    @apply flex-1 rounded-lg border border-gray-600/50 bg-gray-700/50 px-4 py-2 text-sm text-white transition-all duration-300 hover:bg-gray-600/50;
+  }
+
+  /* Primary gradient CTA (add padding with px-* py-* on the element) */
+  .fc-btn-gradient-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-primary to-purple-600 text-sm font-medium text-white transition-all hover:shadow-xl hover:shadow-primary/30;
+  }
+
+  /* Insights “Read more” on card hover overlay */
+  .fc-btn-read-more-subtle {
+    @apply flex cursor-pointer items-center gap-2 self-start rounded-lg border border-primary/30 bg-gradient-to-r from-primary/10 to-purple-500/10 px-3 py-1.5 text-primary transition-all duration-200 hover:scale-105 hover:border-primary/50 hover:bg-gradient-to-r hover:from-primary/20 hover:to-purple-500/20 hover:shadow-lg hover:shadow-primary/20;
+  }
+}
+
 @layer base {
   /* One scrollbar style for all scroll containers (overflow auto/scroll) */
   * {

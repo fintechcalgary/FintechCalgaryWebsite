@@ -1,10 +1,7 @@
 import Link from "next/link";
 import { FiArrowRight, FiUsers, FiCode, FiTrendingUp } from "react-icons/fi";
-import { useState } from "react";
 
 const FeatureCard = ({ feature, index }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
   const getColorClasses = (idx) => {
     if (idx === 0) {
       return {
@@ -34,8 +31,6 @@ const FeatureCard = ({ feature, index }) => {
 
   return (
     <div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       className="group relative p-8 rounded-2xl border border-gray-800/50 
                  bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-sm
                  hover:border-primary/30 transition-all duration-500"

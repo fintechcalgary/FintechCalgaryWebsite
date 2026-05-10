@@ -3,11 +3,8 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import {
   FiImage,
-  FiDownload,
-  FiTrash2,
   FiArrowLeft,
   FiPlus,
   FiEdit2,

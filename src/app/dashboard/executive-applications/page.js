@@ -16,6 +16,7 @@ import {
   FiUpload,
 } from "react-icons/fi";
 import Image from "next/image";
+import DashboardCenterModal from "@/components/ui/DashboardCenterModal";
 
 export default function ExecutiveApplicationsPage() {
   const { data: session, status } = useSession();
@@ -110,7 +111,7 @@ export default function ExecutiveApplicationsPage() {
       const data = await res.json();
       setExecutiveApplicationsOpen(!!data.executiveApplicationsOpen);
       setSettingsLoading(false);
-    } catch (err) {
+    } catch {
       setSettingsError("Failed to load settings");
       setSettingsLoading(false);
     }
@@ -367,7 +368,7 @@ export default function ExecutiveApplicationsPage() {
       });
       if (!res.ok) throw new Error("Failed to update");
       setExecutiveApplicationsOpen((prev) => !prev);
-    } catch (err) {
+    } catch {
       setSettingsError("Failed to update setting");
     } finally {
       setSettingsLoading(false);
@@ -1157,22 +1158,18 @@ export default function ExecutiveApplicationsPage() {
       </main>
 
       {/* Delete Confirmation Modal */}
-      {showDeleteModal && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4"
-          onClick={closeDeleteModal}
-        >
-          <div
-            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp"
-            onClick={(e) => e.stopPropagation()}
-          >
+      <DashboardCenterModal
+        isOpen={showDeleteModal}
+        onClose={closeDeleteModal}
+        size="sm"
+      >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Delete Application
               </h3>
               <button
                 onClick={closeDeleteModal}
-                className="text-gray-400 hover:text-white transition-colors p-1"
+                className="fc-modal-icon-close"
               >
                 <FiX className="w-5 h-5" />
               </button>
@@ -1205,7 +1202,7 @@ export default function ExecutiveApplicationsPage() {
             <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={closeDeleteModal}
-                className="flex-1 px-4 py-2 rounded-lg bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300 text-sm"
+                className="fc-btn-dashboard-cancel"
               >
                 Cancel
               </button>
@@ -1220,20 +1217,14 @@ export default function ExecutiveApplicationsPage() {
                   : "Delete"}
               </button>
             </div>
-          </div>
-        </div>
-      )}
+      </DashboardCenterModal>
 
       {/* Application Details Modal */}
-      {showDetailsModal && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4"
-          onClick={closeDetailsModal}
-        >
-          <div
-            className="bg-gray-900/95 border border-gray-700/50 rounded-2xl p-6 sm:p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-slideInUp"
-            onClick={(e) => e.stopPropagation()}
-          >
+      <DashboardCenterModal
+        isOpen={showDetailsModal}
+        onClose={closeDetailsModal}
+        size="lg"
+      >
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
@@ -1251,7 +1242,7 @@ export default function ExecutiveApplicationsPage() {
               </div>
               <button
                 onClick={closeDetailsModal}
-                className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800/50 rounded-lg"
+                className="fc-modal-icon-close"
               >
                 <FiX className="w-5 h-5" />
               </button>
@@ -1560,7 +1551,7 @@ export default function ExecutiveApplicationsPage() {
                     const questionsToShow = selectedRole?.questions || [];
 
                     return questionsToShow.length > 0 ? (
-                      questionsToShow.map((question, index) => (
+                      questionsToShow.map((question) => (
                         <div
                           key={question.id}
                           className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6"
@@ -1679,27 +1670,21 @@ export default function ExecutiveApplicationsPage() {
                 Close
               </button>
             </div>
-          </div>
-        </div>
-      )}
+      </DashboardCenterModal>
 
       {/* Add Role Modal */}
-      {showAddRoleModal && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4"
-          onClick={closeAddRoleModal}
-        >
-          <div
-            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp"
-            onClick={(e) => e.stopPropagation()}
-          >
+      <DashboardCenterModal
+        isOpen={showAddRoleModal}
+        onClose={closeAddRoleModal}
+        size="sm"
+      >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Add Executive Role
               </h3>
               <button
                 onClick={closeAddRoleModal}
-                className="text-gray-400 hover:text-white transition-colors p-1"
+                className="fc-modal-icon-close"
               >
                 <FiX className="w-5 h-5" />
               </button>
@@ -1791,7 +1776,7 @@ export default function ExecutiveApplicationsPage() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={closeAddRoleModal}
-                className="flex-1 px-4 py-2 rounded-lg bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300 text-sm"
+                className="fc-btn-dashboard-cancel"
               >
                 Cancel
               </button>
@@ -1810,27 +1795,21 @@ export default function ExecutiveApplicationsPage() {
                 )}
               </button>
             </div>
-          </div>
-        </div>
-      )}
+      </DashboardCenterModal>
 
       {/* Edit Role Modal */}
-      {showEditRoleModal && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4"
-          onClick={closeEditRoleModal}
-        >
-          <div
-            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp"
-            onClick={(e) => e.stopPropagation()}
-          >
+      <DashboardCenterModal
+        isOpen={showEditRoleModal}
+        onClose={closeEditRoleModal}
+        size="sm"
+      >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Edit Executive Role
               </h3>
               <button
                 onClick={closeEditRoleModal}
-                className="text-gray-400 hover:text-white transition-colors p-1"
+                className="fc-modal-icon-close"
               >
                 <FiX className="w-5 h-5" />
               </button>
@@ -1922,7 +1901,7 @@ export default function ExecutiveApplicationsPage() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={closeEditRoleModal}
-                className="flex-1 px-4 py-2 rounded-lg bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300 text-sm"
+                className="fc-btn-dashboard-cancel"
               >
                 Cancel
               </button>
@@ -1941,27 +1920,21 @@ export default function ExecutiveApplicationsPage() {
                 )}
               </button>
             </div>
-          </div>
-        </div>
-      )}
+      </DashboardCenterModal>
 
       {/* Delete Role Modal */}
-      {showDeleteRoleModal && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4"
-          onClick={closeDeleteRoleModal}
-        >
-          <div
-            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-slideInUp"
-            onClick={(e) => e.stopPropagation()}
-          >
+      <DashboardCenterModal
+        isOpen={showDeleteRoleModal}
+        onClose={closeDeleteRoleModal}
+        size="sm"
+      >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Delete Role
               </h3>
               <button
                 onClick={closeDeleteRoleModal}
-                className="text-gray-400 hover:text-white transition-colors p-1"
+                className="fc-modal-icon-close"
               >
                 <FiX className="w-5 h-5" />
               </button>
@@ -1994,7 +1967,7 @@ export default function ExecutiveApplicationsPage() {
             <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={closeDeleteRoleModal}
-                className="flex-1 px-4 py-2 rounded-lg bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300 text-sm"
+                className="fc-btn-dashboard-cancel"
               >
                 Cancel
               </button>
@@ -2006,20 +1979,14 @@ export default function ExecutiveApplicationsPage() {
                 Delete Role
               </button>
             </div>
-          </div>
-        </div>
-      )}
+      </DashboardCenterModal>
 
       {/* Role Question Modal */}
-      {showRoleQuestionModal && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn p-4"
-          onClick={closeRoleQuestionModal}
-        >
-          <div
-            className="bg-gray-900/95 border border-gray-700/50 rounded-xl p-4 sm:p-6 max-w-2xl w-full mx-4 animate-slideInUp"
-            onClick={(e) => e.stopPropagation()}
-          >
+      <DashboardCenterModal
+        isOpen={showRoleQuestionModal}
+        onClose={closeRoleQuestionModal}
+        size="md"
+      >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 {editingRoleQuestion ? "Edit Question" : "Add Question"} -{" "}
@@ -2027,7 +1994,7 @@ export default function ExecutiveApplicationsPage() {
               </h3>
               <button
                 onClick={closeRoleQuestionModal}
-                className="text-gray-400 hover:text-white transition-colors p-1"
+                className="fc-modal-icon-close"
               >
                 <FiX className="w-5 h-5" />
               </button>
@@ -2126,7 +2093,7 @@ export default function ExecutiveApplicationsPage() {
             <div className="flex flex-col sm:flex-row gap-3 mt-6">
               <button
                 onClick={closeRoleQuestionModal}
-                className="flex-1 px-4 py-2 rounded-lg bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300 text-sm"
+                className="fc-btn-dashboard-cancel"
               >
                 Cancel
               </button>
@@ -2141,9 +2108,7 @@ export default function ExecutiveApplicationsPage() {
                 {editingRoleQuestion ? "Update Question" : "Add Question"}
               </button>
             </div>
-          </div>
-        </div>
-      )}
+      </DashboardCenterModal>
     </div>
   );
 }

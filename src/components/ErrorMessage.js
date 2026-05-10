@@ -7,17 +7,24 @@ export default function ErrorMessage({ message, duration = 3000 }) {
   const [display, setDisplay] = useState(false);
 
   useEffect(() => {
-    if (message) {
+    if (!message) return undefined;
+
+    let innerVisibleTimer;
+    const startTimer = window.setTimeout(() => {
       setDisplay(true);
-      setTimeout(() => setVisible(true), 10);
+      innerVisibleTimer = window.setTimeout(() => setVisible(true), 10);
+    }, 0);
 
-      const timer = setTimeout(() => {
-        setVisible(false);
-        setTimeout(() => setDisplay(false), 500);
-      }, duration);
+    const hideTimer = window.setTimeout(() => {
+      setVisible(false);
+      window.setTimeout(() => setDisplay(false), 500);
+    }, duration);
 
-      return () => clearTimeout(timer);
-    }
+    return () => {
+      window.clearTimeout(startTimer);
+      window.clearTimeout(innerVisibleTimer);
+      window.clearTimeout(hideTimer);
+    };
   }, [message, duration]);
 
   if (!display) return null;

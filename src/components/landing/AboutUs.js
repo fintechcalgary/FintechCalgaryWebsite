@@ -3,7 +3,7 @@ import { FiArrowRight, FiTarget, FiUsers, FiTrendingUp } from "react-icons/fi";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useState } from "react";
 
-const ServiceCard = ({ title, description, icon: Icon, index }) => {
+const ServiceCard = ({ title, description, icon: Icon }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -142,13 +142,11 @@ export default function AboutUs() {
               title="Our Services"
               description="We provide tech companies with a platform to showcase their solutions to targeted businesses. Through digital marketing and partner features, we connect innovative technologies with decision-makers to drive adoption and growth."
               icon={FiTrendingUp}
-              index={0}
             />
             <ServiceCard
               title="Our Network"
               description="FinTech Calgary connects fintech innovators with enterprise buyers across payments, hospitality, and services. We bridge the gap between solution providers and businesses, fostering strategic partnerships that advance financial technology."
               icon={FiUsers}
-              index={1}
             />
           </div>
         </div>

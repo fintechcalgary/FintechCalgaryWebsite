@@ -1,11 +1,8 @@
 import EventCard from "./EventCard";
 import { FiCalendar, FiArrowRight } from "react-icons/fi";
 import Link from "next/link";
-import { useState } from "react";
 
 export default function UpcomingEvents({ events }) {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-
   return (
     <section id="events" className="py-24 relative overflow-hidden">
       {/* Subtle background pattern */}
@@ -46,15 +43,13 @@ export default function UpcomingEvents({ events }) {
                 events.length === 1 ? "md:grid-cols-1 md:max-w-4xl mx-auto" : ""
               }`}
             >
-              {events.map((event, index) => (
+              {events.map((event) => (
                 <div
                   key={event._id}
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
                   className="group relative transition-all duration-300"
                 >
                   <div className="relative">
-                    <EventCard event={event} index={index} />
+                    <EventCard event={event} />
                   </div>
                 </div>
               ))}

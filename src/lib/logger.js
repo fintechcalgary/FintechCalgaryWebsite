@@ -106,7 +106,7 @@ class Logger {
    * Log to external service (production)
    * This can be extended to integrate with services like Sentry, LogRocket, etc.
    */
-  async logToExternal(errorInfo, level) {
+  async logToExternal(errorInfo, _level) {
     try {
       // Option 1: Send to your own logging endpoint
       if (process.env.LOGGING_ENDPOINT) {

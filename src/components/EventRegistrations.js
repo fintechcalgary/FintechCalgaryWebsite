@@ -28,7 +28,7 @@ export default function EventRegistrations({ eventId }) {
         if (!response.ok) throw new Error("Event not found");
         const data = await response.json();
         setEvent(data);
-      } catch (err) {
+      } catch {
         setError("Failed to load event");
       } finally {
         setLoading(false);

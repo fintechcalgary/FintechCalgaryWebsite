@@ -21,7 +21,7 @@ export const GET = withErrorHandler(async (req, context) => {
 });
 
 export const PUT = withErrorHandler(async (req, context) => {
-  const { session, error } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return error;
 
   const { executiveId } = await context.params;
@@ -37,7 +37,7 @@ export const PUT = withErrorHandler(async (req, context) => {
 });
 
 export const DELETE = withErrorHandler(async (req, context) => {
-  const { session, error } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return error;
 
   const { executiveId } = await context.params;

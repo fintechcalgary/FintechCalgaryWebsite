@@ -24,7 +24,6 @@ export const POST = withErrorHandler(async (req) => {
 
   // Send welcome email (don't fail the request if email fails)
   try {
-    const fullName = `${firstName} ${lastName}`;
     const msg = {
       to: email,
       from: EMAIL.SENDGRID_FROM,

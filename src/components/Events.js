@@ -172,24 +172,6 @@ export default function Events({ mode }) {
     }
   };
 
-  const handleRegister = async (eventId) => {
-    try {
-      const response = await fetch(`/api/events/${eventId}/register`, {
-        method: "POST",
-      });
-
-      if (response.ok) {
-        fetchEvents(); // Refresh the events list
-      } else {
-        const data = await response.json();
-        alert(data.error || "Failed to register");
-      }
-    } catch (error) {
-      console.error("Registration error:", error);
-      alert("Failed to register for event");
-    }
-  };
-
   const resetForm = () => {
     setFormData({
       title: "",

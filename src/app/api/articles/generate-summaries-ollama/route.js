@@ -50,7 +50,7 @@ async function generateSummaryWithOllama(article) {
   }
 }
 
-export async function POST(req) {
+export async function POST(_req) {
   try {
     const db = await connectToDatabase();
     

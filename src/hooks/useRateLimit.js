@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 /**
  * Custom hook for client-side rate limiting
@@ -13,7 +13,7 @@ export function useRateLimit(maxRequests = 5, windowMs = 60000) {
   const [retryAfter, setRetryAfter] = useState(0);
   const requestTimestamps = useRef([]);
 
-  const checkRateLimit = () => {
+  const checkRateLimit = useCallback(() => {
     const now = Date.now();
     const windowStart = now - windowMs;
 
@@ -34,7 +34,7 @@ export function useRateLimit(maxRequests = 5, windowMs = 60000) {
     setCanSend(true);
     setRetryAfter(0);
     return true;
-  };
+  }, [maxRequests, windowMs]);
 
   const recordRequest = () => {
     requestTimestamps.current.push(Date.now());
@@ -48,10 +48,17 @@ export function useRateLimit(maxRequests = 5, windowMs = 60000) {
   };
 
   useEffect(() => {
-    checkRateLimit();
-    const interval = setInterval(checkRateLimit, 1000);
-    return () => clearInterval(interval);
-  }, [maxRequests, windowMs]);
+    const initial = window.setTimeout(() => {
+      checkRateLimit();
+    }, 0);
+    const interval = window.setInterval(() => {
+      checkRateLimit();
+    }, 1000);
+    return () => {
+      window.clearTimeout(initial);
+      window.clearInterval(interval);
+    };
+  }, [checkRateLimit]);
 
   return {
     canSend,

@@ -40,7 +40,7 @@ export async function GET(req, context) {
       });
     }
 
-    const { password, ...memberData } = member;
+    const { password: _password, ...memberData } = member;
 
     return new Response(JSON.stringify(memberData), { status: 200 });
   } catch (error) {

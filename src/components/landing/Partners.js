@@ -55,7 +55,7 @@ export default function Partners() {
                 <section
                   key={sectionIndex}
                   className="flex animate-scroll"
-                  style={{ "--speed": "15000ms" }}
+                  style={{ "--speed": "60000ms" }}
                 >
                   {partners.map((partner, index) => (
                     <div

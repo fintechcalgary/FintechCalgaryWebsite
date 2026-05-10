@@ -56,7 +56,7 @@ export default function Login() {
           router.push("/dashboard");
         }
       }
-    } catch (error) {
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);

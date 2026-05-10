@@ -18,8 +18,6 @@ import {
   FiEdit2,
   FiExternalLink,
   FiArrowLeft,
-  FiCheck,
-  FiX,
 } from "react-icons/fi";
 import { SiLinkedin, SiFacebook, SiX } from "react-icons/si";
 import Navbar from "@/components/Navbar";

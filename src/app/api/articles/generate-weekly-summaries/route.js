@@ -44,7 +44,7 @@ async function generateSummaryWithGemini({ apiKey, article }) {
   return cleaned.length > 500 ? `${cleaned.slice(0, 500)}...` : cleaned;
 }
 
-export async function POST(req) {
+export async function POST(_req) {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {

@@ -1,11 +1,11 @@
 import { connectToDatabase } from "@/lib/mongodb";
-import { createExecutive, getExecutives } from "@/lib/models/executive";
+import { getExecutives } from "@/lib/models/executive";
 import { apiResponse, requireAdmin, withErrorHandler } from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 
 export const POST = withErrorHandler(async (req) => {
-  const { session, error } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return error;
 
   const db = await connectToDatabase();

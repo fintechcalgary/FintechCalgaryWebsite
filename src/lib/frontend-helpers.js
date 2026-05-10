@@ -2,7 +2,7 @@
  * Frontend utility helpers for React components
  */
 
-import { FILE_TYPES, VALIDATION, ERROR_MESSAGES } from "@/lib/constants";
+import { VALIDATION, ERROR_MESSAGES } from "@/lib/constants";
 
 /**
  * Creates drag and drop handlers for file uploads

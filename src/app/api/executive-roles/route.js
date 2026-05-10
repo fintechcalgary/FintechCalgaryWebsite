@@ -1,10 +1,9 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { apiResponse, requireAdmin, validators, withErrorHandler } from "@/lib/api-helpers";
-import logger from "@/lib/logger";
 
 export const POST = withErrorHandler(async (req) => {
-  const { session, error } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return error;
 
   const data = await req.json();
@@ -60,7 +59,7 @@ export const GET = withErrorHandler(async () => {
 });
 
 export const PUT = withErrorHandler(async (req) => {
-  const { session, error } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return error;
 
   const data = await req.json();
@@ -116,7 +115,7 @@ export const PUT = withErrorHandler(async (req) => {
 });
 
 export const DELETE = withErrorHandler(async (req) => {
-  const { session, error } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return error;
 
   const { searchParams } = new URL(req.url);

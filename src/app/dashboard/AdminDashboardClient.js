@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import Executives from "@/components/Executives";
 import Link from "next/link";
 
-const AdminCard = ({ title, description, icon: Icon, href, color, index }) => {
+const AdminCard = ({ title, description, icon: Icon, href, color }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -214,7 +214,6 @@ export default function AdminDashboardClient() {
                     )}
                     href="/dashboard/partners"
                     color="purple"
-                    index={0}
                   />
 
                   <AdminCard
@@ -237,7 +236,6 @@ export default function AdminDashboardClient() {
                     )}
                     href="/dashboard/partner-applications"
                     color="purple"
-                    index={1}
                   />
 
                   <AdminCard
@@ -260,7 +258,6 @@ export default function AdminDashboardClient() {
                     )}
                     href="/dashboard/executive-applications"
                     color="orange"
-                    index={2}
                   />
 
                   <AdminCard
@@ -283,7 +280,6 @@ export default function AdminDashboardClient() {
                     )}
                     href="/dashboard/members"
                     color="green"
-                    index={3}
                   />
                 </div>
               </div>

@@ -10,7 +10,6 @@ import {
   validateFile,
   uploadFile,
   scrollToFirstError,
-  createFormChangeHandler,
   validatePassword,
   validateUsername,
 } from "@/lib/frontend-helpers";

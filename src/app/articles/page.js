@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
@@ -22,12 +22,7 @@ export default function ArticlesPage() {
   const [sortBy, setSortBy] = useState("date_desc");
   const [scope, setScope] = useState("week");
 
-  useEffect(() => {
-    document.title = "Finance News Articles | FinTech Calgary";
-    fetchArticles();
-  }, []);
-
-  const fetchArticles = async () => {
+  const fetchArticles = useCallback(async () => {
     try {
       setLoading(true);
       const [archiveResponse, weeklyResponse] = await Promise.all([
@@ -55,7 +50,12 @@ export default function ArticlesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [sortBy]);
+
+  useEffect(() => {
+    document.title = "Finance News Articles | FinTech Calgary";
+    fetchArticles();
+  }, [fetchArticles]);
 
   const filteredArticles = scope === "week" ? weeklyDigestArticles : articles;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { API_ENDPOINTS, ERROR_MESSAGES, SUCCESS_MESSAGES, UPLOAD_FOLDERS, FILE_TYPES } from "@/lib/constants";
+import { API_ENDPOINTS, ERROR_MESSAGES, UPLOAD_FOLDERS, FILE_TYPES } from "@/lib/constants";
 import { motion } from "framer-motion";
 import { FiCheck, FiArrowLeft, FiAlertCircle, FiUpload, FiX } from "react-icons/fi";
 import PublicNavbar from "@/components/PublicNavbar";
@@ -73,7 +73,7 @@ export default function JoinPage() {
       let resumeUrl = "";
       try {
         resumeUrl = await uploadFile(resumeFile, UPLOAD_FOLDERS.RESUMES);
-      } catch (uploadError) {
+      } catch {
         throw new Error(ERROR_MESSAGES.RESUME_UPLOAD_FAILED);
       }
 

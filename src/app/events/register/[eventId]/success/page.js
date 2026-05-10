@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiCheck, FiArrowLeft } from "react-icons/fi";
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import PublicNavbar from "@/components/PublicNavbar";
 import Footer from "@/components/landing/Footer";
 

@@ -4,7 +4,7 @@ import { apiResponse, requireAdmin, validators, withErrorHandler } from "@/lib/a
 import logger from "@/lib/logger";
 
 export const PUT = withErrorHandler(async (req) => {
-  const { session, error } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return error;
 
   const db = await connectToDatabase();

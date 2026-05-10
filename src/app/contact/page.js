@@ -5,7 +5,6 @@ import {
   FiInstagram,
   FiLinkedin,
   FiMail,
-  FiMapPin,
   FiMessageSquare,
   FiSend,
 } from "react-icons/fi";
@@ -52,7 +51,7 @@ export default function ContactPage() {
 
       setSubmitStatus("success");
       setFormData({ name: "", email: "", subject: "", message: "" });
-    } catch (error) {
+    } catch {
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);

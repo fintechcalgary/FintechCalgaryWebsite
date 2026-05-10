@@ -3,7 +3,7 @@ import { getPartners } from "@/lib/models/partner";
 import bcrypt from "bcryptjs";
 import { apiResponse, requireAdmin, validators, withErrorHandler } from "@/lib/api-helpers";
 import logger from "@/lib/logger";
-import { COLLECTIONS, ERROR_MESSAGES, VALIDATION } from "@/lib/constants";
+import { COLLECTIONS, ERROR_MESSAGES } from "@/lib/constants";
 
 export const POST = withErrorHandler(async (req) => {
   const db = await connectToDatabase();
@@ -81,7 +81,7 @@ export const POST = withErrorHandler(async (req) => {
 });
 
 export const GET = withErrorHandler(async () => {
-  const { session, error } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return error;
 
   const db = await connectToDatabase();

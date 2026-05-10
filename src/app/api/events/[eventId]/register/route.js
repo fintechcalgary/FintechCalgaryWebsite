@@ -206,7 +206,7 @@ export const POST = withErrorHandler(async (req, { params }) => {
 });
 
 export const DELETE = withErrorHandler(async (req, { params }) => {
-  const { session, error } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return error;
 
   const { eventId } = await params;

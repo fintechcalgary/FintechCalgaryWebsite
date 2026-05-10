@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FiX,
@@ -10,21 +9,11 @@ import {
   FiTarget,
   FiBarChart2,
 } from "react-icons/fi";
+import { useModalBodyEffects } from "@/hooks/useModalBodyEffects";
+import FramerModalBackdrop from "@/components/ui/FramerModalBackdrop";
 
 export default function ArticleDetailModal({ isOpen, onClose, article }) {
-  // Close on Escape
-  useEffect(() => {
-    if (!isOpen) return;
-    const handler = (e) => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [isOpen, onClose]);
-
-  // Lock body scroll while open
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [isOpen]);
+  useModalBodyEffects(isOpen, onClose);
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -37,15 +26,10 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
     <AnimatePresence>
       {isOpen && article && (
         <>
-          {/* Backdrop */}
-          <motion.div
-            key="article-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
-            onClick={onClose}
+          <FramerModalBackdrop
+            motionKey="article-backdrop"
+            onClose={onClose}
+            className="bg-black/80 backdrop-blur-sm"
           />
 
           {/* Panel */}
@@ -178,7 +162,7 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                   href={article.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-purple-600 text-white rounded-lg hover:shadow-xl hover:shadow-primary/30 transition-all text-sm font-medium"
+                  className="fc-btn-gradient-primary px-4 py-2"
                 >
                   <FiExternalLink className="w-4 h-4" />
                   Read Full Article
