@@ -46,3 +46,24 @@ The platform uses NextAuth.js for authentication with the following features:
 ## 👥 Team
 
 - Project maintained by FinTech Calgary
+
+## Weekly Insights Digest (15 Articles)
+
+The Insights page is now driven by a weekly digest pipeline that enforces exactly 15 most relevant articles.
+
+- Current digest endpoint: `GET /api/insights/current`
+- Weekly digest storage: `weekly_digests` collection
+- Weekly refresh endpoint: `POST /api/articles/refresh`
+- Friday refresh schedule (UTC): `0 6 * * 5` via `vercel.json`
+
+Behavior:
+
+- Insights page displays only the current weekly digest (max 15).
+- Articles page remains the historical archive of all collected articles.
+- If fewer than 15 articles are available in the week, the digest fills from the most recent relevant historical articles.
+
+Required environment variables:
+
+- `MONGODB_URI`
+- `CRON_SECRET`
+- `GEMINI_API` (optional but recommended for summary generation)

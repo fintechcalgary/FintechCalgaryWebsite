@@ -15,6 +15,7 @@ export default function PublicNavbar() {
   const navigationItems = useMemo(
     () => [
       ["About", "/about"],
+      ["Insights", "/insights"],
       ["Events", "/events"],
       ["Executives", "/executives"],
       ["Partners", "/partners"],

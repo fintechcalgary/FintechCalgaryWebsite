@@ -3,15 +3,33 @@ import { apiResponse, requireAdmin, validators, withErrorHandler, DEFAULT_EXECUT
 import logger from "@/lib/logger";
 
 export const GET = withErrorHandler(async () => {
-  const db = await connectToDatabase();
-  const settings = await db.collection("settings").findOne({});
+  try {
+    const db = await connectToDatabase();
+    const settings = await db.collection("settings").findOne({});
 
-  return apiResponse.success(
-    settings || {
+    return apiResponse.success(
+      settings || {
+        executiveApplicationsOpen: false,
+        executiveApplicationQuestions: DEFAULT_EXECUTIVE_QUESTIONS,
+      }
+    );
+  } catch (error) {
+    const message = error?.message || "";
+    const isConnectionError = message.includes("MONGODB_URI") ||
+      message.includes("connect") ||
+      message.includes("MongoServerSelectionError") ||
+      message.includes("SSL routines") ||
+      message.includes("tlsv1 alert") ||
+      error?.code === "ECONNREFUSED";
+
+    if (!isConnectionError) throw error;
+
+    logger.log("MongoDB not available, returning default settings", { error: message }, "warn");
+    return apiResponse.success({
       executiveApplicationsOpen: false,
       executiveApplicationQuestions: DEFAULT_EXECUTIVE_QUESTIONS,
-    }
-  );
+    });
+  }
 });
 
 export const PUT = withErrorHandler(async (request) => {
