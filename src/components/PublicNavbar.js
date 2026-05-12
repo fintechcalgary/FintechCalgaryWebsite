@@ -20,6 +20,10 @@ export default function PublicNavbar() {
       ["Executives", "/executives"],
       ["Partners", "/partners"],
       ["Contact", "/contact"],
+      [
+        "Ignite",
+        "https://suuofc.campuslabs.ca/engage/organization/fintechcalgary",
+      ],
     ],
     []
   );
@@ -66,7 +70,7 @@ export default function PublicNavbar() {
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center h-24">
+        <div className="hidden lg:flex items-center h-24">
           <motion.div
             className={`w-full flex ${
               isScrolled ? "justify-center" : "justify-between"
@@ -134,33 +138,49 @@ export default function PublicNavbar() {
                 </motion.div>
               )}
               <div className="flex items-center space-x-4">
-                {navigationItems.map(([title, path]) => (
-                  <Link key={path} href={path}>
-                    <motion.div
-                      className={`relative px-6 py-2.5 text-sm font-semibold rounded-xl text-gray-200 hover:text-white transition-colors
+                {navigationItems.map(([title, path]) => {
+                  const isExternal = path.startsWith("http");
+                  const isActive = !isExternal && pathname === path;
+                  const itemClass = `relative px-6 py-2.5 text-sm font-semibold rounded-xl text-gray-200 hover:text-white transition-colors
                         ${
-                          pathname === path
+                          isActive
                             ? isScrolled
                               ? "bg-gray-700/50"
                               : "bg-gray-700/30"
                             : isScrolled
                             ? "hover:bg-gray-700/30"
                             : "hover:bg-gray-700/20"
-                        }`}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {title}
-                    </motion.div>
-                  </Link>
-                ))}
+                        }`;
+                  const motionProps = {
+                    className: itemClass,
+                    whileHover: { scale: 1.05 },
+                    whileTap: { scale: 0.95 },
+                  };
+                  if (isExternal) {
+                    return (
+                      <a
+                        key={path}
+                        href={path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <motion.div {...motionProps}>{title}</motion.div>
+                      </a>
+                    );
+                  }
+                  return (
+                    <Link key={path} href={path}>
+                      <motion.div {...motionProps}>{title}</motion.div>
+                    </Link>
+                  );
+                })}
               </div>
             </motion.div>
           </motion.div>
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden flex justify-between items-center h-20">
+        <div className="lg:hidden flex justify-between items-center h-20">
           <Link href="/">
             <motion.img
               src="/logo.svg"
@@ -190,26 +210,47 @@ export default function PublicNavbar() {
             duration: 0.3,
             ease: "easeOut",
           }}
-          className="md:hidden overflow-hidden"
+          className="lg:hidden overflow-hidden"
         >
           <div
             className={`bg-gray-800/90 backdrop-blur-xl border border-gray-700/30 rounded-2xl p-3 mb-4 space-y-1`}
           >
-            {navigationItems.map(([title, path]) => (
-              <Link key={path} href={path} onClick={closeMenu}>
-                <motion.div
-                  className={`px-4 py-3 text-gray-200 hover:text-white rounded-xl transition-colors
+            {navigationItems.map(([title, path]) => {
+              const isExternal = path.startsWith("http");
+              const isActive = !isExternal && pathname === path;
+              const mobileClass = `px-4 py-3 text-gray-200 hover:text-white rounded-xl transition-colors
                     ${
-                      pathname === path
+                      isActive
                         ? "bg-gray-700/50"
                         : "hover:bg-gray-700/30"
-                    }`}
+                    }`;
+              const motionDiv = (
+                <motion.div
+                  className={mobileClass}
                   whileHover={{ backgroundColor: "rgba(109, 40, 217, 0.1)" }}
                 >
                   {title}
                 </motion.div>
-              </Link>
-            ))}
+              );
+              if (isExternal) {
+                return (
+                  <a
+                    key={path}
+                    href={path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={closeMenu}
+                  >
+                    {motionDiv}
+                  </a>
+                );
+              }
+              return (
+                <Link key={path} href={path} onClick={closeMenu}>
+                  {motionDiv}
+                </Link>
+              );
+            })}
           </div>
         </motion.div>
       </div>
