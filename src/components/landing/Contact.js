@@ -12,7 +12,7 @@ import { useState } from "react";
 
 const SocialIcon = ({ href, icon: Icon, label }) => {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   return (
     <a
       href={href}
@@ -25,17 +25,25 @@ const SocialIcon = ({ href, icon: Icon, label }) => {
                  hover:border-primary/50 hover:bg-gray-800/60
                  transition-all duration-300 hover:translate-x-1"
     >
-      <Icon className={`w-5 h-5 transition-colors duration-300 ${
-        isHovered ? 'text-primary' : 'text-gray-400'
-      }`} />
-      <span className={`text-sm font-medium transition-colors duration-300 ${
-        isHovered ? 'text-white' : 'text-gray-400'
-      }`}>
+      <Icon
+        className={`w-5 h-5 transition-colors duration-300 ${
+          isHovered ? "text-primary" : "text-gray-400"
+        }`}
+      />
+      <span
+        className={`text-sm font-medium transition-colors duration-300 ${
+          isHovered ? "text-white" : "text-gray-400"
+        }`}
+      >
         {label}
       </span>
-      <FiArrowRight className={`w-4 h-4 transition-all duration-300 ${
-        isHovered ? 'text-primary translate-x-1 opacity-100' : 'text-transparent opacity-0 -translate-x-1'
-      }`} />
+      <FiArrowRight
+        className={`w-4 h-4 transition-all duration-300 ${
+          isHovered
+            ? "text-primary translate-x-1 opacity-100"
+            : "text-transparent opacity-0 -translate-x-1"
+        }`}
+      />
     </a>
   );
 };
@@ -47,11 +55,13 @@ export default function Contact() {
     <section id="contact" className="py-24 relative overflow-hidden">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-0 w-full h-full" 
-             style={{
-               backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
-               backgroundSize: '40px 40px'
-             }}
+        <div
+          className="absolute top-0 left-0 w-full h-full"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 2px 2px, white 1px, transparent 0)",
+            backgroundSize: "40px 40px",
+          }}
         />
       </div>
 
@@ -81,7 +91,7 @@ export default function Contact() {
           {/* Left Side - Email & Location */}
           <div className="space-y-6">
             {/* Email Section */}
-            <div 
+            <div
               className="relative group p-8 rounded-2xl border border-gray-800/50 
                          bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-sm
                          hover:border-primary/30 transition-all duration-500 overflow-hidden"
@@ -89,61 +99,83 @@ export default function Contact() {
               onMouseLeave={() => setHoveredEmail(false)}
             >
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 
-                              flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
+                <div
+                  className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 
+                              flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300"
+                >
                   <FiMail className="w-6 h-6 text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-semibold text-white mb-2">Send us an email</h3>
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    Send us an email
+                  </h3>
                   <p className="text-gray-400 text-sm mb-4 leading-relaxed">
-                    Questions, partnerships, or just want to chat? We&apos;re all ears.
+                    Questions, partnerships, or just want to chat? We&apos;re
+                    all ears.
                   </p>
                   <a
-                    href="mailto:fintechcalgary@gmail.com"
+                    href="mailto:fintech.calgary@gmail.com"
                     className="inline-flex items-center gap-2 text-primary hover:text-purple-400 
                              transition-colors duration-300 font-medium group/link"
                   >
-                    <span className="text-base">fintechcalgary@gmail.com</span>
-                    <FiArrowRight className={`w-4 h-4 transition-transform duration-300 ${
-                      hoveredEmail ? 'translate-x-1' : ''
-                    }`} />
+                    <span className="text-base">fintech.calgary@gmail.com</span>
+                    <FiArrowRight
+                      className={`w-4 h-4 transition-transform duration-300 ${
+                        hoveredEmail ? "translate-x-1" : ""
+                      }`}
+                    />
                   </a>
                 </div>
               </div>
             </div>
 
             {/* Location Section */}
-            <div className="relative group p-8 rounded-2xl border border-gray-800/50 
+            <div
+              className="relative group p-8 rounded-2xl border border-gray-800/50 
                           bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-sm
-                          hover:border-primary/30 transition-all duration-500 overflow-hidden">
+                          hover:border-primary/30 transition-all duration-500 overflow-hidden"
+            >
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 
-                              flex items-center justify-center group-hover:bg-purple-500/20 transition-colors duration-300">
+                <div
+                  className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 
+                              flex items-center justify-center group-hover:bg-purple-500/20 transition-colors duration-300"
+                >
                   <FiMapPin className="w-6 h-6 text-purple-400" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-white mb-2">Find us</h3>
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    Find us
+                  </h3>
                   <p className="text-gray-400 text-sm mb-3 leading-relaxed">
-                    Based in Calgary, connecting fintech innovators across Canada and beyond.
+                    Based in Calgary, connecting fintech innovators across
+                    Canada and beyond.
                   </p>
-                  <p className="text-purple-400 font-medium">Calgary, Alberta, Canada</p>
+                  <p className="text-purple-400 font-medium">
+                    Calgary, Alberta, Canada
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Right Side - Social Media */}
-          <div className="relative group p-8 rounded-2xl border border-gray-800/50 
+          <div
+            className="relative group p-8 rounded-2xl border border-gray-800/50 
                         bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-sm
-                        hover:border-primary/30 transition-all duration-500 overflow-hidden">
+                        hover:border-primary/30 transition-all duration-500 overflow-hidden"
+          >
             <div className="flex flex-col h-full">
               <div className="flex items-start gap-4 mb-6">
-                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 
-                              flex items-center justify-center group-hover:bg-pink-500/20 transition-colors duration-300">
+                <div
+                  className="flex-shrink-0 w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 
+                              flex items-center justify-center group-hover:bg-pink-500/20 transition-colors duration-300"
+                >
                   <FiGithub className="w-6 h-6 text-pink-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Connect with us</h3>
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    Connect with us
+                  </h3>
                   <p className="text-gray-400 text-sm leading-relaxed">
                     Follow along for updates, insights, and fintech news.
                   </p>

@@ -112,7 +112,7 @@ export default function ContactPage() {
                     <FiInstagram className="w-6 h-6" />
                   </a>
                   <a
-                    href="mailto:fintechcalgary@gmail.com"
+                    href="mailto:fintech.calgary@gmail.com"
                     className="text-gray-400 hover:text-primary transition-colors"
                   >
                     <FiMail className="w-6 h-6" />
