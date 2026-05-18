@@ -4,15 +4,19 @@
  */
 import winston from "winston";
 
-const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || "info",
-  format: winston.format.combine(
-    winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-    winston.format.errors({ stack: true }),
-    winston.format.json()
-  ),
-  defaultMeta: { service: "fintech-insights" },
-  transports: [
+// Vercel and other serverless runtimes have a read-only filesystem (no logs/ dir).
+const isServerless = Boolean(process.env.VERCEL);
+
+const jsonFormat = winston.format.combine(
+  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+  winston.format.errors({ stack: true }),
+  winston.format.json()
+);
+
+const transports = [];
+
+if (!isServerless) {
+  transports.push(
     new winston.transports.File({
       filename: "logs/error.log",
       level: "error",
@@ -23,20 +27,29 @@ const logger = winston.createLogger({
       filename: "logs/combined.log",
       maxsize: 5242880,
       maxFiles: 5,
-    }),
-  ],
-});
-
-if (process.env.NODE_ENV !== "production") {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      ),
     })
   );
 }
+
+if (isServerless || process.env.NODE_ENV !== "production") {
+  transports.push(
+    new winston.transports.Console({
+      format: isServerless
+        ? jsonFormat
+        : winston.format.combine(
+            winston.format.colorize(),
+            winston.format.simple()
+          ),
+    })
+  );
+}
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || "info",
+  format: jsonFormat,
+  defaultMeta: { service: "fintech-insights" },
+  transports,
+});
 
 export const logError = (message, error, context = {}) => {
   logger.error(message, {
