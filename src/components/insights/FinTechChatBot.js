@@ -270,7 +270,7 @@ export default function FinTechChatBot({ articles = [] }) {
             setIsOpen(true);
             setContextIsOpen(true);
           }}
-          className="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-br from-primary via-purple-600 to-pink-600 rounded-2xl shadow-2xl hover:shadow-primary/50 flex items-center justify-center text-white z-50 border-2 border-white/20 backdrop-blur-sm transition-all duration-300"
+          className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-primary via-purple-600 to-pink-600 rounded-2xl shadow-2xl hover:shadow-primary/50 flex items-center justify-center text-white z-50 border-2 border-white/20 backdrop-blur-sm transition-all duration-300"
           style={{
             boxShadow: "0 20px 40px rgba(139, 92, 246, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)",
           }}
@@ -286,14 +286,16 @@ export default function FinTechChatBot({ articles = [] }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 12 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className={`fixed ${
-              isMinimized ? "bottom-8 right-8 w-80 h-20" : "bottom-8 right-8 w-[420px] h-[680px]"
-            } bg-gradient-to-br from-gray-900 via-gray-900 to-gray-950/95 backdrop-blur-xl rounded-2xl border border-primary/20 shadow-2xl z-50 flex flex-col overflow-hidden`}
+            className={`fixed z-50 flex flex-col overflow-hidden bg-gradient-to-br from-gray-900 via-gray-900 to-gray-950/95 backdrop-blur-xl rounded-2xl border border-primary/20 shadow-2xl ${
+              isMinimized
+                ? "bottom-4 right-4 sm:bottom-8 sm:right-8 w-[min(20rem,calc(100vw-2rem))] h-20"
+                : "inset-x-3 bottom-3 top-[max(3.5rem,env(safe-area-inset-top))] sm:inset-x-auto sm:top-auto sm:bottom-8 sm:right-8 sm:left-auto w-auto sm:w-[420px] h-auto sm:h-[680px] max-h-[calc(100dvh-1.5rem-env(safe-area-inset-bottom))] sm:max-h-[min(680px,calc(100dvh-4rem))]"
+            }`}
             style={{
               boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(139, 92, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
             }}
           >
-            <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-primary/10 via-purple-600/10 to-pink-600/10 border-b border-primary/20 backdrop-blur-sm">
+            <div className="shrink-0 flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4 bg-gradient-to-r from-primary/10 via-purple-600/10 to-pink-600/10 border-b border-primary/20 backdrop-blur-sm">
               <div className="flex items-center gap-3.5">
                 <div className="relative">
                   <div className="w-11 h-11 bg-gradient-to-br from-primary via-purple-500 to-pink-500 rounded-xl flex items-center justify-center border border-white/20 shadow-lg">
@@ -389,9 +391,9 @@ export default function FinTechChatBot({ articles = [] }) {
             )}
 
             {!isMinimized && (
-              <>
-                <div className="px-4 py-4 border-b border-gray-800/50 bg-gradient-to-b from-gray-900/50 to-transparent">
-                  <div className="grid grid-cols-2 gap-2.5">
+              <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                <div className="shrink-0 px-3 py-3 sm:px-4 sm:py-4 border-b border-gray-800/50 bg-gradient-to-b from-gray-900/50 to-transparent max-h-[28vh] overflow-y-auto">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
                     {quickActions.map((action, idx) => {
                       const Icon = action.icon;
                       return (
@@ -401,7 +403,7 @@ export default function FinTechChatBot({ articles = [] }) {
                           disabled={isLoading}
                           whileHover={{ scale: 1.02, y: -1 }}
                           whileTap={{ scale: 0.98 }}
-                          className={`px-4 py-3 text-xs font-semibold text-white bg-gradient-to-br ${action.color} hover:opacity-95 border border-white/20 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl backdrop-blur-sm`}
+                          className={`px-2.5 py-2.5 sm:px-4 sm:py-3 text-[11px] sm:text-xs font-semibold text-white bg-gradient-to-br ${action.color} hover:opacity-95 border border-white/20 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 sm:gap-2 shadow-lg hover:shadow-xl backdrop-blur-sm`}
                           style={{
                             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
                           }}
@@ -414,7 +416,7 @@ export default function FinTechChatBot({ articles = [] }) {
                   </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 bg-gradient-to-b from-gray-950/50 via-gray-900/30 to-gray-950/50">
+                <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 py-3 sm:px-5 sm:py-4 space-y-4 bg-gradient-to-b from-gray-950/50 via-gray-900/30 to-gray-950/50">
                   {messages.map((msg, idx) => (
                     <motion.div
                       key={idx}
@@ -424,7 +426,7 @@ export default function FinTechChatBot({ articles = [] }) {
                       className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                     >
                       <div
-                        className={`max-w-[85%] rounded-2xl px-4 py-3.5 ${
+                        className={`max-w-[90%] sm:max-w-[85%] rounded-2xl px-3.5 py-3 sm:px-4 sm:py-3.5 break-words ${
                           msg.role === "user"
                             ? "bg-gradient-to-br from-primary/30 via-purple-600/30 to-pink-600/30 text-white border border-primary/40 shadow-lg"
                             : msg.error
@@ -437,7 +439,7 @@ export default function FinTechChatBot({ articles = [] }) {
                             : "0 8px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
                         }}
                       >
-                        <div className="text-[14px] leading-relaxed font-normal">
+                        <div className="text-[14px] leading-relaxed font-normal break-words [overflow-wrap:anywhere]">
                           {msg.error && msg.retry && (
                             <button
                               onClick={msg.retry}
@@ -513,7 +515,7 @@ export default function FinTechChatBot({ articles = [] }) {
                   <div ref={messagesEndRef} />
                 </div>
 
-                <div className="px-5 py-4 border-t border-gray-800/50 bg-gradient-to-t from-gray-900/80 to-gray-900/50 backdrop-blur-sm">
+                <div className="shrink-0 px-3 py-3 sm:px-5 sm:py-4 border-t border-gray-800/50 bg-gradient-to-t from-gray-900/80 to-gray-900/50 backdrop-blur-sm pb-[max(0.75rem,env(safe-area-inset-bottom))]">
                   <div className="flex items-end gap-3">
                     <div className="flex-1 relative">
                       {errorMessage && (
@@ -558,11 +560,11 @@ export default function FinTechChatBot({ articles = [] }) {
                       <FiSend className="w-4.5 h-4.5 drop-shadow-sm" />
                     </motion.button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-3 text-center font-medium">
+                  <p className="hidden sm:block text-xs text-gray-500 mt-3 text-center font-medium">
                     Press <kbd className="px-1.5 py-0.5 bg-gray-800/50 rounded text-[10px] border border-gray-700/50">Enter</kbd> to send • <kbd className="px-1.5 py-0.5 bg-gray-800/50 rounded text-[10px] border border-gray-700/50">Shift+Enter</kbd> for new line
                   </p>
                 </div>
-              </>
+              </div>
             )}
           </motion.div>
         )}
