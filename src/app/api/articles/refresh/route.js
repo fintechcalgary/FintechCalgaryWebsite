@@ -10,14 +10,13 @@ import {
 } from "@/lib/models/weeklyDigest";
 import { logError, logInfo, logWarn } from "@/lib/serverLogger";
 import { queueRefreshRequest } from "@/lib/requestQueue";
+import { callGroq } from "@/lib/groq";
 
 export const dynamic = "force-dynamic";
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+// ─── Groq summary generation ───────────────────────────────────────────────
 
-// ─── Gemini summary generation ───────────────────────────────────────────────
-
-async function generateSummaryWithGemini({ apiKey, article }) {
+async function generateSummaryWithGroq({ apiKey, article }) {
   const prompt = [
     "Write a concise 2-3 sentence summary of this fintech news article for a professional audience.",
     "Focus on the key development, its significance, and potential impact on the industry.",
@@ -28,29 +27,7 @@ async function generateSummaryWithGemini({ apiKey, article }) {
     "Respond with only the summary text. No markdown, no asterisks, no bullet points.",
   ].join("\n");
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-      signal: AbortSignal.timeout(20000),
-    }
-  );
-
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => "");
-    throw new Error(
-      `Gemini request failed (${response.status})${errorText ? `: ${errorText.slice(0, 200)}` : ""}`
-    );
-  }
-
-  const data = await response.json();
-  const text =
-    data?.candidates?.[0]?.content?.parts?.map((p) => p?.text || "").join("").trim() || "";
-
-  if (!text) throw new Error("Empty response from Gemini");
-  return text.replace(/\*\*/g, "").replace(/\*/g, "").trim();
+  return callGroq(apiKey, prompt, { maxTokens: 200, timeoutMs: 20000 });
 }
 
 // ─── Week boundary helpers ────────────────────────────────────────────────────
@@ -191,7 +168,7 @@ async function markWeeklyDigestRoles(db, digestResult) {
  * POST /api/articles/refresh
  *   • Fetches fresh articles from Google News RSS
  *   • Inserts new articles into MongoDB (up to 30 per week)
- *   • Picks top 15 for the weekly digest and generates Gemini summaries
+ *   • Picks top 15 for the weekly digest and generates Groq summaries
  *   • Publishes the weekly digest document
  *
  * GET /api/articles/refresh
@@ -254,11 +231,11 @@ export async function POST(req) {
       await ensureWeeklyDigestIndexes(db);
       let digestResult = await createOrUpdateWeeklyDigest(db, { status: "published" });
 
-      // 3. Generate Gemini summaries for the 15 digest articles (skip if already summarised)
+      // 3. Generate Groq summaries for the 15 digest articles (skip if already summarised)
       let summariesGenerated = 0;
-      const geminiApiKey = process.env.GEMINI_API || process.env.GEMINI_API_KEY;
+      const groqApiKey = process.env.GROQ_API_KEY;
 
-      if (geminiApiKey && geminiApiKey !== "your_gemini_api_key_here") {
+      if (groqApiKey && groqApiKey !== "your_groq_api_key_here") {
         for (const article of digestResult.topArticles.slice(0, WEEKLY_DIGEST_ARTICLE_LIMIT)) {
           if (!article.url) continue;
 
@@ -269,11 +246,11 @@ export async function POST(req) {
           }
 
           try {
-            const summary = await generateSummaryWithGemini({ apiKey: geminiApiKey, article });
+            const summary = await generateSummaryWithGroq({ apiKey: groqApiKey, article });
             if (summary) {
               await updateArticleSummary(db, article.url, summary);
               summariesGenerated += 1;
-              logInfo("Generated Gemini summary", { url: article.url });
+              logInfo("Generated Groq summary", { url: article.url });
             }
           } catch (error) {
             logWarn("Summary generation failed for article", {
@@ -286,7 +263,7 @@ export async function POST(req) {
         // Re-build digest so it picks up the fresh summaries just written
         digestResult = await createOrUpdateWeeklyDigest(db, { status: "published" });
       } else {
-        logWarn("Gemini summaries skipped — GEMINI_API is not configured");
+        logWarn("Groq summaries skipped — GROQ_API_KEY is not configured");
       }
 
       // 4. Tag every current-week article as archive or digest

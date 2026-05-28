@@ -156,7 +156,7 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
 
             {/* Footer */}
             <div className="flex items-center justify-between p-6 border-t border-gray-800/50 flex-shrink-0">
-              <p className="text-sm text-gray-500">AI analysis powered by Gemini · Not financial advice</p>
+              <p className="text-sm text-gray-500">AI analysis powered by Groq · Not financial advice</p>
               {article.url && (
                 <a
                   href={article.url}
