@@ -261,6 +261,19 @@ export async function getCurrentWeeklyDigest(db) {
     { sort: { generatedAt: -1 } }
   );
 
+  return getWeeklyDigestArticles(db, digest);
+}
+
+export async function getLatestPublishedWeeklyDigest(db) {
+  const digest = await db.collection(WEEKLY_DIGEST_COLLECTION).findOne(
+    { status: "published" },
+    { sort: { weekStart: -1, generatedAt: -1 } }
+  );
+
+  return getWeeklyDigestArticles(db, digest);
+}
+
+async function getWeeklyDigestArticles(db, digest) {
   if (!digest || !digest.articleUrls?.length) {
     return null;
   }
