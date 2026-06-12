@@ -1,6 +1,7 @@
 import { logError, logInfo } from "@/lib/serverLogger";
 import { sanitizePlainText } from "@/lib/sanitizePlainText";
 import { queueChatRequest } from "@/lib/requestQueue";
+import { callGroq } from "@/lib/groq";
 import crypto from "crypto";
 
 export const dynamic = "force-dynamic";
@@ -8,45 +9,12 @@ export const dynamic = "force-dynamic";
 const MAX_HISTORY = 10;
 const MAX_ARTICLES = 30;
 const MAX_MESSAGE_LENGTH = 2000;
-const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.1-8b-instant";
 
 const chatCache = new Map();
 const CACHE_TTL = 5 * 60 * 1000;
 
 function hashMessage(message) {
   return crypto.createHash("sha256").update(message.toLowerCase().trim()).digest("hex");
-}
-
-async function callGroq(apiKey, prompt) {
-  const response = await fetch(
-    'https://api.groq.com/openai/v1/chat/completions',
-    {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: GROQ_MODEL,
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7,
-        max_tokens: 1000
-      }),
-      signal: AbortSignal.timeout(30000)
-    }
-  );
-
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => "");
-    throw new Error(`Groq request failed (${response.status})${errorText ? `: ${errorText.slice(0, 200)}` : ""}`);
-  }
-
-  const data = await response.json();
-  const text = data.choices?.[0]?.message?.content?.trim();
-
-  if (!text) throw new Error("Empty response from Groq");
-
-  return text.replace(/\*\*/g, "").replace(/\*/g, "").trim();
 }
 
 export async function POST(req) {

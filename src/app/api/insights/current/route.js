@@ -1,5 +1,9 @@
 import { connectToDatabase } from "@/lib/mongodb";
-import { getCurrentWeeklyDigest, WEEKLY_DIGEST_ARTICLE_LIMIT } from "@/lib/models/weeklyDigest";
+import {
+  getCurrentWeeklyDigest,
+  getLatestPublishedWeeklyDigest,
+  WEEKLY_DIGEST_ARTICLE_LIMIT,
+} from "@/lib/models/weeklyDigest";
 import { getLiveWeeklyDigest, isMongoConnectionError } from "@/lib/googleNewsRss";
 
 export const dynamic = "force-dynamic";
@@ -29,8 +33,9 @@ async function liveRssFallback() {
 //
 // Priority:
 //   1. Published weekly digest from MongoDB for the current week
-//   2. Live Google News RSS fallback (when DB is empty or unreachable)
-//   3. Empty response (if RSS also fails)
+//   2. Latest published MongoDB digest while the next scheduled refresh is pending
+//   3. Live Google News RSS fallback (when DB is empty or unreachable)
+//   4. Empty response (if RSS also fails)
 
 export async function GET() {
   try {
@@ -47,7 +52,19 @@ export async function GET() {
       });
     }
 
-    // DB connected but no digest published yet — use live RSS
+    const latestDigest = await getLatestPublishedWeeklyDigest(db);
+    if (latestDigest && latestDigest.articles.length > 0) {
+      return digestResponse({
+        weekStart: latestDigest.weekStart,
+        weekEnd: latestDigest.weekEnd,
+        stats: latestDigest.stats || null,
+        articles: latestDigest.articles.slice(0, WEEKLY_DIGEST_ARTICLE_LIMIT),
+        count: latestDigest.articles.length,
+        source: "latest-published-digest",
+      });
+    }
+
+    // DB connected but no digest has been published yet — use live RSS
     return await liveRssFallback();
   } catch (error) {
     console.error("GET /api/insights/current error:", error);

@@ -1,42 +1,25 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { getArticles, updateArticleSummary } from "@/lib/models/article";
 import { fetchGoogleNewsArticles, isMongoConnectionError } from "@/lib/googleNewsRss";
+import { callGroq } from "@/lib/groq";
 
 export const dynamic = "force-dynamic";
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
-
-async function generateSummaryWithGemini({ apiKey, article }) {
+async function generateSummaryWithGroq({ apiKey, article }) {
   const prompt = [
-    "You are a financial news analyst.",
-    "Generate a concise factual 2-3 sentence summary for this fintech article.",
+    "Write a concise 2-3 sentence summary of this fintech news article for a professional audience.",
+    "Focus on the key development, its significance, and potential impact on the industry.",
+    "",
     `Title: ${article.title || ""}`,
     `Source: ${article.source || ""}`,
     `Date: ${article.date || article.publishedAt || ""}`,
-    "Summary:",
+    "",
+    "Respond with only the summary text. No markdown, no asterisks, no bullet points.",
   ].join("\n");
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-    }
-  );
-
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => "");
-    throw new Error(`Gemini request failed (${response.status})${errorText ? `: ${errorText.slice(0, 180)}` : ""}`);
-  }
-
-  const data = await response.json();
-  const text =
-    data?.candidates?.[0]?.content?.parts?.map((p) => p?.text || "").join("").trim() || "";
-
-  if (!text) return null;
-
-  const cleaned = text.replace(/\*\*/g, "").replace(/\*/g, "").replace(/^Summary:\s*/i, "").trim();
+  const cleaned = (await callGroq(apiKey, prompt, { maxTokens: 200, timeoutMs: 20000 }))
+    .replace(/^Summary:\s*/i, "")
+    .trim();
   if (cleaned.length < 20) return null;
   return cleaned.length > 500 ? `${cleaned.slice(0, 500)}...` : cleaned;
 }
@@ -48,13 +31,13 @@ export async function POST(req) {
     const articleUrl = body?.articleUrl;
     const fallbackArticle = body?.article && typeof body.article === "object" ? body.article : null;
 
-    const geminiApiKey = process.env.GEMINI_API || process.env.GEMINI_API_KEY;
-    if (!geminiApiKey || geminiApiKey === "your_gemini_api_key_here") {
+    const groqApiKey = process.env.GROQ_API_KEY;
+    if (!groqApiKey || groqApiKey === "your_groq_api_key_here") {
       return new Response(
         JSON.stringify({
           success: false,
-          error: "GEMINI_API environment variable not set",
-          suggestion: "Set GEMINI_API in .env.local and restart the dev server.",
+          error: "GROQ_API_KEY environment variable not set",
+          suggestion: "Set GROQ_API_KEY in .env.local and restart the dev server.",
         }),
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
@@ -100,7 +83,7 @@ export async function POST(req) {
       }
 
       try {
-        const summary = await generateSummaryWithGemini({ apiKey: geminiApiKey, article });
+        const summary = await generateSummaryWithGroq({ apiKey: groqApiKey, article });
         if (!summary) continue;
 
         if (db && article.url) {
@@ -114,9 +97,9 @@ export async function POST(req) {
           return new Response(
             JSON.stringify({
               success: false,
-              error: "Gemini summary generation failed",
+              error: "Groq summary generation failed",
               details: process.env.NODE_ENV === "development" ? error.message : undefined,
-              suggestion: "Check that GEMINI_API or GEMINI_API_KEY is a valid Google Gemini API key, then restart the server.",
+              suggestion: "Check that GROQ_API_KEY is valid, then restart the server.",
             }),
             { status: 502, headers: { "Content-Type": "application/json" } }
           );

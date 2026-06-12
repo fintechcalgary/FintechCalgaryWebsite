@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiMessageCircle, FiSend, FiZap, FiMinimize2, FiTrendingUp, FiBook, FiBriefcase, FiTarget, FiBarChart2, FiRefreshCw, FiAlertTriangle, FiInfo } from "react-icons/fi";
+import { FiArrowLeft, FiMessageCircle, FiSend, FiZap, FiX, FiTrendingUp, FiBook, FiBriefcase, FiTarget, FiBarChart2, FiRefreshCw, FiAlertTriangle, FiInfo } from "react-icons/fi";
 import { useChatBot } from "@/contexts/ChatBotContext";
 import { useRateLimit } from "@/hooks/useRateLimit";
 import { CostTracker } from "@/lib/costTracker";
@@ -248,6 +248,14 @@ export default function FinTechChatBot({ articles = [] }) {
     });
   };
 
+  const closeChat = () => {
+    abortControllerRef.current?.abort();
+    setIsOpen(false);
+    setIsMinimized(false);
+    setContextIsOpen(false);
+    setContextIsMinimized(false);
+  };
+
   const quickActions = [
     { icon: FiZap, label: "Weekly Summary", prompt: "Give me a comprehensive weekly summary of the most important FinTech news and events.", color: "from-primary to-purple-600" },
     { icon: FiTrendingUp, label: "Top Trends", prompt: "What are the top FinTech trends I should be watching right now?", color: "from-purple-500 to-pink-500" },
@@ -295,31 +303,38 @@ export default function FinTechChatBot({ articles = [] }) {
               boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(139, 92, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
             }}
           >
-            <div className="shrink-0 flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4 bg-gradient-to-r from-primary/10 via-purple-600/10 to-pink-600/10 border-b border-primary/20 backdrop-blur-sm">
-              <div className="flex items-center gap-3.5">
+            <div className="shrink-0 flex items-center justify-between gap-3 px-3 py-3 sm:px-5 sm:py-4 bg-gradient-to-r from-primary/10 via-purple-600/10 to-pink-600/10 border-b border-primary/20 backdrop-blur-sm">
+              <div className="flex min-w-0 items-center gap-2.5 sm:gap-3.5">
+                <button
+                  type="button"
+                  onClick={closeChat}
+                  className="sm:hidden inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 active:scale-95"
+                  aria-label="Back from chat"
+                  title="Back"
+                >
+                  <FiArrowLeft className="w-4 h-4" />
+                  <span>Back</span>
+                </button>
                 <div className="relative">
                   <div className="w-11 h-11 bg-gradient-to-br from-primary via-purple-500 to-pink-500 rounded-xl flex items-center justify-center border border-white/20 shadow-lg">
                     <FiZap className="w-5.5 h-5.5 text-white drop-shadow-md" />
                   </div>
                   <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-900 shadow-sm"></div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-white text-[15px] tracking-tight">FinTech AI Assistant</h3>
+                <div className="min-w-0">
+                  <h3 className="truncate font-bold text-white text-[15px] tracking-tight">FinTech AI Assistant</h3>
                   <p className="text-xs text-gray-400 font-medium">Powered by Groq</p>
                 </div>
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex shrink-0 items-center gap-1.5">
                 <button
-                  onClick={() => {
-                    setIsOpen(false);
-                    setIsMinimized(false);
-                    setContextIsOpen(false);
-                    setContextIsMinimized(false);
-                  }}
-                  className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200 text-gray-400 hover:text-primary hover:scale-110"
+                  type="button"
+                  onClick={closeChat}
+                  className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white shadow-sm transition-all duration-200 hover:bg-white/15 hover:text-primary active:scale-95"
+                  aria-label="Close chat"
                   title="Close"
                 >
-                  <FiMinimize2 className="w-4 h-4" />
+                  <FiX className="w-5 h-5" />
                 </button>
               </div>
             </div>
