@@ -1,5 +1,5 @@
-import DOMPurify from "isomorphic-dompurify";
 import { logError, logInfo } from "@/lib/serverLogger";
+import { sanitizePlainText } from "@/lib/sanitizePlainText";
 import { queueChatRequest } from "@/lib/requestQueue";
 import crypto from "crypto";
 
@@ -78,10 +78,7 @@ export async function POST(req) {
       message = message.substring(0, MAX_MESSAGE_LENGTH);
     }
 
-    const sanitizedMessage = DOMPurify.sanitize(message, {
-      ALLOWED_TAGS: [],
-      ALLOWED_ATTR: [],
-    }).trim();
+    const sanitizedMessage = sanitizePlainText(message);
 
     if (!sanitizedMessage) {
       return new Response(
