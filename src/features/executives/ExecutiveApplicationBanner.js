@@ -72,7 +72,7 @@ export default function ExecutiveApplicationBanner() {
               <div className="flex-shrink-0">
                 <Link
                   href="/executive-application"
-                  className="inline-flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-primary hover:bg-primary/90 text-white text-xs font-medium rounded-lg transition-all duration-200"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-primary hover:bg-primary/90 text-white text-xs font-medium rounded-xl transition-all duration-200"
                 >
                   Apply Now
                   <FiArrowRight className="w-3 h-3" />

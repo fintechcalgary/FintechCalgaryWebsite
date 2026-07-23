@@ -59,7 +59,7 @@ function DraggableExecutive({
               e.stopPropagation();
               handleEdit(executive);
             }}
-            className="text-gray-400 hover:text-primary transition-all duration-200 p-2 rounded-lg hover:bg-primary/10 hover:scale-105 relative z-20 border border-transparent hover:border-primary/20"
+            className="text-gray-400 hover:text-primary transition-all duration-200 p-2 rounded-xl hover:bg-primary/10 hover:scale-105 relative z-20 border border-transparent hover:border-primary/20"
             title="Edit"
           >
             <FiEdit2 />

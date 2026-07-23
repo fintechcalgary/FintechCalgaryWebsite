@@ -27,7 +27,7 @@ export const INITIAL_PARTNER_FORM = {
 };
 
 export const PARTNER_FORM_INPUT_CLASS =
-  "w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200 hover:border-gray-600/50";
+  "w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200 hover:border-gray-600/50";
 
 /**
  * Map an API member/application record into partner form values.

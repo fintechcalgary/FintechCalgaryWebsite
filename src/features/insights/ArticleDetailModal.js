@@ -71,7 +71,7 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                     href={article.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 rounded-lg bg-gray-800/50 border border-gray-700/30 text-gray-400 hover:text-primary hover:bg-gray-700/50 transition-all"
+                    className="p-2 rounded-xl bg-gray-800/50 border border-gray-700/30 text-gray-400 hover:text-primary hover:bg-gray-700/50 transition-all"
                     title="Open original article"
                   >
                     <FiExternalLink className="w-5 h-5" />
@@ -93,7 +93,7 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
               {article.summary ? (
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-xl flex items-center justify-center border border-primary/30">
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-purple-500/10 rounded-xl flex items-center justify-center border border-primary/30">
                       <FiZap className="w-6 h-6 text-primary" />
                     </div>
                     <div>

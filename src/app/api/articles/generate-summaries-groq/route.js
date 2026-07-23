@@ -114,7 +114,7 @@ export async function POST(_req) {
       const batchResults = await Promise.all(batchPromises);
       results.push(...batchResults);
       
-      console.log(`✓ Processed batch ${Math.floor(i/batchSize) + 1}/${Math.ceil(articles.length/batchSize)}`);
+      console.log(`Processed batch ${Math.floor(i/batchSize) + 1}/${Math.ceil(articles.length/batchSize)}`);
     }
 
     return new Response(

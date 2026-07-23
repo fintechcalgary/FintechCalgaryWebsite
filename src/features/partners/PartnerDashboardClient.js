@@ -196,7 +196,7 @@ export default function PartnerDashboardClient() {
               style={{ animationDelay: "1s" }}
             ></div>
           </div>
-          <div className="container mx-auto px-6 pt-32 pb-12 relative z-10">
+          <div className="container mx-auto px-6 pt-36 pb-12 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -205,7 +205,7 @@ export default function PartnerDashboardClient() {
           >
             {/* Header */}
             <div className="text-center mb-16 animate-fadeIn">
-              <h1 className="text-5xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary">
+              <h1 className="text-5xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
                 Partner Dashboard
               </h1>
               <div className="flex items-center justify-center gap-6">
@@ -278,7 +278,7 @@ export default function PartnerDashboardClient() {
               <section className="group animate-fadeIn">
                 <div
                   className="relative h-full bg-gray-900/80 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 
-                                        transition-all duration-500 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-primary/20
+                                        transition-all duration-500 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-primary/10
                                         hover:border-primary/50 overflow-hidden"
                   id="events"
                 >
@@ -298,7 +298,7 @@ export default function PartnerDashboardClient() {
 
                   {/* Enhanced Reminder Section */}
                   <div
-                    className="mb-6 p-4 rounded-xl border border-gray-700/30 hover:border-primary/50 bg-gradient-to-br from-gray-800/60 via-purple-900/20 to-gray-800/40
+                    className="mb-6 p-4 rounded-xl border border-gray-700/30 hover:border-primary/50 bg-gradient-to-br from-gray-800/60 via-purple-900/10 to-gray-800/40
                          shadow-lg hover:shadow-purple-600/20 duration-300 backdrop-blur-xl max-w-md sm:max-w-full transition-all"
                   >
                     <div className="flex items-center space-x-3">
@@ -336,7 +336,7 @@ export default function PartnerDashboardClient() {
                 </div>
                 <button
                   onClick={handleEditClick}
-                  className="group flex items-center space-x-3 px-6 py-3 bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 text-white rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25 border border-primary/30"
+                  className="group flex items-center space-x-3 px-6 py-3 bg-gradient-to-r from-primary to-purple-500/80 hover:from-primary/85 hover:to-purple-500/75 text-white rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/15 border border-primary/30"
                 >
                   <FiEdit2 className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                   <span className="font-medium">Edit Information</span>

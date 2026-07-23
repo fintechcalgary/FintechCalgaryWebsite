@@ -19,17 +19,17 @@
 
   /* Dashboard form dialogs — secondary / cancel */
   .fc-btn-dashboard-cancel {
-    @apply flex-1 rounded-lg border border-gray-600/50 bg-gray-700/50 px-4 py-2 text-sm text-white transition-all duration-300 hover:bg-gray-600/50;
+    @apply flex-1 rounded-xl border border-gray-600/50 bg-gray-700/50 px-4 py-2 text-sm text-white transition-all duration-300 hover:bg-gray-600/50;
   }
 
   /* Primary gradient CTA (add padding with px-* py-* on the element) */
   .fc-btn-gradient-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-primary to-purple-600 text-sm font-medium text-white transition-all hover:shadow-xl hover:shadow-primary/30;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-purple-500/80 text-sm font-medium text-white transition-all hover:shadow-xl hover:shadow-primary/15;
   }
 
   /* Insights “Read more” on card hover overlay */
   .fc-btn-read-more-subtle {
-    @apply flex cursor-pointer items-center gap-2 self-start rounded-lg border border-primary/30 bg-gradient-to-r from-primary/10 to-purple-500/10 px-3 py-1.5 text-primary transition-all duration-200 hover:scale-105 hover:border-primary/50 hover:bg-gradient-to-r hover:from-primary/20 hover:to-purple-500/20 hover:shadow-lg hover:shadow-primary/20;
+    @apply flex cursor-pointer items-center gap-2 self-start rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 to-purple-500/10 px-3 py-1.5 text-primary transition-all duration-200 hover:scale-105 hover:border-primary/50 hover:bg-gradient-to-r hover:from-primary/10 hover:to-purple-500/10 hover:shadow-lg hover:shadow-primary/10;
   }
 }
 
@@ -37,6 +37,15 @@
   /* One scrollbar style for all scroll containers (overflow auto/scroll) */
   * {
     @apply scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-gray-500/50 hover:scrollbar-thumb-gray-400/80;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display tracking-tight;
   }
 }
 
@@ -53,8 +62,10 @@ html {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), "Plus Jakarta Sans", system-ui, sans-serif;
   overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Modern Input Styles */
@@ -258,26 +269,6 @@ select::-ms-expand {
   }
 }
 
-@keyframes gradientX {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes gradient {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
 /* Animation Classes */
 .animate-scroll {
   animation: scroll var(--speed) linear infinite backwards;
@@ -313,16 +304,6 @@ select::-ms-expand {
 
 .animate-rock {
   animation: rock 3s ease-in-out infinite;
-}
-
-.animate-gradient-x {
-  animation: gradientX 3s ease infinite;
-  background-size: 200% 200%;
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient 3s ease infinite;
 }
 
 /* Animation Delays */

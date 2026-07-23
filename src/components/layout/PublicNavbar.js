@@ -141,7 +141,7 @@ export default function PublicNavbar() {
                 {navigationItems.map(([title, path]) => {
                   const isExternal = path.startsWith("http");
                   const isActive = !isExternal && pathname === path;
-                  const itemClass = `relative px-6 py-2.5 text-sm font-semibold rounded-xl text-gray-200 hover:text-white transition-colors
+                  const itemClass = `relative px-6 py-2.5 text-sm font-medium tracking-wide rounded-xl text-gray-200 hover:text-white transition-colors
                         ${
                           isActive
                             ? isScrolled

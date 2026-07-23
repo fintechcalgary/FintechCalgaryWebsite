@@ -658,7 +658,7 @@ export default function ExecutiveApplicationsPage() {
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/dashboard"
-              className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+              className="px-4 py-2 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
             >
               <FiArrowLeft className="w-4 h-4" />
               <span className="hidden sm:inline">Back to Dashboard</span>
@@ -1240,7 +1240,7 @@ export default function ExecutiveApplicationsPage() {
             <div className="mt-8 flex justify-end">
               <button
                 onClick={closeDetailsModal}
-                className="px-6 py-3 rounded-lg bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300 font-medium"
+                className="px-6 py-3 rounded-xl bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300 font-medium"
               >
                 Close
               </button>
@@ -1275,7 +1275,7 @@ export default function ExecutiveApplicationsPage() {
                   name="title"
                   value={roleForm.title}
                   onChange={handleRoleFormChange}
-                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
+                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
                   placeholder="e.g., VP Finance, President, etc."
                 />
                 {roleFormErrors.title && (
@@ -1358,7 +1358,7 @@ export default function ExecutiveApplicationsPage() {
               <button
                 onClick={handleAddRole}
                 disabled={uploadingImage}
-                className="flex-1 px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                className="flex-1 px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
               >
                 {uploadingImage ? (
                   <>
@@ -1400,7 +1400,7 @@ export default function ExecutiveApplicationsPage() {
                   name="title"
                   value={roleForm.title}
                   onChange={handleRoleFormChange}
-                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
+                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
                   placeholder="e.g., VP Finance, President, etc."
                 />
                 {roleFormErrors.title && (
@@ -1483,7 +1483,7 @@ export default function ExecutiveApplicationsPage() {
               <button
                 onClick={handleEditRole}
                 disabled={uploadingImage}
-                className="flex-1 px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                className="flex-1 px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
               >
                 {uploadingImage ? (
                   <>
@@ -1593,7 +1593,7 @@ export default function ExecutiveApplicationsPage() {
                   value={roleQuestionForm.label}
                   onChange={handleRoleQuestionFormChange}
                   rows={3}
-                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors resize-none"
+                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors resize-none"
                   placeholder="Enter the question text..."
                 />
                 {roleQuestionFormErrors.label && (
@@ -1612,7 +1612,7 @@ export default function ExecutiveApplicationsPage() {
                   value={roleQuestionForm.placeholder}
                   onChange={handleRoleQuestionFormChange}
                   rows={2}
-                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors resize-none"
+                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors resize-none"
                   placeholder="Enter placeholder text for the textarea..."
                 />
                 {roleQuestionFormErrors.placeholder && (
@@ -1678,7 +1678,7 @@ export default function ExecutiveApplicationsPage() {
                     ? handleEditRoleQuestion
                     : handleAddRoleQuestion
                 }
-                className="flex-1 px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+                className="flex-1 px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
               >
                 {editingRoleQuestion ? "Update Question" : "Add Question"}
               </button>

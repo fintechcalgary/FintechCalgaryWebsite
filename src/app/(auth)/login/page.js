@@ -130,7 +130,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full bg-primary hover:bg-primary/80 text-white font-medium py-2.5 sm:py-3 px-4 text-sm sm:text-base rounded-xl transition-all duration-200 shadow-lg shadow-primary/25 flex items-center justify-center
+            className={`w-full bg-primary hover:bg-primary/80 text-white font-medium py-2.5 sm:py-3 px-4 text-sm sm:text-base rounded-xl transition-all duration-200 shadow-lg shadow-primary/15 flex items-center justify-center
               ${isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
           >
             {isLoading ? (

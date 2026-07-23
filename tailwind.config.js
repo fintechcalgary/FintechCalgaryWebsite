@@ -8,6 +8,32 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: [
+          "var(--font-sans)",
+          "Plus Jakarta Sans",
+          "system-ui",
+          "sans-serif",
+        ],
+        display: [
+          "var(--font-display)",
+          "Space Grotesk",
+          "var(--font-sans)",
+          "sans-serif",
+        ],
+        brand: [
+          "var(--font-brand)",
+          "Syne",
+          "var(--font-display)",
+          "sans-serif",
+        ],
+        mono: [
+          "var(--font-mono)",
+          "JetBrains Mono",
+          "ui-monospace",
+          "monospace",
+        ],
+      },
       colors: {
         background: "#121212",
         foreground: "#ededed",

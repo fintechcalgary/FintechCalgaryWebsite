@@ -135,7 +135,7 @@ export default function Navbar() {
                     />
                   </svg>
                 </span>
-                <div className="absolute inset-0 -z-10 bg-gradient-to-r from-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
             </motion.div>
           </div>
@@ -158,7 +158,7 @@ export default function Navbar() {
             </Link>
             <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`text-white text-3xl focus:outline-none p-2 rounded-lg ${
+              className={`text-white text-3xl focus:outline-none p-2 rounded-xl ${
                 isScrolled
                   ? "bg-gray-800/50 hover:bg-gray-800/70"
                   : "hover:bg-gray-800/50"

@@ -23,7 +23,9 @@ export default function Footer() {
                 height={48}
                 className="w-12 h-12"
               />
-              <h3 className="text-2xl font-bold text-white">FinTech Calgary</h3>
+              <h3 className="font-brand text-2xl font-bold tracking-tight text-white">
+                FinTech Calgary
+              </h3>
             </div>
             <p className="text-gray-300 max-w-md leading-relaxed">
               Innovating the future of finance in Calgary. Join us in shaping

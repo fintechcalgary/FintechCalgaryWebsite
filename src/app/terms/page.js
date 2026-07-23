@@ -7,10 +7,10 @@ export default function TermsPage() {
     <PublicPageShell title="Terms of Service | FinTech Calgary">
 
       <div className="relative flex-grow">
-        <div className="container mx-auto px-6 pt-24 pb-16 relative z-10">
+        <div className="container mx-auto px-6 pt-36 pb-16 relative z-10">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h1 className="text-5xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
+              <h1 className="text-5xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 mb-6">
                 Terms of Service
               </h1>
               <p className="text-xl text-gray-300">

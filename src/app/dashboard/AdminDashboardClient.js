@@ -75,7 +75,7 @@ export default function AdminDashboardClient() {
 
         {/* Welcome section */}
         <div className="relative overflow-hidden rounded-2xl mb-8 animate-fadeIn">
-          <div className="relative bg-gray-900/80 backdrop-blur-2xl p-8 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20">
+          <div className="relative bg-gray-900/80 backdrop-blur-2xl p-8 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10">
             <div className="relative z-10 space-y-4">
               <div className="inline-block px-4 py-2 rounded-xl bg-primary/20 text-primary text-sm font-medium backdrop-blur-sm hover:scale-105 transition-transform border border-primary/30">
                 Your Workspace
@@ -83,7 +83,7 @@ export default function AdminDashboardClient() {
               <div className="space-y-2">
                 <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight">
                   Welcome back
-                  <span className="bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-primary to-purple-400/75 bg-clip-text text-transparent">
                     {session?.user?.email?.split("@")[0]
                       ? ` ${session.user.email.split("@")[0]}`
                       : ""}
@@ -104,7 +104,7 @@ export default function AdminDashboardClient() {
             <section className="group animate-fadeIn">
               <div
                 className="relative h-full bg-gray-900/80 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 
-                          transition-all duration-500 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-primary/20
+                          transition-all duration-500 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-primary/10
                           hover:border-primary/50 overflow-hidden"
               >
                 <div className="relative z-10 flex items-center justify-between mb-8">
@@ -229,7 +229,7 @@ export default function AdminDashboardClient() {
           <section className="group animate-fadeIn">
             <div
               className="relative h-full bg-gray-900/80 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 
-                            transition-all duration-500 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-primary/20
+                            transition-all duration-500 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-primary/10
                             hover:border-primary/50 overflow-hidden"
               id="events"
             >
@@ -247,7 +247,7 @@ export default function AdminDashboardClient() {
 
               {/* Enhanced Reminder Section */}
               <div
-                className="mb-6 p-4 rounded-xl border border-gray-700/30 hover:border-primary/50 bg-gradient-to-br from-gray-800/60 via-purple-900/20 to-gray-800/40
+                className="mb-6 p-4 rounded-xl border border-gray-700/30 hover:border-primary/50 bg-gradient-to-br from-gray-800/60 via-purple-900/10 to-gray-800/40
              shadow-lg hover:shadow-purple-600/20 duration-300 backdrop-blur-xl max-w-md sm:max-w-full transition-all"
               >
                 <div className="flex items-center space-x-3">
@@ -274,7 +274,7 @@ export default function AdminDashboardClient() {
           <section className="group animate-fadeIn">
             <div
               className="relative h-full bg-gray-900/80 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 
-                            transition-all duration-500 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-primary/20
+                            transition-all duration-500 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-primary/10
                             hover:border-primary/50 overflow-hidden"
             >
               <div className="relative z-10 flex items-center justify-between mb-8">

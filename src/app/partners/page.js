@@ -40,7 +40,7 @@ export default function PartnersPage() {
   return (
     <PublicPageShell title="Partners | FinTech Calgary">
       <div className="relative flex-grow">
-        <div className="container mx-auto px-6 py-24 sm:px-8 lg:px-12 relative z-10">
+        <div className="container mx-auto px-6 pt-36 pb-24 sm:px-8 lg:px-12 relative z-10">
           {/* Page Heading */}
           <div className="text-center mb-20 animate-fadeIn">
             <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
@@ -138,10 +138,10 @@ export default function PartnersPage() {
             >
               <button
                 onClick={() => setShowAll(!showAll)}
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-full 
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl 
                          bg-gradient-to-r from-primary/20 to-purple-600/20 backdrop-blur-xl
                          text-white transition-all duration-300 
-                         hover:shadow-xl hover:shadow-primary/30 transform hover:-translate-y-1
+                         hover:shadow-xl hover:shadow-primary/15 transform hover:-translate-y-1
                          border border-primary/30 hover:border-primary/50 group hover:scale-105
                          font-medium text-lg"
               >
@@ -170,7 +170,7 @@ export default function PartnersPage() {
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-600/10 rounded-full blur-[60px]"></div>
 
               <div className="relative z-10 text-center">
-                <h2 className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">
+                <h2 className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
                   Become a Sponsor
                 </h2>
                 <p className="text-xl text-gray-300/90 mb-8 max-w-2xl mx-auto">
@@ -182,7 +182,7 @@ export default function PartnersPage() {
                   <a
                     href="/FinTech Calgary Sponsorship Package 2025_2026.pdf"
                     download
-                    className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-primary hover:bg-primary/90 text-white text-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-xl hover:shadow-primary/30"
+                    className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white text-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-xl hover:shadow-primary/15"
                   >
                     Download Package
                     <FiDownload className="ml-2" />
@@ -191,7 +191,7 @@ export default function PartnersPage() {
                     href="/FinTech Calgary Sponsorship Package 2025_2026.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-[#1e1e2d] hover:bg-[#2a2a3d] text-white text-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-xl hover:shadow-gray-700/30"
+                    className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-[#1e1e2d] hover:bg-[#2a2a3d] text-white text-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-xl hover:shadow-gray-700/30"
                   >
                     View in New Tab
                     <FiExternalLink className="ml-2" />

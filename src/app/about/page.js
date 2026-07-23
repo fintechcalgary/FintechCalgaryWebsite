@@ -9,9 +9,9 @@ export default function AboutPage() {
   return (
     <PublicPageShell title="About | FinTech Calgary">
       <div className="relative flex-grow">
-        <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-24 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 pt-28 pb-12 sm:pt-36 sm:pb-24 relative z-10">
           <div className="text-center mb-8 sm:mb-16 relative animate-fadeIn">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-4 sm:mb-6 relative z-10">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 mb-4 sm:mb-6 relative z-10">
               About Us
             </h1>
             <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto relative z-10 mb-6 sm:mb-10">
@@ -96,7 +96,7 @@ export default function AboutPage() {
         {/* Call to Action */}
         <div className="mb-16 sm:mb-32 text-center animate-slideInUp px-4 sm:px-6">
           <div className="bg-gradient-to-br from-gray-800/70 to-gray-900/70 backdrop-blur-xl p-8 sm:p-12 rounded-3xl border border-gray-700/50 max-w-4xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
               Join Our Community
             </h2>
             <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto">
@@ -105,7 +105,7 @@ export default function AboutPage() {
             </p>
             <Link
               href="/join"
-              className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-primary hover:bg-primary/90 text-base sm:text-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-xl hover:shadow-primary/30"
+              className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-primary hover:bg-primary/90 text-base sm:text-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-xl hover:shadow-primary/15"
             >
               Become a Member
               <FiArrowRight className="ml-2" />

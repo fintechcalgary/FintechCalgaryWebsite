@@ -187,7 +187,7 @@ export default function Events({ mode }) {
             e.stopPropagation();
             showForm ? resetForm() : setShowForm(true);
           }}
-          className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+          className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-xl transition-all duration-200 hover:scale-105"
         >
           {showForm ? <FiX /> : <FiPlus />}
           {showForm ? "Cancel" : "Add"}
@@ -353,7 +353,7 @@ export default function Events({ mode }) {
                   />
                   <label
                     htmlFor="imageUpload"
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700"
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700"
                   >
                     <FiImage />
                     {uploading ? "Uploading..." : "Choose Images"}
@@ -405,7 +405,7 @@ export default function Events({ mode }) {
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg"
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-xl"
                 disabled={uploading}
               >
                 Cancel
@@ -413,7 +413,7 @@ export default function Events({ mode }) {
               <button
                 type="submit"
                 disabled={uploading}
-                className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg"
+                className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-xl"
               >
                 {editingEvent ? <FiEdit2 /> : <FiPlus />}
                 {uploading
@@ -472,7 +472,7 @@ export default function Events({ mode }) {
                       e.stopPropagation();
                       handleEdit(event);
                     }}
-                    className="text-gray-400 hover:text-primary transition-all duration-200 p-2 rounded-lg hover:bg-primary/10 hover:scale-105 relative z-20 border border-transparent hover:border-primary/20"
+                    className="text-gray-400 hover:text-primary transition-all duration-200 p-2 rounded-xl hover:bg-primary/10 hover:scale-105 relative z-20 border border-transparent hover:border-primary/20"
                     title="Edit"
                   >
                     <FiEdit2 />
@@ -508,7 +508,7 @@ export default function Events({ mode }) {
                     <Link
                       href={`/events/register/${event._id}`}
                       onClick={(e) => e.stopPropagation()}
-                      className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg transition-all duration-200 text-sm font-medium hover:scale-105"
+                      className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-xl transition-all duration-200 text-sm font-medium hover:scale-105"
                     >
                       Register for Event
                     </Link>
@@ -534,7 +534,7 @@ export default function Events({ mode }) {
       </div>
 
       {events.length === 0 && !showForm && (
-        <div className="text-center py-12 bg-gray-800/50 rounded-lg min-h-[400px] flex flex-col items-center justify-center">
+        <div className="text-center py-12 bg-gray-800/50 rounded-xl min-h-[400px] flex flex-col items-center justify-center">
           <FiCalendar className="mx-auto text-4xl text-primary mb-4" />
           <p className="text-gray-400">
             No events yet. Create your first event!

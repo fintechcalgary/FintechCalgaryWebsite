@@ -66,7 +66,7 @@ export async function POST(_req) {
             summary: summary.substring(0, 100) + "...",
             status: "success"
           });
-          console.log(`✓ Generated summary for: ${article.title}`);
+          console.log(`Generated summary for: ${article.title}`);
         } else {
           results.push({
             url: article.url,
@@ -74,10 +74,10 @@ export async function POST(_req) {
             status: "failed",
             error: "Empty summary generated"
           });
-          console.log(`✗ Failed to generate summary for: ${article.title}`);
+          console.log(`Failed to generate summary for: ${article.title}`);
         }
       } catch (error) {
-        console.error(`✗ Error generating summary for ${article.title}:`, error.message);
+        console.error(`Error generating summary for ${article.title}:`, error.message);
         results.push({
           url: article.url,
           title: article.title,

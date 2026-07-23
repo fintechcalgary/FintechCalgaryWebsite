@@ -113,7 +113,7 @@ export default function JoinPage() {
   return (
     <PublicPageShell>
 
-      <div className="relative flex-grow flex items-center justify-center py-12">
+      <div className="relative flex-grow flex items-center justify-center pt-28 pb-12">
         <div className="relative container mx-auto px-6 my-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -464,7 +464,7 @@ export default function JoinPage() {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                          className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-4 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                         >
                           {isSubmitting
                             ? "Submitting..."

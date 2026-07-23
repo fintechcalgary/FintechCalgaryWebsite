@@ -103,7 +103,7 @@ export default function EventCard({ event }) {
             <p className="text-gray-300 line-clamp-2 leading-relaxed">{event.description}</p>
 
             {/* View Event/Webinar button */}
-            <div className="inline-flex items-center px-6 py-3 rounded-full bg-primary/90 hover:bg-primary text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/25">
+            <div className="inline-flex items-center px-6 py-3 rounded-xl bg-primary/90 hover:bg-primary text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/15">
               {event.eventType === "webinar" ? "View Webinar" : "View Event"}
             </div>
           </div>

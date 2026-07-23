@@ -271,13 +271,13 @@ export default function RegisterEventForm({ eventId }) {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Link
                 href="/"
-                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 text-center"
+                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 text-center"
               >
                 Cancel
               </Link>
               <button
                 type="submit"
-                className="flex-1 bg-primary hover:bg-primary/80 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 shadow-lg shadow-primary/25"
+                className="flex-1 bg-primary hover:bg-primary/80 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 shadow-lg shadow-primary/15"
               >
                 {event && event.eventType === "webinar"
                   ? "Register for Webinar"

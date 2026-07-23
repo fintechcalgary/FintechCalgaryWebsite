@@ -90,7 +90,7 @@ export default function ArticlesPage() {
   return (
     <PublicPageShell title="Finance News Articles | FinTech Calgary">
 
-      <section className="relative overflow-hidden pt-28 pb-3">
+      <section className="relative overflow-hidden pt-36 pb-3">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
@@ -118,7 +118,7 @@ export default function ArticlesPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-8"
           >
-            <h1 className="text-5xl md:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500">
+            <h1 className="text-5xl md:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
               Finance News Articles
             </h1>
             <p className="text-gray-300 text-lg max-w-2xl mx-auto">
@@ -139,13 +139,13 @@ export default function ArticlesPage() {
                 <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
                   <button
                     onClick={() => setScope("week")}
-                    className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${scope === "week" ? "bg-gradient-to-r from-primary to-fuchsia-500 text-white shadow-lg shadow-primary/20" : "text-gray-300 hover:text-white"}`}
+                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${scope === "week" ? "bg-gradient-to-r from-primary to-purple-500/80 text-white shadow-lg shadow-primary/10" : "text-gray-300 hover:text-white"}`}
                   >
                     This Week
                   </button>
                   <button
                     onClick={() => setScope("all")}
-                    className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${scope === "all" ? "bg-gradient-to-r from-primary to-fuchsia-500 text-white shadow-lg shadow-primary/20" : "text-gray-300 hover:text-white"}`}
+                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${scope === "all" ? "bg-gradient-to-r from-primary to-purple-500/80 text-white shadow-lg shadow-primary/10" : "text-gray-300 hover:text-white"}`}
                   >
                     Full Archive
                   </button>
@@ -157,14 +157,14 @@ export default function ArticlesPage() {
                 <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
                   <button
                     onClick={() => setViewMode("grid")}
-                    className={`p-2.5 rounded-lg transition-all ${viewMode === "grid" ? "bg-primary text-white" : "text-gray-400 hover:text-white"}`}
+                    className={`p-2.5 rounded-xl transition-all ${viewMode === "grid" ? "bg-primary text-white" : "text-gray-400 hover:text-white"}`}
                     aria-label="Grid view"
                   >
                     <FiGrid className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => setViewMode("list")}
-                    className={`p-2.5 rounded-lg transition-all ${viewMode === "list" ? "bg-primary text-white" : "text-gray-400 hover:text-white"}`}
+                    className={`p-2.5 rounded-xl transition-all ${viewMode === "list" ? "bg-primary text-white" : "text-gray-400 hover:text-white"}`}
                     aria-label="List view"
                   >
                     <FiList className="w-5 h-5" />
@@ -188,7 +188,7 @@ export default function ArticlesPage() {
                 <button
                   onClick={fetchArticles}
                   disabled={loading}
-                  className="inline-flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white hover:shadow-lg hover:shadow-primary/25 disabled:opacity-50"
+                  className="inline-flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-500/80 text-white hover:shadow-lg hover:shadow-primary/15 disabled:opacity-50"
                   aria-label="Refresh articles"
                 >
                   <FiRefreshCw className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />

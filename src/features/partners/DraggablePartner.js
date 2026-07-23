@@ -100,7 +100,7 @@ function DraggablePartner({
               e.stopPropagation();
               onEdit(partner);
             }}
-            className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-primary hover:bg-primary/10 transition-all touch-manipulation"
+            className="p-1.5 sm:p-2 rounded-xl text-gray-400 hover:text-primary hover:bg-primary/10 transition-all touch-manipulation"
             title="Edit"
           >
             <FiEdit2 className="w-4 h-4" />

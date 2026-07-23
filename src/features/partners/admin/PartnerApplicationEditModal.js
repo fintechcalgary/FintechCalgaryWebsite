@@ -42,7 +42,7 @@ export default function PartnerApplicationEditModal({
                     approvalStatus: e.target.value,
                   })
                 }
-                className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white"
+                className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white"
               >
                 <option value="pending">Pending</option>
                 <option value="accepted">Accepted</option>

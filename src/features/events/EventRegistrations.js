@@ -142,7 +142,7 @@ export default function EventRegistrations({ eventId }) {
             onClick={exportToCSV}
             className="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary/80 
             text-white rounded-lg transition-all duration-200 gap-2 shadow-lg 
-            hover:shadow-primary/25 hover:-translate-y-0.5"
+            hover:shadow-primary/15 hover:-translate-y-0.5"
           >
             <FiDownload className="w-4 h-4" />
             Export CSV

@@ -109,7 +109,7 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
             aria-label="Weekly FinTech Digest"
             className="fixed inset-4 md:inset-8 lg:inset-x-16 lg:inset-y-8 xl:inset-x-28 z-[60] flex flex-col rounded-2xl overflow-hidden border border-primary/30 shadow-2xl"
             style={{
-              background: "linear-gradient(135deg, #0f0f1a 0%, #13111f 50%, #0d0d18 100%)",
+              background: "linear-gradient(160deg, #0e0e12 0%, #121218 55%, #0e0e12 100%)",
               boxShadow: "0 25px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(139,92,246,0.15), inset 0 1px 0 rgba(255,255,255,0.05)",
             }}
           >
@@ -125,7 +125,7 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
 
             {/* ── Header ── */}
             <div className="relative flex-shrink-0 px-6 pt-6 pb-5 border-b border-gray-800/60"
-              style={{ background: "linear-gradient(to bottom, rgba(139,92,246,0.08), transparent)" }}
+              style={{ background: "linear-gradient(to bottom, rgba(139,92,246,0.04), transparent)" }}
             >
               {/* Decorative glow */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-24 bg-primary/10 blur-3xl pointer-events-none" />
@@ -145,7 +145,7 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
 
                 <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-1">
                   Weekly{" "}
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-400">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
                     FinTech Digest
                   </span>
                 </h2>
@@ -363,7 +363,7 @@ function DigestArticleRow({ article, rank, formatDate }) {
         href={article.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg text-gray-500 hover:text-primary"
+        className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-xl text-gray-500 hover:text-primary"
       >
         <FiExternalLink className="w-3.5 h-3.5" />
       </a>

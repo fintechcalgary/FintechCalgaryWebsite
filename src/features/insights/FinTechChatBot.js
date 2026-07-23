@@ -87,7 +87,7 @@ export default function FinTechChatBot({ articles = [] }) {
     if (isOpen && !isInitialized) {
       const welcomeMessage = selectedArticle 
         ? `Hi! I can help you analyze this article: "${selectedArticle.title}". Ask me any questions about it, and I'll provide detailed insights.`
-        : "Hello! I'm your FinTech AI assistant. To get the most out of our conversation, navigate to an article you'd like to learn about or are curious about, then use the magnifying glass (🔍) to analyze it with AI. This helps me provide more targeted insights about specific articles and build your financial literacy. What would you like to explore?";
+        : "Hello! I'm your FinTech AI assistant. To get the most out of our conversation, navigate to an article you'd like to learn about or are curious about, then use the magnifying glass to analyze it with AI. This helps me provide more targeted insights about specific articles and build your financial literacy. What would you like to explore?";
       
       setMessages([
         {
@@ -255,8 +255,8 @@ export default function FinTechChatBot({ articles = [] }) {
   };
 
   const quickActions = [
-    { icon: FiZap, label: "Weekly Summary", prompt: "Give me a comprehensive weekly summary of the most important FinTech news and events.", color: "from-primary to-purple-600" },
-    { icon: FiTrendingUp, label: "Top Trends", prompt: "What are the top FinTech trends I should be watching right now?", color: "from-purple-500 to-pink-500" },
+    { icon: FiZap, label: "Weekly Summary", prompt: "Give me a comprehensive weekly summary of the most important FinTech news and events.", color: "from-primary to-purple-500/80" },
+    { icon: FiTrendingUp, label: "Top Trends", prompt: "What are the top FinTech trends I should be watching right now?", color: "from-purple-500/80 to-purple-400/70" },
     { icon: FiBook, label: "For Students", prompt: "I'm a student interested in FinTech. What should I learn, explore, and focus on? Give me advice on career paths, skills to develop, and trends to watch.", color: "from-blue-500 to-cyan-500" },
     { icon: FiBriefcase, label: "Career Advice", prompt: "What career opportunities and paths are available in FinTech? What skills are in demand?", color: "from-green-500 to-emerald-500" },
     { icon: FiTarget, label: "Explore Areas", prompt: "What are the most exciting areas in FinTech to explore right now? What should I focus on?", color: "from-orange-500 to-red-500" },
@@ -276,7 +276,7 @@ export default function FinTechChatBot({ articles = [] }) {
             setIsOpen(true);
             setContextIsOpen(true);
           }}
-          className="fixed bottom-8 right-8 z-[60] flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-white/20 bg-gradient-to-br from-primary via-purple-600 to-pink-600 text-white shadow-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-primary/50"
+          className="fixed bottom-4 right-4 z-[60] flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-white/20 bg-gradient-to-br from-primary to-purple-500/80 text-white shadow-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-primary/20 sm:bottom-8 sm:right-8 sm:h-16 sm:w-16"
           style={{
             boxShadow: "0 20px 40px rgba(139, 92, 246, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)",
           }}
@@ -299,7 +299,7 @@ export default function FinTechChatBot({ articles = [] }) {
               boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(139, 92, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
             }}
           >
-            <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-primary/10 via-purple-600/10 to-pink-600/10 border-b border-primary/20 backdrop-blur-sm">
+            <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-primary/10 to-purple-500/10 border-b border-primary/20 backdrop-blur-sm">
               <div>
                 <h3 className="font-bold text-white text-[15px] tracking-tight">FinTech AI Assistant</h3>
                 <p className="text-xs text-gray-400 font-medium">Powered by Groq</p>
@@ -424,7 +424,7 @@ export default function FinTechChatBot({ articles = [] }) {
                       <div
                         className={`max-w-[85%] rounded-2xl px-4 py-3.5 ${
                           msg.role === "user"
-                            ? "bg-gradient-to-br from-primary/30 via-purple-600/30 to-pink-600/30 text-white border border-primary/40 shadow-lg"
+                            ? "bg-gradient-to-br from-primary/15 to-purple-500/15 text-white border border-primary/40 shadow-lg"
                             : msg.error
                             ? "bg-gradient-to-br from-red-900/30 to-red-800/20 text-red-100 border border-red-500/40 shadow-lg backdrop-blur-sm"
                             : "bg-gradient-to-br from-gray-800/80 to-gray-800/60 text-gray-100 border border-gray-700/40 shadow-lg backdrop-blur-sm"
@@ -547,7 +547,7 @@ export default function FinTechChatBot({ articles = [] }) {
                       disabled={!input.trim() || isLoading || !canSend}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="p-3 bg-gradient-to-br from-primary via-purple-600 to-pink-600 rounded-xl hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white flex items-center justify-center shadow-lg hover:shadow-xl border border-white/20"
+                      className="p-3 bg-gradient-to-br from-primary to-purple-500/80 rounded-xl hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white flex items-center justify-center shadow-lg hover:shadow-xl border border-white/20"
                       style={{
                         boxShadow: "0 4px 12px rgba(139, 92, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
                       }}

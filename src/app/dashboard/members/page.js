@@ -123,7 +123,7 @@ export default function MembersPage() {
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/dashboard"
-              className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+              className="px-4 py-2 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
             >
               <FiArrowLeft className="w-4 h-4" />
               <span className="hidden sm:inline">Back to Dashboard</span>

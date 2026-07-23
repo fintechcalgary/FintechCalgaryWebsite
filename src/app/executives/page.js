@@ -75,10 +75,10 @@ export default async function ExecutivesPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/80 z-0"></div>
 
           {/* Content Section */}
-          <div className="relative z-10 container mx-auto px-6 py-24 sm:px-8 lg:px-12">
+          <div className="relative z-10 container mx-auto px-6 pt-36 pb-24 sm:px-8 lg:px-12">
             {/* Page Heading */}
             <div className="text-center mb-16 animate-fadeIn">
-              <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
+              <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 mb-6">
                 Meet Our Executives
               </h1>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto">

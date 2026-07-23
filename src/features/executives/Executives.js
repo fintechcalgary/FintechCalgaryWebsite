@@ -198,16 +198,16 @@ export default function Executives() {
   };
 
   const moveExecutive = (fromIndex, toIndex) => {
-    // 1️⃣ Get the actual executive being moved from the filtered list
+    // 1. Get the actual executive being moved from the filtered list
     const movedExecutive = filteredExecutives[fromIndex];
 
-    // 2️⃣ Get its index in the full executives list
+    // 2. Get its index in the full executives list
     const globalFromIndex = executives.findIndex((e) => e._id === movedExecutive._id);
     const globalToIndex = executives.findIndex(
       (e) => e._id === filteredExecutives[toIndex]._id
     );
 
-    // 3️⃣ Swap executives in the global list
+    // 3. Swap executives in the global list
     const updatedExecutives = [...executives];
     const [movedGlobalExecutive] = updatedExecutives.splice(globalFromIndex, 1);
     updatedExecutives.splice(globalToIndex, 0, movedGlobalExecutive);
@@ -261,7 +261,7 @@ export default function Executives() {
                 e.stopPropagation();
                 showForm ? resetForm() : setShowForm(true);
               }}
-              className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+              className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-xl transition-all duration-200 hover:scale-105"
             >
               {showForm ? <FiX /> : <FiPlus />}
               {showForm ? "Cancel" : "Add"}
@@ -494,7 +494,7 @@ export default function Executives() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
+                className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-xl transition-all duration-200"
                 disabled={uploading}
               >
                 Cancel
@@ -503,7 +503,7 @@ export default function Executives() {
                 type="submit"
                 form="executiveForm"
                 disabled={uploading || submitting}
-                className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2
+                className={`bg-primary hover:bg-primary/80 text-white font-medium py-2 px-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2
                 ${
                   uploading || submitting ? "opacity-50 cursor-not-allowed" : ""
                 }`}
@@ -539,7 +539,7 @@ export default function Executives() {
         </div>
 
         {executives.length === 0 && !showForm && (
-          <div className="text-center py-12 bg-gray-800/50 rounded-lg min-h-[400px] flex flex-col items-center justify-center animate-fadeIn">
+          <div className="text-center py-12 bg-gray-800/50 rounded-xl min-h-[400px] flex flex-col items-center justify-center animate-fadeIn">
             <FiUser className="mx-auto text-4xl text-primary mb-4" />
             <p className="text-gray-400">
               No team executives yet. Add your first executive!

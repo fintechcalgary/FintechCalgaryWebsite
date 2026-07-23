@@ -69,12 +69,12 @@ async function generateSummariesForArticles() {
         
         if (summary) {
           await updateArticleSummary(db, article.url, summary);
-          console.log(`✓ Summary generated and saved: ${summary.substring(0, 100)}...`);
+          console.log(`OK Summary generated and saved: ${summary.substring(0, 100)}...`);
         } else {
-          console.log('✗ Failed to generate summary (empty result)');
+          console.log('FAILED to generate summary (empty result)');
         }
       } catch (error) {
-        console.error(`✗ Error generating summary for ${article.title}:`, error.message);
+        console.error(`ERROR generating summary for ${article.title}:`, error.message);
       }
 
       // Small delay between requests to avoid rate limiting

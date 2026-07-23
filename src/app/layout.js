@@ -1,13 +1,44 @@
 import "./globals.css";
-import { DM_Sans } from "next/font/google";
+import {
+  Plus_Jakarta_Sans,
+  Space_Grotesk,
+  Syne,
+  JetBrains_Mono,
+} from "next/font/google";
 import ClientSessionProvider from "@/components/providers/ClientSessionProvider";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { Analytics } from "@vercel/analytics/next";
 
-// Add multiple weights for DM Sans
-const dmSans = DM_Sans({
+/* Slim geometric UI — body, nav, buttons */
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-sans",
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+/* Modern tech display — section titles & headlines */
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+/* Distinctive brand moments — hero & wordmarks */
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-brand",
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+/* Technical accents — labels, issue numbers, code-like UI */
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata = {
@@ -48,9 +79,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${plusJakarta.variable} ${spaceGrotesk.variable} ${syne.variable} ${jetbrainsMono.variable}`}
+    >
       <body
-        className={`${dmSans.className} bg-background text-foreground min-h-screen bg-cover bg-top bg-no-repeat relative`}
+        className={`${plusJakarta.className} bg-background text-foreground min-h-screen bg-cover bg-top bg-no-repeat relative font-sans antialiased`}
         style={{
           backgroundImage: "url(/bg-image.jpg)",
           backgroundSize: "cover",

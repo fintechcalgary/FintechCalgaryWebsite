@@ -1,34 +1,7 @@
 import Link from "next/link";
-import { FiArrowRight, FiUsers, FiCode, FiTrendingUp } from "react-icons/fi";
+import { FiArrowRight } from "react-icons/fi";
 
-const FeatureCard = ({ feature, index }) => {
-  const getColorClasses = (idx) => {
-    if (idx === 0) {
-      return {
-        bg: 'bg-primary/10',
-        border: 'border-primary/20',
-        icon: 'text-primary',
-        hoverBg: 'group-hover:bg-primary/20'
-      };
-    } else if (idx === 1) {
-      return {
-        bg: 'bg-purple-500/10',
-        border: 'border-purple-500/20',
-        icon: 'text-purple-400',
-        hoverBg: 'group-hover:bg-purple-500/20'
-      };
-    } else {
-      return {
-        bg: 'bg-pink-500/10',
-        border: 'border-pink-500/20',
-        icon: 'text-pink-400',
-        hoverBg: 'group-hover:bg-pink-500/20'
-      };
-    }
-  };
-  
-  const colorScheme = getColorClasses(index);
-
+const FeatureCard = ({ feature }) => {
   return (
     <div
       className="group relative p-8 rounded-2xl border border-gray-800/50 
@@ -36,22 +9,9 @@ const FeatureCard = ({ feature, index }) => {
                  hover:border-primary/30 transition-all duration-500"
     >
       <div className="flex flex-col h-full">
-        <div className="flex items-start gap-4 mb-4">
-          <div 
-            className={`flex-shrink-0 w-14 h-14 rounded-xl ${colorScheme.bg} ${colorScheme.border} border
-                        flex items-center justify-center ${colorScheme.hoverBg} 
-                        transition-all duration-300`}
-          >
-            <div className={colorScheme.icon}>
-              {feature.icon}
-            </div>
-          </div>
-          <div className="flex-1 pt-1">
-            <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-primary transition-colors duration-300">
-              {feature.title}
-            </h3>
-          </div>
-        </div>
+        <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-primary transition-colors duration-300">
+          {feature.title}
+        </h3>
 
         <p className="text-gray-400 leading-relaxed text-base flex-1">
           {feature.description}
@@ -64,18 +24,15 @@ const FeatureCard = ({ feature, index }) => {
 export default function MissionStatement() {
   const features = [
     {
-      icon: <FiUsers />,
       title: "To Educate",
       description:
         "Learn about the evolving world of Fintech and its transformative impact",
     },
     {
-      icon: <FiCode />,
       title: "To Inspire",
       description: "Foster creativity and innovation in discovering new ideas",
     },
     {
-      icon: <FiTrendingUp />,
       title: "To Shape",
       description: "Be part of shaping the future of financial technology",
     },
@@ -89,25 +46,25 @@ export default function MissionStatement() {
           <Link href="/about" className="group inline-block relative">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 md:mb-6">
               <span className="relative inline-block">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500 animate-gradient">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
                   Mission Statement
                 </span>
-                <span className="absolute inset-0 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300">
+                <span className="absolute inset-0 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300">
                   Mission Statement
                 </span>
               </span>
             </h2>
             <div className="relative h-1 w-full max-w-xs mx-auto mt-2 md:mt-3">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50 blur-sm"></div>
-              <div className="relative h-full bg-gradient-to-r from-primary via-purple-400 to-pink-500 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
+              <div className="relative h-full bg-gradient-to-r from-primary to-purple-400/75 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
             </div>
           </Link>
         </div>
 
         {/* Features grid */}
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8 mb-12">
-          {features.map((feature, index) => (
-            <FeatureCard key={feature.title} feature={feature} index={index} />
+          {features.map((feature) => (
+            <FeatureCard key={feature.title} feature={feature} />
           ))}
         </div>
 
@@ -115,9 +72,9 @@ export default function MissionStatement() {
         <div className="flex justify-center">
           <Link
             href="/join"
-            className="group inline-flex items-center gap-3 px-8 py-4 text-lg font-medium rounded-full 
+            className="group inline-flex items-center gap-3 px-8 py-4 text-lg font-medium rounded-xl 
                      bg-primary hover:bg-primary/90 text-white 
-                     transition-all duration-300 hover:shadow-xl hover:shadow-primary/25"
+                     transition-all duration-300 hover:shadow-xl hover:shadow-primary/15"
           >
             Join Now
             <FiArrowRight className="text-xl transition-transform duration-300 group-hover:translate-x-1" />

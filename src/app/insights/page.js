@@ -12,19 +12,7 @@ import { OverviewSentimentBar } from "@/features/insights/SentimentBars";
 import { ChatBotProvider, useChatBot } from "@/contexts/ChatBotContext";
 import ErrorBoundary from "@/components/providers/ErrorBoundary";
 import Link from "next/link";
-import {
-  FiTrendingUp,
-  FiZap,
-  FiBarChart2,
-  FiArrowRight,
-  FiClock,
-  FiEye,
-  FiTarget,
-  FiCalendar,
-  FiAlertCircle,
-  FiSearch,
-  FiFileText,
-} from "react-icons/fi";
+import { FiArrowRight, FiAlertCircle, FiSearch } from "react-icons/fi";
 
 const extractReadableSource = (article) => {
   const rawSource = (article?.source || "").trim();
@@ -397,7 +385,7 @@ function InsightsPageContent() {
         <main className="flex flex-col min-h-screen">
           <PublicNavbar />
 
-          <section className="relative overflow-hidden pt-32 pb-16">
+          <section className="relative overflow-hidden pt-36 pb-16">
             <div className="container mx-auto px-6 max-w-7xl relative z-10">
               {hasConnectionError && (
                 <motion.div
@@ -422,37 +410,29 @@ function InsightsPageContent() {
                 transition={{ duration: 0.6 }}
                 className="text-center mb-16"
               >
-                <h1 className="text-6xl md:text-7xl lg:text-8xl font-black leading-[1.08] pb-2 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500">
+                <h1 className="text-6xl md:text-7xl lg:text-8xl font-black leading-[1.08] pb-2 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
                   FinTech Insights
                 </h1>
                 <p className="text-gray-300 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed mb-8">
                   Your command center for the latest FinTech trends, top
                   stories, and AI-curated insights
                 </p>
-                <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-400">
-                  <div className="flex items-center gap-2">
-                    <FiClock className="w-4 h-4" />
-                    <span>Updated daily</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <FiZap className="w-4 h-4" />
-                    <span>AI-powered summaries</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <FiTrendingUp className="w-4 h-4" />
-                    <span>Trending topics</span>
-                  </div>
+                <p className="text-sm text-gray-500">
+                  Updated daily
+                  <span className="mx-2.5 text-white/20" aria-hidden>
+                    ·
+                  </span>
+                  AI-powered summaries
                   {lastRefresh && (
-                    <div className="flex items-center gap-2">
-                      <FiClock className="w-4 h-4" />
-                      <span>
-                        Last refresh: {formatLastRefresh(lastRefresh)}
+                    <>
+                      <span className="mx-2.5 text-white/20" aria-hidden>
+                        ·
                       </span>
-                    </div>
+                      Last refresh: {formatLastRefresh(lastRefresh)}
+                    </>
                   )}
-                </div>
+                </p>
 
-                {/* Weekly Digest trigger */}
                 {articles.length > 0 && (
                   <motion.div
                     initial={{ opacity: 0, y: 8 }}
@@ -462,14 +442,11 @@ function InsightsPageContent() {
                   >
                     <button
                       onClick={() => setDigestOpen(true)}
-                      className="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-primary/40 bg-gradient-to-r from-primary/10 via-purple-500/10 to-pink-500/10 text-white text-sm font-medium hover:border-primary/70 hover:from-primary/20 hover:via-purple-500/20 hover:to-pink-500/20 transition-all duration-300 shadow-lg shadow-primary/10 hover:shadow-primary/25"
+                      className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 bg-white/[0.03] text-white text-sm font-medium hover:border-primary/40 hover:bg-primary/5 transition-colors duration-200"
                     >
-                      <div className="w-5 h-5 rounded-md bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center flex-shrink-0">
-                        <FiFileText className="w-3 h-3 text-white" />
-                      </div>
                       <span>This Week&apos;s Full Digest</span>
-                      <span className="px-1.5 py-0.5 rounded bg-primary/20 border border-primary/30 text-primary text-[10px] font-semibold">
-                        {articles.length} stories
+                      <span className="text-gray-500 tabular-nums">
+                        {articles.length}
                       </span>
                       <FiArrowRight className="w-3.5 h-3.5 text-primary group-hover:translate-x-0.5 transition-transform" />
                     </button>
@@ -496,17 +473,12 @@ function InsightsPageContent() {
                   className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50 flex-1 flex flex-col"
                 >
                   <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-xl flex items-center justify-center border border-primary/30">
-                        <FiTrendingUp className="w-5 h-5 text-primary" />
-                      </div>
-                      <h2 className="text-2xl font-bold text-white">
-                        This Week&apos;s Top Stories
-                      </h2>
-                    </div>
+                    <h2 className="text-2xl font-bold text-white">
+                      This Week&apos;s Top Stories
+                    </h2>
                     <Link
                       href="/articles"
-                      className="text-sm text-primary hover:text-purple-400 transition-colors flex items-center gap-1"
+                      className="text-sm text-primary hover:text-purple-400 transition-colors inline-flex items-center gap-1"
                     >
                       View All
                       <FiArrowRight className="w-4 h-4" />
@@ -546,9 +518,6 @@ function InsightsPageContent() {
                       </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center py-16 text-center flex-1">
-                        <div className="w-16 h-16 bg-gray-800/50 rounded-full flex items-center justify-center mb-4">
-                          <FiTrendingUp className="w-8 h-8 text-gray-500" />
-                        </div>
                         <p className="text-gray-400">
                           No top stories available yet
                         </p>
@@ -566,14 +535,9 @@ function InsightsPageContent() {
                   transition={{ duration: 0.6, delay: 0.5 }}
                   className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50 flex-1 flex flex-col"
                 >
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-xl flex items-center justify-center border border-purple-500/30">
-                      <FiTarget className="w-5 h-5 text-purple-400" />
-                    </div>
-                    <h2 className="text-2xl font-bold text-white">
-                      Key Insights
-                    </h2>
-                  </div>
+                  <h2 className="text-2xl font-bold text-white mb-6">
+                    Key Insights
+                  </h2>
 
                   <div className="flex-1 flex flex-col">
                     {keyInsights ? (
@@ -581,27 +545,18 @@ function InsightsPageContent() {
                         <InsightCard
                           title="News Coverage"
                           description={`${keyInsights.totalArticles} articles from ${keyInsights.uniqueSources} sources covering ${keyInsights.coverage} days`}
-                          icon={FiBarChart2}
-                          color="text-primary"
                         />
                         <InsightCard
                           title="Archive Growth"
                           description={`${keyInsights.totalArchiveArticles || totalArchiveArticles} total articles in archive, updated with each weekly digest release`}
-                          icon={FiCalendar}
-                          color="text-purple-400"
                         />
                         <InsightCard
                           title="Trending Now"
                           description={`${trendingTopics.length} topics are trending across FinTech news, indicating active industry movement`}
-                          icon={FiTrendingUp}
-                          color="text-blue-400"
                         />
                       </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center py-12 text-center flex-1">
-                        <div className="w-12 h-12 bg-gray-800/50 rounded-full flex items-center justify-center mb-4 animate-pulse">
-                          <FiTarget className="w-6 h-6 text-gray-500" />
-                        </div>
                         <p className="text-gray-400">Loading insights...</p>
                       </div>
                     )}
@@ -616,14 +571,9 @@ function InsightsPageContent() {
                   transition={{ duration: 0.6, delay: 0.4 }}
                   className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50 flex-1 flex flex-col min-h-0"
                 >
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center border border-blue-500/30">
-                      <FiTrendingUp className="w-5 h-5 text-blue-400" />
-                    </div>
-                    <h3 className="text-xl font-bold text-white">
-                      Trending Topics
-                    </h3>
-                  </div>
+                  <h3 className="text-xl font-bold text-white mb-6">
+                    Trending Topics
+                  </h3>
 
                   <div className="flex-1 flex flex-col min-h-0 justify-center">
                     {trendingTopics.length > 0 ? (
@@ -637,7 +587,7 @@ function InsightsPageContent() {
                               duration: 0.3,
                               delay: 0.5 + index * 0.05,
                             }}
-                            className="px-4 py-2 rounded-lg bg-gradient-to-r from-primary/20 to-purple-500/20 border border-primary/30 text-sm font-medium text-white hover:border-primary/50 hover:from-primary/30 hover:to-purple-500/30 transition-all cursor-pointer whitespace-nowrap"
+                            className="px-4 py-2 rounded-lg bg-white/[0.04] border border-white/10 text-sm font-medium text-gray-200 hover:border-primary/40 hover:text-white transition-colors cursor-pointer whitespace-nowrap"
                           >
                             {topic}
                           </motion.span>
@@ -645,9 +595,6 @@ function InsightsPageContent() {
                       </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center text-center">
-                        <div className="w-12 h-12 bg-gray-800/50 rounded-full flex items-center justify-center mb-4">
-                          <FiTrendingUp className="w-6 h-6 text-gray-500" />
-                        </div>
                         <p className="text-gray-400 text-sm">
                           No trending topics yet
                         </p>
@@ -662,14 +609,9 @@ function InsightsPageContent() {
                   transition={{ duration: 0.6, delay: 0.5 }}
                   className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50 flex-1 flex flex-col min-h-0"
                 >
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl flex items-center justify-center border border-green-500/30">
-                      <FiBarChart2 className="w-5 h-5 text-green-400" />
-                    </div>
-                    <h3 className="text-xl font-bold text-white">
-                      Sentiment Overview
-                    </h3>
-                  </div>
+                  <h3 className="text-xl font-bold text-white mb-6">
+                    Sentiment Overview
+                  </h3>
 
                   <div className="flex-1 flex flex-col min-h-0 justify-center">
                     {sentimentData.total > 0 ? (
@@ -722,12 +664,9 @@ function InsightsPageContent() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.6 }}
-                  className="bg-gradient-to-br from-primary/20 to-purple-500/20 backdrop-blur-xl rounded-2xl p-6 border border-primary/30 flex-1 flex flex-col min-h-0 justify-center"
+                  className="bg-gradient-to-br from-primary/10 to-purple-500/10 backdrop-blur-xl rounded-2xl p-6 border border-primary/30 flex-1 flex flex-col min-h-0 justify-center"
                 >
                   <div className="text-center">
-                    <div className="w-14 h-14 bg-gradient-to-br from-primary/30 to-purple-500/30 rounded-xl flex items-center justify-center mx-auto mb-4 border border-primary/40">
-                      <FiEye className="w-7 h-7 text-primary" />
-                    </div>
                     <h3 className="text-lg font-bold text-white mb-2">
                       Explore Deeper
                     </h3>
@@ -883,14 +822,10 @@ function FeaturedArticleCardInner({ article, featured = false, onReadMore }) {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleCheckoutToAI}
-          className="absolute bottom-3 right-3 z-20 w-10 h-10 bg-gradient-to-br from-primary via-purple-600 to-pink-600 rounded-xl shadow-lg hover:shadow-xl flex items-center justify-center text-white border-2 border-white/20 backdrop-blur-sm transition-all duration-200"
-          style={{
-            boxShadow:
-              "0 8px 16px rgba(139, 92, 246, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)",
-          }}
+          className="absolute bottom-3 right-3 z-20 w-9 h-9 rounded-xl bg-primary/90 hover:bg-primary flex items-center justify-center text-white border border-white/10 transition-colors duration-200"
           title="Analyze with AI"
         >
-          <FiSearch className="w-5 h-5 drop-shadow-sm" />
+          <FiSearch className="w-4 h-4" />
         </motion.button>
       )}
 
@@ -925,7 +860,7 @@ function FeaturedArticleCardInner({ article, featured = false, onReadMore }) {
             </h3>
             <button
               onClick={(e) => onReadMore(e, article, summary)}
-              className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary/10 border border-primary/30 rounded-lg text-xs text-primary hover:bg-primary/20 hover:border-primary/50 transition-all duration-200 w-fit"
+              className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary/10 border border-primary/30 rounded-xl text-xs text-primary hover:bg-primary/20 hover:border-primary/50 transition-all duration-200 w-fit"
             >
               Read more
               <FiArrowRight className="w-3 h-3" />
@@ -968,18 +903,11 @@ function FeaturedArticleCardInner({ article, featured = false, onReadMore }) {
   );
 }
 
-function InsightCard({ title, description, icon: Icon, color }) {
+function InsightCard({ title, description }) {
   return (
-    <div className="flex items-start gap-4 p-4 rounded-lg bg-gray-900/30 border border-gray-700/30 hover:border-primary/30 transition-colors">
-      <div
-        className={`w-10 h-10 bg-gradient-to-br ${color === "text-primary" ? "from-primary/20 to-purple-500/20 border-primary/30" : color === "text-purple-400" ? "from-purple-500/20 to-blue-500/20 border-purple-500/30" : "from-blue-500/20 to-cyan-500/20 border-blue-500/30"} rounded-lg flex items-center justify-center border flex-shrink-0`}
-      >
-        <Icon className={`w-5 h-5 ${color}`} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <h4 className="font-semibold text-white mb-1">{title}</h4>
-        <p className="text-sm text-gray-300 leading-relaxed">{description}</p>
-      </div>
+    <div className="p-4 rounded-lg border border-white/[0.06] hover:border-white/10 transition-colors">
+      <h4 className="font-semibold text-white mb-1">{title}</h4>
+      <p className="text-sm text-gray-400 leading-relaxed">{description}</p>
     </div>
   );
 }

@@ -303,7 +303,7 @@ export default function AddPartnersPage() {
             </div>
           )}
           <div className="flex flex-col gap-2">
-            <label className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-gray-700/50 cursor-pointer transition-all inline-flex items-center gap-2 w-fit">
+            <label className="px-4 py-2 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-gray-700/50 cursor-pointer transition-all inline-flex items-center gap-2 w-fit">
               <FiUpload className="w-4 h-4" />
               {logoFile ? "Change image" : "Upload image"}
               <input
@@ -323,14 +323,14 @@ export default function AddPartnersPage() {
         <button
           type="button"
           onClick={resetForm}
-          className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-all text-sm sm:text-base"
+          className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gray-700 hover:bg-gray-600 text-white transition-all text-sm sm:text-base"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={submitting || uploadingLogo}
-          className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base"
+          className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base"
         >
           <FiEdit2 className="w-4 h-4 flex-shrink-0" />
           {submitting ? "Saving..." : submitLabel}
@@ -353,7 +353,7 @@ export default function AddPartnersPage() {
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
             <Link
               href="/dashboard"
-              className="px-4 py-2.5 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm w-full sm:w-auto"
+              className="px-4 py-2.5 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm w-full sm:w-auto"
             >
               <FiArrowLeft className="w-4 h-4 flex-shrink-0" />
               <span className="hidden sm:inline">Back to Dashboard</span>
@@ -361,7 +361,7 @@ export default function AddPartnersPage() {
             </Link>
             <button
               onClick={openAdd}
-              className="px-4 py-2.5 rounded-lg bg-primary/20 border border-primary/30 text-primary hover:bg-primary/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm w-full sm:w-auto"
+              className="px-4 py-2.5 rounded-xl bg-primary/20 border border-primary/30 text-primary hover:bg-primary/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm w-full sm:w-auto"
             >
               <FiPlus className="w-4 h-4 flex-shrink-0" />
               Add Partner
@@ -391,7 +391,7 @@ export default function AddPartnersPage() {
             <p className="text-gray-400 text-base sm:text-lg mb-4">No partners yet</p>
             <button
               onClick={openAdd}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm sm:text-base w-full max-w-xs mx-auto justify-center"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white text-sm sm:text-base w-full max-w-xs mx-auto justify-center"
             >
               <FiPlus className="w-4 h-4 flex-shrink-0" />
               Add your first partner

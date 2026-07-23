@@ -19,7 +19,7 @@ export default function ApplicationList({
               <p className="text-red-400 text-sm sm:text-base">{error}</p>
               <button
                 onClick={fetchApplications}
-                className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm"
+                className="mt-4 px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors text-sm"
               >
                 Try Again
               </button>
@@ -143,7 +143,7 @@ export default function ApplicationList({
                         <div className="flex gap-2 ml-3">
                           <button
                             onClick={() => onViewDetails(application)}
-                            className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-lg transition-colors"
+                            className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-xl transition-colors"
                             title="View Details"
                           >
                             <FiEye className="w-4 h-4" />

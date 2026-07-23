@@ -78,7 +78,7 @@ export default async function EventPage({ params }) {
               </p>
               <Link
                 href="/events"
-                className="inline-flex items-center px-6 py-3 rounded-full bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
+                className="inline-flex items-center px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
               >
                 <FiArrowLeft className="mr-2" />
                 Back to Events
@@ -107,7 +107,7 @@ export default async function EventPage({ params }) {
               </p>
               <Link
                 href="/events"
-                className="inline-flex items-center px-6 py-3 rounded-full bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
+                className="inline-flex items-center px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
               >
                 <FiArrowLeft className="mr-2" />
                 Back to Events
@@ -131,7 +131,7 @@ export default async function EventPage({ params }) {
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
           </div>
 
-          <div className="container mx-auto px-4 pt-32 pb-20 relative z-10">
+          <div className="container mx-auto px-4 pt-36 pb-20 relative z-10">
             {/* Back Button */}
             <div className="mb-8">
               <Link
@@ -258,7 +258,7 @@ export default async function EventPage({ params }) {
                     {isUpcoming ? (
                       <Link
                         href={`/events/register/${event._id}`}
-                        className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-primary/25"
+                        className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-500/80 hover:from-primary/85 hover:to-purple-500/75 text-white font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-primary/15"
                       >
                         {event.eventType === "webinar"
                           ? "Register for Webinar"
@@ -305,7 +305,7 @@ export default async function EventPage({ params }) {
             </p>
             <Link
               href="/events"
-              className="inline-flex items-center px-6 py-3 rounded-full bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
+              className="inline-flex items-center px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
             >
               <FiArrowLeft className="mr-2" />
               Back to Events

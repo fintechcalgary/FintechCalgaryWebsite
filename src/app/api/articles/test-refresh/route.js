@@ -2,7 +2,7 @@ import { connectToDatabase } from "@/lib/mongodb";
 
 export const dynamic = "force-dynamic";
 
-// ⚠️  Development-only endpoint.
+// Development-only endpoint.
 // Clears the articles collection and inserts a small set of seed articles for
 // local testing.  Blocked entirely in production so it can never be triggered
 // accidentally or by an attacker.

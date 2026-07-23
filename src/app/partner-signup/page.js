@@ -200,9 +200,9 @@ export default function PartnerSignupPage() {
     <PublicPageShell title="Partner | FinTech Calgary">
 
       <div className="relative flex-grow">
-        <div className="container mx-auto px-6 pt-24 relative z-10">
+        <div className="container mx-auto px-6 pt-36 relative z-10">
           <div className="text-center animate-fadeIn">
-            <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
+            <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 mb-6">
               Partner Sign Up
             </h1>
             <p className="text-xl text-gray-300 mx-auto">

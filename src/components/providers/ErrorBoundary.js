@@ -80,14 +80,14 @@ class ErrorBoundary extends React.Component {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onClick={this.handleReset}
-                  className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-purple-600 text-white rounded-lg hover:opacity-90 transition-all font-medium"
+                  className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-purple-500/80 text-white rounded-xl hover:opacity-90 transition-all font-medium"
                 >
                   <FiRefreshCw className="w-4 h-4" />
                   Try Again
                 </button>
                 <Link
                   href="/"
-                  className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-800/50 text-white rounded-lg hover:bg-gray-800 transition-all font-medium border border-gray-700/50"
+                  className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-800/50 text-white rounded-xl hover:bg-gray-800 transition-all font-medium border border-gray-700/50"
                 >
                   <FiHome className="w-4 h-4" />
                   Go Home

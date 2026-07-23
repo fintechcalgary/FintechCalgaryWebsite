@@ -93,7 +93,7 @@ export default function EventsPageClient({ initialEvents }) {
   return (
     <PublicPageShell title="Events | FinTech Calgary">
       {/* Page Content */}
-      <div className="container mx-auto px-6 py-24 sm:px-8 lg:px-12 relative z-10 flex-grow">
+      <div className="container mx-auto px-6 pt-36 pb-24 sm:px-8 lg:px-12 relative z-10 flex-grow">
         {/* Dynamic Page Heading */}
         <div className="text-center mb-16 animate-fadeIn">
           <PageTitle
@@ -112,7 +112,7 @@ export default function EventsPageClient({ initialEvents }) {
           <select
             value={filter}
             onChange={handleFilterChange}
-            className="px-6 py-3 w-64 bg-gray-800/50 text-white rounded-lg border border-gray-600 
+            className="px-6 py-3 w-64 bg-gray-800/50 text-white rounded-xl border border-gray-600 
             focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
             shadow-lg backdrop-blur-sm
             pl-6 pr-12 hover:bg-gray-700/50"
@@ -202,7 +202,7 @@ export default function EventsPageClient({ initialEvents }) {
         </div>
 
         {filteredEvents.length === 0 && (
-          <div className="text-center py-12 bg-gray-800/50 rounded-lg min-h-[400px] flex flex-col items-center justify-center mt-12 animate-fadeIn">
+          <div className="text-center py-12 bg-gray-800/50 rounded-xl min-h-[400px] flex flex-col items-center justify-center mt-12 animate-fadeIn">
             <FiCalendar className="mx-auto text-4xl text-primary mb-4" />
             <p className="text-gray-400">
               No events or webinars available for the selected filter.

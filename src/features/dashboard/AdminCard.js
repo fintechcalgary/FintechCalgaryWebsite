@@ -12,7 +12,7 @@ export default function AdminCard({ title, description, icon: Icon, href, color 
   return (
     <Link
       href={href}
-      className="group relative overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl p-6 border border-gray-700/30 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:scale-[1.02]"
+      className="group relative overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl p-6 border border-gray-700/30 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:scale-[1.02]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -30,7 +30,7 @@ export default function AdminCard({ title, description, icon: Icon, href, color 
           </h3>
           <div
             className={`w-10 h-10 bg-gradient-to-br from-${color}/20 to-${color}/30 rounded-lg flex items-center justify-center border border-${color}/30 transition-all duration-300 ${
-              isHovered ? "scale-110 shadow-lg shadow-primary/25" : ""
+              isHovered ? "scale-110 shadow-lg shadow-primary/15" : ""
             }`}
           >
             <Icon className={`w-5 h-5 text-${color}`} />

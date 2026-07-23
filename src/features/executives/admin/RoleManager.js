@@ -32,7 +32,7 @@ export default function RoleManager({
             {executiveApplicationsOpen && (
               <button
                 onClick={onAddClick}
-                className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium"
+                className="px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium"
               >
                 <FiPlus className="w-4 h-4" />
                 Add an Opening
@@ -53,7 +53,7 @@ export default function RoleManager({
               {executiveApplicationsOpen && (
                 <button
                   onClick={onAddClick}
-                  className="px-6 py-3 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium mx-auto"
+                  className="px-6 py-3 rounded-xl bg-primary text-white hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium mx-auto"
                 >
                   <FiPlus className="w-4 h-4" />
                   Create First Role
@@ -74,7 +74,7 @@ export default function RoleManager({
                     <div className="flex gap-2">
                       <button
                         onClick={() => onEditClick(role)}
-                        className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-lg transition-all duration-200 hover:scale-105"
+                        className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-xl transition-all duration-200 hover:scale-105"
                         title="Edit Role"
                       >
                         <FiEdit2 className="w-4 h-4" />
@@ -121,7 +121,7 @@ export default function RoleManager({
                         </h4>
                         <button
                           onClick={() => onAddQuestion(role)}
-                          className="p-1.5 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-lg transition-all duration-200 hover:scale-105"
+                          className="p-1.5 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-xl transition-all duration-200 hover:scale-105"
                           title="Add Question"
                         >
                           <FiPlus className="w-3 h-3" />

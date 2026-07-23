@@ -13,10 +13,10 @@ export default function ExecutiveApplications() {
           <div className="group inline-block relative">
             <div className="flex items-center justify-center gap-4">
               <div className="relative">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-primary">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
                   Executive Applications
                 </span>
-                <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-28 h-1 bg-gradient-to-r from-primary to-purple-500 rounded-full"></div>
+                <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-28 h-1 bg-gradient-to-r from-primary to-purple-500/80 rounded-full"></div>
               </div>
             </div>
           </div>
@@ -28,7 +28,7 @@ export default function ExecutiveApplications() {
             className="group bg-gray-900/40 backdrop-blur-2xl rounded-3xl p-12 lg:p-16 
             shadow-2xl border border-white/10 hover:border-primary/30 
             transition-all duration-700 relative overflow-hidden mb-12
-            hover:shadow-primary/20 hover:scale-[1.02]"
+            hover:shadow-primary/10 hover:scale-[1.02]"
           >
             <div className="relative z-10 text-center">
               <div className="mb-8">
@@ -68,7 +68,7 @@ export default function ExecutiveApplications() {
                   },
                 ].map((item, index) => (
                   <div key={index} className="text-center group/item">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-800/30 backdrop-blur-xl rounded-full mb-4 border border-white/10 hover:border-primary/30 transition-all duration-300 group-hover/item:scale-110 group-hover/item:shadow-lg group-hover/item:shadow-primary/20">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-800/30 backdrop-blur-xl rounded-full mb-4 border border-white/10 hover:border-primary/30 transition-all duration-300 group-hover/item:scale-110 group-hover/item:shadow-lg group-hover/item:shadow-primary/10">
                       <item.icon className="w-8 h-8 text-primary" />
                     </div>
                     <h4 className="text-xl font-semibold text-white mb-2">
@@ -81,10 +81,10 @@ export default function ExecutiveApplications() {
 
               <Link
                 href="/executive-application"
-                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold rounded-full 
+                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold rounded-xl 
                   bg-gradient-to-r from-primary/20 to-purple-600/20 backdrop-blur-xl
                   text-white transition-all duration-300 
-                  hover:shadow-xl hover:shadow-primary/30 transform hover:-translate-y-1
+                  hover:shadow-xl hover:shadow-primary/15 transform hover:-translate-y-1
                   border border-primary/30 hover:border-primary/50 group hover:scale-105"
               >
                 Apply Now
@@ -116,7 +116,7 @@ export default function ExecutiveApplications() {
                 className="group bg-gray-900/40 backdrop-blur-2xl rounded-3xl p-8 
                   shadow-xl hover:shadow-2xl border border-white/10 hover:border-primary/30 
                   transition-all duration-700 relative overflow-hidden
-                  hover:scale-[1.02] hover:shadow-primary/20"
+                  hover:scale-[1.02] hover:shadow-primary/10"
               >
                 <div className="relative z-10 h-full flex flex-col">
                   <h3 className="text-2xl font-bold text-white mb-4">

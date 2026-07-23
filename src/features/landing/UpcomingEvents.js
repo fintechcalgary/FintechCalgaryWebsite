@@ -11,17 +11,17 @@ export default function UpcomingEvents({ events }) {
           <Link href="/events" className="group inline-block relative">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 md:mb-6">
               <span className="relative inline-block">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500 animate-gradient">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
                   Upcoming Events & Webinars
                 </span>
-                <span className="absolute inset-0 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300">
+                <span className="absolute inset-0 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300">
                   Upcoming Events & Webinars
                 </span>
               </span>
             </h2>
             <div className="relative h-1 w-full max-w-xs mx-auto mt-2 md:mt-3">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50 blur-sm"></div>
-              <div className="relative h-full bg-gradient-to-r from-primary via-purple-400 to-pink-500 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
+              <div className="relative h-full bg-gradient-to-r from-primary to-purple-400/75 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
             </div>
           </Link>
         </div>
@@ -49,7 +49,7 @@ export default function UpcomingEvents({ events }) {
             <div className="flex justify-center">
               <Link
                 href="/events"
-                className="group inline-flex items-center gap-3 px-8 py-4 text-lg font-medium rounded-full 
+                className="group inline-flex items-center gap-3 px-8 py-4 text-lg font-medium rounded-xl 
                          border border-gray-700 hover:border-primary/50 text-white transition-all duration-300 
                          hover:shadow-xl hover:bg-gray-800/50"
               >

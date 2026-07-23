@@ -235,7 +235,7 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
                   className={`p-2 rounded-lg transition-all ${
                     isGeneratingSummary
                       ? 'bg-primary/30 text-primary cursor-wait'
-                      : 'text-gray-400 hover:text-primary hover:bg-gradient-to-br hover:from-primary/20 hover:to-purple-600/20'
+                      : 'text-gray-400 hover:text-primary hover:bg-gradient-to-br hover:from-primary/10 hover:to-purple-500/10'
                   }`}
                   title={isGeneratingSummary ? 'Generating summary...' : 'Generate AI summary'}
                   aria-label="Generate AI summary"
@@ -256,7 +256,7 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
                 href={article.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-lg text-gray-400 hover:text-primary hover:bg-gray-700/50 transition-colors"
+                className="p-2 rounded-xl text-gray-400 hover:text-primary hover:bg-gray-700/50 transition-colors"
                 aria-label="Open article in new tab"
               >
                 <FiExternalLink className="w-4 h-4" />

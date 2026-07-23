@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const GRADIENT =
-  "bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary";
+  "bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75";
 
 /**
  * Landing-section gradient heading with optional hover underline (linked).
@@ -23,7 +23,7 @@ export function SectionHeading({
         >
           {children}
         </span>
-        <span className="absolute -bottom-2 left-0 w-0 h-1 bg-gradient-to-r from-primary via-purple-400 to-pink-500 group-hover:w-full transition-all duration-500 rounded-full" />
+        <span className="absolute -bottom-2 left-0 w-0 h-1 bg-gradient-to-r from-primary to-purple-400/75 group-hover:w-full transition-all duration-500 rounded-full" />
       </span>
     </Tag>
   );
