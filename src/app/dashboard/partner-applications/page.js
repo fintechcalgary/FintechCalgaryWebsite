@@ -1,3 +1,5 @@
-"use client";
+import { redirect } from "next/navigation";
 
-export { default } from "@/features/partners/admin/PartnerApplicationsPage";
+export default function PartnerApplicationsRedirect() {
+  redirect("/dashboard/partners?tab=applications");
+}
