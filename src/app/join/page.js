@@ -4,8 +4,7 @@ import { useState } from "react";
 import { API_ENDPOINTS, ERROR_MESSAGES, UPLOAD_FOLDERS, FILE_TYPES } from "@/lib/constants";
 import { motion } from "framer-motion";
 import { FiCheck, FiArrowLeft, FiAlertCircle, FiUpload, FiX } from "react-icons/fi";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
 import Link from "next/link";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { uploadFile, validateFile, createDragHandlers } from "@/lib/frontend-helpers";
@@ -112,8 +111,7 @@ export default function JoinPage() {
 
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
+    <PublicPageShell>
 
       <div className="relative flex-grow flex items-center justify-center py-12">
         <div className="relative container mx-auto px-6 my-20">
@@ -483,8 +481,6 @@ export default function JoinPage() {
           </motion.div>
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

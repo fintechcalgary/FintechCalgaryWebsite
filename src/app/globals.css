@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Shared dashboard modal shell (see DashboardCenterModal) */
+/* Shared dashboard modal shell (see components/ui/Modal/DashboardModal) */
 @layer components {
   .fc-dashboard-modal-backdrop {
     @apply fixed inset-0 z-50 flex animate-fadeIn items-center justify-center bg-black/50 p-4 backdrop-blur-sm;

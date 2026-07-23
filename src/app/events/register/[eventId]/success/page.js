@@ -2,18 +2,12 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiCheck, FiArrowLeft } from "react-icons/fi";
-import { useEffect } from "react";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
 
 export default function RegistrationSuccess() {
-  useEffect(() => {
-    document.title = "Registration Successful | FinTech Calgary";
-  }, []);
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
+    <PublicPageShell title="Registration Successful | FinTech Calgary">
 
       <div className="relative flex-grow flex items-center justify-center">
         <div className="relative z-10 w-full max-w-2xl px-4">
@@ -55,8 +49,6 @@ export default function RegistrationSuccess() {
           </motion.div>
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

@@ -1,21 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function AboutPage() {
-  useEffect(() => {
-    document.title = "About | FinTech Calgary";
-  }, []);
-
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
-
+    <PublicPageShell title="About | FinTech Calgary">
       <div className="relative flex-grow">
         <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-24 relative z-10">
           <div className="text-center mb-8 sm:mb-16 relative animate-fadeIn">
@@ -121,8 +113,6 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

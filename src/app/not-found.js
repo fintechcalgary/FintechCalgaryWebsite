@@ -1,20 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { FiArrowLeft } from "react-icons/fi";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
 
 export default function NotFound() {
-  useEffect(() => {
-    document.title = "404 - Page Not Found | FinTech Calgary";
-  }, []);
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
+    <PublicPageShell title="404 - Page Not Found | FinTech Calgary">
 
       <div className="relative flex-grow flex items-center justify-center">
         <div className="relative z-10 container mx-auto px-6 py-24">
@@ -43,8 +37,6 @@ export default function NotFound() {
           </motion.div>
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

@@ -1,7 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import {
   FiMail,
@@ -10,112 +8,93 @@ import {
   FiTrash2,
   FiArrowLeft,
 } from "react-icons/fi";
-import Navbar from "@/components/Navbar";
-import Modal from "@/components/Modal";
+import Navbar from "@/components/layout/AdminNavbar";
+import Modal from "@/components/ui/Modal/ConfirmModal";
+import { LoadingState } from "@/components/ui/Spinner";
 import Link from "next/link";
+import useAdminResource from "@/hooks/useAdminResource";
+import useConfirmDelete from "@/hooks/useConfirmDelete";
+import { downloadCsv } from "@/lib/csv";
+import { formatDateLocale, todayIsoDate } from "@/lib/dates";
+
+function getMemberName(member) {
+  if (member.firstName && member.lastName) {
+    return `${member.firstName} ${member.lastName}`;
+  }
+  return member.name || "N/A";
+}
 
 export default function MembersPage() {
-  const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [memberToDelete, setMemberToDelete] = useState(null);
-  const { data: session } = useSession();
-
-  useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/members");
-        const data = await response.json();
-        setMembers(data);
-      } catch (error) {
-        console.error("Failed to fetch members:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (session?.user?.role === "admin") {
-      fetchMembers();
-    } else if (session && session.user.role !== "admin") {
-      setLoading(false);
-    }
-  }, [session]);
-
-  const handleDeleteClick = (member) => {
-    setMemberToDelete(member);
-    setShowDeleteModal(true);
-  };
+  const {
+    isAdmin,
+    data: members,
+    setData: setMembers,
+    loading,
+  } = useAdminResource("/api/members", {
+    redirectUnauthenticated: false,
+  });
+  const {
+    isOpen: showDeleteModal,
+    target: memberToDelete,
+    ask: handleDeleteClick,
+    close: closeDeleteModal,
+  } = useConfirmDelete();
 
   const handleDeleteConfirm = async () => {
+    if (!memberToDelete) return;
+
     try {
-      const response = await fetch(
-        `/api/members/${memberToDelete._id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`/api/members/${memberToDelete._id}`, {
+        method: "DELETE",
+      });
 
       if (!response.ok) {
         throw new Error("Failed to delete member");
       }
 
-      setMembers(
-        members.filter((m) => m._id !== memberToDelete._id)
-      );
-      setShowDeleteModal(false);
-      setMemberToDelete(null);
+      setMembers((prev) => prev.filter((m) => m._id !== memberToDelete._id));
+      closeDeleteModal();
     } catch (error) {
       console.error("Error deleting member:", error);
     }
   };
 
-  const getMemberName = (member) => {
-    if (member.firstName && member.lastName) {
-      return `${member.firstName} ${member.lastName}`;
-    }
-    // Fallback for old records that might have "name" field
-    return member.name || "N/A";
-  };
-
-  const downloadCSV = () => {
-    const headers = ["First Name", "Last Name", "UCID", "Email", "Membership Type", "Has Paid", "Resume", "Joined Date"];
-    const csvData = members.map((member) => [
-      member.firstName || member.name || "",
-      member.lastName || "",
-      member.ucid || "",
-      member.email || "",
-      member.membership_type || member.membershipType || "free",
-      member.has_paid === true ? "Yes" : "No",
-      member.resume || "",
-      new Date(member.createdAt).toLocaleDateString(),
-    ]);
-
-    const csvContent = [
-      headers.join(","),
-      ...csvData.map((row) => row.map(cell => `"${cell}"`).join(",")),
-    ].join("\n");
-
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `members-${new Date().toISOString().split("T")[0]}.csv`;
-    a.click();
+  const handleExportCsv = () => {
+    downloadCsv({
+      headers: [
+        "First Name",
+        "Last Name",
+        "UCID",
+        "Email",
+        "Membership Type",
+        "Has Paid",
+        "Resume",
+        "Joined Date",
+      ],
+      rows: members.map((member) => [
+        member.firstName || member.name || "",
+        member.lastName || "",
+        member.ucid || "",
+        member.email || "",
+        member.membership_type || member.membershipType || "free",
+        member.has_paid === true ? "Yes" : "No",
+        member.resume || "",
+        formatDateLocale(member.createdAt),
+      ]),
+      filename: `members-${todayIsoDate()}.csv`,
+    });
   };
 
   if (loading) {
     return (
       <div className="min-h-screen">
         <Navbar />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
-        </div>
+        <LoadingState fullScreen />
       </div>
     );
   }
 
-  if (session?.user?.role !== "admin") {
+  if (!isAdmin) {
     return (
       <div className="min-h-screen">
         <Navbar />
@@ -151,7 +130,7 @@ export default function MembersPage() {
               <span className="sm:hidden">Back</span>
             </Link>
             <button
-              onClick={downloadCSV}
+              onClick={handleExportCsv}
               disabled={members.length === 0}
               className="px-4 py-2 rounded-lg bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -266,22 +245,29 @@ export default function MembersPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            (member.membership_type || member.membershipType) === "premium"
-                              ? "bg-primary/20 text-primary"
-                              : "bg-gray-700/50 text-gray-300"
-                          }`}>
-                            {member.membership_type || member.membershipType || "free"}
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              (member.membership_type ||
+                                member.membershipType) === "premium"
+                                ? "bg-primary/20 text-primary"
+                                : "bg-gray-700/50 text-gray-300"
+                            }`}
+                          >
+                            {member.membership_type ||
+                              member.membershipType ||
+                              "free"}
                           </span>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            member.has_paid === true
-                              ? "bg-green-500/20 text-green-400"
-                              : "bg-gray-700/50 text-gray-300"
-                          }`}>
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              member.has_paid === true
+                                ? "bg-green-500/20 text-green-400"
+                                : "bg-gray-700/50 text-gray-300"
+                            }`}
+                          >
                             {member.has_paid === true ? "Yes" : "No"}
                           </span>
                         </div>
@@ -304,7 +290,7 @@ export default function MembersPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-400">
-                          {new Date(member.createdAt).toLocaleDateString()}
+                          {formatDateLocale(member.createdAt)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -327,13 +313,12 @@ export default function MembersPage() {
 
       <Modal
         isOpen={showDeleteModal}
-        onClose={() => {
-          setShowDeleteModal(false);
-          setMemberToDelete(null);
-        }}
+        onClose={closeDeleteModal}
         onConfirm={handleDeleteConfirm}
         title="Confirm Delete"
-        message={`Are you sure you want to remove ${memberToDelete ? getMemberName(memberToDelete) : ""} from the members list?`}
+        message={`Are you sure you want to remove ${
+          memberToDelete ? getMemberName(memberToDelete) : ""
+        } from the members list?`}
         confirmText="Delete"
         cancelText="Cancel"
         type="danger"
@@ -341,4 +326,3 @@ export default function MembersPage() {
     </div>
   );
 }
-

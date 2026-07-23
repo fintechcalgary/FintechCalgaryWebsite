@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import {
   FiImage,
   FiArrowLeft,
@@ -10,13 +8,19 @@ import {
   FiEdit2,
   FiUpload,
 } from "react-icons/fi";
-import Navbar from "@/components/Navbar";
-import Modal from "@/components/Modal";
-import PortalModal from "@/components/PortalModal";
-import PartnersGrid from "@/components/PartnersGrid";
+import Navbar from "@/components/layout/AdminNavbar";
+import Modal from "@/components/ui/Modal/ConfirmModal";
+import PortalModal from "@/components/ui/Modal/ContentModal";
+import PartnersGrid from "@/features/partners/PartnersGrid";
+import { LoadingState } from "@/components/ui/Spinner";
 import Image from "next/image";
 import Link from "next/link";
 import { UPLOAD_FOLDERS } from "@/lib/constants";
+import useAdminResource from "@/hooks/useAdminResource";
+import useConfirmDelete from "@/hooks/useConfirmDelete";
+import useDocumentTitle from "@/hooks/useDocumentTitle";
+import useFileUpload from "@/hooks/useFileUpload";
+import { downloadRemoteFile } from "@/lib/frontend-helpers";
 
 const INITIAL_FORM = {
   name: "",
@@ -27,53 +31,29 @@ const INITIAL_FORM = {
 };
 
 export default function AddPartnersPage() {
-  const [partners, setPartners] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [partnerToDelete, setPartnerToDelete] = useState(null);
+  const {
+    status,
+    isAdmin,
+    data: partners,
+    setData: setPartners,
+    loading,
+  } = useAdminResource("/api/partners");
+  const {
+    isOpen: showDeleteModal,
+    target: partnerToDelete,
+    ask: handleDeleteClick,
+    close: closeDeleteModal,
+  } = useConfirmDelete();
+  const { upload, uploading: uploadingLogo } = useFileUpload();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingPartner, setEditingPartner] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [submitting, setSubmitting] = useState(false);
-  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
-  const { data: session, status } = useSession();
-  const router = useRouter();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    }
-  }, [status, router]);
-
-  useEffect(() => {
-    document.title = "Add Partners | FinTech Calgary";
-  }, []);
-
-  useEffect(() => {
-    const fetchPartners = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/partners");
-        if (response.ok) {
-          const data = await response.json();
-          setPartners(data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch partners:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (session?.user?.role === "admin") {
-      fetchPartners();
-    } else if (session && session.user.role !== "admin") {
-      setLoading(false);
-    }
-  }, [session]);
+  useDocumentTitle("Add Partners | FinTech Calgary");
 
   const resetForm = () => {
     setFormData(INITIAL_FORM);
@@ -117,27 +97,9 @@ export default function AddPartnersPage() {
     setLogoPreview(url);
   };
 
-  const uploadLogoToCloudinary = async () => {
+  const resolveLogoUrl = async () => {
     if (!logoFile) return formData.logo;
-
-    setUploadingLogo(true);
-    try {
-      const form = new FormData();
-      form.append("file", logoFile);
-      form.append("folder", UPLOAD_FOLDERS.PARTNER_DISPLAY_LOGOS);
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: form,
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Upload failed");
-      }
-      const data = await res.json();
-      return data.url;
-    } finally {
-      setUploadingLogo(false);
-    }
+    return upload(logoFile, UPLOAD_FOLDERS.PARTNER_DISPLAY_LOGOS);
   };
 
   const handleAddSubmit = async (e) => {
@@ -145,10 +107,7 @@ export default function AddPartnersPage() {
     if (submitting) return;
     try {
       setSubmitting(true);
-      let logoUrl = formData.logo;
-      if (logoFile) {
-        logoUrl = await uploadLogoToCloudinary();
-      }
+      const logoUrl = await resolveLogoUrl();
       const response = await fetch("/api/partners", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -174,10 +133,7 @@ export default function AddPartnersPage() {
     if (submitting || !editingPartner) return;
     try {
       setSubmitting(true);
-      let logoUrl = formData.logo;
-      if (logoFile) {
-        logoUrl = await uploadLogoToCloudinary();
-      }
+      const logoUrl = await resolveLogoUrl();
       const response = await fetch(`/api/partners/${editingPartner._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -200,11 +156,6 @@ export default function AddPartnersPage() {
     }
   };
 
-  const handleDeleteClick = (partner) => {
-    setPartnerToDelete(partner);
-    setShowDeleteModal(true);
-  };
-
   const handleDeleteConfirm = async () => {
     if (!partnerToDelete) return;
     try {
@@ -213,8 +164,7 @@ export default function AddPartnersPage() {
       });
       if (!response.ok) throw new Error("Failed to delete partner");
       setPartners((prev) => prev.filter((p) => p._id !== partnerToDelete._id));
-      setShowDeleteModal(false);
-      setPartnerToDelete(null);
+      closeDeleteModal();
     } catch (err) {
       console.error(err);
       alert("Failed to delete partner.");
@@ -222,31 +172,31 @@ export default function AddPartnersPage() {
   };
 
   const handleDownloadLogo = (partner) => {
-    if (!partner.logo) {
-      alert("No logo available for this partner.");
-      return;
+    try {
+      if (!partner.logo) {
+        alert("No logo available for this partner.");
+        return;
+      }
+      downloadRemoteFile(
+        partner.logo,
+        `${(partner.name || "partner").replace(/[^a-zA-Z0-9]/g, "_")}_logo.jpg`
+      );
+    } catch (err) {
+      console.error(err);
+      alert("Failed to download logo.");
     }
-    const link = document.createElement("a");
-    link.href = partner.logo;
-    link.download = `${(partner.name || "partner").replace(/[^a-zA-Z0-9]/g, "_")}_logo.jpg`;
-    link.target = "_blank";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
-  if (status === "loading" || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen">
         <Navbar />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
-        </div>
+        <LoadingState fullScreen />
       </div>
     );
   }
 
-  if (status !== "authenticated" || session?.user?.role !== "admin") {
+  if (status !== "authenticated" || !isAdmin) {
     return (
       <div className="min-h-screen">
         <Navbar />
@@ -482,10 +432,7 @@ export default function AddPartnersPage() {
 
       <Modal
         isOpen={showDeleteModal}
-        onClose={() => {
-          setShowDeleteModal(false);
-          setPartnerToDelete(null);
-        }}
+        onClose={closeDeleteModal}
         onConfirm={handleDeleteConfirm}
         title="Delete Partner"
         message={`Are you sure you want to remove "${partnerToDelete?.name}" from the partners list?`}

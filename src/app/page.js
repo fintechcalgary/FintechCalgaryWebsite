@@ -1,33 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import PublicNavbar from "@/components/PublicNavbar";
 import Link from "next/link";
-import AboutUs from "@/components/landing/AboutUs";
-import UpcomingEvents from "@/components/landing/UpcomingEvents";
-import Footer from "@/components/landing/Footer";
-import Contact from "@/components/landing/Contact";
+import AboutUs from "@/features/landing/AboutUs";
+import UpcomingEvents from "@/features/landing/UpcomingEvents";
+import Contact from "@/features/landing/Contact";
 import { FiArrowRight } from "react-icons/fi";
-import MissionStatement from "@/components/landing/MissionStatement";
-import Partners from "@/components/landing/Partners";
-import ExecutiveApplications from "@/components/landing/ExecutiveApplications";
-import ExecutiveApplicationBanner from "@/components/ExecutiveApplicationBanner";
+import MissionStatement from "@/features/landing/MissionStatement";
+import Partners from "@/features/partners/LandingPartners";
+import ExecutiveApplications from "@/features/landing/ExecutiveApplications";
+import ExecutiveApplicationBanner from "@/features/executives/ExecutiveApplicationBanner";
 import Image from "next/image";
 import { useSettings } from "@/contexts/SettingsContext";
-
-// Helper function to normalize dates to start of day for consistent comparison
-const normalizeDate = (dateString) => {
-  const date = new Date(dateString);
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-};
+import PublicPageShell from "@/components/layout/PublicPageShell";
+import { normalizeDate, startOfToday } from "@/lib/dates";
 
 export default function Home() {
   const [allEvents, setAllEvents] = useState([]);
   const { executiveApplicationsOpen, settingsLoaded } = useSettings();
-
-  useEffect(() => {
-    document.title = "FinTech Calgary";
-  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -38,13 +28,7 @@ export default function Home() {
         const response = await fetch("/api/events");
         if (response.ok && isMounted) {
           const data = await response.json();
-
-          const currentDate = new Date();
-          const normalizedCurrentDate = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            currentDate.getDate()
-          );
+          const normalizedCurrentDate = startOfToday();
 
           // Filter only upcoming events and webinars
           const upcomingEventsAndWebinars = data
@@ -69,9 +53,10 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex flex-col min-h-screen overflow-hidden relative">
-      <PublicNavbar />
-
+    <PublicPageShell
+      title="FinTech Calgary"
+      mainClassName="flex flex-col min-h-screen overflow-hidden relative"
+    >
       <div className="relative flex-grow">
         <section className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden pt-24 pb-20 md:pt-28 md:pb-24">
           {/* Layered backdrop */}
@@ -196,8 +181,6 @@ export default function Home() {
       <div className="relative">
         <ExecutiveApplicationBanner />
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

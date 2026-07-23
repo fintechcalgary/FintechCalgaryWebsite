@@ -1,18 +1,13 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
+import { PageTitle } from "@/components/ui/SectionHeading";
 import { FiCalendar } from "react-icons/fi";
 import Image from "next/image";
-import ImageCarousel from "@/components/ImageCarousel";
+import ImageCarousel from "@/features/events/ImageCarousel";
 import { useRouter } from "next/navigation";
-
-// Helper function to normalize dates to start of day for consistent comparison
-const normalizeDate = (dateString) => {
-  const date = new Date(dateString);
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-};
+import { normalizeDate, startOfToday } from "@/lib/dates";
 
 export default function EventsPageClient({ initialEvents }) {
   const [filter, setFilter] = useState("all");
@@ -20,15 +15,7 @@ export default function EventsPageClient({ initialEvents }) {
 
   // Memoize the current date to prevent recalculation on every render
   // Normalize to start of day for consistent comparison
-  const currentDate = useMemo(() => {
-    const now = new Date();
-    const normalized = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate()
-    );
-    return normalized;
-  }, []);
+  const currentDate = useMemo(() => startOfToday(), []);
 
   // Memoize the expensive filtering and sorting operation
   const filteredEvents = useMemo(() => {
@@ -104,17 +91,17 @@ export default function EventsPageClient({ initialEvents }) {
   }, []);
 
   return (
-    <main className="flex flex-col min-h-screen">
-      {/* Navbar */}
-      <PublicNavbar />
-
+    <PublicPageShell title="Events | FinTech Calgary">
       {/* Page Content */}
-      <div className="container mx-auto px-6 py-24 sm:px-8 lg:px-12 relative z-10">
+      <div className="container mx-auto px-6 py-24 sm:px-8 lg:px-12 relative z-10 flex-grow">
         {/* Dynamic Page Heading */}
         <div className="text-center mb-16 animate-fadeIn">
-          <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
+          <PageTitle
+            sizeClass="text-6xl font-extrabold mb-6"
+            className="text-white"
+          >
             {pageContent.title}
-          </h1>
+          </PageTitle>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             {pageContent.description}
           </p>
@@ -223,9 +210,6 @@ export default function EventsPageClient({ initialEvents }) {
           </div>
         )}
       </div>
-
-      {/* Footer */}
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

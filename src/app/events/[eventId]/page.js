@@ -8,16 +8,10 @@ import {
   FiArrowLeft,
   FiUsers,
 } from "react-icons/fi";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
-import ImageCarousel from "@/components/ImageCarousel";
+import PublicPageShell from "@/components/layout/PublicPageShell";
+import ImageCarousel from "@/features/events/ImageCarousel";
 import Image from "next/image";
-
-// Helper function to normalize dates to start of day for consistent comparison
-const normalizeDate = (dateString) => {
-  const date = new Date(dateString);
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-};
+import { normalizeDate, startOfToday } from "@/lib/dates";
 
 // Generate metadata for the event
 export async function generateMetadata({ params }) {
@@ -73,8 +67,7 @@ export default async function EventPage({ params }) {
     // Validate ObjectId format
     if (!ObjectId.isValid(eventId)) {
       return (
-        <main className="flex flex-col min-h-screen">
-          <PublicNavbar />
+        <PublicPageShell>
           <div className="flex-grow flex items-center justify-center">
             <div className="text-center">
               <h1 className="text-4xl font-bold text-white mb-4">
@@ -92,8 +85,7 @@ export default async function EventPage({ params }) {
               </Link>
             </div>
           </div>
-          <Footer />
-        </main>
+        </PublicPageShell>
       );
     }
     
@@ -104,8 +96,7 @@ export default async function EventPage({ params }) {
 
     if (!event) {
       return (
-        <main className="flex flex-col min-h-screen">
-          <PublicNavbar />
+        <PublicPageShell>
           <div className="flex-grow flex items-center justify-center">
             <div className="text-center">
               <h1 className="text-4xl font-bold text-white mb-4">
@@ -123,22 +114,15 @@ export default async function EventPage({ params }) {
               </Link>
             </div>
           </div>
-          <Footer />
-        </main>
+        </PublicPageShell>
       );
     }
 
-    const currentDate = new Date();
-    const normalizedCurrentDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getDate()
-    );
+    const normalizedCurrentDate = startOfToday();
     const isUpcoming = normalizeDate(event.date) >= normalizedCurrentDate;
 
     return (
-      <main className="flex flex-col min-h-screen">
-        <PublicNavbar />
+      <PublicPageShell>
 
         <div className="relative flex-grow">
           {/* Background Elements */}
@@ -305,15 +289,12 @@ export default async function EventPage({ params }) {
             )}
           </div>
         </div>
-
-        <Footer />
-      </main>
+        </PublicPageShell>
     );
   } catch (error) {
     console.error("Failed to fetch event:", error);
     return (
-      <main className="flex flex-col min-h-screen">
-        <PublicNavbar />
+      <PublicPageShell>
         <div className="flex-grow flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white mb-4">
@@ -331,8 +312,7 @@ export default async function EventPage({ params }) {
             </Link>
           </div>
         </div>
-        <Footer />
-      </main>
+        </PublicPageShell>
     );
   }
 }

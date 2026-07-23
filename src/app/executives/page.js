@@ -1,7 +1,6 @@
 import { connectToDatabase } from "@/lib/mongodb";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
-import ExecutiveApplicationBanner from "@/components/ExecutiveApplicationBanner";
+import PublicPageShell from "@/components/layout/PublicPageShell";
+import ExecutiveApplicationBanner from "@/features/executives/ExecutiveApplicationBanner";
 import { SiLinkedin } from "react-icons/si";
 import { FiMail } from "react-icons/fi";
 import Image from "next/image";
@@ -55,8 +54,7 @@ export default async function ExecutivesPage() {
   // If no executives are found, show a message instead of loading spinner
   if (executives.length === 0) {
     return (
-      <main className="flex flex-col min-h-screen">
-        <PublicNavbar />
+      <PublicPageShell>
         <div className="flex-grow flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-white mb-4">
@@ -65,14 +63,12 @@ export default async function ExecutivesPage() {
             <p className="text-gray-400">Please check back later.</p>
           </div>
         </div>
-        <Footer />
-      </main>
+    </PublicPageShell>
     );
   }
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
+    <PublicPageShell>
 
       <div className="relative flex-grow">
         <section className="relative z-10 flex items-center justify-center min-h-screen">
@@ -168,7 +164,6 @@ export default async function ExecutivesPage() {
       </div>
 
       <ExecutiveApplicationBanner />
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

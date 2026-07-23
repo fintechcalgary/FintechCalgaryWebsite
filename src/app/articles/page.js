@@ -2,9 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
-import ArticleCard from "@/components/digest/ArticleCard";
+import PublicPageShell from "@/components/layout/PublicPageShell";
+import ArticleCard from "@/features/insights/ArticleCard";
 import {
   FiCalendar,
   FiRefreshCw,
@@ -89,8 +88,7 @@ export default function ArticlesPage() {
   };
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
+    <PublicPageShell title="Finance News Articles | FinTech Calgary">
 
       <section className="relative overflow-hidden pt-28 pb-3">
         <div className="absolute inset-0 overflow-hidden">
@@ -273,8 +271,6 @@ export default function ArticlesPage() {
           </>
         )}
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

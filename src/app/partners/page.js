@@ -7,8 +7,8 @@ import {
   FiArrowRight,
   FiChevronDown,
 } from "react-icons/fi";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
+import Spinner from "@/components/ui/Spinner";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -38,9 +38,7 @@ export default function PartnersPage() {
   /* Partners loaded from DB - see scripts/seed-partners.js */
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
-
+    <PublicPageShell title="Partners | FinTech Calgary">
       <div className="relative flex-grow">
         <div className="container mx-auto px-6 py-24 sm:px-8 lg:px-12 relative z-10">
           {/* Page Heading */}
@@ -56,7 +54,7 @@ export default function PartnersPage() {
 
           {loading ? (
             <div className="flex justify-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+              <Spinner size="md" />
             </div>
           ) : (
           <>
@@ -220,8 +218,6 @@ export default function PartnersPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

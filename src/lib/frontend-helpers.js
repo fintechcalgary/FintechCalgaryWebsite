@@ -124,6 +124,25 @@ export async function uploadFile(file, folder) {
 }
 
 /**
+ * Trigger a browser download for a remote file URL.
+ * @param {string} url
+ * @param {string} filename
+ */
+export function downloadRemoteFile(url, filename) {
+  if (!url) {
+    throw new Error("No file URL provided");
+  }
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.target = "_blank";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+/**
  * Scrolls to the first error field in a form
  * @param {Object} errors - Object with error fields
  * @param {number} delay - Delay in milliseconds before scrolling

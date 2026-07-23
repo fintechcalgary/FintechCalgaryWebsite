@@ -1,6 +1,6 @@
 import "./globals.css";
 import { DM_Sans } from "next/font/google";
-import ClientSessionProvider from "@/components/ClientSessionProvider";
+import ClientSessionProvider from "@/components/providers/ClientSessionProvider";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { Analytics } from "@vercel/analytics/next";
 

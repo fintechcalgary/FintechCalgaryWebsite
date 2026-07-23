@@ -1,4 +1,4 @@
-import EventRegistrations from "@/components/EventRegistrations";
+import EventRegistrations from "@/features/events/EventRegistrations";
 
 export default async function EventRegistrationsPage({ params }) {
   const { eventId } = await params;

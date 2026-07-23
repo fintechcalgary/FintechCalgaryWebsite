@@ -1,16 +1,10 @@
 "use client";
-import { useEffect } from "react";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
 
 export default function PrivacyPage() {
-  useEffect(() => {
-    document.title = "Privacy Policy | FinTech Calgary";
-  }, []);
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
+    <PublicPageShell title="Privacy Policy | FinTech Calgary">
 
       <div className="relative flex-grow">
         <div className="container mx-auto px-6 pt-24 pb-16 relative z-10">
@@ -226,8 +220,6 @@ export default function PrivacyPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

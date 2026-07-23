@@ -3,14 +3,14 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import useSWR from "swr";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
-import FinTechChatBot from "@/components/insights/FinTechChatBot";
-import WeeklyDigestModal from "@/components/insights/WeeklyDigestModal";
-import ArticleDetailModal from "@/components/insights/ArticleDetailModal";
-import { OverviewSentimentBar } from "@/components/insights/SentimentBars";
+import PublicNavbar from "@/components/layout/PublicNavbar";
+import Footer from "@/components/layout/Footer";
+import FinTechChatBot from "@/features/insights/FinTechChatBot";
+import WeeklyDigestModal from "@/features/insights/WeeklyDigestModal";
+import ArticleDetailModal from "@/features/insights/ArticleDetailModal";
+import { OverviewSentimentBar } from "@/features/insights/SentimentBars";
 import { ChatBotProvider, useChatBot } from "@/contexts/ChatBotContext";
-import ErrorBoundary from "@/components/ErrorBoundary";
+import ErrorBoundary from "@/components/providers/ErrorBoundary";
 import Link from "next/link";
 import {
   FiTrendingUp,

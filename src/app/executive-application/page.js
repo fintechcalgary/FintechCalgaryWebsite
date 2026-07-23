@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
 import { FiCheck, FiAlertCircle } from "react-icons/fi";
 import Image from "next/image";
 import logger from "@/lib/logger";
@@ -306,8 +305,7 @@ export default function ExecutiveApplicationPage() {
     "w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200 hover:border-gray-600/50";
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
+    <PublicPageShell>
 
       <div className="relative flex-grow">
         <div className="container mx-auto px-6 pt-24 relative z-10">
@@ -833,8 +831,6 @@ export default function ExecutiveApplicationPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

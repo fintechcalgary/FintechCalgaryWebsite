@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   FiGithub,
   FiInstagram,
@@ -8,17 +8,13 @@ import {
   FiMessageSquare,
   FiSend,
 } from "react-icons/fi";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
 import { FaTiktok } from "react-icons/fa";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { createFormChangeHandler } from "@/lib/frontend-helpers";
 import { API_ENDPOINTS, ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/lib/constants";
 
 export default function ContactPage() {
-  useEffect(() => {
-    document.title = "Contact | FinTech Calgary";
-  }, []);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -59,8 +55,7 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
+    <PublicPageShell title="Contact | FinTech Calgary">
 
       <div className="relative flex-grow">
         <div className="container mx-auto px-6 py-24 relative z-10">
@@ -228,8 +223,6 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }
