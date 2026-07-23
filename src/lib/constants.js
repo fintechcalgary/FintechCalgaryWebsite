@@ -18,6 +18,7 @@ export const API_ENDPOINTS = {
   EXECUTIVES_ORDER: "/api/executives/order",
   MEMBERS: "/api/members",
   EXECUTIVE_ROLES: "/api/executive-roles",
+  CONTRACTS: "/api/contracts",
 };
 
 // MongoDB Collection Names
@@ -32,6 +33,7 @@ export const COLLECTIONS = {
   SETTINGS: "settings",
   MEMBERS: "members",
   LOGS: "logs",
+  CONTRACTS: "contracts",
 };
 
 // File Upload Folders
@@ -162,5 +164,78 @@ export const APPLICATION_STATUS = {
   PENDING: "pending",
   APPROVED: "approved",
   REJECTED: "rejected",
+};
+
+// Contract Pipeline Stages (in order, from the contract approvals process flow)
+export const CONTRACT_STAGES = [
+  {
+    id: "outreach-meetings",
+    label: "Outreach Meetings",
+    role: "Advisors / Outreach Manager",
+    description:
+      "Advisors / Outreach Manager conduct meetings with potential partners.",
+  },
+  {
+    id: "eoi-submission",
+    label: "EOI Submission",
+    role: "Advisors / Outreach Manager",
+    description:
+      "Outreach team fills out and submits the EOI (Expression of Interest) form.",
+  },
+  {
+    id: "eoi-review",
+    label: "EOI Review",
+    role: "Operations Manager",
+    description:
+      "Operations Manager reviews the EOI and decides whether to proceed.",
+  },
+  {
+    id: "legal-team-draft",
+    label: "Assign to Legal Team & Draft",
+    role: "Legal Manager",
+    description:
+      "Legal Manager assigns the matter to the legal team to draft the contract.",
+  },
+  {
+    id: "legal-review",
+    label: "Legal Review",
+    role: "Legal Manager",
+    description: "Legal Manager reviews the drafted contract.",
+  },
+  {
+    id: "ops-director-approval",
+    label: "Operations Director Approval",
+    role: "Operations Director",
+    description: "Contract is sent to the Operations Director for approval.",
+  },
+  {
+    id: "ceo-approval",
+    label: "CEO Approval",
+    role: "CEO",
+    description: "Contract is sent to the CEO for final approval.",
+  },
+  {
+    id: "execution-signature",
+    label: "Send for Execution & Signature",
+    role: "Outreach Team",
+    description:
+      "Once approved, Outreach team sends the contract out for execution and signature.",
+  },
+];
+
+// Index of the stage that requires the EOI PDF to be attached before advancing
+export const CONTRACT_EOI_STAGE_INDEX = 1;
+
+// Contract Status
+export const CONTRACT_STATUS = {
+  ACTIVE: "active",
+  DO_NOT_PROCEED: "do-not-proceed",
+  COMPLETED: "completed",
+};
+
+// Contract Stage Actions
+export const CONTRACT_STAGE_ACTIONS = {
+  APPROVE: "approve",
+  DO_NOT_PROCEED: "do-not-proceed",
 };
 

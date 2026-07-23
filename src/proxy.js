@@ -10,6 +10,7 @@ const PROTECTED_API_ROUTES = [
   "/api/partner-applications",
   "/api/executives",
   "/api/members",
+  "/api/contracts",
 ];
 
 const ADMIN_ONLY_ROUTES = [
@@ -21,6 +22,7 @@ const ADMIN_ONLY_ROUTES = [
   "/api/executives",
   "/api/events",
   "/api/members",
+  "/api/contracts",
 ];
 
 const PUBLIC_GET_ROUTES = ["/api/settings", "/api/executive-roles", "/api/partners"];
@@ -166,6 +168,7 @@ export const config = {
     "/api/partner-applications/:path*",
     "/api/executives/:path*",
     "/api/members/:path*",
+    "/api/contracts/:path*",
     "/api/events/:path*",
     "/api/upload/:path*",
     "/api/auth/:path*",

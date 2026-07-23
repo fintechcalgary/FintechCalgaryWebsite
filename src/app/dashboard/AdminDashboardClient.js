@@ -195,6 +195,28 @@ export default function AdminDashboardClient() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   <AdminCard
+                    title="Contracts"
+                    description="Track contracts through the approvals pipeline, from outreach to execution"
+                    icon={(props) => (
+                      <svg
+                        {...props}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2zM9 8h2"
+                        />
+                      </svg>
+                    )}
+                    href="/dashboard/contracts"
+                    color="blue"
+                  />
+
+                  <AdminCard
                     title="Add Partners"
                     description="Add, edit, and manage partners shown on the public partners page"
                     icon={(props) => (

@@ -96,6 +96,7 @@ export default function Navbar() {
                   ...(session?.user?.role === "admin"
                     ? [
                         ["Members", "/dashboard/members"],
+                        ["Contracts", "/dashboard/contracts"],
                         ["Add Partners", "/dashboard/partners"],
                         ["Partner Applications", "/dashboard/partner-applications"],
                       ]
@@ -193,6 +194,7 @@ export default function Navbar() {
                 ...(session?.user?.role === "admin"
                   ? [
                       { href: "/dashboard/members", label: "Members" },
+                      { href: "/dashboard/contracts", label: "Contracts" },
                       { href: "/dashboard/partners", label: "Add Partners" },
                       { href: "/dashboard/partner-applications", label: "Partner Applications" },
                     ]
