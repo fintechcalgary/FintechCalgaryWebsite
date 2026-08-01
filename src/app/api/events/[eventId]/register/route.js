@@ -34,7 +34,7 @@ export const POST = withErrorHandler(async (req, { params }) => {
   const alreadyRegistered = await isUserRegistered(
     db,
     eventId,
-    registrationData.userEmail
+    registrationData.userEmail,
   );
   if (alreadyRegistered) {
     return apiResponse.badRequest("Already registered for this event");
@@ -42,24 +42,24 @@ export const POST = withErrorHandler(async (req, { params }) => {
 
   const result = await registerForEvent(db, eventId, registrationData);
 
-    // Format the date
-    const eventDate = new Date(event.date + "T00:00:00").toLocaleDateString(
-      "en-US",
-      {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }
-    );
+  // Format the date
+  const eventDate = new Date(event.date + "T00:00:00").toLocaleDateString(
+    "en-US",
+    {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    },
+  );
 
-    // Send confirmation email
-    try {
-      const msg = {
-        to: registrationData.userEmail,
-        from: "rojnovyotam@gmail.com",
-        subject: `Registration Confirmed: ${event.title}`,
-        html: `
+  // Send confirmation email
+  try {
+    const msg = {
+      to: registrationData.userEmail,
+      from: "rojnovyotam@gmail.com",
+      subject: `Registration Confirmed: ${event.title}`,
+      html: `
           <!DOCTYPE html>
           <html>
             <head>
@@ -193,16 +193,19 @@ export const POST = withErrorHandler(async (req, { params }) => {
             </body>
           </html>
         `,
-      };
+    };
 
-      await sgMail.send(msg);
-    } catch (emailError) {
-      logger.logApiError("send_confirmation_email", emailError);
-      // Don't fail the registration if email fails
-    }
+    await sgMail.send(msg);
+  } catch (emailError) {
+    logger.logApiError("send_confirmation_email", emailError);
+    // Don't fail the registration if email fails
+  }
 
-    logger.logUserAction("register_for_event", { eventId, email: registrationData.userEmail });
-    return apiResponse.success(result);
+  logger.logUserAction("register_for_event", {
+    eventId,
+    email: registrationData.userEmail,
+  });
+  return apiResponse.success(result);
 });
 
 export const DELETE = withErrorHandler(async (req, { params }) => {
@@ -229,20 +232,23 @@ export const DELETE = withErrorHandler(async (req, { params }) => {
 
   // Remove the registration at the specified index
   const updatedRegistrations = event.registrations.filter(
-    (_, index) => index !== registrationIndex
+    (_, index) => index !== registrationIndex,
   );
 
   const result = await db
     .collection("events")
     .updateOne(
       { _id: new ObjectId(eventId) },
-      { $set: { registrations: updatedRegistrations } }
+      { $set: { registrations: updatedRegistrations } },
     );
 
   if (result.matchedCount === 0) {
     return apiResponse.notFound("Event not found");
   }
 
-  logger.logUserAction("delete_event_registration", { eventId, registrationIndex });
+  logger.logUserAction("delete_event_registration", {
+    eventId,
+    registrationIndex,
+  });
   return apiResponse.success({ success: true });
 });

@@ -7,165 +7,95 @@ import {
   FiArrowRight,
 } from "react-icons/fi";
 import { FaTiktok } from "react-icons/fa";
-import Link from "next/link";
-import { useState } from "react";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 const SocialIcon = ({ href, icon: Icon, label }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="group relative flex items-center gap-3 px-4 py-3 rounded-lg 
-                 bg-gray-900/40 backdrop-blur-sm border border-gray-700/30 
-                 hover:border-primary/50 hover:bg-gray-800/60
-                 transition-all duration-300 hover:translate-x-1"
+      className="group relative flex items-center gap-3 rounded-lg border border-gray-700/30 bg-gray-900/40 px-4 py-3 backdrop-blur-sm transition-all duration-300 hover:translate-x-1 hover:border-primary/50 hover:bg-gray-800/60"
     >
-      <Icon
-        className={`w-5 h-5 transition-colors duration-300 ${
-          isHovered ? "text-primary" : "text-gray-400"
-        }`}
-      />
-      <span
-        className={`text-sm font-medium transition-colors duration-300 ${
-          isHovered ? "text-white" : "text-gray-400"
-        }`}
-      >
+      <Icon className="h-5 w-5 text-gray-400 transition-colors duration-300 group-hover:text-primary" />
+      <span className="text-sm font-medium text-gray-400 transition-colors duration-300 group-hover:text-white">
         {label}
       </span>
-      <FiArrowRight
-        className={`w-4 h-4 transition-all duration-300 ${
-          isHovered
-            ? "text-primary translate-x-1 opacity-100"
-            : "text-transparent opacity-0 -translate-x-1"
-        }`}
-      />
+      <FiArrowRight className="h-4 w-4 -translate-x-1 text-transparent opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary group-hover:opacity-100" />
     </a>
   );
 };
 
 export default function Contact() {
-  const [hoveredEmail, setHoveredEmail] = useState(false);
-
   return (
-    <section id="contact" className="py-24 relative overflow-hidden">
-      <div className="container mx-auto px-6 relative z-10 max-w-6xl">
-        {/* Header */}
-        <div className="mb-16 md:mb-20 text-center">
-          <Link href="/contact" className="group inline-block relative">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 md:mb-6">
-              <span className="relative inline-block">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
-                  Get In Touch
-                </span>
-                <span className="absolute inset-0 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300">
-                  Get In Touch
-                </span>
-              </span>
-            </h2>
-            <div className="relative h-1 w-full max-w-xs mx-auto mt-2 md:mt-3">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50 blur-sm"></div>
-              <div className="relative h-full bg-gradient-to-r from-primary to-purple-400/75 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
-            </div>
-          </Link>
+    <section id="contact" className="relative overflow-hidden py-24">
+      <div className="container relative z-10 mx-auto max-w-6xl px-6">
+        <div className="mb-16 text-center md:mb-20">
+          <SectionHeading href="/contact">Get In Touch</SectionHeading>
         </div>
 
-        {/* Main Content - Split Layout */}
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Left Side - Email & Location */}
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
           <div className="space-y-6">
-            {/* Email Section */}
-            <div
-              className="relative group p-8 rounded-2xl border border-gray-800/50 
-                         bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-sm
-                         hover:border-primary/30 transition-all duration-500 overflow-hidden"
-              onMouseEnter={() => setHoveredEmail(true)}
-              onMouseLeave={() => setHoveredEmail(false)}
-            >
+            <div className="fc-card group relative overflow-hidden p-8">
               <div className="flex items-start gap-4">
-                <div
-                  className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 
-                              flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300"
-                >
-                  <FiMail className="w-6 h-6 text-primary" />
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 transition-colors duration-300 group-hover:bg-primary/20">
+                  <FiMail className="h-6 w-6 text-primary" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-semibold text-white mb-2">
+                <div className="min-w-0 flex-1">
+                  <h3 className="mb-2 text-xl font-semibold text-white">
                     Send us an email
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4 leading-relaxed">
+                  <p className="mb-4 text-sm leading-relaxed text-gray-400">
                     Questions, partnerships, or just want to chat? We&apos;re
                     all ears.
                   </p>
                   <a
                     href="mailto:fintech.calgary@gmail.com"
-                    className="inline-flex items-center gap-2 text-primary hover:text-purple-400 
-                             transition-colors duration-300 font-medium group/link"
+                    className="fc-link group/link inline-flex items-center gap-2 font-medium"
                   >
                     <span className="text-base">fintech.calgary@gmail.com</span>
-                    <FiArrowRight
-                      className={`w-4 h-4 transition-transform duration-300 ${
-                        hoveredEmail ? "translate-x-1" : ""
-                      }`}
-                    />
+                    <FiArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1" />
                   </a>
                 </div>
               </div>
             </div>
 
-            {/* Location Section */}
-            <div
-              className="relative group p-8 rounded-2xl border border-gray-800/50 
-                          bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-sm
-                          hover:border-primary/30 transition-all duration-500 overflow-hidden"
-            >
+            <div className="fc-card group relative overflow-hidden p-8">
               <div className="flex items-start gap-4">
-                <div
-                  className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 
-                              flex items-center justify-center group-hover:bg-purple-500/20 transition-colors duration-300"
-                >
-                  <FiMapPin className="w-6 h-6 text-purple-400" />
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl border border-purple-500/20 bg-purple-500/10 transition-colors duration-300 group-hover:bg-purple-500/20">
+                  <FiMapPin className="h-6 w-6 text-purple-400" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-white mb-2">
+                  <h3 className="mb-2 text-xl font-semibold text-white">
                     Find us
                   </h3>
-                  <p className="text-gray-400 text-sm mb-3 leading-relaxed">
-                    Based in Calgary, connecting fintech innovators across
-                    Canada and beyond.
+                  <p className="mb-3 text-sm leading-relaxed text-gray-400">
+                    Based at the University of Calgary. We work with partners
+                    across Canada.
                   </p>
-                  <p className="text-purple-400 font-medium">
-                    Calgary, Alberta, Canada
+                  <p className="font-medium text-purple-400">
+                    University of Calgary
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    2500 University Dr NW, Calgary, AB T2N 1N4
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right Side - Social Media */}
-          <div
-            className="relative group p-8 rounded-2xl border border-gray-800/50 
-                        bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-sm
-                        hover:border-primary/30 transition-all duration-500 overflow-hidden"
-          >
-            <div className="flex flex-col h-full">
-              <div className="flex items-start gap-4 mb-6">
-                <div
-                  className="flex-shrink-0 w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 
-                              flex items-center justify-center group-hover:bg-pink-500/20 transition-colors duration-300"
-                >
-                  <FiGithub className="w-6 h-6 text-pink-400" />
+          <div className="fc-card group relative overflow-hidden p-8">
+            <div className="flex h-full flex-col">
+              <div className="mb-6 flex items-start gap-4">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl border border-pink-500/20 bg-pink-500/10 transition-colors duration-300 group-hover:bg-pink-500/20">
+                  <FiGithub className="h-6 w-6 text-pink-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">
+                  <h3 className="mb-2 text-xl font-semibold text-white">
                     Connect with us
                   </h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">
-                    Follow along for updates, insights, and fintech news.
+                  <p className="text-sm leading-relaxed text-gray-400">
+                    Event posts, club updates, and occasional fintech news.
                   </p>
                 </div>
               </div>

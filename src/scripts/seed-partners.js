@@ -14,8 +14,7 @@ const SPONSORS_DATA = [
     logo: "/partners/ucalgary.png",
     description:
       "Our foundational partner and home institution. The University of Calgary provides the academic foundation and support that enables FinTech Calgary to thrive as a leading student organization in financial technology innovation.",
-    website:
-      "https://suuofc.campuslabs.ca/engage/organization/fintechcalgary",
+    website: "https://suuofc.campuslabs.ca/engage/organization/fintechcalgary",
     color: "#dc2626",
     order: 0,
   },
@@ -171,7 +170,7 @@ async function seedSponsors() {
 
     if (toInsert.length === 0) {
       console.log(
-        `All ${SPONSORS_DATA.length} partners already exist in the collection. Nothing to add.`
+        `All ${SPONSORS_DATA.length} partners already exist in the collection. Nothing to add.`,
       );
       process.exit(0);
       return;
@@ -190,11 +189,11 @@ async function seedSponsors() {
     }
     if (toInsert.length < SPONSORS_DATA.length) {
       console.log(
-        "Run again to verify; next: npm run upload-partner-logos to upload any new logos to Cloudinary."
+        "Run again to verify; next: npm run upload-partner-logos to upload any new logos to Cloudinary.",
       );
     } else {
       console.log(
-        "Next: run npm run upload-partner-logos to upload logos to Cloudinary."
+        "Next: run npm run upload-partner-logos to upload logos to Cloudinary.",
       );
     }
   } catch (error) {

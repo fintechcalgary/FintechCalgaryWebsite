@@ -27,6 +27,28 @@
     @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-purple-500/80 text-sm font-medium text-white transition-all hover:shadow-xl hover:shadow-primary/15;
   }
 
+  /* Public marketing CTAs */
+  .fc-btn-primary {
+    @apply inline-flex items-center justify-center gap-3 rounded-xl bg-primary px-8 py-4 text-lg font-medium text-white transition-all duration-300 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/15 hover:-translate-y-0.5;
+  }
+
+  .fc-btn-secondary {
+    @apply inline-flex items-center justify-center gap-3 rounded-xl border border-gray-700 bg-white/[0.04] px-8 py-4 text-lg font-medium text-white backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:bg-gray-800/50 hover:shadow-xl;
+  }
+
+  .fc-btn-soft {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/20 to-purple-600/20 px-8 py-4 text-lg font-medium text-white backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/15;
+  }
+
+  /* Shared glass surface for public cards */
+  .fc-card {
+    @apply rounded-2xl border border-gray-800/50 bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-sm transition-all duration-500 hover:border-primary/30;
+  }
+
+  .fc-link {
+    @apply text-primary transition-colors duration-300 hover:text-purple-400;
+  }
+
   /* Insights “Read more” on card hover overlay */
   .fc-btn-read-more-subtle {
     @apply flex cursor-pointer items-center gap-2 self-start rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 to-purple-500/10 px-3 py-1.5 text-primary transition-all duration-200 hover:scale-105 hover:border-primary/50 hover:bg-gradient-to-r hover:from-primary/10 hover:to-purple-500/10 hover:shadow-lg hover:shadow-primary/10;
@@ -50,7 +72,7 @@
 }
 
 :root {
-  --background: #171717;
+  --background: #121212;
   --foreground: #ededed;
   font-size: 90%;
 }

@@ -3,7 +3,20 @@
 import { useState, useRef, useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiMessageCircle, FiSend, FiZap, FiMinimize2, FiTrendingUp, FiBook, FiBriefcase, FiTarget, FiBarChart2, FiRefreshCw, FiAlertTriangle, FiInfo } from "react-icons/fi";
+import {
+  FiMessageCircle,
+  FiSend,
+  FiZap,
+  FiMinimize2,
+  FiTrendingUp,
+  FiBook,
+  FiBriefcase,
+  FiTarget,
+  FiBarChart2,
+  FiRefreshCw,
+  FiAlertTriangle,
+  FiInfo,
+} from "react-icons/fi";
 import { useChatBot } from "@/contexts/ChatBotContext";
 import { useRateLimit } from "@/hooks/useRateLimit";
 import { CostTracker } from "@/lib/costTracker";
@@ -15,9 +28,16 @@ export default function FinTechChatBot({ articles = [] }) {
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
-    () => false
+    () => false,
   );
-  const { isOpen: contextIsOpen, setIsOpen: setContextIsOpen, isMinimized: contextIsMinimized, setIsMinimized: setContextIsMinimized, selectedArticle, setSelectedArticle } = useChatBot();
+  const {
+    isOpen: contextIsOpen,
+    setIsOpen: setContextIsOpen,
+    isMinimized: contextIsMinimized,
+    setIsMinimized: setContextIsMinimized,
+    selectedArticle,
+    setSelectedArticle,
+  } = useChatBot();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -65,7 +85,7 @@ export default function FinTechChatBot({ articles = [] }) {
 
   useEffect(() => {
     if (selectedArticle && contextIsOpen) {
-      const analysisPrompt = `Analyze this article in detail:\n\nTitle: ${selectedArticle.title}\nSource: ${selectedArticle.source}\nDate: ${selectedArticle.date || selectedArticle.publishedAt}\nSummary: ${selectedArticle.summary || 'No summary available'}\n\nProvide a comprehensive analysis and be ready to answer questions about it.`;
+      const analysisPrompt = `Analyze this article in detail:\n\nTitle: ${selectedArticle.title}\nSource: ${selectedArticle.source}\nDate: ${selectedArticle.date || selectedArticle.publishedAt}\nSummary: ${selectedArticle.summary || "No summary available"}\n\nProvide a comprehensive analysis and be ready to answer questions about it.`;
 
       setMessages([
         {
@@ -85,14 +105,14 @@ export default function FinTechChatBot({ articles = [] }) {
 
   useEffect(() => {
     if (isOpen && !isInitialized) {
-      const welcomeMessage = selectedArticle 
+      const welcomeMessage = selectedArticle
         ? `Hi! I can help you analyze this article: "${selectedArticle.title}". Ask me any questions about it, and I'll provide detailed insights.`
         : "Hello! I'm your FinTech AI assistant. To get the most out of our conversation, navigate to an article you'd like to learn about or are curious about, then use the magnifying glass to analyze it with AI. This helps me provide more targeted insights about specific articles and build your financial literacy. What would you like to explore?";
-      
+
       setMessages([
         {
           role: "assistant",
-          content: welcomeMessage
+          content: welcomeMessage,
         },
       ]);
       setIsInitialized(true);
@@ -124,7 +144,10 @@ export default function FinTechChatBot({ articles = [] }) {
     setErrorMessage(null);
     recordRequest();
 
-    const updatedMessages = [...messages, { role: "user", content: userMessage }];
+    const updatedMessages = [
+      ...messages,
+      { role: "user", content: userMessage },
+    ];
     setMessages(updatedMessages);
 
     const controller = new AbortController();
@@ -149,27 +172,36 @@ export default function FinTechChatBot({ articles = [] }) {
       if (response.ok && data.response) {
         costTracker.current.trackChatRequest();
         setCostStatus(costTracker.current.getStatus());
-        setMessages([...updatedMessages, { role: "assistant", content: data.response }]);
+        setMessages([
+          ...updatedMessages,
+          { role: "assistant", content: data.response },
+        ]);
       } else {
-        setMessages([...updatedMessages, {
-          role: "assistant",
-          content: `Sorry, I encountered an error: ${data.error || "Unknown error"}. Click to retry.`,
-          error: true,
-          retry: onRetry,
-        }]);
+        setMessages([
+          ...updatedMessages,
+          {
+            role: "assistant",
+            content: `Sorry, I encountered an error: ${data.error || "Unknown error"}. Click to retry.`,
+            error: true,
+            retry: onRetry,
+          },
+        ]);
       }
     } catch (error) {
       clearTimeout(timeoutId);
       const isTimeout = error.name === "AbortError";
       if (!isTimeout) console.error("Chat error:", error);
-      setMessages([...updatedMessages, {
-        role: "assistant",
-        content: isTimeout
-          ? "Request timed out. Please try a shorter question or click to retry."
-          : "Connection error. Please check your connection and click to retry.",
-        error: true,
-        retry: onRetry,
-      }]);
+      setMessages([
+        ...updatedMessages,
+        {
+          role: "assistant",
+          content: isTimeout
+            ? "Request timed out. Please try a shorter question or click to retry."
+            : "Connection error. Please check your connection and click to retry.",
+          error: true,
+          retry: onRetry,
+        },
+      ]);
     } finally {
       setIsLoading(false);
       setIsTyping(false);
@@ -185,14 +217,16 @@ export default function FinTechChatBot({ articles = [] }) {
       setErrorMessage(
         currentStatus.isAtLimit
           ? `Monthly budget reached ($${currentStatus.costSoFar.toFixed(2)} / $${currentStatus.budget.toFixed(2)}). Resets next month.`
-          : `Usage limit approaching. ${currentStatus.remainingChatRequests} requests remaining this month.`
+          : `Usage limit approaching. ${currentStatus.remainingChatRequests} requests remaining this month.`,
       );
       setTimeout(() => setErrorMessage(null), 8000);
       return false;
     }
 
     if (!canSend) {
-      setErrorMessage(`Rate limit: please wait ${retryAfter}s before sending another message.`);
+      setErrorMessage(
+        `Rate limit: please wait ${retryAfter}s before sending another message.`,
+      );
       setTimeout(() => setErrorMessage(null), 5000);
       return false;
     }
@@ -205,7 +239,9 @@ export default function FinTechChatBot({ articles = [] }) {
     if (!messageToSend || isLoading) return;
 
     if (messageToSend.length > MAX_MESSAGE_LENGTH) {
-      setErrorMessage(`Message too long. Maximum ${MAX_MESSAGE_LENGTH} characters allowed.`);
+      setErrorMessage(
+        `Message too long. Maximum ${MAX_MESSAGE_LENGTH} characters allowed.`,
+      );
       setTimeout(() => setErrorMessage(null), 3000);
       setInput(messageToSend.substring(0, MAX_MESSAGE_LENGTH));
       return;
@@ -255,12 +291,47 @@ export default function FinTechChatBot({ articles = [] }) {
   };
 
   const quickActions = [
-    { icon: FiZap, label: "Weekly Summary", prompt: "Give me a comprehensive weekly summary of the most important FinTech news and events.", color: "from-primary to-purple-500/80" },
-    { icon: FiTrendingUp, label: "Top Trends", prompt: "What are the top FinTech trends I should be watching right now?", color: "from-purple-500/80 to-purple-400/70" },
-    { icon: FiBook, label: "For Students", prompt: "I'm a student interested in FinTech. What should I learn, explore, and focus on? Give me advice on career paths, skills to develop, and trends to watch.", color: "from-blue-500 to-cyan-500" },
-    { icon: FiBriefcase, label: "Career Advice", prompt: "What career opportunities and paths are available in FinTech? What skills are in demand?", color: "from-green-500 to-emerald-500" },
-    { icon: FiTarget, label: "Explore Areas", prompt: "What are the most exciting areas in FinTech to explore right now? What should I focus on?", color: "from-orange-500 to-red-500" },
-    { icon: FiBarChart2, label: "Market Insights", prompt: "What are the key market developments, funding rounds, and partnerships happening in FinTech?", color: "from-indigo-500 to-purple-500" },
+    {
+      icon: FiZap,
+      label: "Weekly Summary",
+      prompt:
+        "Give me a comprehensive weekly summary of the most important FinTech news and events.",
+      color: "from-primary to-purple-500/80",
+    },
+    {
+      icon: FiTrendingUp,
+      label: "Top Trends",
+      prompt: "What are the top FinTech trends I should be watching right now?",
+      color: "from-purple-500/80 to-purple-400/70",
+    },
+    {
+      icon: FiBook,
+      label: "For Students",
+      prompt:
+        "I'm a student interested in FinTech. What should I learn, explore, and focus on? Give me advice on career paths, skills to develop, and trends to watch.",
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      icon: FiBriefcase,
+      label: "Career Advice",
+      prompt:
+        "What career opportunities and paths are available in FinTech? What skills are in demand?",
+      color: "from-green-500 to-emerald-500",
+    },
+    {
+      icon: FiTarget,
+      label: "Explore Areas",
+      prompt:
+        "What are the most exciting areas in FinTech to explore right now? What should I focus on?",
+      color: "from-orange-500 to-red-500",
+    },
+    {
+      icon: FiBarChart2,
+      label: "Market Insights",
+      prompt:
+        "What are the key market developments, funding rounds, and partnerships happening in FinTech?",
+      color: "from-indigo-500 to-purple-500",
+    },
   ];
 
   const ui = (
@@ -278,7 +349,8 @@ export default function FinTechChatBot({ articles = [] }) {
           }}
           className="fixed bottom-4 right-4 z-[60] flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-white/20 bg-gradient-to-br from-primary to-purple-500/80 text-white shadow-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-primary/20 sm:bottom-8 sm:right-8 sm:h-16 sm:w-16"
           style={{
-            boxShadow: "0 20px 40px rgba(139, 92, 246, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)",
+            boxShadow:
+              "0 20px 40px rgba(139, 92, 246, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)",
           }}
         >
           <FiMessageCircle className="w-7 h-7 drop-shadow-lg" />
@@ -296,13 +368,18 @@ export default function FinTechChatBot({ articles = [] }) {
               isMinimized ? "h-20 w-80" : "h-[680px] w-[420px]"
             }`}
             style={{
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(139, 92, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
+              boxShadow:
+                "0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(139, 92, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
             }}
           >
             <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-primary/10 to-purple-500/10 border-b border-primary/20 backdrop-blur-sm">
               <div>
-                <h3 className="font-bold text-white text-[15px] tracking-tight">FinTech AI Assistant</h3>
-                <p className="text-xs text-gray-400 font-medium">Powered by Groq</p>
+                <h3 className="font-bold text-white text-[15px] tracking-tight">
+                  FinTech AI Assistant
+                </h3>
+                <p className="text-xs text-gray-400 font-medium">
+                  Powered by Groq
+                </p>
               </div>
               <div className="flex items-center gap-1.5">
                 <button
@@ -321,13 +398,15 @@ export default function FinTechChatBot({ articles = [] }) {
             </div>
 
             {!isMinimized && costStatus && (
-              <div className={`px-4 py-3 border-b border-gray-800/50 ${
-                costStatus.isAtLimit 
-                  ? 'bg-red-900/30 border-red-500/30' 
-                  : costStatus.isNearLimit 
-                    ? 'bg-yellow-900/30 border-yellow-500/30'
-                    : 'bg-gradient-to-b from-gray-900/50 to-transparent'
-              }`}>
+              <div
+                className={`px-4 py-3 border-b border-gray-800/50 ${
+                  costStatus.isAtLimit
+                    ? "bg-red-900/30 border-red-500/30"
+                    : costStatus.isNearLimit
+                      ? "bg-yellow-900/30 border-yellow-500/30"
+                      : "bg-gradient-to-b from-gray-900/50 to-transparent"
+                }`}
+              >
                 <div className="flex items-center gap-2 text-xs">
                   {costStatus.isAtLimit ? (
                     <FiAlertTriangle className="w-4 h-4 text-red-400" />
@@ -338,47 +417,60 @@ export default function FinTechChatBot({ articles = [] }) {
                   )}
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className={`font-medium ${
-                        costStatus.isAtLimit 
-                          ? 'text-red-400' 
-                          : costStatus.isNearLimit 
-                            ? 'text-yellow-400'
-                            : 'text-gray-300'
-                      }`}>
-                        {costStatus.chatRequests || 0} / {(costStatus.remainingChatRequests || 0) + (costStatus.chatRequests || 0)} requests
+                      <span
+                        className={`font-medium ${
+                          costStatus.isAtLimit
+                            ? "text-red-400"
+                            : costStatus.isNearLimit
+                              ? "text-yellow-400"
+                              : "text-gray-300"
+                        }`}
+                      >
+                        {costStatus.chatRequests || 0} /{" "}
+                        {(costStatus.remainingChatRequests || 0) +
+                          (costStatus.chatRequests || 0)}{" "}
+                        requests
                       </span>
-                      <span className={`${
-                        costStatus.isAtLimit 
-                          ? 'text-red-400' 
-                          : costStatus.isNearLimit 
-                            ? 'text-yellow-400'
-                            : 'text-gray-400'
-                      }`}>
-                        $${(costStatus.costSoFar || 0).toFixed(3)} / $${(costStatus.budget || 0).toFixed(2)}
+                      <span
+                        className={`${
+                          costStatus.isAtLimit
+                            ? "text-red-400"
+                            : costStatus.isNearLimit
+                              ? "text-yellow-400"
+                              : "text-gray-400"
+                        }`}
+                      >
+                        $${(costStatus.costSoFar || 0).toFixed(3)} / $$
+                        {(costStatus.budget || 0).toFixed(2)}
                       </span>
                     </div>
                     <div className="mt-1">
                       <div className="w-full bg-gray-700/50 rounded-full h-1.5">
-                        <div 
+                        <div
                           className={`h-1.5 rounded-full transition-all duration-300 ${
-                            costStatus.isAtLimit 
-                              ? 'bg-red-400' 
-                              : costStatus.isNearLimit 
-                                ? 'bg-yellow-400'
-                                : 'bg-primary'
+                            costStatus.isAtLimit
+                              ? "bg-red-400"
+                              : costStatus.isNearLimit
+                                ? "bg-yellow-400"
+                                : "bg-primary"
                           }`}
-                          style={{ width: `${Math.min(100, costStatus.budgetUsed || 0)}%` }}
+                          style={{
+                            width: `${Math.min(100, costStatus.budgetUsed || 0)}%`,
+                          }}
                         />
                       </div>
                     </div>
                     {costStatus.isNearLimit && (
-                      <p className={`mt-1 text-xs ${
-                        costStatus.isAtLimit ? 'text-red-400' : 'text-yellow-400'
-                      }`}>
-                        {costStatus.isAtLimit 
-                          ? 'Monthly budget reached. Resets next month.'
-                          : `${costStatus.remainingChatRequests || 0} requests remaining this month.`
-                        }
+                      <p
+                        className={`mt-1 text-xs ${
+                          costStatus.isAtLimit
+                            ? "text-red-400"
+                            : "text-yellow-400"
+                        }`}
+                      >
+                        {costStatus.isAtLimit
+                          ? "Monthly budget reached. Resets next month."
+                          : `${costStatus.remainingChatRequests || 0} requests remaining this month.`}
                       </p>
                     )}
                   </div>
@@ -401,7 +493,8 @@ export default function FinTechChatBot({ articles = [] }) {
                           whileTap={{ scale: 0.98 }}
                           className={`px-4 py-3 text-xs font-semibold text-white bg-gradient-to-br ${action.color} hover:opacity-95 border border-white/20 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl backdrop-blur-sm`}
                           style={{
-                            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                            boxShadow:
+                              "0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
                           }}
                         >
                           <Icon className="w-4 h-4 drop-shadow-sm" />
@@ -426,13 +519,14 @@ export default function FinTechChatBot({ articles = [] }) {
                           msg.role === "user"
                             ? "bg-gradient-to-br from-primary/15 to-purple-500/15 text-white border border-primary/40 shadow-lg"
                             : msg.error
-                            ? "bg-gradient-to-br from-red-900/30 to-red-800/20 text-red-100 border border-red-500/40 shadow-lg backdrop-blur-sm"
-                            : "bg-gradient-to-br from-gray-800/80 to-gray-800/60 text-gray-100 border border-gray-700/40 shadow-lg backdrop-blur-sm"
+                              ? "bg-gradient-to-br from-red-900/30 to-red-800/20 text-red-100 border border-red-500/40 shadow-lg backdrop-blur-sm"
+                              : "bg-gradient-to-br from-gray-800/80 to-gray-800/60 text-gray-100 border border-gray-700/40 shadow-lg backdrop-blur-sm"
                         }`}
                         style={{
-                          boxShadow: msg.role === "user"
-                            ? "0 8px 16px rgba(139, 92, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)"
-                            : "0 8px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
+                          boxShadow:
+                            msg.role === "user"
+                              ? "0 8px 16px rgba(139, 92, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)"
+                              : "0 8px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
                         }}
                       >
                         <div className="text-[14px] leading-relaxed font-normal">
@@ -445,31 +539,43 @@ export default function FinTechChatBot({ articles = [] }) {
                               Retry
                             </button>
                           )}
-                          {(typeof msg.content === 'string' ? msg.content : String(msg.content || ''))
-                            .replace(/\*\*(.*?)\*\*/g, '$1')
-                            .replace(/\*(.*?)\*/g, '$1')
-                            .split('\n\n')
+                          {(typeof msg.content === "string"
+                            ? msg.content
+                            : String(msg.content || "")
+                          )
+                            .replace(/\*\*(.*?)\*\*/g, "$1")
+                            .replace(/\*(.*?)\*/g, "$1")
+                            .split("\n\n")
                             .map((paragraph, pIdx) => {
                               if (!paragraph.trim()) return null;
-                              const lines = paragraph.split('\n');
+                              const lines = paragraph.split("\n");
                               const firstLine = lines[0]?.trim();
-                              const restLines = lines.slice(1).filter(l => l.trim());
-                              const isHeader = firstLine &&
-                                                firstLine.length < 50 &&
-                                                restLines.length > 0 &&
-                                                !firstLine.endsWith('.') &&
-                                                !firstLine.endsWith('!') &&
-                                                !firstLine.endsWith('?');
+                              const restLines = lines
+                                .slice(1)
+                                .filter((l) => l.trim());
+                              const isHeader =
+                                firstLine &&
+                                firstLine.length < 50 &&
+                                restLines.length > 0 &&
+                                !firstLine.endsWith(".") &&
+                                !firstLine.endsWith("!") &&
+                                !firstLine.endsWith("?");
 
                               return (
-                                <div key={pIdx} className={pIdx > 0 ? "mt-4" : ""}>
+                                <div
+                                  key={pIdx}
+                                  className={pIdx > 0 ? "mt-4" : ""}
+                                >
                                   {isHeader ? (
                                     <>
                                       <h4 className="font-semibold text-white mb-1.5 text-[15px] tracking-tight">
                                         {firstLine}
                                       </h4>
                                       {restLines.map((line, lIdx) => (
-                                        <p key={lIdx} className="text-gray-200 mb-1 leading-relaxed">
+                                        <p
+                                          key={lIdx}
+                                          className="text-gray-200 mb-1 leading-relaxed"
+                                        >
                                           {line.trim()}
                                         </p>
                                       ))}
@@ -479,7 +585,10 @@ export default function FinTechChatBot({ articles = [] }) {
                                       const trimmed = line.trim();
                                       if (!trimmed) return null;
                                       return (
-                                        <p key={lIdx} className="text-gray-100 mb-1.5 leading-relaxed">
+                                        <p
+                                          key={lIdx}
+                                          className="text-gray-100 mb-1.5 leading-relaxed"
+                                        >
                                           {trimmed}
                                         </p>
                                       );
@@ -500,10 +609,21 @@ export default function FinTechChatBot({ articles = [] }) {
                     >
                       <div className="bg-gradient-to-br from-gray-800/80 to-gray-800/60 text-gray-100 border border-gray-700/40 rounded-2xl px-4 py-3.5 shadow-lg backdrop-blur-sm">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs text-gray-400 mr-2">AI is typing</span>
-                          <div className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
-                          <div className="w-2.5 h-2.5 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
-                          <div className="w-2.5 h-2.5 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
+                          <span className="text-xs text-gray-400 mr-2">
+                            AI is typing
+                          </span>
+                          <div
+                            className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce"
+                            style={{ animationDelay: "0ms" }}
+                          ></div>
+                          <div
+                            className="w-2.5 h-2.5 bg-purple-500 rounded-full animate-bounce"
+                            style={{ animationDelay: "150ms" }}
+                          ></div>
+                          <div
+                            className="w-2.5 h-2.5 bg-pink-500 rounded-full animate-bounce"
+                            style={{ animationDelay: "300ms" }}
+                          ></div>
                         </div>
                       </div>
                     </motion.div>
@@ -521,7 +641,8 @@ export default function FinTechChatBot({ articles = [] }) {
                       )}
                       {!canSend && (
                         <div className="absolute -top-8 left-0 right-0 text-xs text-yellow-400 bg-yellow-900/30 px-2 py-1 rounded border border-yellow-500/30">
-                          Rate limit: Please wait {retryAfter}s before sending another message.
+                          Rate limit: Please wait {retryAfter}s before sending
+                          another message.
                         </div>
                       )}
                       <textarea
@@ -532,7 +653,8 @@ export default function FinTechChatBot({ articles = [] }) {
                         placeholder="Ask me anything about FinTech..."
                         className="w-full bg-gray-900/60 border border-gray-700/50 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 resize-none max-h-32 transition-all duration-200 backdrop-blur-sm"
                         style={{
-                          boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.05)",
+                          boxShadow:
+                            "inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.05)",
                         }}
                         rows={1}
                         disabled={isLoading || !canSend}
@@ -549,15 +671,28 @@ export default function FinTechChatBot({ articles = [] }) {
                       whileTap={{ scale: 0.95 }}
                       className="p-3 bg-gradient-to-br from-primary to-purple-500/80 rounded-xl hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white flex items-center justify-center shadow-lg hover:shadow-xl border border-white/20"
                       style={{
-                        boxShadow: "0 4px 12px rgba(139, 92, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                        boxShadow:
+                          "0 4px 12px rgba(139, 92, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
                       }}
-                      title={!canSend ? `Rate limit: wait ${retryAfter}s` : "Send message"}
+                      title={
+                        !canSend
+                          ? `Rate limit: wait ${retryAfter}s`
+                          : "Send message"
+                      }
                     >
                       <FiSend className="w-4.5 h-4.5 drop-shadow-sm" />
                     </motion.button>
                   </div>
                   <p className="text-xs text-gray-500 mt-3 text-center font-medium">
-                    Press <kbd className="px-1.5 py-0.5 bg-gray-800/50 rounded text-[10px] border border-gray-700/50">Enter</kbd> to send • <kbd className="px-1.5 py-0.5 bg-gray-800/50 rounded text-[10px] border border-gray-700/50">Shift+Enter</kbd> for new line
+                    Press{" "}
+                    <kbd className="px-1.5 py-0.5 bg-gray-800/50 rounded text-[10px] border border-gray-700/50">
+                      Enter
+                    </kbd>{" "}
+                    to send •{" "}
+                    <kbd className="px-1.5 py-0.5 bg-gray-800/50 rounded text-[10px] border border-gray-700/50">
+                      Shift+Enter
+                    </kbd>{" "}
+                    for new line
                   </p>
                 </div>
               </>

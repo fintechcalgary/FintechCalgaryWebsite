@@ -1,6 +1,7 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import ExecutiveApplicationBanner from "@/features/executives/ExecutiveApplicationBanner";
+import { PageTitle } from "@/components/ui/SectionHeading";
 import { SiLinkedin } from "react-icons/si";
 import { FiMail } from "react-icons/fi";
 import Image from "next/image";
@@ -39,7 +40,7 @@ async function getExecutives() {
 export const metadata = {
   title: "Executives | FinTech Calgary",
   description:
-    "Executives and program leads behind FinTech Calgary — Calgary's premier FinTech community.",
+    "Executives and program leads behind FinTech Calgary, a student-run association at the University of Calgary.",
   openGraph: {
     title: "Executives | FinTech Calgary",
     description:
@@ -77,11 +78,11 @@ export default async function ExecutivesPage() {
           {/* Content Section */}
           <div className="relative z-10 container mx-auto px-6 pt-36 pb-24 sm:px-8 lg:px-12">
             {/* Page Heading */}
-            <div className="text-center mb-16 animate-fadeIn">
-              <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 mb-6">
+            <div className="mb-16 animate-fadeIn text-center">
+              <PageTitle sizeClass="text-5xl md:text-6xl font-extrabold mb-6">
                 Meet Our Executives
-              </h1>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              </PageTitle>
+              <p className="mx-auto max-w-3xl text-xl text-gray-300">
                 Leadership across programs, partnerships, and community initiatives.
               </p>
             </div>

@@ -1,13 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { API_ENDPOINTS, ERROR_MESSAGES, UPLOAD_FOLDERS, FILE_TYPES } from "@/lib/constants";
+import {
+  API_ENDPOINTS,
+  ERROR_MESSAGES,
+  UPLOAD_FOLDERS,
+  FILE_TYPES,
+} from "@/lib/constants";
 import { motion } from "framer-motion";
-import { FiCheck, FiArrowLeft, FiAlertCircle, FiUpload, FiX } from "react-icons/fi";
+import {
+  FiCheck,
+  FiArrowLeft,
+  FiAlertCircle,
+  FiUpload,
+  FiX,
+} from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import Link from "next/link";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { uploadFile, validateFile, createDragHandlers } from "@/lib/frontend-helpers";
+import {
+  uploadFile,
+  validateFile,
+  createDragHandlers,
+} from "@/lib/frontend-helpers";
 
 export default function JoinPage() {
   const [formData, setFormData] = useState({
@@ -54,7 +69,12 @@ export default function JoinPage() {
     setErrorMessage(""); // Clear any previous error messages
 
     // Validate required fields
-    if (!formData.firstName || !formData.lastName || !formData.ucid || !formData.email) {
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.ucid ||
+      !formData.email
+    ) {
       setErrorMessage("Please fill in all required fields.");
       setIsSubmitting(false);
       return;
@@ -109,10 +129,8 @@ export default function JoinPage() {
     }
   };
 
-
   return (
     <PublicPageShell>
-
       <div className="relative flex-grow flex items-center justify-center pt-28 pb-12">
         <div className="relative container mx-auto px-6 my-20">
           <motion.div
@@ -296,7 +314,9 @@ export default function JoinPage() {
                       <form onSubmit={handleSubmit} className="space-y-4">
                         {membershipType === "premium" && (
                           <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 text-sm text-gray-300">
-                            <p className="font-medium text-white mb-1">Resume submission is for members only.</p>
+                            <p className="font-medium text-white mb-1">
+                              Resume submission is for members only.
+                            </p>
                             <p>
                               Not a member yet? Select{" "}
                               <button
@@ -306,7 +326,8 @@ export default function JoinPage() {
                               >
                                 Free Membership
                               </button>{" "}
-                              above to join first, then return to submit your resume.
+                              above to join first, then return to submit your
+                              resume.
                             </p>
                           </div>
                         )}
@@ -315,13 +336,10 @@ export default function JoinPage() {
                             <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
                             <div>
                               <p className="text-red-400">{errorMessage}</p>
-                              {errorMessage.includes(
-                                "already subscribed"
-                              ) && (
+                              {errorMessage.includes("already subscribed") && (
                                 <p className="text-gray-400 text-sm mt-1">
-                                  Please use a different email address or
-                                  check your inbox for previous
-                                  communications.
+                                  Please use a different email address or check
+                                  your inbox for previous communications.
                                 </p>
                               )}
                             </div>
@@ -409,13 +427,16 @@ export default function JoinPage() {
                         {/* Resume Upload */}
                         <div>
                           <label className="text-sm font-medium text-gray-300 mb-1 block">
-                            Resume (PDF, max 5MB) <span className="text-red-400">*</span>
+                            Resume (PDF, max 5MB){" "}
+                            <span className="text-red-400">*</span>
                           </label>
                           {resumeFileName ? (
                             <div className="flex items-center justify-between p-3 bg-gray-900/50 border border-gray-700 rounded-lg">
                               <div className="flex items-center gap-2">
                                 <FiUpload className="text-primary" />
-                                <span className="text-white text-sm">{resumeFileName}</span>
+                                <span className="text-white text-sm">
+                                  {resumeFileName}
+                                </span>
                               </div>
                               <button
                                 type="button"
@@ -469,8 +490,8 @@ export default function JoinPage() {
                           {isSubmitting
                             ? "Submitting..."
                             : membershipType === "premium"
-                            ? "Submit Resume"
-                            : "Join Free"}
+                              ? "Submit Resume"
+                              : "Join Free"}
                         </button>
                       </form>
                     </div>

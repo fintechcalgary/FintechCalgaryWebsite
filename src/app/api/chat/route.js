@@ -14,7 +14,10 @@ const chatCache = new Map();
 const CACHE_TTL = 5 * 60 * 1000;
 
 function hashMessage(message) {
-  return crypto.createHash("sha256").update(message.toLowerCase().trim()).digest("hex");
+  return crypto
+    .createHash("sha256")
+    .update(message.toLowerCase().trim())
+    .digest("hex");
 }
 
 export async function POST(req) {
@@ -29,17 +32,18 @@ export async function POST(req) {
       return new Response(
         JSON.stringify({
           error: "GROQ_API_KEY environment variable not set",
-          suggestion: "Set GROQ_API_KEY in .env.local and restart the dev server.",
+          suggestion:
+            "Set GROQ_API_KEY in .env.local and restart the dev server.",
         }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
+        { status: 500, headers: { "Content-Type": "application/json" } },
       );
     }
 
     if (!message || !message.trim()) {
-      return new Response(
-        JSON.stringify({ error: "Message is required" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Message is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     if (message.length > MAX_MESSAGE_LENGTH) {
@@ -51,7 +55,7 @@ export async function POST(req) {
     if (!sanitizedMessage) {
       return new Response(
         JSON.stringify({ error: "Invalid message content" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
 
@@ -62,8 +66,12 @@ export async function POST(req) {
     if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
       logInfo("Chat response served from cache", { cacheKey });
       return new Response(
-        JSON.stringify({ success: true, response: cached.response, cached: true }),
-        { status: 200, headers: { "Content-Type": "application/json" } }
+        JSON.stringify({
+          success: true,
+          response: cached.response,
+          cached: true,
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
       );
     }
 
@@ -85,21 +93,27 @@ export async function POST(req) {
           url: article.url,
         }));
 
-      const articlesContext = recentArticles.length > 0
-        ? recentArticles
-            .map(
-              (a, idx) =>
-                `${idx + 1}. ${a.title} (${a.source || "Unknown"}, ${a.date || "recent"})\n   ${a.summary || "No summary available"}`
-            )
-            .join("\n\n")
-        : "No recent articles available.";
+      const articlesContext =
+        recentArticles.length > 0
+          ? recentArticles
+              .map(
+                (a, idx) =>
+                  `${idx + 1}. ${a.title} (${a.source || "Unknown"}, ${a.date || "recent"})\n   ${a.summary || "No summary available"}`,
+              )
+              .join("\n\n")
+          : "No recent articles available.";
 
       const conversationContext = conversationHistory
-        .map((msg) => `${msg.role === "user" ? "User" : "Assistant"}: ${msg.content}`)
+        .map(
+          (msg) =>
+            `${msg.role === "user" ? "User" : "Assistant"}: ${msg.content}`,
+        )
         .join("\n");
 
       const isStudentQuery =
-        /student|learn|career|explore|advice|trend|opportunity/i.test(sanitizedMessage);
+        /student|learn|career|explore|advice|trend|opportunity/i.test(
+          sanitizedMessage,
+        );
 
       const prompt = [
         "You are an expert FinTech AI assistant for FinTech Calgary.",
@@ -107,7 +121,9 @@ export async function POST(req) {
         "",
         "Recent FinTech Articles:",
         articlesContext,
-        conversationContext ? `\nRecent conversation:\n${conversationContext}\n` : "",
+        conversationContext
+          ? `\nRecent conversation:\n${conversationContext}\n`
+          : "",
         `User: ${sanitizedMessage}`,
         "",
         isStudentQuery
@@ -121,25 +137,29 @@ export async function POST(req) {
 
       const responseText = await callGroq(groqApiKey, prompt);
 
-      chatCache.set(cacheKey, { response: responseText, timestamp: Date.now() });
+      chatCache.set(cacheKey, {
+        response: responseText,
+        timestamp: Date.now(),
+      });
 
       return responseText;
     });
 
     logInfo("Chat response generated", { duration: Date.now() - startTime });
 
-    return new Response(
-      JSON.stringify({ success: true, response: result }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ success: true, response: result }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
     logError("Chat API error", error, { duration: Date.now() - startTime });
     return new Response(
       JSON.stringify({
         error: "Failed to get a response. Please try again.",
-        details: process.env.NODE_ENV === "development" ? error.message : undefined,
+        details:
+          process.env.NODE_ENV === "development" ? error.message : undefined,
       }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+      { status: 500, headers: { "Content-Type": "application/json" } },
     );
   }
 }

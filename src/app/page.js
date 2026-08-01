@@ -96,7 +96,7 @@ export default function Home() {
           <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
             <h1 className="animate-fade-in-down font-sans bg-gradient-to-br from-white via-white to-white/75 bg-clip-text pb-2 text-[clamp(3.125rem,calc(2.25rem+5vw),3.75rem)] font-extrabold leading-[0.98] tracking-[-0.03em] text-transparent drop-shadow-[0_3px_28px_rgba(0,0,0,0.55)] max-[380px]:text-[clamp(3rem,calc(1.85rem+7.5vw),3.5rem)] sm:pb-3 sm:text-6xl sm:tracking-tight sm:leading-[1.05] md:text-7xl xl:text-8xl xl:leading-[1.02]">
               FinTech{" "}
-              <span className="bg-gradient-to-r from-primary to-purple-400/70 bg-clip-text text-transparent drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)]">
+              <span className="bg-gradient-to-r from-primary to-purple-400/75 bg-clip-text text-transparent drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)]">
                 Calgary
               </span>
             </h1>

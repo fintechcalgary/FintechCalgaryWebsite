@@ -9,6 +9,7 @@ export default function ApplicationList({
   formatDate,
   onViewDetails,
   onDeleteClick,
+  deletingId,
 }) {
   return (
     <>

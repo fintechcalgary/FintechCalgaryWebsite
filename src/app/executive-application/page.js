@@ -13,7 +13,12 @@ import {
   validateRequiredFields,
   validateEmail,
 } from "@/lib/frontend-helpers";
-import { API_ENDPOINTS, UPLOAD_FOLDERS, FILE_TYPES, ERROR_MESSAGES } from "@/lib/constants";
+import {
+  API_ENDPOINTS,
+  UPLOAD_FOLDERS,
+  FILE_TYPES,
+  ERROR_MESSAGES,
+} from "@/lib/constants";
 
 export default function ExecutiveApplicationPage() {
   const [form, setForm] = useState({
@@ -63,7 +68,7 @@ export default function ExecutiveApplicationPage() {
     (roleTitle) => {
       if (roleTitle && availableRoles.length > 0) {
         const selectedRole = availableRoles.find(
-          (role) => role.title === roleTitle
+          (role) => role.title === roleTitle,
         );
         if (selectedRole && selectedRole.questions) {
           setSelectedRoleQuestions(selectedRole.questions);
@@ -84,7 +89,7 @@ export default function ExecutiveApplicationPage() {
         setSelectedRoleQuestions([]);
       }
     },
-    [availableRoles]
+    [availableRoles],
   );
 
   useEffect(() => {
@@ -253,7 +258,7 @@ export default function ExecutiveApplicationPage() {
             email: form.email,
             role: form.role,
             hasResume: !!form.resumeFile,
-          }
+          },
         );
 
         if (errorData.error) {
@@ -275,7 +280,10 @@ export default function ExecutiveApplicationPage() {
         resumeType: form.resumeFile?.type,
       });
 
-      if (error.message === "Failed to upload resume" || error.message.includes("upload")) {
+      if (
+        error.message === "Failed to upload resume" ||
+        error.message.includes("upload")
+      ) {
         setErrorMessage(ERROR_MESSAGES.RESUME_UPLOAD_FAILED);
         logger.logUploadError(form.resumeFile?.name || "unknown", error, {
           size: form.resumeFile?.size,
@@ -286,13 +294,13 @@ export default function ExecutiveApplicationPage() {
         error.message.includes("fetch")
       ) {
         setErrorMessage(
-          "Network error. Please check your internet connection and try again."
+          "Network error. Please check your internet connection and try again.",
         );
       } else if (error.message.includes("timeout")) {
         setErrorMessage("Request timed out. Please try again.");
       } else {
         setErrorMessage(
-          "An unexpected error occurred. Please try again or contact support if the problem persists."
+          "An unexpected error occurred. Please try again or contact support if the problem persists.",
         );
       }
     } finally {
@@ -306,7 +314,6 @@ export default function ExecutiveApplicationPage() {
 
   return (
     <PublicPageShell>
-
       <div className="relative flex-grow">
         <div className="container mx-auto px-6 pt-36 relative z-10">
           <div className="text-center animate-fadeIn">
@@ -396,7 +403,7 @@ export default function ExecutiveApplicationPage() {
                       <div className="mb-5">
                         {(() => {
                           const selectedRole = availableRoles.find(
-                            (role) => role.title === form.role
+                            (role) => role.title === form.role,
                           );
                           return selectedRole ? (
                             <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/30">
@@ -413,7 +420,7 @@ export default function ExecutiveApplicationPage() {
                                   onClick={() =>
                                     window.open(
                                       selectedRole.responsibilitiesImageUrl,
-                                      "_blank"
+                                      "_blank",
                                     )
                                   }
                                 />
@@ -751,7 +758,7 @@ export default function ExecutiveApplicationPage() {
                           >
                             {errors[question.id]}
                           </p>
-                        )
+                        ),
                     )}
 
                     {/* Display errors for fallback questions */}

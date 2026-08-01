@@ -47,7 +47,8 @@ export const metadata = {
     default: "FinTech Calgary",
     template: "%s | FinTech Calgary",
   },
-  description: "Calgary's Premier FinTech Community",
+  description:
+    "Student-run fintech association at the University of Calgary — events, partnerships, and B2B programs.",
   keywords: ["fintech", "calgary", "technology", "finance", "community"],
   authors: [{ name: "FinTech Calgary" }],
   creator: "FinTech Calgary",

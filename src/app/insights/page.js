@@ -414,15 +414,15 @@ function InsightsPageContent() {
                   FinTech Insights
                 </h1>
                 <p className="text-gray-300 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed mb-8">
-                  Your command center for the latest FinTech trends, top
-                  stories, and AI-curated insights
+                  Weekly fintech news digests, top stories, and short article
+                  summaries we track for members
                 </p>
                 <p className="text-sm text-gray-500">
                   Updated daily
                   <span className="mx-2.5 text-white/20" aria-hidden>
                     ·
                   </span>
-                  AI-powered summaries
+                  Short article summaries
                   {lastRefresh && (
                     <>
                       <span className="mx-2.5 text-white/20" aria-hidden>
@@ -552,7 +552,7 @@ function InsightsPageContent() {
                         />
                         <InsightCard
                           title="Trending Now"
-                          description={`${trendingTopics.length} topics are trending across FinTech news, indicating active industry movement`}
+                          description={`${trendingTopics.length} topics appearing most often in this week's coverage`}
                         />
                       </div>
                     ) : (
@@ -668,11 +668,10 @@ function InsightsPageContent() {
                 >
                   <div className="text-center">
                     <h3 className="text-lg font-bold text-white mb-2">
-                      Explore Deeper
+                      Full archive
                     </h3>
                     <p className="text-gray-300 text-sm mb-6 leading-relaxed">
-                      Dive into our complete article collection with advanced
-                      filters and search
+                      Browse every saved article with filters and search
                     </p>
                     <Link
                       href="/articles"

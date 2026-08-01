@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 export default function Partners() {
   const [hoveredPartner, setHoveredPartner] = useState(null);
@@ -23,33 +24,17 @@ export default function Partners() {
   }, []);
 
   return (
-    <section id="partners" className="py-24 relative">
-      {/* Background Elements */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[128px] translate-x-1/2 opacity-20"></div>
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/30 rounded-full blur-[96px] -translate-x-1/2 opacity-20"></div>
+    <section id="partners" className="relative py-24">
+      <div className="absolute right-0 top-0 h-[500px] w-[500px] translate-x-1/2 rounded-full bg-purple-500/30 opacity-20 blur-[128px]" />
+      <div className="absolute bottom-0 left-0 h-[400px] w-[400px] -translate-x-1/2 rounded-full bg-primary/30 opacity-20 blur-[96px]" />
 
-      <div className="container mx-auto px-6 relative">
-        <div className="mb-16 md:mb-20 text-center">
-          <Link href="/partners" className="group inline-block relative">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 md:mb-6 cursor-pointer">
-              <span className="relative inline-block">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
-                  Our Partners
-                </span>
-                <span className="absolute inset-0 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300">
-                  Our Partners
-                </span>
-              </span>
-            </h2>
-            <div className="relative h-1 w-full max-w-xs mx-auto mt-2 md:mt-3">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50 blur-sm"></div>
-              <div className="relative h-full bg-gradient-to-r from-primary to-purple-400/75 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
-            </div>
-          </Link>
+      <div className="container relative mx-auto px-6">
+        <div className="mb-16 text-center md:mb-20">
+          <SectionHeading href="/partners">Our Partners</SectionHeading>
         </div>
 
-        <div className="max-w-7xl mx-auto">
-          <div className="relative h-48 overflow-hidden mb-12">
+        <div className="mx-auto max-w-7xl">
+          <div className="relative mb-12 h-48 overflow-hidden">
             <div className="absolute flex">
               {[1, 2, 3].map((sectionIndex) => (
                 <section
@@ -64,13 +49,9 @@ export default function Partners() {
                       onMouseLeave={() => setHoveredPartner(null)}
                       className="mx-4"
                     >
-                      <div
-                        className="backdrop-blur-sm rounded-2xl p-6 w-64 h-48 flex flex-col items-center justify-center
-                        border border-gray-700/30 hover:border-primary/50 transition-all duration-300
-                        hover:shadow-lg hover:shadow-primary/10 overflow-hidden"
-                      >
+                      <div className="relative flex h-48 w-64 flex-col items-center justify-center overflow-hidden rounded-2xl border border-gray-800/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10">
                         <div
-                          className="absolute inset-0 rounded-2xl z-0"
+                          className="absolute inset-0 z-0 rounded-2xl"
                           style={{
                             background: `radial-gradient(circle at center, ${partner.color || "#8b5cf6"}20 0%, transparent 70%)`,
                             opacity: hoveredPartner === partner.name ? 0.8 : 0,
@@ -82,7 +63,7 @@ export default function Partners() {
                         />
 
                         <div
-                          className="relative w-full h-28 flex items-center justify-center z-10"
+                          className="relative z-10 flex h-28 w-full items-center justify-center"
                           style={{
                             transform:
                               hoveredPartner === partner.name
@@ -97,7 +78,7 @@ export default function Partners() {
                               alt={partner.name}
                               width={180}
                               height={90}
-                              className="object-contain max-h-28"
+                              className="max-h-28 object-contain"
                             />
                           ) : (
                             <span
@@ -110,7 +91,7 @@ export default function Partners() {
                         </div>
 
                         <p
-                          className="mt-6 text-gray-300 text-center font-medium z-10"
+                          className="z-10 mt-6 text-center font-medium text-gray-300"
                           style={{
                             color:
                               hoveredPartner === partner.name
@@ -130,43 +111,10 @@ export default function Partners() {
           </div>
 
           <div className="text-center">
-            <div
-              className="inline-block"
-              style={{
-                transform: "scale(1)",
-                transition: "transform 0.3s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "scale(1.05)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)";
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = "scale(0.95)";
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = "scale(1.05)";
-              }}
-            >
-              <Link
-                href="/partners"
-                className="group inline-flex items-center gap-3 px-8 py-4 text-lg font-medium rounded-xl 
-                       bg-primary hover:bg-primary/90 text-white transition-all duration-300 
-                       hover:shadow-xl hover:shadow-primary/15"
-              >
-                View All Partners
-                <div
-                  className="animate-bounce"
-                  style={{
-                    animation: "none",
-                    transform: "translateX(0)",
-                  }}
-                >
-                  <FiArrowRight className="text-xl" />
-                </div>
-              </Link>
-            </div>
+            <Link href="/partners" className="fc-btn-primary group">
+              View All Partners
+              <FiArrowRight className="text-xl transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
       </div>

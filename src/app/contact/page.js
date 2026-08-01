@@ -9,6 +9,7 @@ import {
   FiSend,
 } from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
+import { PageTitle } from "@/components/ui/SectionHeading";
 import { FaTiktok } from "react-icons/fa";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { createFormChangeHandler } from "@/lib/frontend-helpers";
@@ -58,34 +59,34 @@ export default function ContactPage() {
     <PublicPageShell title="Contact | FinTech Calgary">
 
       <div className="relative flex-grow">
-        <div className="container mx-auto px-6 pt-36 pb-24 relative z-10">
-          <div className="text-center mb-16 animate-fadeIn">
-            <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 mb-6">
+        <div className="container relative z-10 mx-auto px-6 pb-24 pt-36 sm:px-8 lg:px-12">
+          <div className="mb-16 animate-fadeIn text-center">
+            <PageTitle sizeClass="text-5xl md:text-6xl font-extrabold mb-6">
               Contact Us
-            </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            </PageTitle>
+            <p className="mx-auto max-w-3xl text-xl text-gray-300">
               Have questions? We&apos;d love to hear from you.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 shadow-lg hover:border-primary/50 hover:bg-gray-800/70 transition-all duration-300 animate-slideInLeft">
-              <FiMail className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">Email</h3>
+          <div className="mb-16 grid gap-8 md:grid-cols-2">
+            <div className="fc-card animate-slideInLeft p-8">
+              <FiMail className="mb-4 h-8 w-8 text-primary" />
+              <h3 className="mb-2 text-xl font-semibold text-white">Email</h3>
               <a
                 href="mailto:fintech.calgary@gmail.com"
-                className="text-gray-300 hover:text-primary transition-colors"
+                className="fc-link"
               >
                 fintech.calgary@gmail.com
               </a>
             </div>
 
-            <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 shadow-lg hover:border-primary/50 hover:bg-gray-800/70 transition-all duration-300 animate-slideInRight">
-              <FiMessageSquare className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">
+            <div className="fc-card animate-slideInRight p-8">
+              <FiMessageSquare className="mb-4 h-8 w-8 text-primary" />
+              <h3 className="mb-2 text-xl font-semibold text-white">
                 Social Media
               </h3>
-              <p className="text-gray-300 mb-4">
+              <p className="mb-4 text-gray-300">
                 Follow us for the latest updates
               </p>
               <div>
@@ -186,7 +187,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="fc-btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
                   >
                     {isSubmitting ? (
                       "Sending..."

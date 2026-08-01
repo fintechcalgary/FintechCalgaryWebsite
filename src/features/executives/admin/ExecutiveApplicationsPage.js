@@ -729,6 +729,7 @@ export default function ExecutiveApplicationsPage() {
           formatDate={formatDateTimeShort}
           onViewDetails={openDetailsModal}
           onDeleteClick={openDeleteModal}
+          deletingId={deletingId}
         />
       </main>
 
