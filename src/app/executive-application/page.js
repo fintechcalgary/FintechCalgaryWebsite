@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
 import { FiCheck, FiAlertCircle } from "react-icons/fi";
 import Image from "next/image";
 import logger from "@/lib/logger";
@@ -14,7 +13,12 @@ import {
   validateRequiredFields,
   validateEmail,
 } from "@/lib/frontend-helpers";
-import { API_ENDPOINTS, UPLOAD_FOLDERS, FILE_TYPES, ERROR_MESSAGES } from "@/lib/constants";
+import {
+  API_ENDPOINTS,
+  UPLOAD_FOLDERS,
+  FILE_TYPES,
+  ERROR_MESSAGES,
+} from "@/lib/constants";
 
 export default function ExecutiveApplicationPage() {
   const [form, setForm] = useState({
@@ -64,7 +68,7 @@ export default function ExecutiveApplicationPage() {
     (roleTitle) => {
       if (roleTitle && availableRoles.length > 0) {
         const selectedRole = availableRoles.find(
-          (role) => role.title === roleTitle
+          (role) => role.title === roleTitle,
         );
         if (selectedRole && selectedRole.questions) {
           setSelectedRoleQuestions(selectedRole.questions);
@@ -85,7 +89,7 @@ export default function ExecutiveApplicationPage() {
         setSelectedRoleQuestions([]);
       }
     },
-    [availableRoles]
+    [availableRoles],
   );
 
   useEffect(() => {
@@ -254,7 +258,7 @@ export default function ExecutiveApplicationPage() {
             email: form.email,
             role: form.role,
             hasResume: !!form.resumeFile,
-          }
+          },
         );
 
         if (errorData.error) {
@@ -276,7 +280,10 @@ export default function ExecutiveApplicationPage() {
         resumeType: form.resumeFile?.type,
       });
 
-      if (error.message === "Failed to upload resume" || error.message.includes("upload")) {
+      if (
+        error.message === "Failed to upload resume" ||
+        error.message.includes("upload")
+      ) {
         setErrorMessage(ERROR_MESSAGES.RESUME_UPLOAD_FAILED);
         logger.logUploadError(form.resumeFile?.name || "unknown", error, {
           size: form.resumeFile?.size,
@@ -287,13 +294,13 @@ export default function ExecutiveApplicationPage() {
         error.message.includes("fetch")
       ) {
         setErrorMessage(
-          "Network error. Please check your internet connection and try again."
+          "Network error. Please check your internet connection and try again.",
         );
       } else if (error.message.includes("timeout")) {
         setErrorMessage("Request timed out. Please try again.");
       } else {
         setErrorMessage(
-          "An unexpected error occurred. Please try again or contact support if the problem persists."
+          "An unexpected error occurred. Please try again or contact support if the problem persists.",
         );
       }
     } finally {
@@ -303,16 +310,14 @@ export default function ExecutiveApplicationPage() {
 
   // Update the base input class styling to match associate signup
   const inputClassName =
-    "w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200 hover:border-gray-600/50";
+    "w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200 hover:border-gray-600/50";
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
-
+    <PublicPageShell>
       <div className="relative flex-grow">
-        <div className="container mx-auto px-6 pt-24 relative z-10">
+        <div className="container mx-auto px-6 pt-36 relative z-10">
           <div className="text-center animate-fadeIn">
-            <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
+            <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 mb-6">
               Executive Application
             </h1>
             <p className="text-xl text-gray-300 mx-auto">
@@ -359,11 +364,11 @@ export default function ExecutiveApplicationPage() {
 
                     <div className="mb-5">
                       {rolesLoading ? (
-                        <div className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-gray-400">
+                        <div className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-gray-400">
                           Loading available roles...
                         </div>
                       ) : availableRoles.length === 0 ? (
-                        <div className="w-full px-4 py-3 rounded-lg bg-gray-800/50 border border-gray-700/50 text-gray-400">
+                        <div className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-gray-400">
                           No roles currently available
                         </div>
                       ) : (
@@ -398,7 +403,7 @@ export default function ExecutiveApplicationPage() {
                       <div className="mb-5">
                         {(() => {
                           const selectedRole = availableRoles.find(
-                            (role) => role.title === form.role
+                            (role) => role.title === form.role,
                           );
                           return selectedRole ? (
                             <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/30">
@@ -415,7 +420,7 @@ export default function ExecutiveApplicationPage() {
                                   onClick={() =>
                                     window.open(
                                       selectedRole.responsibilitiesImageUrl,
-                                      "_blank"
+                                      "_blank",
                                     )
                                   }
                                 />
@@ -753,7 +758,7 @@ export default function ExecutiveApplicationPage() {
                           >
                             {errors[question.id]}
                           </p>
-                        )
+                        ),
                     )}
 
                     {/* Display errors for fallback questions */}
@@ -781,7 +786,7 @@ export default function ExecutiveApplicationPage() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="w-full px-8 py-4 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="w-full px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
                     >
                       {submitting ? "Submitting..." : "Submit Application"}
                     </button>
@@ -833,8 +838,6 @@ export default function ExecutiveApplicationPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

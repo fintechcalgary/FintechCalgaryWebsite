@@ -77,7 +77,9 @@ export const validators = {
   },
 
   requiredFields: (data, fields) => {
-    const missing = fields.filter((field) => data[field] === undefined || data[field] === null);
+    const missing = fields.filter(
+      (field) => data[field] === undefined || data[field] === null,
+    );
     if (missing.length > 0) {
       return `Missing required fields: ${missing.join(", ")}`;
     }
@@ -99,7 +101,8 @@ export const validators = {
   },
 
   password: (password) => {
-    if (!password) return ERROR_MESSAGES.EMAIL_REQUIRED.replace("Email", "Password");
+    if (!password)
+      return ERROR_MESSAGES.EMAIL_REQUIRED.replace("Email", "Password");
     if (password.length < VALIDATION.PASSWORD_MIN_LENGTH) {
       return ERROR_MESSAGES.PASSWORD_MIN_LENGTH;
     }
@@ -137,10 +140,7 @@ export function withErrorHandler(handler) {
       return await handler(req, context);
     } catch (error) {
       logger.logApiError(req.nextUrl?.pathname || "unknown", error);
-      return apiResponse.error(
-        error.message || "Internal server error",
-        500
-      );
+      return apiResponse.error(error.message || "Internal server error", 500);
     }
   };
 }
@@ -173,4 +173,3 @@ export const DEFAULT_EXECUTIVE_QUESTIONS = [
     required: true,
   },
 ];
-

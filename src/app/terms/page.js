@@ -1,30 +1,25 @@
 "use client";
-import { useEffect } from "react";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
+import { PageTitle } from "@/components/ui/SectionHeading";
 
 export default function TermsPage() {
-  useEffect(() => {
-    document.title = "Terms of Service | FinTech Calgary";
-  }, []);
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
+    <PublicPageShell title="Terms of Service | FinTech Calgary">
 
       <div className="relative flex-grow">
-        <div className="container mx-auto px-6 pt-24 pb-16 relative z-10">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h1 className="text-5xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-6">
+        <div className="container relative z-10 mx-auto px-6 pb-16 pt-36 sm:px-8 lg:px-12">
+          <div className="mx-auto max-w-4xl">
+            <div className="mb-12 text-center">
+              <PageTitle sizeClass="text-5xl font-extrabold mb-6">
                 Terms of Service
-              </h1>
+              </PageTitle>
               <p className="text-xl text-gray-300">
                 Last updated: {new Date().toLocaleDateString()}
               </p>
             </div>
 
-            <div className="bg-gray-800/30 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/30 space-y-8">
+            <div className="fc-card space-y-8 p-8 hover:border-gray-800/50">
               <section>
                 <h2 className="text-2xl font-bold text-white mb-4">
                   1. Acceptance of Terms
@@ -208,8 +203,6 @@ export default function TermsPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

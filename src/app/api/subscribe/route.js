@@ -6,12 +6,13 @@ import { EMAIL } from "@/lib/constants";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const POST = withErrorHandler(async (req) => {
-  const { email, firstName, lastName, ucid, membershipType, resume, hasPaid } = await req.json();
+  const { email, firstName, lastName, ucid, membershipType, resume, hasPaid } =
+    await req.json();
 
   // Input validation
   const validationError = validators.validateRequiredAndEmail(
     { email, firstName, lastName, ucid },
-    ["firstName", "lastName", "ucid", "email"]
+    ["firstName", "lastName", "ucid", "email"],
   );
   if (validationError) {
     return apiResponse.badRequest(validationError);
@@ -52,6 +53,13 @@ export const POST = withErrorHandler(async (req) => {
     logger.log(emailError, { type: "email_error", endpoint: "/api/subscribe" });
   }
 
-  logger.logUserAction("subscribe", { email, firstName, lastName, ucid, membership_type: membershipType || "free", has_paid: hasPaid || false });
+  logger.logUserAction("subscribe", {
+    email,
+    firstName,
+    lastName,
+    ucid,
+    membership_type: membershipType || "free",
+    has_paid: hasPaid || false,
+  });
   return apiResponse.success({ success: true });
 });

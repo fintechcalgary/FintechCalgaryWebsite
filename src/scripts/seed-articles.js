@@ -109,7 +109,7 @@ async function fetchRssFeed(url) {
     }
     return items;
   } catch (err) {
-    console.warn(`  ⚠  RSS fetch failed for ${url}: ${err.message}`);
+    console.warn(`  WARN  RSS fetch failed for ${url}: ${err.message}`);
     return [];
   }
 }
@@ -142,7 +142,7 @@ async function generateSummary(article) {
     const cleaned = text.replace(/\*\*/g, "").replace(/\*/g, "").replace(/^Summary:\s*/i, "").trim();
     return cleaned.length >= 20 ? (cleaned.length > 500 ? cleaned.slice(0, 500) + "…" : cleaned) : null;
   } catch (err) {
-    console.warn(`    ⚠ Gemini failed for "${article.title.slice(0, 50)}": ${err.message}`);
+    console.warn(`    WARN Gemini failed for "${article.title.slice(0, 50)}": ${err.message}`);
     return null;
   }
 }
@@ -261,7 +261,7 @@ function buildDigest(articles) {
 // ── Main ─────────────────────────────────────────────────────────────
 async function main() {
   if (!MONGODB_URI) {
-    console.error("✗ MONGODB_URI not set. Run with: node --env-file=.env.local src/scripts/seed-articles.js");
+    console.error("ERROR: MONGODB_URI not set. Run with: node --env-file=.env.local src/scripts/seed-articles.js");
     process.exit(1);
   }
 
@@ -270,7 +270,7 @@ async function main() {
   const db = client.db(DB_NAME);
 
   // ── Step 1: Clear collections ──────────────────────────────────────
-  console.log("\n🗑  Clearing collections...");
+  console.log("\nClearing collections...");
   const [delArticles, delDigests, delLogs] = await Promise.all([
     db.collection("articles").deleteMany({}),
     db.collection("weekly_digests").deleteMany({}),
@@ -281,11 +281,11 @@ async function main() {
   console.log(`   refresh_logs:   ${delLogs.deletedCount} deleted`);
 
   // ── Step 2: Fetch RSS ──────────────────────────────────────────────
-  console.log("\n📡  Fetching RSS feeds...");
+  console.log("\nFetching RSS feeds...");
   const allItems = [];
   for (const url of RSS_FEEDS) {
     const items = await fetchRssFeed(url);
-    console.log(`   ${items.length} articles ← ${url.split("q=")[1]?.split("&")[0] || url}`);
+    console.log(`   ${items.length} articles from ${url.split("q=")[1]?.split("&")[0] || url}`);
     allItems.push(...items);
   }
 
@@ -299,26 +299,26 @@ async function main() {
   console.log(`\n   ${unique.length} unique articles after dedup`);
 
   if (unique.length === 0) {
-    console.error("✗ No articles fetched. Check network/RSS feeds.");
+    console.error("ERROR: No articles fetched. Check network/RSS feeds.");
     await client.close();
     process.exit(1);
   }
 
   // ── Step 3: Insert all articles (no summaries yet) ─────────────────
-  console.log("\n💾  Inserting articles into MongoDB...");
+  console.log("\nInserting articles into MongoDB...");
   await db.collection("articles").insertMany(unique, { ordered: false }).catch(() => {});
   const totalInserted = await db.collection("articles").countDocuments();
   console.log(`   ${totalInserted} articles in DB`);
 
   // ── Step 4: Pre-rank to find which 15 will be in digest ───────────
-  console.log("\n🏆  Ranking articles to identify digest candidates...");
+  console.log("\nRanking articles to identify digest candidates...");
   const ranked = rankArticles(unique);
   const digestCandidates = ranked.slice(0, 15);
   console.log(`   Top 15 identified. Generating AI summaries for them...`);
 
   // ── Step 5: Generate summaries for the top 15 ─────────────────────
   if (!GEMINI_API_KEY) {
-    console.warn("   ⚠ GEMINI_API not set — skipping summaries");
+    console.warn("   WARN: GEMINI_API not set — skipping summaries");
   } else {
     let generated = 0;
     for (let i = 0; i < digestCandidates.length; i++) {
@@ -329,9 +329,9 @@ async function main() {
         await db.collection("articles").updateOne({ url: a.url }, { $set: { summary, updatedAt: new Date() } });
         digestCandidates[i] = { ...a, summary };
         generated++;
-        process.stdout.write("✓\n");
+        process.stdout.write("OK\n");
       } else {
-        process.stdout.write("✗ (skipped)\n");
+        process.stdout.write("FAILED (skipped)\n");
       }
       // Small delay to avoid Gemini rate limits
       await new Promise((r) => setTimeout(r, 300));
@@ -340,7 +340,7 @@ async function main() {
   }
 
   // ── Step 6: Build and save weekly digest ──────────────────────────
-  console.log("\n📋  Building weekly digest...");
+  console.log("\nBuilding weekly digest...");
   // Re-rank with summaries included
   const rankedWithSummaries = rankArticles(digestCandidates);
   const top15 = rankedWithSummaries.slice(0, 15);
@@ -380,19 +380,19 @@ async function main() {
   });
 
   // ── Step 7: Print results ──────────────────────────────────────────
-  console.log("\n✅  Digest built. Final top 15:\n");
+  console.log("\nDigest built. Final top 15:\n");
   top15.forEach((a, i) => {
     const hasSummary = a.summary && a.summary.trim().length > 20;
-    console.log(`  ${String(i + 1).padStart(2, "0")}. [${hasSummary ? "✓ summary" : "✗ no summary"}] ${a.title.slice(0, 80)}`);
+    console.log(`  ${String(i + 1).padStart(2, "0")}. [${hasSummary ? "summary" : "no summary"}] ${a.title.slice(0, 80)}`);
     console.log(`      Source: ${a.source}  |  Date: ${a.date}`);
-    if (hasSummary) console.log(`      → ${a.summary.slice(0, 100)}...`);
+    if (hasSummary) console.log(`      > ${a.summary.slice(0, 100)}...`);
     console.log();
   });
 
-  console.log(`📊  Sentiment:  +${stats.sentiment.positive} positive  ~${stats.sentiment.neutral} neutral  -${stats.sentiment.negative} negative`);
-  console.log(`🏷   Topics:    ${stats.topics.map((t) => t.topic).join(", ")}`);
-  console.log(`\n🌐  Total articles in DB: ${totalInserted}`);
-  console.log(`📰  Digest articles:      ${top15.length} / 15`);
+  console.log(`Sentiment:  +${stats.sentiment.positive} positive  ~${stats.sentiment.neutral} neutral  -${stats.sentiment.negative} negative`);
+  console.log(`Topics:    ${stats.topics.map((t) => t.topic).join(", ")}`);
+  console.log(`\nTotal articles in DB: ${totalInserted}`);
+  console.log(`Digest articles:      ${top15.length} / 15`);
   console.log("\nDone. Start the dev server and visit /insights to test.\n");
 
   await client.close();

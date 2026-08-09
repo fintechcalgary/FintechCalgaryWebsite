@@ -44,6 +44,7 @@ export const UPLOAD_FOLDERS = {
   EVENT_IMAGES: "eventImages",
   EXECUTIVE_IMAGES: "executiveImages",
   ROLE_IMAGES: "roleImages",
+  ROLE_RESPONSIBILITIES: "role-responsibilities",
 };
 
 // File Type Constants

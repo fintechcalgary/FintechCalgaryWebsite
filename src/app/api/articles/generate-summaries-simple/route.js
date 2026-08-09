@@ -7,8 +7,9 @@ export const dynamic = "force-dynamic";
 
 async function generateSummaryWithGroq({ apiKey, article }) {
   const prompt = [
-    "Write a concise 2-3 sentence summary of this fintech news article for a professional audience.",
-    "Focus on the key development, its significance, and potential impact on the industry.",
+    "Write a concise 2-3 sentence factual summary of this fintech news article.",
+    "State what happened and who is involved. Do not claim broader significance or industry impact unless the article states it.",
+    "Avoid filler: landscape, delve, pivotal, transformative, underscore, foster, seamless, cutting-edge, robust, tapestry, testament, empower.",
     "",
     `Title: ${article.title || ""}`,
     `Source: ${article.source || ""}`,

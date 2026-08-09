@@ -1,34 +1,30 @@
 "use client";
 
-import { useEffect } from "react";
-import PublicNavbar from "@/components/PublicNavbar";
-import Footer from "@/components/landing/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { PageTitle } from "@/components/ui/SectionHeading";
 
 export default function AboutPage() {
-  useEffect(() => {
-    document.title = "About | FinTech Calgary";
-  }, []);
-
   return (
-    <main className="flex flex-col min-h-screen">
-      <PublicNavbar />
-
+    <PublicPageShell title="About | FinTech Calgary">
       <div className="relative flex-grow">
-        <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-24 relative z-10">
-          <div className="text-center mb-8 sm:mb-16 relative animate-fadeIn">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary mb-4 sm:mb-6 relative z-10">
+        <div className="container relative z-10 mx-auto px-6 pb-24 pt-36 sm:px-8 lg:px-12">
+          <div className="relative mb-16 animate-fadeIn text-center">
+            <PageTitle
+              sizeClass="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 sm:mb-6"
+              className="relative z-10"
+            >
               About Us
-            </h1>
-            <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto relative z-10 mb-6 sm:mb-10">
+            </PageTitle>
+            <p className="relative z-10 mx-auto mb-6 max-w-3xl text-lg text-gray-300 sm:mb-10 sm:text-xl">
               Welcome to FinTech Calgary!
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 max-w-6xl mx-auto">
-            <div className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-6 sm:p-8 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500 animate-slideInLeft">
+            <div className="fc-card group relative animate-slideInLeft p-6 sm:p-8">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-4 sm:mb-6 relative">
                 Who We Are
@@ -57,9 +53,9 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="md:col-span-2 group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-6 sm:p-8 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500 animate-slideInUp">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-4 sm:mb-6 relative">
+            <div className="fc-card group relative animate-slideInUp p-6 md:col-span-2 sm:p-8">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-purple-400/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+              <h2 className="relative mb-4 text-2xl font-bold text-primary sm:mb-6 sm:text-3xl">
                 Our Services
               </h2>
               <p className="text-base sm:text-lg text-gray-300 leading-relaxed relative">
@@ -82,9 +78,9 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl p-6 sm:p-8 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500 animate-slideInRight">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-4 sm:mb-6 relative">
+            <div className="fc-card group relative animate-slideInRight p-6 sm:p-8">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-purple-400/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+              <h2 className="relative mb-4 text-2xl font-bold text-primary sm:mb-6 sm:text-3xl">
                 Our Network
               </h2>
               <p className="text-base sm:text-lg text-gray-300 leading-relaxed relative">
@@ -101,28 +97,22 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Call to Action */}
-        <div className="mb-16 sm:mb-32 text-center animate-slideInUp px-4 sm:px-6">
-          <div className="bg-gradient-to-br from-gray-800/70 to-gray-900/70 backdrop-blur-xl p-8 sm:p-12 rounded-3xl border border-gray-700/50 max-w-4xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">
-              Join Our Community
+        <div className="mb-16 animate-slideInUp px-6 text-center sm:mb-32 sm:px-8">
+          <div className="fc-card mx-auto max-w-4xl p-8 sm:p-12">
+            <h2 className="mb-4 bg-gradient-to-r from-primary to-purple-400/75 bg-clip-text text-3xl font-bold text-transparent sm:mb-6 sm:text-4xl">
+              Membership
             </h2>
-            <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto">
-              Ready to be part of the future of finance and technology? Join
-              FinTech Calgary today and connect with like-minded innovators.
+            <p className="mx-auto mb-6 max-w-2xl text-lg text-gray-300 sm:mb-8 sm:text-xl">
+              Want event invites, workshops, and partner opportunities? Sign up
+              for membership.
             </p>
-            <Link
-              href="/join"
-              className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-primary hover:bg-primary/90 text-base sm:text-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-xl hover:shadow-primary/30"
-            >
+            <Link href="/join" className="fc-btn-primary group">
               Become a Member
-              <FiArrowRight className="ml-2" />
+              <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </PublicPageShell>
   );
 }

@@ -75,7 +75,7 @@ class Logger {
         ? console.warn
         : console.log;
 
-    logMethod("🚨 Error Logged:", {
+    logMethod("Error Logged:", {
       message: errorInfo.message,
       stack: errorInfo.stack,
       context: errorInfo.context,
@@ -94,7 +94,7 @@ class Logger {
         ? console.warn
         : console.log;
 
-    logMethod("🚨 Client Error:", {
+    logMethod("Client Error:", {
       message: errorInfo.message,
       url: errorInfo.url,
       context: errorInfo.context,
@@ -152,7 +152,7 @@ class Logger {
         );
       }
 
-      console.log("✅ Error sent to logging endpoint successfully");
+      console.log("Error sent to logging endpoint successfully");
     } catch (fetchError) {
       console.error("Failed to send error to logging endpoint:", fetchError);
       throw fetchError;
@@ -224,7 +224,7 @@ class Logger {
    */
   logUserAction(action, context = {}) {
     if (this.isDevelopment) {
-      console.log("👤 User Action:", {
+      console.log("User Action:", {
         action,
         context,
         timestamp: new Date().toISOString(),

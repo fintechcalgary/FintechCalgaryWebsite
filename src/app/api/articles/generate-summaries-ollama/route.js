@@ -5,8 +5,9 @@ export const dynamic = "force-dynamic";
 
 async function generateSummaryWithOllama(article) {
   const prompt = [
-    "Write a concise 2-3 sentence summary of this fintech news article for a professional audience.",
-    "Focus on the key development, its significance, and potential impact on the industry.",
+    "Write a concise 2-3 sentence factual summary of this fintech news article.",
+    "State what happened and who is involved. Do not claim broader significance or industry impact unless the article states it.",
+    "Avoid filler: landscape, delve, pivotal, transformative, underscore, foster, seamless, cutting-edge, robust, tapestry, testament, empower.",
     "",
     `Title: ${article.title}`,
     `Source: ${article.source || "Unknown"}`,
@@ -86,7 +87,7 @@ export async function POST(_req) {
             summary: summary.substring(0, 100) + "...",
             status: "success"
           });
-          console.log(`✓ Generated summary for: ${article.title}`);
+          console.log(`Generated summary for: ${article.title}`);
         } else {
           results.push({
             url: article.url,
@@ -94,10 +95,10 @@ export async function POST(_req) {
             status: "failed",
             error: "Empty summary generated"
           });
-          console.log(`✗ Failed to generate summary for: ${article.title}`);
+          console.log(`Failed to generate summary for: ${article.title}`);
         }
       } catch (error) {
-        console.error(`✗ Error generating summary for ${article.title}:`, error.message);
+        console.error(`Error generating summary for ${article.title}:`, error.message);
         results.push({
           url: article.url,
           title: article.title,
