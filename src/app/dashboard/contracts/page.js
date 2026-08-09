@@ -21,9 +21,9 @@ import {
   FiX,
 } from "react-icons/fi";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import Modal from "@/components/Modal";
-import PortalModal from "@/components/PortalModal";
+import Navbar from "@/components/layout/AdminNavbar";
+import Modal from "@/components/ui/Modal/ConfirmModal";
+import PortalModal from "@/components/ui/Modal/ContentModal";
 import ContractPipeline from "@/components/ContractPipeline";
 import {
   API_ENDPOINTS,
