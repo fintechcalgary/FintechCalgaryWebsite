@@ -19,6 +19,12 @@ export const API_ENDPOINTS = {
   MEMBERS: "/api/members",
   EXECUTIVE_ROLES: "/api/executive-roles",
   CONTRACTS: "/api/contracts",
+  CONVERGE_SESSION_TOKEN: "/api/converge/session-token",
+};
+
+// Membership payments (charged via Elavon Converge hosted payment modal)
+export const MEMBERSHIP = {
+  PREMIUM_PRICE: "5.00",
 };
 
 // MongoDB Collection Names
