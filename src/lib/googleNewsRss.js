@@ -90,6 +90,8 @@ export function isMongoConnectionError(error) {
     message.includes("MongoServerSelectionError") ||
     message.includes("SSL routines") ||
     message.includes("tlsv1 alert") ||
+    message.includes("ENOTFOUND") ||
+    error?.code === "ENOTFOUND" ||
     error?.code === "ECONNREFUSED";
 }
 

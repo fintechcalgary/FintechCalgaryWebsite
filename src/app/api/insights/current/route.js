@@ -8,6 +8,8 @@ import { getLiveWeeklyDigest, isMongoConnectionError } from "@/lib/googleNewsRss
 
 export const dynamic = "force-dynamic";
 
+const ROLLOVER_FALLBACK_HOURS = 12;
+
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
 function digestResponse(data) {
@@ -15,6 +17,13 @@ function digestResponse(data) {
     status: 200,
     headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
   });
+}
+
+function isRolloverFallbackDigest(digest) {
+  if (!digest?.weekEnd) return false;
+  const weekEnd = new Date(digest.weekEnd);
+  const fallbackCutoff = new Date(weekEnd.getTime() + ROLLOVER_FALLBACK_HOURS * 60 * 60 * 1000);
+  return new Date() <= fallbackCutoff;
 }
 
 async function liveRssFallback() {
@@ -53,7 +62,7 @@ export async function GET() {
     }
 
     const latestDigest = await getLatestPublishedWeeklyDigest(db);
-    if (latestDigest && latestDigest.articles.length > 0) {
+    if (latestDigest && latestDigest.articles.length > 0 && isRolloverFallbackDigest(latestDigest)) {
       return digestResponse({
         weekStart: latestDigest.weekStart,
         weekEnd: latestDigest.weekEnd,

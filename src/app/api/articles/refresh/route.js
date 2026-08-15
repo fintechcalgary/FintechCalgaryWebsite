@@ -68,6 +68,8 @@ function isMongoConnectionError(error) {
     message.includes("MongoServerSelectionError") ||
     message.includes("SSL routines") ||
     message.includes("tlsv1 alert") ||
+    message.includes("ENOTFOUND") ||
+    error?.code === "ENOTFOUND" ||
     error?.code === "ECONNREFUSED"
   );
 }
@@ -332,9 +334,21 @@ export async function POST(req) {
 export async function GET(req) {
   const authHeader = req.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
+  const isVercelCron = (req.headers.get("user-agent") || "").includes("vercel-cron");
 
   if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
     return POST(req);
+  }
+
+  if (isVercelCron) {
+    return new Response(
+      JSON.stringify({
+        error: cronSecret
+          ? "Invalid cron authorization header"
+          : "CRON_SECRET is not configured",
+      }),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
   }
 
   try {
