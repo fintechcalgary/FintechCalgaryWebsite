@@ -218,7 +218,7 @@ export default function Events({ mode }) {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-gray-200">
+                <p className="fc-body">
                   <span className="font-medium">Important:</span> Please use
                   high-resolution images for the best display quality. When
                   specifying time, ensure to include{" "}
@@ -489,10 +489,10 @@ export default function Events({ mode }) {
                   </button>
                 </div>
               </div>
-              <p className="text-gray-400 mb-4 line-clamp-3">
+              <p className="fc-body mb-4 line-clamp-3">
                 {event.description}
               </p>
-              <div className="text-sm text-gray-500">
+              <div className="fc-muted">
                 {formatEventDate(event.date)}
                 {event.time && ` at ${event.time}`}{" "}
                 {/* Display time if available */}
@@ -500,7 +500,7 @@ export default function Events({ mode }) {
               <div className="mt-4 pt-4 border-t border-gray-700">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="text-sm text-gray-400">
+                    <p className="fc-muted">
                       {event.registrations?.length || 0} registered
                     </p>
                   </div>
@@ -519,7 +519,7 @@ export default function Events({ mode }) {
                     <Link
                       href={`/events/${event._id}/registrations`}
                       onClick={(e) => e.stopPropagation()}
-                      className="text-sm text-primary hover:text-primary/80 transition-all duration-200 inline-flex items-center gap-2 hover:scale-105 relative z-20"
+                      className="fc-link text-sm transition-all duration-200 inline-flex items-center gap-2 hover:scale-105 relative z-20"
                     >
                       <FiUser className="w-4 h-4" />
                       View {event.registrations.length} Registration
@@ -536,7 +536,7 @@ export default function Events({ mode }) {
       {events.length === 0 && !showForm && (
         <div className="text-center py-12 bg-gray-800/50 rounded-xl min-h-[400px] flex flex-col items-center justify-center">
           <FiCalendar className="mx-auto text-4xl text-primary mb-4" />
-          <p className="text-gray-400">
+          <p className="fc-muted">
             No events yet. Create your first event!
           </p>
         </div>

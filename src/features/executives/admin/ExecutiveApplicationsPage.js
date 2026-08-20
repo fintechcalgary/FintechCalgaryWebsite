@@ -24,6 +24,7 @@ import useFileUpload from "@/hooks/useFileUpload";
 import { downloadCsv } from "@/lib/csv";
 import { formatDateShort, formatDateTimeShort, todayIsoDate } from "@/lib/dates";
 import { UPLOAD_FOLDERS } from "@/lib/constants";
+import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function ExecutiveApplicationsPage() {
   const { data: session, status } = useSession();
@@ -651,7 +652,7 @@ export default function ExecutiveApplicationsPage() {
             <h1 className="text-4xl font-bold text-white">
               Executive Applications
             </h1>
-            <p className="text-gray-400 text-lg">
+            <p className="fc-body-lg">
               Review and manage executive team applications
             </p>
           </div>
@@ -678,36 +679,42 @@ export default function ExecutiveApplicationsPage() {
         </div>
 
         {/* Executive Applications Toggle */}
-        <div className="mb-8 p-6 rounded-2xl bg-gray-900/60 backdrop-blur-xl border border-primary/30 max-w-md hover:border-primary/50 transition-all duration-300">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-white font-semibold text-lg">
-              Executive Applications
-            </span>
-            <button
-              type="button"
-              onClick={handleToggleExecutiveApplications}
-              disabled={settingsLoading || !settingsLoaded}
-              className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none border-2 border-primary/40 ${
-                executiveApplicationsOpen ? "bg-primary" : "bg-gray-600"
-              }`}
-              aria-pressed={executiveApplicationsOpen}
-            >
-              <span
-                className={`inline-block h-7 w-7 transform rounded-full bg-white shadow transition-transform ${
-                  executiveApplicationsOpen ? "translate-x-8" : "translate-x-1"
+        <GlowCard
+          customSize
+          glowColor="purple"
+          className="mb-8 w-full max-w-md !gap-0 !p-6"
+        >
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-2">
+              <span className="fc-title text-lg">
+                Executive Applications
+              </span>
+              <button
+                type="button"
+                onClick={handleToggleExecutiveApplications}
+                disabled={settingsLoading || !settingsLoaded}
+                className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none border-2 border-primary/40 ${
+                  executiveApplicationsOpen ? "bg-primary" : "bg-gray-600"
                 }`}
-              ></span>
-            </button>
+                aria-pressed={executiveApplicationsOpen}
+              >
+                <span
+                  className={`inline-block h-7 w-7 transform rounded-full bg-white shadow transition-transform ${
+                    executiveApplicationsOpen ? "translate-x-8" : "translate-x-1"
+                  }`}
+                ></span>
+              </button>
+            </div>
+            <div className="fc-muted">
+              {executiveApplicationsOpen
+                ? "Executive applications are currently open and accepting submissions."
+                : "Executive applications are currently closed."}
+            </div>
+            {settingsError && (
+              <div className="text-red-400 text-sm mt-2">{settingsError}</div>
+            )}
           </div>
-          <div className="text-gray-400 text-sm">
-            {executiveApplicationsOpen
-              ? "Executive applications are currently open and accepting submissions."
-              : "Executive applications are currently closed."}
-          </div>
-          {settingsError && (
-            <div className="text-red-400 text-sm mt-2">{settingsError}</div>
-          )}
-        </div>
+        </GlowCard>
 
         <RoleManager
           roles={roles}
@@ -752,14 +759,14 @@ export default function ExecutiveApplicationsPage() {
             </div>
 
             <div className="mb-6">
-              <p className="text-gray-300 mb-4 text-sm sm:text-base">
+              <p className="fc-body mb-4 text-sm sm:text-base">
                 Are you sure you want to delete the application for{" "}
                 <span className="text-white font-medium">
                   {applicationToDelete?.name}
                 </span>
                 ?
               </p>
-              <div className="bg-gray-800/50 rounded-lg p-3 text-sm text-gray-400">
+              <div className="bg-gray-800/50 rounded-lg p-3 fc-muted">
                 <div>
                   <strong>Role:</strong> {applicationToDelete?.role}
                 </div>
@@ -811,7 +818,7 @@ export default function ExecutiveApplicationsPage() {
                   <h3 className="text-xl sm:text-2xl font-bold text-white">
                     Application Details
                   </h3>
-                  <p className="text-gray-400 text-sm">
+                  <p className="fc-muted">
                     {selectedApplication?.name} • {selectedApplication?.role}
                   </p>
                 </div>
@@ -841,8 +848,8 @@ export default function ExecutiveApplicationsPage() {
                           <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-primary/20 text-primary border border-primary/30">
                             {selectedApplication.role}
                           </span>
-                          <span className="text-gray-400">•</span>
-                          <span className="text-gray-300">
+                          <span className="fc-muted">•</span>
+                          <span className="fc-body">
                             {selectedApplication.program} • Year{" "}
                             {selectedApplication.year}
                           </span>
@@ -850,7 +857,7 @@ export default function ExecutiveApplicationsPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm text-gray-400">Applied</div>
+                      <div className="fc-muted">Applied</div>
                       <div className="text-white font-medium">
                         {formatDateTimeShort(selectedApplication.createdAt)}
                       </div>
@@ -898,7 +905,7 @@ export default function ExecutiveApplicationsPage() {
                           />
                         </svg>
                         <div>
-                          <div className="text-xs text-gray-400">Email</div>
+                          <div className="text-xs fc-muted">Email</div>
                           <div className="text-white break-all">
                             {selectedApplication.email}
                           </div>
@@ -920,7 +927,7 @@ export default function ExecutiveApplicationsPage() {
                             />
                           </svg>
                           <div>
-                            <div className="text-xs text-gray-400">Phone</div>
+                            <div className="text-xs fc-muted">Phone</div>
                             <div className="text-white">
                               {selectedApplication.phone}
                             </div>
@@ -974,7 +981,7 @@ export default function ExecutiveApplicationsPage() {
                           />
                         </svg>
                         <div>
-                          <div className="text-xs text-gray-400">Program</div>
+                          <div className="text-xs fc-muted">Program</div>
                           <div className="text-white">
                             {selectedApplication.program}
                           </div>
@@ -995,7 +1002,7 @@ export default function ExecutiveApplicationsPage() {
                           />
                         </svg>
                         <div>
-                          <div className="text-xs text-gray-400">
+                          <div className="text-xs fc-muted">
                             Year of Study
                           </div>
                           <div className="text-white">
@@ -1045,18 +1052,18 @@ export default function ExecutiveApplicationsPage() {
                         />
                       </svg>
                       <div className="flex-1">
-                        <div className="text-xs text-gray-400">LinkedIn</div>
+                        <div className="text-xs fc-muted">LinkedIn</div>
                         {selectedApplication.linkedin ? (
                           <a
                             href={selectedApplication.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-primary hover:text-primary/80 break-all text-sm font-medium"
+                            className="fc-link break-all text-sm"
                           >
                             View Profile
                           </a>
                         ) : (
-                          <div className="text-gray-500 text-sm">
+                          <div className="fc-muted">
                             Not provided
                           </div>
                         )}
@@ -1077,19 +1084,19 @@ export default function ExecutiveApplicationsPage() {
                         />
                       </svg>
                       <div className="flex-1">
-                        <div className="text-xs text-gray-400">Resume</div>
+                        <div className="text-xs fc-muted">Resume</div>
                         {selectedApplication.resume ? (
                           <a
                             href={selectedApplication.resume}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-primary hover:text-primary/80 text-sm font-medium flex items-center gap-1"
+                            className="fc-link text-sm flex items-center gap-1"
                           >
                             <FiEye className="w-3 h-3" />
                             View Resume
                           </a>
                         ) : (
-                          <div className="text-gray-500 text-sm">
+                          <div className="fc-muted">
                             Not provided
                           </div>
                         )}
@@ -1148,7 +1155,7 @@ export default function ExecutiveApplicationsPage() {
                             </svg>
                             {question.label}
                           </h5>
-                          <div className="bg-gray-900/50 rounded-lg p-4 text-gray-300 leading-relaxed">
+                          <div className="bg-gray-900/50 rounded-lg p-4 fc-body">
                             {selectedApplication[question.id] ||
                               "No response provided"}
                           </div>
@@ -1175,7 +1182,7 @@ export default function ExecutiveApplicationsPage() {
                             </svg>
                             Why do you want to be an executive?
                           </h5>
-                          <div className="bg-gray-900/50 rounded-lg p-4 text-gray-300 leading-relaxed">
+                          <div className="bg-gray-900/50 rounded-lg p-4 fc-body">
                             {selectedApplication.why || "No response provided"}
                           </div>
                         </div>
@@ -1200,7 +1207,7 @@ export default function ExecutiveApplicationsPage() {
                             do you see its role in the future of business and
                             innovation?
                           </h5>
-                          <div className="bg-gray-900/50 rounded-lg p-4 text-gray-300 leading-relaxed">
+                          <div className="bg-gray-900/50 rounded-lg p-4 fc-body">
                             {selectedApplication.fintechVision ||
                               "No response provided"}
                           </div>
@@ -1226,7 +1233,7 @@ export default function ExecutiveApplicationsPage() {
                             commitments? How do you plan to balance your
                             responsibilities?
                           </h5>
-                          <div className="bg-gray-900/50 rounded-lg p-4 text-gray-300 leading-relaxed">
+                          <div className="bg-gray-900/50 rounded-lg p-4 fc-body">
                             {selectedApplication.otherCommitments ||
                               "No response provided"}
                           </div>
@@ -1328,10 +1335,10 @@ export default function ExecutiveApplicationsPage() {
                     >
                       <FiUpload className="w-8 h-8 text-gray-400" />
                       <div>
-                        <p className="text-sm text-gray-300">
+                        <p className="fc-body">
                           Click to upload or drag and drop
                         </p>
-                        <p className="text-xs text-gray-400 mt-1">
+                        <p className="fc-muted text-xs mt-1">
                           PNG, JPG, GIF up to 5MB
                         </p>
                         <p className="text-xs text-yellow-400 mt-1">
@@ -1453,10 +1460,10 @@ export default function ExecutiveApplicationsPage() {
                     >
                       <FiUpload className="w-8 h-8 text-gray-400" />
                       <div>
-                        <p className="text-sm text-gray-300">
+                        <p className="fc-body">
                           Click to upload new image or drag and drop
                         </p>
-                        <p className="text-xs text-gray-400 mt-1">
+                        <p className="fc-muted text-xs mt-1">
                           PNG, JPG, GIF up to 5MB
                         </p>
                         <p className="text-xs text-yellow-400 mt-1">
@@ -1517,14 +1524,14 @@ export default function ExecutiveApplicationsPage() {
             </div>
 
             <div className="mb-6">
-              <p className="text-gray-300 mb-4 text-sm sm:text-base">
+              <p className="fc-body mb-4 text-sm sm:text-base">
                 Are you sure you want to delete the role{" "}
                 <span className="text-white font-medium">
                   {roleToDelete?.title}
                 </span>
                 ?
               </p>
-              <div className="bg-gray-800/50 rounded-lg p-3 text-sm text-gray-400">
+              <div className="bg-gray-800/50 rounded-lg p-3 fc-muted">
                 <div>
                   <strong>Role:</strong> {roleToDelete?.title}
                 </div>

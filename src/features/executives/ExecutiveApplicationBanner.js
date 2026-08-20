@@ -63,7 +63,7 @@ export default function ExecutiveApplicationBanner() {
                 <h3 className="text-white font-semibold text-xs sm:text-sm mb-1">
                   Join Our Executive Team!
                 </h3>
-                <p className="text-gray-300 text-xs leading-relaxed">
+                <p className="fc-body text-xs">
                   Executive applications are now open. Apply to be part of our
                   leadership team.
                 </p>

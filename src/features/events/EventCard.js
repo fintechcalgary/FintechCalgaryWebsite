@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { formatEventDate } from "@/lib/dates";
+import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function EventCard({ event }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -27,49 +30,48 @@ export default function EventCard({ event }) {
 
   return (
     <Link href={`/events/${event._id}`} className="block">
-      <div className="relative h-[400px] group w-full cursor-pointer">
+      <GlowCard
+        customSize
+        glowColor="purple"
+        className="group h-[400px] w-full !gap-0 !p-0"
+      >
         <div
-          className="absolute inset-0 rounded-2xl overflow-hidden"
+          className="absolute inset-0 overflow-hidden rounded-2xl"
           style={{
             backgroundImage: images[currentImageIndex]
               ? `url(${images[currentImageIndex]})`
-              : "linear-gradient(to bottom right, rgb(147, 51, 234), rgb(79, 70, 229))",
+              : "linear-gradient(to bottom right, rgb(124, 58, 237), rgb(139, 92, 246))",
             backgroundSize: "cover",
             backgroundPosition: "center",
             transition: "background-image 0.3s ease-in-out",
           }}
         >
-          {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent" />
 
-          {/* Navigation arrows - only show if there are multiple images */}
           {images.length > 1 && (
             <>
-              {/* Left arrow */}
               <button
                 onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity duration-300 hover:bg-black/70 group-hover:opacity-100"
               >
                 <FiChevronLeft size={24} />
               </button>
 
-              {/* Right arrow */}
               <button
                 onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity duration-300 hover:bg-black/70 group-hover:opacity-100"
               >
                 <FiChevronRight size={24} />
               </button>
 
-              {/* Image indicator dots */}
-              <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-2">
+              <div className="absolute bottom-20 left-1/2 flex -translate-x-1/2 gap-2">
                 {images.map((_, idx) => (
                   <button
                     key={idx}
                     onClick={(e) => handleImageDotClick(e, idx)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    className={`h-2 w-2 rounded-full transition-all duration-300 ${
                       idx === currentImageIndex
-                        ? "bg-white w-4"
+                        ? "w-4 bg-white"
                         : "bg-white/50 hover:bg-white/80"
                     }`}
                   />
@@ -79,36 +81,34 @@ export default function EventCard({ event }) {
           )}
         </div>
 
-        <div className="relative h-full p-8 flex flex-col justify-end">
+        <div className="relative z-10 flex h-full flex-col justify-end p-8">
           <div className="space-y-4">
-            {/* Date badge and webinar indicator */}
             <div className="flex flex-wrap gap-2">
-              <div className="inline-block px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/20 text-sm font-medium text-white">
+              <div className="inline-block rounded-full border border-primary/20 bg-primary/20 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                 {formatEventDate(event.date)}
                 {event.time && ` • ${event.time}`}
               </div>
               {event.eventType === "webinar" && (
-                <div className="inline-block px-3 py-2 rounded-full bg-purple-500/20 backdrop-blur-sm border border-purple-500/20 text-sm font-medium text-purple-200">
+                <div className="inline-block rounded-full border border-purple-500/20 bg-purple-500/20 px-3 py-2 text-sm font-medium text-purple-200 backdrop-blur-sm">
                   Webinar
                 </div>
               )}
             </div>
 
-            {/* Title */}
-            <h3 className="text-2xl font-bold text-white group-hover:text-primary transition-colors duration-300">
+            <h3 className="fc-title text-2xl font-bold transition-colors duration-300 group-hover:text-primary">
               {event.title}
             </h3>
 
-            {/* Description */}
-            <p className="text-gray-300 line-clamp-2 leading-relaxed">{event.description}</p>
+            <p className="fc-body line-clamp-2">
+              {event.description}
+            </p>
 
-            {/* View Event/Webinar button */}
-            <div className="inline-flex items-center px-6 py-3 rounded-xl bg-primary/90 hover:bg-primary text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/15">
+            <div className="inline-flex items-center rounded-xl bg-primary/90 px-6 py-3 font-medium text-white transition-all duration-300 hover:bg-primary hover:shadow-lg hover:shadow-primary/15">
               {event.eventType === "webinar" ? "View Webinar" : "View Event"}
             </div>
           </div>
         </div>
-      </div>
+      </GlowCard>
     </Link>
   );
 }

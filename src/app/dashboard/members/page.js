@@ -16,6 +16,7 @@ import useAdminResource from "@/hooks/useAdminResource";
 import useConfirmDelete from "@/hooks/useConfirmDelete";
 import { downloadCsv } from "@/lib/csv";
 import { formatDateLocale, todayIsoDate } from "@/lib/dates";
+import PartnersStatCard from "@/features/partners/admin/PartnersStatCard";
 
 function getMemberName(member) {
   if (member.firstName && member.lastName) {
@@ -115,7 +116,7 @@ export default function MembersPage() {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
           <div className="space-y-2">
             <h1 className="text-4xl font-bold text-white">Members</h1>
-            <p className="text-gray-400 text-lg">
+            <p className="fc-lede">
               Manage general members and mailing lists
             </p>
           </div>
@@ -143,49 +144,33 @@ export default function MembersPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-gray-400 text-sm font-medium">
-                  Total Members
-                </p>
-                <p className="text-3xl font-bold text-white">
-                  {members.length}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
-                <FiMail className="text-primary text-xl" />
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-green-500/30 transition-all duration-300">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-gray-400 text-sm font-medium">This Month</p>
-                <p className="text-3xl font-bold text-white">
-                  {
-                    members.filter(
-                      (member) =>
-                        new Date(member.createdAt).getMonth() ===
-                          new Date().getMonth() &&
-                        new Date(member.createdAt).getFullYear() ===
-                          new Date().getFullYear()
-                    ).length
-                  }
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center border border-green-500/30">
-                <FiCalendar className="text-green-500 text-xl" />
-              </div>
-            </div>
-          </div>
+          <PartnersStatCard
+            label="Total Members"
+            value={members.length}
+            icon={FiMail}
+            accent="primary"
+          />
+          <PartnersStatCard
+            label="This Month"
+            value={
+              members.filter(
+                (member) =>
+                  new Date(member.createdAt).getMonth() ===
+                    new Date().getMonth() &&
+                  new Date(member.createdAt).getFullYear() ===
+                    new Date().getFullYear()
+              ).length
+            }
+            icon={FiCalendar}
+            accent="green"
+          />
         </div>
 
         {/* Members List */}
         {members.length === 0 ? (
           <div className="text-center py-16 bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-white/10">
             <FiMail className="mx-auto text-4xl text-primary mb-4" />
-            <p className="text-gray-400 text-lg">No members found</p>
+            <p className="fc-body text-lg">No members found</p>
           </div>
         ) : (
           <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
@@ -193,28 +178,28 @@ export default function MembersPage() {
               <table className="w-full">
                 <thead className="bg-gray-800/50 border-b border-gray-700/50">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
                       Name
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
                       UCID
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
                       Email
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
                       Membership
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
                       Has Paid
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
                       Resume
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
                       Joined Date
                     </th>
-                    <th className="px-6 py-4 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-right text-xs font-medium uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -234,12 +219,12 @@ export default function MembersPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-300">
+                        <div className="fc-body text-sm">
                           {member.ucid || "N/A"}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-300">
+                        <div className="fc-body text-sm">
                           {member.email}
                         </div>
                       </td>
@@ -273,23 +258,23 @@ export default function MembersPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-300">
+                        <div className="fc-body text-sm">
                           {member.resume ? (
                             <a
                               href={member.resume}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-primary hover:text-primary/80 underline"
+                              className="fc-link underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
                             >
                               View
                             </a>
                           ) : (
-                            <span className="text-gray-500">No resume</span>
+                            <span className="fc-muted">No resume</span>
                           )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-400">
+                        <div className="fc-muted text-sm">
                           {formatDateLocale(member.createdAt)}
                         </div>
                       </td>

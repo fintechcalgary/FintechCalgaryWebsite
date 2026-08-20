@@ -2,7 +2,22 @@
 
 import FileUploadDropzone from "@/components/ui/FileUploadDropzone";
 import Button from "@/components/ui/Button";
+import {
+  PasswordStrength,
+  defaultPasswordRules,
+} from "@/components/ui/password-strength";
 import { PARTNER_FORM_INPUT_CLASS } from "@/features/partners/partnerFormFields";
+import { VALIDATION } from "@/lib/constants";
+
+const signupPasswordRules = [
+  {
+    id: "length",
+    label: `${VALIDATION.PASSWORD_MIN_LENGTH} characters or more`,
+    test: (v) => v.length >= VALIDATION.PASSWORD_MIN_LENGTH,
+  },
+  ...defaultPasswordRules.filter((rule) => rule.id !== "length"),
+];
+
 
 function Field({
   label,
@@ -23,7 +38,7 @@ function Field({
       {error ? (
         <p className="mt-1 text-sm text-red-400">{error}</p>
       ) : hint ? (
-        <p className="mt-1 text-sm text-gray-400">{hint}</p>
+        <p className="mt-1 fc-muted">{hint}</p>
       ) : null}
     </div>
   );
@@ -154,11 +169,6 @@ export default function PartnerForm({
               label="Password"
               showLabel={false}
               error={errors.password}
-              hint={
-                !errors.password
-                  ? "Password must be at least 6 characters long"
-                  : undefined
-              }
             >
               <input
                 type="password"
@@ -166,8 +176,15 @@ export default function PartnerForm({
                 value={values.password}
                 onChange={set("password")}
                 required
+                autoComplete="new-password"
+                spellCheck={false}
                 data-error="password"
                 className={errClass("password")}
+              />
+              <PasswordStrength
+                value={values.password ?? ""}
+                rules={signupPasswordRules}
+                className="mt-3"
               />
             </Field>
           ) : null}
@@ -191,7 +208,7 @@ export default function PartnerForm({
           {mode === "signup" ? "Contacts" : "Contact Information"}
         </SectionTitle>
         {mode === "signup" ? (
-          <div className="mb-2 text-gray-200 text-md">
+          <div className="mb-2 fc-body">
             <p>
               Please enter the information for the Main Contact of your
               organization.

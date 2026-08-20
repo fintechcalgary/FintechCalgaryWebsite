@@ -69,7 +69,7 @@ export default function Login() {
         <div className="flex justify-start">
           <Link
             href="/"
-            className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-1"
+            className="fc-muted text-sm hover:text-white transition-colors flex items-center gap-1"
           >
             <FiArrowLeft className="w-4 h-4" />
             Back to Home
@@ -91,7 +91,7 @@ export default function Login() {
           <h2 className="text-2xl sm:text-3xl font-bold text-center text-white mb-2">
             Welcome Back
           </h2>
-          <p className="text-sm sm:text-base text-gray-400 text-center">
+          <p className="fc-body text-center">
             Sign in to access your dashboard
           </p>
         </div>
@@ -130,8 +130,8 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full bg-primary hover:bg-primary/80 text-white font-medium py-2.5 sm:py-3 px-4 text-sm sm:text-base rounded-xl transition-all duration-200 shadow-lg shadow-primary/15 flex items-center justify-center
-              ${isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
+            className={`fc-btn-gradient-primary w-full !px-4 !py-2.5 text-sm sm:!py-3 sm:text-base disabled:cursor-not-allowed disabled:hover:translate-y-0
+              ${isLoading ? "opacity-70" : ""}`}
           >
             {isLoading ? (
               <>

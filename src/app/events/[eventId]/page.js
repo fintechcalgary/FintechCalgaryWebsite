@@ -9,6 +9,8 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
+import { PageTitle } from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 import ImageCarousel from "@/features/events/ImageCarousel";
 import Image from "next/image";
 import { normalizeDate, startOfToday } from "@/lib/dates";
@@ -70,15 +72,15 @@ export default async function EventPage({ params }) {
         <PublicPageShell>
           <div className="flex-grow flex items-center justify-center">
             <div className="text-center">
-              <h1 className="text-4xl font-bold text-white mb-4">
+              <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-4">
                 Invalid Event ID
-              </h1>
-              <p className="text-gray-400 mb-8">
+              </PageTitle>
+              <p className="fc-muted mb-8">
                 The event ID format is invalid.
               </p>
               <Link
                 href="/events"
-                className="inline-flex items-center px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
+                className="fc-btn-primary !px-6 !py-3 !text-base"
               >
                 <FiArrowLeft className="mr-2" />
                 Back to Events
@@ -99,15 +101,15 @@ export default async function EventPage({ params }) {
         <PublicPageShell>
           <div className="flex-grow flex items-center justify-center">
             <div className="text-center">
-              <h1 className="text-4xl font-bold text-white mb-4">
+              <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-4">
                 Event Not Found
-              </h1>
-              <p className="text-gray-400 mb-8">
+              </PageTitle>
+              <p className="fc-muted mb-8">
                 The requested event could not be found.
               </p>
               <Link
                 href="/events"
-                className="inline-flex items-center px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
+                className="fc-btn-primary !px-6 !py-3 !text-base"
               >
                 <FiArrowLeft className="mr-2" />
                 Back to Events
@@ -136,7 +138,7 @@ export default async function EventPage({ params }) {
             <div className="mb-8">
               <Link
                 href="/events"
-                className="inline-flex items-center px-4 py-2 text-gray-300 hover:text-white group transition-colors duration-200"
+                className="inline-flex items-center px-4 py-2 fc-link group transition-colors duration-200"
               >
                 <FiArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
                 Back to Events
@@ -144,7 +146,11 @@ export default async function EventPage({ params }) {
             </div>
 
             {/* Main Event Card */}
-            <div className="bg-gray-900/40 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-800/50 shadow-xl animate-fadeIn">
+            <GlowCard
+              customSize
+              glowColor="purple"
+              className="w-full animate-fadeIn !gap-0 !overflow-hidden !p-0"
+            >
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 h-full">
                 {/* Image Section */}
                 <div className="relative bg-gray-950 overflow-hidden">
@@ -197,16 +203,16 @@ export default async function EventPage({ params }) {
                 </div>
 
                 {/* Content Section */}
-                <div className="p-6 md:p-8 lg:p-12 flex flex-col justify-between">
+                <div className="p-6 md:p-8 lg:p-12 flex flex-col justify-between relative z-10">
                   <div>
                     {/* Event Title */}
-                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-white">
+                    <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
                       {event.title}
-                    </h1>
+                    </PageTitle>
 
                     {/* Event Details */}
                     <div className="space-y-4 mb-8">
-                      <div className="flex items-center text-gray-300">
+                      <div className="flex items-center fc-body-lg">
                         <FiCalendar className="w-6 h-6 mr-4 text-primary flex-shrink-0" />
                         <span className="text-lg">
                           {new Date(
@@ -221,14 +227,14 @@ export default async function EventPage({ params }) {
                       </div>
 
                       {event.time && (
-                        <div className="flex items-center text-gray-300">
+                        <div className="flex items-center fc-body-lg">
                           <FiClock className="w-6 h-6 mr-4 text-primary flex-shrink-0" />
                           <span className="text-lg">{event.time}</span>
                         </div>
                       )}
 
                       {event.location && (
-                        <div className="flex items-center text-gray-300">
+                        <div className="flex items-center fc-body-lg">
                           <FiMapPin className="w-6 h-6 mr-4 text-primary flex-shrink-0" />
                           <span className="text-lg">{event.location}</span>
                         </div>
@@ -236,7 +242,7 @@ export default async function EventPage({ params }) {
 
                       {event.registrations &&
                         event.registrations.length > 0 && (
-                          <div className="flex items-center text-gray-300">
+                          <div className="flex items-center fc-body-lg">
                             <FiUsers className="w-6 h-6 mr-4 text-primary flex-shrink-0" />
                             <span className="text-lg">
                               {event.registrations.length} registered
@@ -247,7 +253,7 @@ export default async function EventPage({ params }) {
 
                     {/* Description */}
                     <div className="prose prose-invert max-w-none mb-8">
-                      <div className="text-lg text-gray-300 leading-relaxed whitespace-pre-wrap">
+                      <div className="fc-body-lg whitespace-pre-wrap">
                         {event.description}
                       </div>
                     </div>
@@ -258,7 +264,7 @@ export default async function EventPage({ params }) {
                     {isUpcoming ? (
                       <Link
                         href={`/events/register/${event._id}`}
-                        className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-500/80 hover:from-primary/85 hover:to-purple-500/75 text-white font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-primary/15"
+                        className="fc-btn-gradient-primary !px-6 !py-3"
                       >
                         {event.eventType === "webinar"
                           ? "Register for Webinar"
@@ -266,7 +272,7 @@ export default async function EventPage({ params }) {
                       </Link>
                     ) : (
                       <div className="w-full text-center py-4">
-                        <span className="text-gray-400 text-lg">
+                        <span className="fc-muted text-lg">
                           This event has already taken place
                         </span>
                       </div>
@@ -274,18 +280,22 @@ export default async function EventPage({ params }) {
                   </div>
                 </div>
               </div>
-            </div>
+            </GlowCard>
 
             {/* Additional Information Section */}
             {event.additionalInfo && (
-              <div className="mt-8 bg-gray-900/40 backdrop-blur-xl rounded-2xl p-6 border border-gray-800/50">
-                <h3 className="text-2xl font-bold text-white mb-4">
+              <GlowCard
+                customSize
+                glowColor="purple"
+                className="mt-8 w-full !gap-0 !p-6"
+              >
+                <h3 className="fc-title-accent relative z-10 mb-4 text-xl">
                   Additional Information
                 </h3>
-                <div className="text-gray-300 leading-relaxed">
+                <div className="relative z-10 fc-body-lg">
                   {event.additionalInfo}
                 </div>
-              </div>
+              </GlowCard>
             )}
           </div>
         </div>
@@ -297,15 +307,15 @@ export default async function EventPage({ params }) {
       <PublicPageShell>
         <div className="flex-grow flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-4">
+            <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-4">
               Error Loading Event
-            </h1>
-            <p className="text-gray-400 mb-8">
+            </PageTitle>
+            <p className="fc-muted mb-8">
               There was an error loading the event details.
             </p>
             <Link
               href="/events"
-              className="inline-flex items-center px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
+              className="fc-btn-primary !px-6 !py-3 !text-base"
             >
               <FiArrowLeft className="mr-2" />
               Back to Events

@@ -97,7 +97,6 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
             className="bg-black/70 backdrop-blur-sm"
           />
 
-          {/* Modal */}
           <motion.div
             key="modal"
             initial={{ opacity: 0, y: 40, scale: 0.97 }}
@@ -107,107 +106,108 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
             role="dialog"
             aria-modal="true"
             aria-label="Weekly FinTech Digest"
-            className="fixed inset-4 md:inset-8 lg:inset-x-16 lg:inset-y-8 xl:inset-x-28 z-[60] flex flex-col rounded-2xl overflow-hidden border border-primary/30 shadow-2xl"
-            style={{
-              background: "linear-gradient(160deg, #0e0e12 0%, #121218 55%, #0e0e12 100%)",
-              boxShadow: "0 25px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(139,92,246,0.15), inset 0 1px 0 rgba(255,255,255,0.05)",
-            }}
+            className="fixed inset-4 z-[60] flex flex-col overflow-hidden rounded-2xl border border-gray-700/50 bg-gradient-to-br from-gray-900/95 via-gray-900 to-gray-950 shadow-2xl shadow-black/50 md:inset-8 lg:inset-x-16 lg:inset-y-8 xl:inset-x-28"
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Close button — direct child of modal, no sub-stacking-context interference */}
+            {/* Soft ambient glows */}
+            <div
+              className="pointer-events-none absolute -left-16 top-0 h-40 w-40 rounded-full bg-primary/15 blur-3xl"
+              aria-hidden
+            />
+            <div
+              className="pointer-events-none absolute -right-10 top-24 h-32 w-32 rounded-full bg-purple-500/10 blur-3xl"
+              aria-hidden
+            />
+
             <button
               type="button"
               aria-label="Close weekly digest"
               onClick={onClose}
-              className="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center rounded-xl bg-gray-800/60 border border-gray-700/40 text-gray-400 hover:text-white hover:bg-gray-700/60 transition-all cursor-pointer"
+              className="fc-modal-icon-close absolute right-4 top-4 z-20"
             >
-              <FiX className="w-4 h-4" />
+              <FiX className="h-4 w-4" />
             </button>
 
-            {/* ── Header ── */}
-            <div className="relative flex-shrink-0 px-6 pt-6 pb-5 border-b border-gray-800/60"
-              style={{ background: "linear-gradient(to bottom, rgba(139,92,246,0.04), transparent)" }}
-            >
-              {/* Decorative glow */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-24 bg-primary/10 blur-3xl pointer-events-none" />
-
-              <div className="relative z-[1]">
-                <div className="flex items-center gap-3 mb-3 flex-wrap">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30">
-                    <FiZap className="w-3 h-3 text-primary" />
-                    <span className="text-xs font-semibold text-primary tracking-wider uppercase">
-                      FinTech Calgary
-                    </span>
-                  </div>
+            {/* Header */}
+            <div className="relative flex-shrink-0 border-b border-gray-800/50 px-6 pb-5 pt-6">
+              <div className="relative z-[1] pr-10">
+                <div className="mb-3 flex flex-wrap items-center gap-2.5">
+                  <span className="inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/15 px-2.5 py-1 text-xs font-medium tracking-wide text-primary">
+                    <FiZap className="h-3 w-3" />
+                    FinTech Calgary
+                  </span>
                   {issueNumber && (
-                    <span className="text-xs text-gray-500 font-mono">Issue #{issueNumber}</span>
+                    <span className="fc-muted text-xs tabular-nums">
+                      Issue #{issueNumber}
+                    </span>
                   )}
                 </div>
 
-                <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-1">
+                <h2 className="fc-title-lg mb-1.5">
                   Weekly{" "}
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
-                    FinTech Digest
-                  </span>
+                  <span className="fc-title-accent">FinTech Digest</span>
                 </h2>
 
                 {weekRange && (
-                  <p className="text-sm text-gray-400 flex items-center gap-2">
-                    <FiCalendar className="w-3.5 h-3.5" />
+                  <p className="fc-muted flex items-center gap-2">
+                    <FiCalendar className="h-3.5 w-3.5 shrink-0" />
                     {weekRange}
                   </p>
                 )}
 
-                {/* Quick stats strip */}
-                <div className="flex flex-wrap items-center gap-4 mt-4 text-xs text-gray-400">
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+                  <span className="fc-muted flex items-center gap-1.5 text-xs">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
                     {articles.length} curated stories
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <FiGlobe className="w-3 h-3" />
+                  <span className="fc-muted flex items-center gap-1.5 text-xs">
+                    <FiGlobe className="h-3 w-3" />
                     {sources} sources
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <FiZap className="w-3 h-3" />
+                  <span className="fc-muted flex items-center gap-1.5 text-xs">
+                    <FiZap className="h-3 w-3" />
                     AI-summarized
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                  <span className="fc-muted flex items-center gap-1.5 text-xs">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/80" aria-hidden />
                     Refreshed every Friday
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* ── Body ── */}
-            <div
-              ref={scrollRef}
-              className="flex-1 overflow-y-auto"
-            >
-              <div className="flex flex-col lg:flex-row gap-0 h-full">
-
-                {/* Left — article list */}
-                <div className="flex-1 px-6 py-5 space-y-3 min-w-0">
+            {/* Body */}
+            <div ref={scrollRef} className="relative flex-1 overflow-y-auto">
+              <div className="flex h-full flex-col gap-0 lg:flex-row">
+                {/* Article list */}
+                <div className="min-w-0 flex-1 space-y-3 px-6 py-5">
                   {articles.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 text-center">
-                      <FiZap className="w-10 h-10 text-gray-600 mb-3" />
-                      <p className="text-gray-400">No digest available yet.</p>
-                      <p className="text-sm text-gray-500 mt-1">Check back after the next Friday refresh.</p>
+                      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl border border-gray-700/40 bg-white/[0.03]">
+                        <FiZap className="h-6 w-6 text-white/35" />
+                      </div>
+                      <p className="fc-body">No digest available yet.</p>
+                      <p className="fc-muted mt-1">
+                        Check back after the next Friday refresh.
+                      </p>
                     </div>
                   ) : (
                     articles.map((article, index) => (
-                      <DigestArticleRow key={article._id || article.url || index} article={article} rank={index + 1} formatDate={formatDate} />
+                      <DigestArticleRow
+                        key={article._id || article.url || index}
+                        article={article}
+                        rank={index + 1}
+                        formatDate={formatDate}
+                      />
                     ))
                   )}
                 </div>
 
-                {/* Right — sidebar */}
-                <div className="lg:w-64 xl:w-72 flex-shrink-0 border-t lg:border-t-0 lg:border-l border-gray-800/60 px-5 py-5 space-y-6">
-
-                  {/* Sentiment */}
+                {/* Sidebar */}
+                <aside className="flex-shrink-0 space-y-6 border-t border-gray-800/50 px-5 py-5 lg:w-64 lg:border-l lg:border-t-0 xl:w-72">
                   {sentiment && sentiment.total > 0 && (
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                      <h4 className="fc-muted mb-3 text-xs font-medium uppercase tracking-wider">
                         Market Sentiment
                       </h4>
                       <div className="space-y-3">
@@ -233,62 +233,67 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
                           bgClass="bg-gradient-to-r from-red-500 to-rose-400"
                         />
                       </div>
-                      <div className="mt-3 p-2.5 rounded-lg bg-gray-800/40 border border-gray-700/30 text-center">
-                        <span className="text-xs text-gray-400">Overall mood: </span>
-                        <span className={`text-xs font-semibold ${
-                          sentiment.positive > sentiment.negative ? "text-green-400" :
-                          sentiment.negative > sentiment.positive ? "text-red-400" :
-                          "text-gray-400"
-                        }`}>
-                          {sentiment.positive > sentiment.negative ? "Bullish" :
-                           sentiment.negative > sentiment.positive ? "Cautious" : "Mixed"}
+                      <div className="mt-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-3 py-2.5 text-center backdrop-blur-sm">
+                        <span className="fc-muted text-xs">Overall mood: </span>
+                        <span
+                          className={`text-xs font-semibold ${
+                            sentiment.positive > sentiment.negative
+                              ? "text-green-400"
+                              : sentiment.negative > sentiment.positive
+                                ? "text-red-400"
+                                : "text-white/55"
+                          }`}
+                        >
+                          {sentiment.positive > sentiment.negative
+                            ? "Bullish"
+                            : sentiment.negative > sentiment.positive
+                              ? "Cautious"
+                              : "Mixed"}
                         </span>
                       </div>
                     </div>
                   )}
 
-                  {/* Trending topics */}
                   {topics.length > 0 && (
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                      <h4 className="fc-muted mb-3 text-xs font-medium uppercase tracking-wider">
                         This Week&apos;s Topics
                       </h4>
                       <div className="flex flex-wrap gap-1.5">
                         {topics.map(({ topic, count }, i) => (
                           <span
                             key={topic}
-                            className="px-2.5 py-1 rounded-md text-xs border font-medium capitalize"
-                            style={{
-                              background: `rgba(139,92,246,${0.08 + (topics.length - i) / topics.length * 0.12})`,
-                              borderColor: `rgba(139,92,246,${0.2 + (topics.length - i) / topics.length * 0.2})`,
-                              color: i < 3 ? "#a78bfa" : "#9ca3af",
-                            }}
+                            className={`rounded-md border px-2.5 py-1 text-xs font-medium capitalize transition-colors ${
+                              i < 3
+                                ? "border-primary/30 bg-primary/15 text-primary"
+                                : "border-white/[0.08] bg-white/[0.03] text-white/55"
+                            }`}
                           >
                             {topic}
-                            <span className="ml-1 opacity-60 text-[10px]">{count}</span>
+                            <span className="ml-1 text-[10px] opacity-60">{count}</span>
                           </span>
                         ))}
                       </div>
                     </div>
                   )}
 
-                  {/* Ask AI CTA */}
-                  <div className="rounded-xl p-4 border border-primary/20 bg-gradient-to-br from-primary/10 to-purple-500/10">
-                    <div className="flex items-center gap-2 mb-2">
-                      <FiMessageCircle className="w-4 h-4 text-primary" />
-                      <span className="text-sm font-semibold text-white">Ask the Digest</span>
+                  <div className="rounded-xl border border-primary/25 bg-gradient-to-br from-primary/15 via-purple-600/10 to-violet-400/10 p-4 backdrop-blur-sm">
+                    <div className="mb-2 flex items-center gap-2">
+                      <FiMessageCircle className="h-4 w-4 text-primary" />
+                      <span className="fc-title text-sm">Ask the Digest</span>
                     </div>
-                    <p className="text-xs text-gray-400 mb-3 leading-relaxed">
+                    <p className="fc-muted mb-3 text-xs leading-relaxed">
                       Chat with AI about this week&apos;s stories — ask questions, get deeper analysis.
                     </p>
                     <button
+                      type="button"
                       onClick={handleOpenChat}
-                      className="fc-btn-gradient-primary w-full px-3 py-2 text-xs font-semibold hover:opacity-90"
+                      className="fc-btn-gradient-primary w-full px-3 py-2 text-xs font-semibold"
                     >
                       Open AI Chat →
                     </button>
                   </div>
-                </div>
+                </aside>
               </div>
             </div>
           </motion.div>
@@ -300,10 +305,13 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
 
 function DigestArticleRow({ article, rank, formatDate }) {
   const rankColor =
-    rank === 1 ? "text-yellow-400 border-yellow-400/40 bg-yellow-400/10" :
-    rank === 2 ? "text-gray-300 border-gray-400/40 bg-gray-400/10" :
-    rank === 3 ? "text-orange-400 border-orange-400/40 bg-orange-400/10" :
-    "text-gray-500 border-gray-700/40 bg-gray-800/40";
+    rank === 1
+      ? "border-amber-400/35 bg-amber-400/10 text-amber-300"
+      : rank === 2
+        ? "border-white/20 bg-white/[0.06] text-white/80"
+        : rank === 3
+          ? "border-orange-400/35 bg-orange-400/10 text-orange-300"
+          : "border-white/[0.08] bg-white/[0.03] text-white/40";
 
   const hasSummary = article.summary && article.summary.trim().length > 20;
 
@@ -317,23 +325,25 @@ function DigestArticleRow({ article, rank, formatDate }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay: Math.min(rank * 0.04, 0.4) }}
-      className="group flex items-start gap-3 p-3 rounded-xl border border-gray-800/40 hover:border-primary/30 bg-gray-900/20 hover:bg-gray-900/40 transition-all duration-200"
+      className="fc-card group flex items-start gap-3 !rounded-xl p-3.5 hover:border-primary/40"
     >
-      {/* Rank badge */}
-      <div className={`flex-shrink-0 w-7 h-7 rounded-lg border text-[11px] font-bold flex items-center justify-center ${rankColor}`}>
+      <div
+        className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg border text-[11px] font-bold tabular-nums ${rankColor}`}
+      >
         {String(rank).padStart(2, "0")}
       </div>
 
-      {/* Content */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1 flex-wrap">
-          <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">
+      <div className="min-w-0 flex-1">
+        <div className="mb-1 flex flex-wrap items-center gap-2">
+          <span className="fc-muted text-[10px] font-medium uppercase tracking-wide">
             {article.source || "Unknown"}
           </span>
           {article.date || article.publishedAt ? (
             <>
-              <span className="text-gray-700">·</span>
-              <span className="text-[10px] text-gray-600">
+              <span className="text-white/20" aria-hidden>
+                ·
+              </span>
+              <span className="fc-muted text-[10px]">
                 {formatDate(article.date || article.publishedAt)}
               </span>
             </>
@@ -344,28 +354,26 @@ function DigestArticleRow({ article, rank, formatDate }) {
           href={article.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="block text-sm font-semibold text-white group-hover:text-primary transition-colors line-clamp-2 leading-snug mb-1"
+          className="fc-title mb-1 block text-sm leading-snug transition-colors line-clamp-2 group-hover:text-primary"
         >
           {article.title}
         </a>
 
         {hasSummary ? (
-          <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">
-            {truncate(article.summary, 160)}
-          </p>
+          <p className="fc-body line-clamp-2 !text-xs">{truncate(article.summary, 160)}</p>
         ) : (
-          <p className="text-xs text-gray-600 italic">No summary available yet.</p>
+          <p className="fc-muted text-xs italic">No summary available yet.</p>
         )}
       </div>
 
-      {/* External link */}
       <a
         href={article.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-xl text-gray-500 hover:text-primary"
+        className="flex-shrink-0 rounded-xl p-1.5 text-white/35 opacity-0 transition-all hover:bg-white/[0.06] hover:text-primary group-hover:opacity-100"
+        aria-label="Open article"
       >
-        <FiExternalLink className="w-3.5 h-3.5" />
+        <FiExternalLink className="h-3.5 w-3.5" />
       </a>
     </motion.div>
   );

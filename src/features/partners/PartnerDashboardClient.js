@@ -158,10 +158,7 @@ export default function PartnerDashboardClient() {
     return (
       <PublicPageShell title="Partner Dashboard | FinTech Calgary">
         <div className="flex-grow flex items-center justify-center relative">
-          <div className="text-center">
-            <LoadingState size="lg" className="mb-4" />
-            <p className="text-gray-300">Loading your dashboard...</p>
-          </div>
+          <LoadingState size="lg" message="Loading your dashboard..." />
         </div>
       </PublicPageShell>
     );
@@ -176,7 +173,7 @@ export default function PartnerDashboardClient() {
             <h2 className="text-2xl font-bold text-white mb-2">
               Error Loading Dashboard
             </h2>
-            <p className="text-gray-300">
+            <p className="fc-body">
               Unable to load your member information. Please try again later.
             </p>
           </div>
@@ -209,7 +206,7 @@ export default function PartnerDashboardClient() {
                 Partner Dashboard
               </h1>
               <div className="flex items-center justify-center gap-6">
-                <p className="text-xl text-gray-300">
+                <p className="fc-lede">
                   Welcome back, {memberData.firstName} {memberData.lastName}
                 </p>
                 <button
@@ -264,7 +261,7 @@ export default function PartnerDashboardClient() {
                 </div>
                 {memberData.approvedAt && (
                   <div className="text-right">
-                    <p className="text-sm text-gray-400 mb-1">Approved on</p>
+                    <p className="fc-muted mb-1">Approved on</p>
                     <p className="text-white font-medium">
                       {formatDateLocale(memberData.approvedAt)}
                     </p>
@@ -287,7 +284,7 @@ export default function PartnerDashboardClient() {
                       <h2 className="text-2xl font-semibold text-white">
                         Events and Webinars
                       </h2>
-                      <p className="text-sm text-gray-400">
+                      <p className="fc-muted">
                         Manage your schedule
                       </p>
                     </div>
@@ -330,7 +327,7 @@ export default function PartnerDashboardClient() {
                   <h2 className="text-3xl font-bold text-white mb-2">
                     Your Information
                   </h2>
-                  <p className="text-gray-400">
+                  <p className="fc-body">
                     View and manage your organization details
                   </p>
                 </div>
@@ -397,7 +394,7 @@ export default function PartnerDashboardClient() {
                         href={memberData.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary hover:text-primary/80 transition-colors flex items-center space-x-2 group"
+                        className="fc-link flex items-center space-x-2 group"
                       >
                         <FiGlobe className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                         <span className="text-lg font-medium">
@@ -436,7 +433,7 @@ export default function PartnerDashboardClient() {
                       </label>
                       <a
                         href={`mailto:${memberData.contactEmail}`}
-                        className="text-primary hover:text-primary/80 transition-colors flex items-center space-x-2 group"
+                        className="fc-link flex items-center space-x-2 group"
                       >
                         <FiMail className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
                         <span className="text-lg font-medium">
@@ -451,7 +448,7 @@ export default function PartnerDashboardClient() {
                       </label>
                       <a
                         href={`tel:${memberData.contactPhoneNumber}`}
-                        className="text-primary hover:text-primary/80 transition-colors flex items-center space-x-2 group"
+                        className="fc-link flex items-center space-x-2 group"
                       >
                         <FiPhone className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
                         <span className="text-lg font-medium">
@@ -466,7 +463,7 @@ export default function PartnerDashboardClient() {
                       </label>
                       <a
                         href={`mailto:${memberData.organizationEmail}`}
-                        className="text-primary hover:text-primary/80 transition-colors flex items-center space-x-2 group"
+                        className="fc-link flex items-center space-x-2 group"
                       >
                         <FiMail className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
                         <span className="text-lg font-medium">
@@ -556,7 +553,7 @@ export default function PartnerDashboardClient() {
                     <h3 className="text-2xl font-bold text-white">About Us</h3>
                   </div>
                   <div className="bg-gray-800/30 rounded-xl p-6 border border-white/5">
-                    <p className="text-gray-300 leading-relaxed text-lg">
+                    <p className="fc-body-lg">
                       {memberData.aboutUs}
                     </p>
                   </div>

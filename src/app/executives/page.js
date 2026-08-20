@@ -61,7 +61,7 @@ export default async function ExecutivesPage() {
             <h1 className="text-2xl font-bold text-white mb-4">
               No Executives Found
             </h1>
-            <p className="text-gray-400">Please check back later.</p>
+            <p className="fc-muted">Please check back later.</p>
           </div>
         </div>
     </PublicPageShell>
@@ -79,10 +79,10 @@ export default async function ExecutivesPage() {
           <div className="relative z-10 container mx-auto px-6 pt-36 pb-24 sm:px-8 lg:px-12">
             {/* Page Heading */}
             <div className="mb-16 animate-fadeIn text-center">
-              <PageTitle sizeClass="text-5xl md:text-6xl font-extrabold mb-6">
+              <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
                 Meet Our Executives
               </PageTitle>
-              <p className="mx-auto max-w-3xl text-xl text-gray-300">
+              <p className="fc-lede mx-auto max-w-3xl">
                 Leadership across programs, partnerships, and community initiatives.
               </p>
             </div>
@@ -94,7 +94,7 @@ export default async function ExecutivesPage() {
                   {/* Role Header */}
                   <div className="flex items-center gap-4 mb-8">
                     <div className="h-px flex-grow bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-                    <h2 className="text-3xl font-bold text-white px-4">
+                    <h2 className="fc-title-accent text-2xl px-4">
                       {role}
                     </h2>
                     <div className="h-px flex-grow bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
@@ -121,10 +121,10 @@ export default async function ExecutivesPage() {
                           <p className="text-lg font-bold text-primary">
                             {executive.position}
                           </p>
-                          <h3 className="text-xl font-semibold text-white transition-colors">
+                          <h3 className="fc-title text-xl transition-colors">
                             {executive.name}
                           </h3>
-                          <p className="text-base text-gray-300">
+                          <p className="fc-body">
                             {executive.major}
                           </p>
                           <div className="flex items-center justify-center gap-3">
@@ -149,7 +149,7 @@ export default async function ExecutivesPage() {
                             )}
                           </div>
                           {executive.description && (
-                            <p className="text-sm text-gray-400 mt-2">
+                            <p className="fc-body mt-2">
                               {executive.description}
                             </p>
                           )}

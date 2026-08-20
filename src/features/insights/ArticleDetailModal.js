@@ -51,7 +51,7 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
             {/* Header */}
             <div className="flex items-start justify-between p-6 border-b border-gray-800/50 flex-shrink-0">
               <div className="flex-1 mr-4">
-                <div className="flex items-center gap-2 mb-3 text-sm text-gray-400">
+                <div className="fc-muted flex items-center gap-2 mb-3 text-sm">
                   <span className="font-medium uppercase">{article.source}</span>
                   {(article.date || article.publishedAt) && (
                     <>
@@ -98,11 +98,11 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                     </div>
                     <div>
                       <h3 className="text-xl font-bold text-white">AI Summary</h3>
-                      <p className="text-sm text-gray-400">Comprehensive insights and analysis</p>
+                      <p className="fc-muted">Comprehensive insights and analysis</p>
                     </div>
                   </div>
 
-                  <div className="text-gray-300 leading-relaxed space-y-4">
+                  <div className="fc-body-lg space-y-4">
                     {article.summary.split("\n\n").map((paragraph, index) => {
                       const p = paragraph.trim();
                       if (!p) return null;
@@ -117,7 +117,7 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                           {p}
                         </h4>
                       ) : (
-                        <p key={index} className="text-gray-200 leading-relaxed">
+                        <p key={index}>
                           {p}
                         </p>
                       );
@@ -135,7 +135,7 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                         <Icon className={`w-5 h-5 ${iconColor} flex-shrink-0`} />
                         <div>
                           <p className="text-sm font-medium text-white">{label}</p>
-                          <p className="text-xs text-gray-400">{sub}</p>
+                          <p className="fc-muted text-xs">{sub}</p>
                         </div>
                       </div>
                     ))}
@@ -146,8 +146,8 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                   <div className="w-16 h-16 bg-gray-500/20 rounded-full flex items-center justify-center mb-4">
                     <FiZap className="w-8 h-8 text-gray-400" />
                   </div>
-                  <p className="text-gray-400 mb-2">No AI summary available yet</p>
-                  <p className="text-sm text-gray-500">
+                  <p className="fc-body mb-2">No AI summary available yet</p>
+                  <p className="fc-muted">
                     Summaries are generated during the weekly Friday refresh.
                   </p>
                 </div>
@@ -156,7 +156,7 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
 
             {/* Footer */}
             <div className="flex items-center justify-between p-6 border-t border-gray-800/50 flex-shrink-0">
-              <p className="text-sm text-gray-500">AI analysis powered by Groq · Not financial advice</p>
+              <p className="fc-muted">AI analysis powered by Groq · Not financial advice</p>
               {article.url && (
                 <a
                   href={article.url}

@@ -12,6 +12,7 @@ import {
   FiArrowLeft,
 } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { LoadingState } from "@/components/ui/Spinner";
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState([]);
@@ -105,7 +106,7 @@ export default function ArticlesPage() {
           >
             <Link
               href="/insights"
-              className="inline-flex items-center gap-2 text-primary hover:text-purple-400 transition-colors font-medium"
+              className="fc-link inline-flex items-center gap-2"
             >
               <FiArrowLeft className="w-5 h-5" />
               Back to Insights
@@ -121,7 +122,7 @@ export default function ArticlesPage() {
             <h1 className="text-5xl md:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
               Finance News Articles
             </h1>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+            <p className="fc-lede mx-auto max-w-2xl">
               Browse weekly highlights or the full FinTech archive
             </p>
           </motion.div>
@@ -135,7 +136,7 @@ export default function ArticlesPage() {
           >
             <div className="grid grid-cols-1 xl:grid-cols-[auto_auto_1fr_auto] gap-4 items-stretch xl:items-end">
               <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Scope</p>
+                <p className="text-[11px] uppercase tracking-[0.14em] fc-muted font-semibold">Scope</p>
                 <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
                   <button
                     onClick={() => setScope("week")}
@@ -153,7 +154,7 @@ export default function ArticlesPage() {
               </div>
 
               <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Layout</p>
+                <p className="text-[11px] uppercase tracking-[0.14em] fc-muted font-semibold">Layout</p>
                 <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
                   <button
                     onClick={() => setViewMode("grid")}
@@ -173,7 +174,7 @@ export default function ArticlesPage() {
               </div>
 
               <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">Sort Order</p>
+                <p className="text-[11px] uppercase tracking-[0.14em] fc-muted font-semibold">Sort Order</p>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
@@ -188,7 +189,7 @@ export default function ArticlesPage() {
                 <button
                   onClick={fetchArticles}
                   disabled={loading}
-                  className="inline-flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-500/80 text-white hover:shadow-lg hover:shadow-primary/15 disabled:opacity-50"
+                  className="fc-btn-gradient-primary !px-4 !py-3 disabled:opacity-50"
                   aria-label="Refresh articles"
                 >
                   <FiRefreshCw className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />
@@ -198,7 +199,7 @@ export default function ArticlesPage() {
           </motion.div>
 
           {!loading && (
-            <p className="text-gray-400 text-sm mb-1">
+            <p className="fc-muted mb-1">
               Showing {filteredArticles.length} of {scope === "week" ? 15 : articles.length} articles
             </p>
           )}
@@ -206,27 +207,21 @@ export default function ArticlesPage() {
       </section>
 
       <div className="container mx-auto px-6 pt-1 pb-6 max-w-7xl flex-1">
-        {loading && (
-          <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="h-64 bg-gray-800/50 rounded-xl border border-gray-700/30 animate-pulse" />
-            ))}
-          </div>
-        )}
+        {loading && <LoadingState size="lg" />}
 
         {!loading && (
           <>
             {filteredArticles.length === 0 ? (
               <div className="text-center py-16">
                 <FiCalendar className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                <p className="text-gray-400 mb-4">
+                <p className="fc-body mb-4">
                   {scope === "week"
                     ? "No weekly digest available yet. Trigger Monday refresh to generate the weekly top 15."
                     : "No articles yet. Refresh from Insights or run article refresh."}
                 </p>
                 <Link
                   href="/insights"
-                  className="inline-flex items-center gap-2 text-primary hover:text-purple-400"
+                  className="inline-flex items-center gap-2 fc-link"
                 >
                   <FiArrowLeft className="w-4 h-4" />
                   Back to Insights

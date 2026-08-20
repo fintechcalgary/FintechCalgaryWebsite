@@ -35,9 +35,9 @@ module.exports = {
         ],
       },
       colors: {
-        background: "#121212",
+        background: "#02010A",
         foreground: "#ededed",
-        primary: "#CA3CFF",
+        primary: "#8B5CF6",
       },
       animation: {
         "gradient-x": "gradient-x 15s ease infinite",

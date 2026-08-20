@@ -52,7 +52,7 @@ function DraggableExecutive({
           {executive.name}
         </h4>
         <p className="text-primary font-medium mb-1">{executive.position}</p>
-        <p className="text-gray-400 mb-4">{executive.major}</p>
+        <p className="fc-muted mb-4">{executive.major}</p>
         <div className="flex gap-2">
           <button
             onClick={(e) => {

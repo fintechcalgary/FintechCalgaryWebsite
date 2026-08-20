@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { FiArrowRight, FiUsers, FiAward, FiTrendingUp } from "react-icons/fi";
 import SectionHeading from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function ExecutiveApplications() {
   return (
     <section
       id="executive-applications"
-      className="relative overflow-hidden py-24"
+      className="relative overflow-x-clip py-24"
     >
       <div className="container relative mx-auto px-6">
         <div className="mb-16 text-center md:mb-20">
@@ -16,16 +17,20 @@ export default function ExecutiveApplications() {
         </div>
 
         <div className="mx-auto max-w-6xl">
-          <div className="fc-card group relative mb-12 overflow-hidden p-12 lg:p-16">
+          <GlowCard
+            customSize
+            glowColor="purple"
+            className="group relative mb-12 w-full !gap-0 !p-8 lg:!p-10"
+          >
             <div className="relative z-10 text-center">
               <div className="mb-8">
-                <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full border border-primary/30 bg-gradient-to-br from-primary/20 to-purple-600/20 shadow-lg transition-all duration-300 hover:scale-110 hover:border-primary/50">
+                <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 transition-all duration-300 hover:scale-110 hover:bg-primary/20">
                   <FiAward className="h-10 w-10 text-primary" />
                 </div>
-                <h3 className="mb-6 text-4xl font-bold text-white lg:text-5xl">
+                <h3 className="fc-title-accent mb-4 text-2xl sm:text-3xl">
                   Join Our Executive Team
                 </h3>
-                <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto mb-8">
+                <p className="fc-body mx-auto mb-8 max-w-3xl sm:text-base sm:leading-[1.75]">
                   Take on a leadership role in shaping the future of fintech in
                   Calgary. We&apos;re looking for passionate individuals to join
                   our executive team and help drive innovation in the financial
@@ -55,13 +60,15 @@ export default function ExecutiveApplications() {
                   },
                 ].map((item) => (
                   <div key={item.title} className="group/item text-center">
-                    <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full border border-gray-800/50 bg-gray-800/30 transition-all duration-300 group-hover/item:scale-110 group-hover/item:border-primary/30 group-hover/item:shadow-lg group-hover/item:shadow-primary/10">
+                    <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 transition-all duration-300 group-hover/item:scale-110 group-hover/item:bg-primary/20">
                       <item.icon className="h-8 w-8 text-primary" />
                     </div>
-                    <h4 className="mb-2 text-xl font-semibold text-white">
+                    <h4 className="fc-title mb-2 text-xl">
                       {item.title}
                     </h4>
-                    <p className="text-gray-400">{item.description}</p>
+                    <p className="fc-body">
+                      {item.description}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -71,7 +78,7 @@ export default function ExecutiveApplications() {
                 <FiArrowRight className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>
-          </div>
+          </GlowCard>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {[
@@ -81,6 +88,7 @@ export default function ExecutiveApplications() {
                   "Passionate individuals with experience in fintech, business development, or community leadership. We value creativity, strategic thinking, and a commitment to advancing financial technology in Calgary.",
                 link: "/about",
                 linkText: "Learn about our team",
+                glowColor: "purple",
               },
               {
                 title: "Benefits & Opportunities",
@@ -88,28 +96,31 @@ export default function ExecutiveApplications() {
                   "Gain valuable leadership experience, expand your professional network, and contribute to the growth of Calgary's fintech ecosystem. Access exclusive events, mentorship opportunities, and industry connections.",
                 link: "/partners",
                 linkText: "View partners",
+                glowColor: "pink",
               },
             ].map((card) => (
-              <div
+              <GlowCard
                 key={card.title}
-                className="fc-card group relative flex flex-col overflow-hidden p-8"
+                customSize
+                glowColor={card.glowColor}
+                className="group relative flex w-full flex-col !gap-0 !p-6"
               >
                 <div className="relative z-10 flex h-full flex-col">
-                  <h3 className="mb-4 text-2xl font-bold text-white">
+                  <h3 className="fc-title mb-2 text-xl">
                     {card.title}
                   </h3>
-                  <p className="mb-6 flex-grow leading-relaxed text-gray-300">
+                  <p className="fc-body mb-4 flex-1">
                     {card.description}
                   </p>
                   <Link
                     href={card.link}
                     className="fc-link group/link inline-flex items-center gap-2"
                   >
-                    <span className="font-semibold">{card.linkText}</span>
+                    <span>{card.linkText}</span>
                     <FiArrowRight className="transform transition-transform duration-300 group-hover/link:translate-x-1" />
                   </Link>
                 </div>
-              </div>
+              </GlowCard>
             ))}
           </div>
         </div>

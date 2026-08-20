@@ -41,7 +41,7 @@ export default function DisplayPartnerForm({
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Accent color
           </label>
-          <p className="text-xs text-gray-400 mb-2">
+          <p className="fc-muted mb-2">
             Used for the partner card highlight on the public page. Pick a color
             or enter a hex code.
           </p>

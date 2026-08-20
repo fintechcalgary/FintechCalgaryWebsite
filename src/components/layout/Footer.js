@@ -25,7 +25,7 @@ export default function Footer() {
                 FinTech Calgary
               </h3>
             </div>
-            <p className="max-w-md leading-relaxed text-gray-300">
+            <p className="fc-body max-w-md">
               Innovating the future of finance in Calgary. Join us in shaping
               tomorrow&apos;s financial landscape.
             </p>
@@ -48,7 +48,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="group inline-flex items-center text-gray-300 transition-all duration-300 hover:text-primary"
+                    className="group inline-flex items-center tracking-wide text-white/55 transition-all duration-300 hover:text-primary"
                   >
                     <span className="transition-transform duration-300 group-hover:translate-x-1">
                       {link.label}
@@ -65,21 +65,21 @@ export default function Footer() {
               Contact
             </h4>
             <ul className="space-y-3">
-              <li className="flex items-start gap-2 text-gray-300">
+              <li className="flex items-start gap-2 text-white/65">
                 <FiMapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
                 <div>
-                  <p className="text-gray-300">University of Calgary</p>
-                  <p className="text-sm text-gray-400">2500 University Dr NW</p>
-                  <p className="text-sm text-gray-400">Calgary, AB T2N 1N4</p>
+                  <p className="tracking-wide text-white/70">University of Calgary</p>
+                  <p className="fc-muted">2500 University Dr NW</p>
+                  <p className="fc-muted">Calgary, AB T2N 1N4</p>
                 </div>
               </li>
               <li className="pt-2">
                 <a
                   href="mailto:fintech.calgary@gmail.com"
-                  className="fc-link group inline-flex items-center gap-2"
+                  className="fc-link group inline-flex items-center gap-2 underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
                 >
                   <FiMail className="h-4 w-4" />
-                  <span className="group-hover:underline">
+                  <span>
                     fintech.calgary@gmail.com
                   </span>
                 </a>
@@ -90,20 +90,20 @@ export default function Footer() {
 
         <div className="mt-12 border-t border-gray-800/50 pt-8 md:mt-8">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <p className="text-sm text-gray-400">
+            <p className="fc-muted">
               &copy; {new Date().getFullYear()} FinTech Calgary. All rights
               reserved.
             </p>
             <div className="flex items-center gap-6 text-sm">
               <Link
                 href="/privacy"
-                className="text-gray-400 transition-colors duration-300 hover:text-primary"
+                className="tracking-wide text-white/45 transition-colors duration-300 hover:text-primary"
               >
                 Privacy Policy
               </Link>
               <Link
                 href="/terms"
-                className="text-gray-400 transition-colors duration-300 hover:text-primary"
+                className="tracking-wide text-white/45 transition-colors duration-300 hover:text-primary"
               >
                 Terms of Service
               </Link>
