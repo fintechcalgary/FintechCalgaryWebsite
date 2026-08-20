@@ -16,6 +16,8 @@ import {
   FiX,
 } from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
+import { PageTitle } from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 import Link from "next/link";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import {
@@ -141,7 +143,7 @@ export default function JoinPage() {
             <div className="relative z-50">
               <Link
                 href="/"
-                className="inline-flex items-center text-gray-400 hover:text-white hover:scale-105 active:scale-95 transition-all duration-200 mb-6 group"
+                className="inline-flex items-center fc-muted hover:text-white hover:scale-105 active:scale-95 transition-all duration-200 mb-6 group"
               >
                 <FiArrowLeft className="mr-2 group-hover:translate-x-[-4px] transition-transform duration-200" />
                 Back to Home
@@ -149,8 +151,12 @@ export default function JoinPage() {
             </div>
 
             <div className="relative z-40">
-              <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50">
-                <div className="flex flex-col md:flex-row items-center gap-6 mb-8">
+              <GlowCard
+                customSize
+                glowColor="purple"
+                className="w-full !gap-0 !p-8"
+              >
+                <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 mb-8">
                   <div className="w-full md:w-1/2">
                     <DotLottieReact
                       src="/lottie/blockchain3.lottie"
@@ -160,10 +166,10 @@ export default function JoinPage() {
                     />
                   </div>
                   <div className="w-full md:w-1/2">
-                    <h1 className="text-3xl font-bold text-white mb-4">
+                    <PageTitle sizeClass="text-3xl sm:text-4xl mb-4">
                       Join Us
-                    </h1>
-                    <p className="text-gray-300">
+                    </PageTitle>
+                    <p className="fc-body-lg">
                       Join the FinTech Calgary community to stay updated with
                       our latest events, workshops, and opportunities. Connect
                       with industry leaders and innovators in the blockchain and
@@ -173,37 +179,49 @@ export default function JoinPage() {
                 </div>
 
                 {submitStatus === "success" ? (
-                  <div className="text-center py-8">
+                  <div className="relative z-10 text-center py-8">
                     <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
                       <FiCheck className="w-8 h-8 text-primary" />
                     </div>
-                    <h2 className="text-2xl font-bold text-white mb-2">
+                    <h2 className="fc-title text-2xl mb-2">
                       Thank you for joining!
                     </h2>
-                    <p className="text-gray-300">
+                    <p className="fc-body">
                       Check your email for a welcome message from our team.
                     </p>
                   </div>
                 ) : (
                   <>
                     {/* Membership Options */}
-                    <div className="mb-6">
-                      <h2 className="text-xl font-semibold text-white mb-4">
+                    <div className="relative z-10 mb-6">
+                      <h2 className="fc-title-accent text-xl mb-4">
                         Choose Your Membership
                       </h2>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Free Membership Option */}
-                        <div
-                          className={`p-5 rounded-xl border cursor-pointer transition-all duration-200 ${
+                        <GlowCard
+                          customSize
+                          glowColor="purple"
+                          className={`w-full !gap-0 !p-5 cursor-pointer transition-all duration-200 ${
                             membershipType === "free"
-                              ? "bg-primary/10 border-primary"
-                              : "bg-gray-800/50 border-gray-700 hover:border-gray-500"
+                              ? "!border-primary"
+                              : ""
                           }`}
-                          onClick={() => setMembershipType("free")}
                         >
+                          <div
+                            className="relative z-10"
+                            onClick={() => setMembershipType("free")}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                setMembershipType("free");
+                              }
+                            }}
+                          >
                           <div className="flex justify-between items-start mb-3">
-                            <h3 className="text-lg font-medium text-white">
+                            <h3 className="fc-title text-lg">
                               Free Membership
                             </h3>
                             <div
@@ -218,10 +236,10 @@ export default function JoinPage() {
                               )}
                             </div>
                           </div>
-                          <p className="text-gray-400 text-sm mb-3">
+                          <p className="fc-body mb-3">
                             Stay updated with our community
                           </p>
-                          <ul className="space-y-1 text-sm text-gray-300">
+                          <ul className="space-y-1 fc-body">
                             <li className="flex items-start">
                               <FiCheck className="w-4 h-4 text-primary mr-2 mt-0.5" />
                               <span>Email newsletters</span>
@@ -239,25 +257,38 @@ export default function JoinPage() {
                             <span className="text-xl font-bold text-white">
                               $0
                             </span>
-                            <span className="text-gray-400 text-sm">
+                            <span className="fc-muted">
                               {" "}
                               / forever
                             </span>
                           </div>
-                        </div>
+                          </div>
+                        </GlowCard>
 
                         {/* Resume Submission Option (temporary label; backend still "premium") */}
-                        <div
-                          className={`p-5 rounded-xl border cursor-pointer transition-all duration-200 ${
+                        <GlowCard
+                          customSize
+                          glowColor="purple"
+                          className={`w-full !gap-0 !p-5 cursor-pointer transition-all duration-200 ${
                             membershipType === "premium"
-                              ? "bg-primary/10 border-primary"
-                              : "bg-gray-800/50 border-gray-700 hover:border-gray-500"
+                              ? "!border-primary"
+                              : ""
                           }`}
-                          onClick={() => setMembershipType("premium")}
                         >
+                          <div
+                            className="relative z-10"
+                            onClick={() => setMembershipType("premium")}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                setMembershipType("premium");
+                              }
+                            }}
+                          >
                           <div className="flex justify-between items-start mb-3">
                             <div>
-                              <h3 className="text-lg font-medium text-white">
+                              <h3 className="fc-title text-lg">
                                 Resume Submission
                               </h3>
                               <span className="inline-block px-2 py-1 bg-primary/20 text-primary text-xs rounded-full mt-1">
@@ -276,10 +307,10 @@ export default function JoinPage() {
                               )}
                             </div>
                           </div>
-                          <p className="text-gray-400 text-sm mb-3">
+                          <p className="fc-body mb-3">
                             Submit your resume (members only)
                           </p>
-                          <ul className="space-y-1 text-sm text-gray-300">
+                          <ul className="space-y-1 fc-body">
                             <li className="flex items-start">
                               <FiCheck className="w-4 h-4 text-primary mr-2 mt-0.5" />
                               <span>All free benefits</span>
@@ -301,19 +332,20 @@ export default function JoinPage() {
                             <span className="text-xl font-bold text-white">
                               $5
                             </span>
-                            <span className="text-gray-400 text-sm">
+                            <span className="fc-muted">
                               {" "}
                               / year
                             </span>
                           </div>
-                        </div>
+                          </div>
+                        </GlowCard>
                       </div>
                     </div>
 
-                    <div className="mt-6">
+                    <div className="relative z-10 mt-6">
                       <form onSubmit={handleSubmit} className="space-y-4">
                         {membershipType === "premium" && (
-                          <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 text-sm text-gray-300">
+                          <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 fc-body">
                             <p className="font-medium text-white mb-1">
                               Resume submission is for members only.
                             </p>
@@ -322,7 +354,7 @@ export default function JoinPage() {
                               <button
                                 type="button"
                                 onClick={() => setMembershipType("free")}
-                                className="text-primary hover:underline font-medium"
+                                className="fc-link hover:underline"
                               >
                                 Free Membership
                               </button>{" "}
@@ -337,7 +369,7 @@ export default function JoinPage() {
                             <div>
                               <p className="text-red-400">{errorMessage}</p>
                               {errorMessage.includes("already subscribed") && (
-                                <p className="text-gray-400 text-sm mt-1">
+                                <p className="fc-muted mt-1">
                                   Please use a different email address or check
                                   your inbox for previous communications.
                                 </p>
@@ -471,10 +503,10 @@ export default function JoinPage() {
                                 className="cursor-pointer flex flex-col items-center gap-2"
                               >
                                 <FiUpload className="w-8 h-8 text-gray-400" />
-                                <span className="text-gray-300 text-sm">
+                                <span className="fc-body">
                                   Click to upload or drag and drop
                                 </span>
-                                <span className="text-gray-500 text-xs">
+                                <span className="fc-muted text-xs">
                                   PDF only, max 5MB
                                 </span>
                               </label>
@@ -485,7 +517,7 @@ export default function JoinPage() {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-4 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                          className="fc-btn-gradient-primary mt-2 w-full !px-4 !py-2.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
                         >
                           {isSubmitting
                             ? "Submitting..."
@@ -497,7 +529,7 @@ export default function JoinPage() {
                     </div>
                   </>
                 )}
-              </div>
+              </GlowCard>
             </div>
           </motion.div>
         </div>

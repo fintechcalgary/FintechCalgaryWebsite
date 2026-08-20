@@ -10,7 +10,7 @@ export default function PartnersPageHeader() {
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white truncate">
           Partners
         </h1>
-        <p className="text-gray-400 text-sm sm:text-base md:text-lg">
+        <p className="fc-lede">
           Manage the public partners list and organization applications in one
           place
         </p>

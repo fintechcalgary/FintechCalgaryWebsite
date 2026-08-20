@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import SectionHeading from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function Partners() {
   const [hoveredPartner, setHoveredPartner] = useState(null);
@@ -24,7 +27,7 @@ export default function Partners() {
   }, []);
 
   return (
-    <section id="partners" className="relative py-24">
+    <section id="partners" className="relative overflow-x-clip py-24">
       <div className="absolute right-0 top-0 h-[500px] w-[500px] translate-x-1/2 rounded-full bg-purple-500/30 opacity-20 blur-[128px]" />
       <div className="absolute bottom-0 left-0 h-[400px] w-[400px] -translate-x-1/2 rounded-full bg-primary/30 opacity-20 blur-[96px]" />
 
@@ -49,14 +52,18 @@ export default function Partners() {
                       onMouseLeave={() => setHoveredPartner(null)}
                       className="mx-4"
                     >
-                      <div className="relative flex h-48 w-64 flex-col items-center justify-center overflow-hidden rounded-2xl border border-gray-800/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10">
+                      <GlowCard
+                        customSize
+                        color={partner.color || "#8B5CF6"}
+                        className="relative flex h-48 w-64 flex-col items-center justify-center !gap-0 !p-6"
+                      >
                         <div
                           className="absolute inset-0 z-0 rounded-2xl"
                           style={{
-                            background: `radial-gradient(circle at center, ${partner.color || "#8b5cf6"}20 0%, transparent 70%)`,
-                            opacity: hoveredPartner === partner.name ? 0.8 : 0,
+                            background: `radial-gradient(circle at center, ${partner.color || "#8B5CF6"}30 0%, transparent 70%)`,
+                            opacity: hoveredPartner === partner.name ? 0.85 : 0.25,
                             transform: `scale(${
-                              hoveredPartner === partner.name ? 1.2 : 1
+                              hoveredPartner === partner.name ? 1.15 : 1
                             })`,
                             transition: "opacity 0.5s, transform 0.5s",
                           }}
@@ -82,8 +89,8 @@ export default function Partners() {
                             />
                           ) : (
                             <span
-                              className="text-2xl font-bold text-white/80"
-                              style={{ color: partner.color || "#8b5cf6" }}
+                              className="fc-title text-2xl text-white/80"
+                              style={{ color: partner.color || "#8B5CF6" }}
                             >
                               {(partner.name || "?").charAt(0)}
                             </span>
@@ -91,7 +98,7 @@ export default function Partners() {
                         </div>
 
                         <p
-                          className="z-10 mt-6 text-center font-medium text-gray-300"
+                          className="fc-title z-10 mt-4 text-center text-sm font-medium"
                           style={{
                             color:
                               hoveredPartner === partner.name
@@ -102,7 +109,7 @@ export default function Partners() {
                         >
                           {partner.name}
                         </p>
-                      </div>
+                      </GlowCard>
                     </div>
                   ))}
                 </section>

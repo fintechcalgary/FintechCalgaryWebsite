@@ -97,7 +97,7 @@ export default function Navbar() {
                   <Link
                     key={path}
                     href={path}
-                    className="text-white text-base font-medium hover:text-purple-300 transition-all relative group"
+                    className="tracking-wide text-white/55 text-base font-medium hover:text-primary transition-all relative group"
                   >
                     {title}
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-300 transition-all group-hover:w-full" />
@@ -194,7 +194,7 @@ export default function Navbar() {
                   key={href}
                   href={href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="block text-white text-base font-medium mb-3 hover:text-purple-400"
+                  className="block tracking-wide text-white/55 text-base font-medium mb-3 hover:text-primary"
                 >
                   {label}
                 </Link>

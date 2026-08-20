@@ -1,6 +1,7 @@
 "use client";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import { PageTitle } from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function PrivacyPage() {
 
@@ -11,30 +12,35 @@ export default function PrivacyPage() {
         <div className="container relative z-10 mx-auto px-6 pb-16 pt-36 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-4xl">
             <div className="mb-12 text-center">
-              <PageTitle sizeClass="text-5xl font-extrabold mb-6">
+              <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
                 Privacy Policy
               </PageTitle>
-              <p className="text-xl text-gray-300">
+              <p className="fc-lede">
                 Last updated: {new Date().toLocaleDateString()}
               </p>
             </div>
 
-            <div className="fc-card space-y-8 p-8 hover:border-gray-800/50">
+            <GlowCard
+              customSize
+              glowColor="purple"
+              className="w-full space-y-8 !gap-0 !p-8"
+            >
+              <div className="relative z-10 space-y-8">
               <section>
                 <h2 className="text-2xl font-bold text-white mb-4">
                   1. Information We Collect
                 </h2>
-                <p className="text-gray-300 leading-relaxed mb-4">
+                <p className="fc-body-lg mb-4">
                   We collect information you provide directly to us, such as
                   when you:
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
                   <li>Create an account or apply for membership</li>
                   <li>Register for events</li>
                   <li>Contact us or subscribe to our newsletter</li>
                   <li>Participate in surveys or provide feedback</li>
                 </ul>
-                <p className="text-gray-300 leading-relaxed mt-4">
+                <p className="fc-body-lg mt-4">
                   This information may include your name, email address, phone
                   number, organization details, and other information you choose
                   to provide.
@@ -45,10 +51,10 @@ export default function PrivacyPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   2. How We Use Your Information
                 </h2>
-                <p className="text-gray-300 leading-relaxed mb-4">
+                <p className="fc-body-lg mb-4">
                   We use the information we collect to:
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
                   <li>Provide, maintain, and improve our services</li>
                   <li>
                     Process membership applications and manage member accounts
@@ -69,12 +75,12 @@ export default function PrivacyPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   3. Information Sharing
                 </h2>
-                <p className="text-gray-300 leading-relaxed mb-4">
+                <p className="fc-body-lg mb-4">
                   We do not sell, trade, or otherwise transfer your personal
                   information to third parties without your consent, except in
                   the following circumstances:
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
                   <li>With your explicit consent</li>
                   <li>To comply with legal obligations</li>
                   <li>To protect our rights, property, or safety</li>
@@ -92,7 +98,7 @@ export default function PrivacyPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   4. Data Security
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   We implement appropriate security measures to protect your
                   personal information against unauthorized access, alteration,
                   disclosure, or destruction. However, no method of transmission
@@ -105,16 +111,16 @@ export default function PrivacyPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   5. Cookies and Tracking
                 </h2>
-                <p className="text-gray-300 leading-relaxed mb-4">
+                <p className="fc-body-lg mb-4">
                   We use cookies and similar tracking technologies to:
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
                   <li>Remember your preferences and settings</li>
                   <li>Understand how you use our website</li>
                   <li>Improve our services and user experience</li>
                   <li>Provide personalized content and advertisements</li>
                 </ul>
-                <p className="text-gray-300 leading-relaxed mt-4">
+                <p className="fc-body-lg mt-4">
                   You can control cookies through your browser settings, but
                   disabling cookies may affect the functionality of our website.
                 </p>
@@ -124,7 +130,7 @@ export default function PrivacyPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   6. Third-Party Services
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   Our website may contain links to third-party websites or
                   services. We are not responsible for the privacy practices of
                   these third parties. We encourage you to read their privacy
@@ -136,7 +142,7 @@ export default function PrivacyPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   7. Data Retention
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   We retain your personal information for as long as necessary
                   to fulfill the purposes outlined in this privacy policy,
                   unless a longer retention period is required or permitted by
@@ -149,11 +155,11 @@ export default function PrivacyPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   8. Your Rights
                 </h2>
-                <p className="text-gray-300 leading-relaxed mb-4">
+                <p className="fc-body-lg mb-4">
                   Depending on your location, you may have certain rights
                   regarding your personal information, including:
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
                   <li>The right to access your personal information</li>
                   <li>The right to correct inaccurate information</li>
                   <li>The right to delete your personal information</li>
@@ -161,7 +167,7 @@ export default function PrivacyPage() {
                   <li>The right to data portability</li>
                   <li>The right to withdraw consent</li>
                 </ul>
-                <p className="text-gray-300 leading-relaxed mt-4">
+                <p className="fc-body-lg mt-4">
                   To exercise these rights, please contact us using the
                   information provided below.
                 </p>
@@ -171,7 +177,7 @@ export default function PrivacyPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   9. Children&apos;s Privacy
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   Our services are not directed to children under 13 years of
                   age. We do not knowingly collect personal information from
                   children under 13. If we become aware that we have collected
@@ -184,7 +190,7 @@ export default function PrivacyPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   10. Changes to This Policy
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   We may update this privacy policy from time to time. We will
                   notify you of any changes by posting the new privacy policy on
                   this page and updating the &quot;Last updated&quot; date. We
@@ -197,27 +203,28 @@ export default function PrivacyPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   11. Contact Us
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   If you have any questions about this privacy policy or our
                   privacy practices, please contact us at:
                 </p>
                 <div className="mt-4 p-4 bg-gray-700/30 rounded-lg">
-                  <p className="text-gray-300">
+                  <p className="fc-body-lg">
                     <strong>Email:</strong>{" "}
                     <a
                       href="mailto:fintech.calgary@gmail.com"
-                      className="text-primary hover:text-primary/80 transition-colors"
+                      className="fc-link underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
                     >
                       fintech.calgary@gmail.com
                     </a>
                   </p>
-                  <p className="text-gray-300 mt-2">
+                  <p className="fc-body-lg mt-2">
                     <strong>Address:</strong> University of Calgary, 2500
                     University Dr NW, Calgary, AB T2N 1N4
                   </p>
                 </div>
               </section>
-            </div>
+              </div>
+            </GlowCard>
           </div>
         </div>
       </div>

@@ -19,25 +19,25 @@
 
   /* Dashboard form dialogs — secondary / cancel */
   .fc-btn-dashboard-cancel {
-    @apply flex-1 rounded-xl border border-gray-600/50 bg-gray-700/50 px-4 py-2 text-sm text-white transition-all duration-300 hover:bg-gray-600/50;
+    @apply flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-medium text-gray-200 backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-white/[0.08] hover:text-white active:scale-[0.98];
   }
 
   /* Primary gradient CTA (add padding with px-* py-* on the element) */
   .fc-btn-gradient-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-purple-500/80 text-sm font-medium text-white transition-all hover:shadow-xl hover:shadow-primary/15;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-gradient-to-r from-violet-500 via-primary to-purple-600 text-sm font-medium text-white shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/25 hover:shadow-xl hover:shadow-primary/30 hover:brightness-110 active:translate-y-0 active:scale-[0.98];
   }
 
   /* Public marketing CTAs */
   .fc-btn-primary {
-    @apply inline-flex items-center justify-center gap-3 rounded-xl bg-primary px-8 py-4 text-lg font-medium text-white transition-all duration-300 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/15 hover:-translate-y-0.5;
+    @apply inline-flex items-center justify-center gap-3 rounded-xl border border-white/15 bg-gradient-to-r from-violet-500 via-primary to-purple-600 px-8 py-4 text-lg font-medium tracking-wide text-white shadow-lg shadow-primary/25 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/25 hover:shadow-xl hover:shadow-primary/35 hover:brightness-110 active:translate-y-0 active:scale-[0.98];
   }
 
   .fc-btn-secondary {
-    @apply inline-flex items-center justify-center gap-3 rounded-xl border border-gray-700 bg-white/[0.04] px-8 py-4 text-lg font-medium text-white backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:bg-gray-800/50 hover:shadow-xl;
+    @apply inline-flex items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-8 py-4 text-lg font-medium tracking-wide text-white shadow-lg shadow-black/20 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/10 hover:shadow-xl hover:shadow-primary/10 active:translate-y-0 active:scale-[0.98];
   }
 
   .fc-btn-soft {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/20 to-purple-600/20 px-8 py-4 text-lg font-medium text-white backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/15;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-primary/35 bg-gradient-to-r from-primary/25 via-purple-600/20 to-violet-400/15 px-8 py-4 text-lg font-medium tracking-wide text-white shadow-lg shadow-primary/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:from-primary/35 hover:via-purple-600/30 hover:to-violet-400/25 hover:shadow-xl hover:shadow-primary/20 active:translate-y-0 active:scale-[0.98];
   }
 
   /* Shared glass surface for public cards */
@@ -45,13 +45,46 @@
     @apply rounded-2xl border border-gray-800/50 bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-sm transition-all duration-500 hover:border-primary/30;
   }
 
+  /* Page / section intro under titles — light, open, secondary to display headers */
+  .fc-lede {
+    @apply text-base font-light leading-relaxed tracking-wide text-white/55 sm:text-lg md:text-xl md:leading-[1.7];
+  }
+
+  /* Card & section body copy */
+  .fc-body {
+    @apply text-sm font-normal leading-[1.7] tracking-[0.015em] text-white/65;
+  }
+
+  .fc-body-lg {
+    @apply text-base font-normal leading-[1.75] tracking-[0.015em] text-white/70 sm:text-lg;
+  }
+
+  /* Meta, captions, secondary lines */
+  .fc-muted {
+    @apply text-sm font-normal leading-relaxed tracking-wide text-white/45;
+  }
+
+  /* Inline / “learn more” links — clear accent without competing with CTAs */
   .fc-link {
-    @apply text-primary transition-colors duration-300 hover:text-purple-400;
+    @apply font-medium tracking-wide text-primary transition-colors duration-300 hover:text-violet-300;
+  }
+
+  /* In-section / card titles — keep weight moderate so they don’t overwhelm cards */
+  .fc-title {
+    @apply font-display font-semibold tracking-tight text-white;
+  }
+
+  .fc-title-lg {
+    @apply font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl;
+  }
+
+  .fc-title-accent {
+    @apply font-display font-semibold tracking-tight bg-gradient-to-br from-white via-violet-200 to-primary bg-clip-text text-transparent;
   }
 
   /* Insights “Read more” on card hover overlay */
   .fc-btn-read-more-subtle {
-    @apply flex cursor-pointer items-center gap-2 self-start rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 to-purple-500/10 px-3 py-1.5 text-primary transition-all duration-200 hover:scale-105 hover:border-primary/50 hover:bg-gradient-to-r hover:from-primary/10 hover:to-purple-500/10 hover:shadow-lg hover:shadow-primary/10;
+    @apply flex cursor-pointer items-center gap-2 self-start rounded-xl border border-primary/35 bg-gradient-to-r from-primary/15 to-purple-500/15 px-3 py-1.5 text-sm font-medium text-primary backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-primary/55 hover:from-primary/25 hover:to-purple-500/25 hover:shadow-lg hover:shadow-primary/15;
   }
 }
 
@@ -72,13 +105,14 @@
 }
 
 :root {
-  --background: #121212;
+  --background: #02010a;
   --foreground: #ededed;
   font-size: 90%;
 }
 
 html {
   overscroll-behavior: none;
+  background: var(--background);
 }
 
 body {
@@ -88,6 +122,22 @@ body {
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hold UI until Silk's first WebGL frame is presented (see SilkBackground). */
+body.silk-boot .site-content {
+  opacity: 0;
+}
+
+body.silk-ready .site-content {
+  opacity: 1;
+  transition: opacity 280ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.silk-ready .site-content {
+    transition: none;
+  }
 }
 
 /* Modern Input Styles */
@@ -335,4 +385,124 @@ select::-ms-expand {
 
 .animation-delay-600 {
   animation-delay: 600ms;
+}
+
+/* AI loader (src/components/ui/ai-loader.tsx) — Tailwind 3 globals extension */
+@keyframes loader-rotate {
+  0% {
+    transform: rotate(90deg);
+    box-shadow:
+      0 10px 20px 0 #fff inset,
+      0 20px 30px 0 #ad5fff inset,
+      0 60px 60px 0 #471eec inset;
+  }
+  50% {
+    transform: rotate(270deg);
+    box-shadow:
+      0 10px 20px 0 #fff inset,
+      0 20px 10px 0 #d60a47 inset,
+      0 40px 60px 0 #311e80 inset;
+  }
+  100% {
+    transform: rotate(450deg);
+    box-shadow:
+      0 10px 20px 0 #fff inset,
+      0 20px 30px 0 #ad5fff inset,
+      0 60px 60px 0 #471eec inset;
+  }
+}
+
+@keyframes loader-letter-anim {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  40% {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+}
+
+.ai-loader-root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.ai-loader-root.ai-loader--sm .loader-wrapper {
+  width: 96px;
+  height: 96px;
+  font-size: 0.65em;
+}
+
+.ai-loader-root.ai-loader--md .loader-wrapper {
+  width: 132px;
+  height: 132px;
+  font-size: 0.9em;
+}
+
+.ai-loader-root.ai-loader--lg .loader-wrapper {
+  width: 180px;
+  height: 180px;
+  font-size: 1.2em;
+}
+
+.loader-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  height: 180px;
+  font-family: var(--font-sans), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 1.2em;
+  font-weight: 300;
+  color: white;
+  border-radius: 50%;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background-color: transparent;
+  animation: loader-rotate 2s linear infinite;
+  z-index: 0;
+}
+
+.loader-letter {
+  display: inline-block;
+  opacity: 0.4;
+  transform: translateY(0);
+  animation: loader-letter-anim 2s infinite;
+  z-index: 1;
+  border: none;
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader {
+    animation: none;
+    box-shadow:
+      0 10px 20px 0 #fff inset,
+      0 20px 30px 0 #ad5fff inset,
+      0 60px 60px 0 #471eec inset;
+  }
+
+  .loader-letter {
+    animation: none;
+    opacity: 0.85;
+    transform: none;
+  }
 }

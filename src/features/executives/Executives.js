@@ -60,7 +60,7 @@ export default function Executives() {
       <div className="min-h-[500px] flex items-center justify-center">
         <div className="text-center">
           <FiUser className="mx-auto text-4xl text-primary mb-4" />
-          <p className="text-gray-400">
+          <p className="fc-muted">
             You don&apos;t have permission to manage team executives.
           </p>
         </div>
@@ -541,7 +541,7 @@ export default function Executives() {
         {executives.length === 0 && !showForm && (
           <div className="text-center py-12 bg-gray-800/50 rounded-xl min-h-[400px] flex flex-col items-center justify-center animate-fadeIn">
             <FiUser className="mx-auto text-4xl text-primary mb-4" />
-            <p className="text-gray-400">
+            <p className="fc-muted">
               No team executives yet. Add your first executive!
             </p>
           </div>

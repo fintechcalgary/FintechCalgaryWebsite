@@ -8,6 +8,7 @@ import {
 import ClientSessionProvider from "@/components/providers/ClientSessionProvider";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { Analytics } from "@vercel/analytics/next";
+import SilkBackground from "@/components/ui/SilkBackground";
 
 /* Slim geometric UI — body, nav, buttons */
 const plusJakarta = Plus_Jakarta_Sans({
@@ -85,16 +86,14 @@ export default function RootLayout({ children }) {
       className={`${plusJakarta.variable} ${spaceGrotesk.variable} ${syne.variable} ${jetbrainsMono.variable}`}
     >
       <body
-        className={`${plusJakarta.className} bg-background text-foreground min-h-screen bg-cover bg-top bg-no-repeat relative font-sans antialiased`}
-        style={{
-          backgroundImage: "url(/bg-image.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "top center",
-        }}
+        className={`silk-boot ${plusJakarta.className} bg-background text-foreground min-h-screen relative font-sans antialiased`}
       >
-        <div className="absolute inset-0 bg-black/20 z-0 pointer-events-none min-h-full"></div>
-        {/* Main content wrapper */}
-        <div className="relative z-10 min-h-screen">
+        <noscript>
+          <style>{`body.silk-boot .site-content{opacity:1!important}`}</style>
+        </noscript>
+        <SilkBackground />
+        {/* Main content wrapper — revealed after first silk frame */}
+        <div className="site-content relative z-10 min-h-screen">
           <SettingsProvider>
             <ClientSessionProvider>{children}</ClientSessionProvider>
           </SettingsProvider>

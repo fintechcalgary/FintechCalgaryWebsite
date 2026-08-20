@@ -14,7 +14,7 @@ export default function PartnerApplicationsList({
     return (
       <div className="text-center py-12 sm:py-16 bg-gray-900/60 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/10 px-4">
         <FiUsers className="mx-auto text-3xl sm:text-4xl text-primary mb-3 sm:mb-4" />
-        <p className="text-gray-400 text-base sm:text-lg">
+        <p className="fc-body">
           No partner applications found
         </p>
       </div>

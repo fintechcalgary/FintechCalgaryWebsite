@@ -3,16 +3,18 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import useSWR from "swr";
-import PublicNavbar from "@/components/layout/PublicNavbar";
-import Footer from "@/components/layout/Footer";
+import PublicPageShell from "@/components/layout/PublicPageShell";
 import FinTechChatBot from "@/features/insights/FinTechChatBot";
 import WeeklyDigestModal from "@/features/insights/WeeklyDigestModal";
 import ArticleDetailModal from "@/features/insights/ArticleDetailModal";
 import { OverviewSentimentBar } from "@/features/insights/SentimentBars";
 import { ChatBotProvider, useChatBot } from "@/contexts/ChatBotContext";
 import ErrorBoundary from "@/components/providers/ErrorBoundary";
+import { PageTitle } from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 import Link from "next/link";
 import { FiArrowRight, FiAlertCircle, FiSearch } from "react-icons/fi";
+import { LoadingState } from "@/components/ui/Spinner";
 
 const extractReadableSource = (article) => {
   const rawSource = (article?.source || "").trim();
@@ -90,8 +92,6 @@ function InsightsPageContent() {
     revalidateOnMount: true,
   });
 
-  const { openChatWithArticle } = useChatBot();
-
   const handleReadMore = (e, article, summary = null) => {
     e.preventDefault();
     e.stopPropagation();
@@ -149,10 +149,6 @@ function InsightsPageContent() {
 
   const hasConnectionError =
     (articlesError || statsError) && !weeklyDigestData && !statsData;
-
-  useEffect(() => {
-    document.title = "FinTech Insights & Trends | FinTech Calgary";
-  }, []);
 
   useEffect(() => {
     if (!articles || !Array.isArray(articles)) {
@@ -380,123 +376,102 @@ function InsightsPageContent() {
   );
 
   return (
-    <ErrorBoundary>
-      <ChatBotProvider>
-        <main className="flex flex-col min-h-screen">
-          <PublicNavbar />
+    <PublicPageShell title="Insights | FinTech Calgary">
+      <div className="relative flex-grow">
+        <div className="container relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-36 sm:px-8 lg:px-12">
+          {hasConnectionError && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 rounded-xl border border-yellow-500/30 bg-yellow-900/30 p-4 text-sm text-yellow-200"
+            >
+              <div className="flex items-center gap-2">
+                <FiAlertCircle className="h-5 w-5 shrink-0" />
+                <div>
+                  <strong>Database Connection Required:</strong> MongoDB is not
+                  connected. Connect to MongoDB to view articles and insights.
+                </div>
+              </div>
+            </motion.div>
+          )}
 
-          <section className="relative overflow-hidden pt-36 pb-16">
-            <div className="container mx-auto px-6 max-w-7xl relative z-10">
-              {hasConnectionError && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mb-6 p-4 bg-yellow-900/30 border border-yellow-500/30 rounded-xl text-yellow-200 text-sm"
-                >
-                  <div className="flex items-center gap-2">
-                    <FiAlertCircle className="w-5 h-5" />
-                    <div>
-                      <strong>Database Connection Required:</strong> MongoDB is
-                      not connected. Connect to MongoDB to view articles and
-                      insights. The UI improvements are still active.
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-center mb-16"
-              >
-                <h1 className="text-6xl md:text-7xl lg:text-8xl font-black leading-[1.08] pb-2 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
-                  FinTech Insights
-                </h1>
-                <p className="text-gray-300 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed mb-8">
-                  Weekly fintech news digests, top stories, and short article
-                  summaries we track for members
-                </p>
-                <p className="text-sm text-gray-500">
-                  Updated daily
+          <div className="mb-16 animate-fadeIn text-center">
+            <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6 leading-tight">
+              Insights
+            </PageTitle>
+            <p className="fc-lede mx-auto mb-6 max-w-3xl">
+              Weekly fintech news digests, top stories, and short article
+              summaries we track for members
+            </p>
+            <p className="fc-muted">
+              Updated daily
+              <span className="mx-2.5 text-white/20" aria-hidden>
+                ·
+              </span>
+              Short article summaries
+              {lastRefresh && (
+                <>
                   <span className="mx-2.5 text-white/20" aria-hidden>
                     ·
                   </span>
-                  Short article summaries
-                  {lastRefresh && (
-                    <>
-                      <span className="mx-2.5 text-white/20" aria-hidden>
-                        ·
-                      </span>
-                      Last refresh: {formatLastRefresh(lastRefresh)}
-                    </>
-                  )}
-                </p>
-
-                {articles.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.35 }}
-                    className="flex justify-center mt-6"
-                  >
-                    <button
-                      onClick={() => setDigestOpen(true)}
-                      className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 bg-white/[0.03] text-white text-sm font-medium hover:border-primary/40 hover:bg-primary/5 transition-colors duration-200"
-                    >
-                      <span>This Week&apos;s Full Digest</span>
-                      <span className="text-gray-500 tabular-nums">
-                        {articles.length}
-                      </span>
-                      <FiArrowRight className="w-3.5 h-3.5 text-primary group-hover:translate-x-0.5 transition-transform" />
-                    </button>
-                  </motion.div>
-                )}
-              </motion.div>
-
-              {keyInsights && (
-                <DigestSnapshotStrip
-                  keyInsights={keyInsights}
-                  totalArchiveArticles={totalArchiveArticles}
-                />
+                  Last refresh: {formatLastRefresh(lastRefresh)}
+                </>
               )}
-            </div>
-          </section>
+            </p>
 
-          <div className="container mx-auto px-6 pt-0 pb-12 max-w-7xl">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
-              <div className="lg:col-span-8 flex flex-col gap-6">
-                <motion.section
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                  className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50 flex-1 flex flex-col"
+            {articles.length > 0 && (
+              <div className="mt-8 flex justify-center">
+                <button
+                  onClick={() => setDigestOpen(true)}
+                  className="fc-btn-soft group !px-5 !py-2.5 !text-sm"
                 >
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-white">
+                  <span>This Week&apos;s Full Digest</span>
+                  <span className="tabular-nums text-white/70">
+                    {articles.length}
+                  </span>
+                  <FiArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {keyInsights && (
+            <DigestSnapshotStrip
+              keyInsights={keyInsights}
+              totalArchiveArticles={totalArchiveArticles}
+            />
+          )}
+
+          <div className="mt-12 grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
+            <div className="flex flex-col gap-6 lg:col-span-8">
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.15 }}
+              >
+                <GlowCard
+                  customSize
+                  glowColor="purple"
+                  className="w-full !gap-0 !p-5 sm:!p-6"
+                >
+                  <div className="relative z-10 mb-4 flex items-center justify-between gap-4">
+                    <h2 className="fc-title-accent text-xl sm:text-2xl">
                       This Week&apos;s Top Stories
                     </h2>
                     <Link
                       href="/articles"
-                      className="text-sm text-primary hover:text-purple-400 transition-colors inline-flex items-center gap-1"
+                      className="fc-link inline-flex shrink-0 items-center gap-1 text-sm font-medium"
                     >
                       View All
-                      <FiArrowRight className="w-4 h-4" />
+                      <FiArrowRight className="h-4 w-4" />
                     </Link>
                   </div>
 
-                  <div className="flex-1 flex flex-col">
+                  <div className="relative z-10">
                     {loading ? (
-                      <div className="space-y-4 flex-1">
-                        {[1, 2, 3].map((i) => (
-                          <div
-                            key={i}
-                            className="h-32 bg-gray-800/50 rounded-xl border border-gray-700/30 animate-pulse"
-                          />
-                        ))}
-                      </div>
+                      <LoadingState size="md" className="py-8" />
                     ) : topStories.length > 0 ? (
-                      <div className="space-y-4 flex-1">
+                      <div className="space-y-3">
                         {topStories.slice(0, 3).map((article, index) => (
                           <motion.div
                             key={article._id || article.url || index}
@@ -504,44 +479,48 @@ function InsightsPageContent() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{
                               duration: 0.4,
-                              delay: 0.4 + index * 0.1,
+                              delay: 0.2 + index * 0.08,
                             }}
                           >
                             <FeaturedArticleCardInner
                               article={article}
                               featured={index === 0}
-                              openChatWithArticle={openChatWithArticle}
                               onReadMore={handleReadMore}
                             />
                           </motion.div>
                         ))}
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center justify-center py-16 text-center flex-1">
-                        <p className="text-gray-400">
+                      <div className="py-8 text-center">
+                        <p className="fc-muted">
                           No top stories available yet
                         </p>
-                        <p className="text-sm text-gray-500 mt-2">
+                        <p className="mt-2 fc-muted">
                           Check back soon for the latest FinTech news
                         </p>
                       </div>
                     )}
                   </div>
-                </motion.section>
+                </GlowCard>
+              </motion.section>
 
-                <motion.section
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                  className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50 flex-1 flex flex-col"
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.25 }}
+              >
+                <GlowCard
+                  customSize
+                  glowColor="purple"
+                  className="w-full !gap-0 !p-5 sm:!p-6"
                 >
-                  <h2 className="text-2xl font-bold text-white mb-6">
+                  <h2 className="fc-title-accent relative z-10 mb-4 text-xl sm:text-2xl">
                     Key Insights
                   </h2>
 
-                  <div className="flex-1 flex flex-col">
+                  <div className="relative z-10">
                     {keyInsights ? (
-                      <div className="space-y-4 flex-1">
+                      <div className="space-y-2.5">
                         <InsightCard
                           title="News Coverage"
                           description={`${keyInsights.totalArticles} articles from ${keyInsights.uniqueSources} sources covering ${keyInsights.coverage} days`}
@@ -556,28 +535,31 @@ function InsightsPageContent() {
                         />
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center justify-center py-12 text-center flex-1">
-                        <p className="text-gray-400">Loading insights...</p>
-                      </div>
+                      <LoadingState size="sm" className="py-6" />
                     )}
                   </div>
-                </motion.section>
-              </div>
+                </GlowCard>
+              </motion.section>
+            </div>
 
-              <div className="lg:col-span-4 flex flex-col gap-6 h-full min-h-0">
-                <motion.section
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50 flex-1 flex flex-col min-h-0"
+            <div className="flex flex-col gap-6 lg:col-span-4">
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <GlowCard
+                  customSize
+                  glowColor="purple"
+                  className="w-full !gap-0 !p-5"
                 >
-                  <h3 className="text-xl font-bold text-white mb-6">
+                  <h3 className="fc-title-accent relative z-10 mb-3 text-lg">
                     Trending Topics
                   </h3>
 
-                  <div className="flex-1 flex flex-col min-h-0 justify-center">
+                  <div className="relative z-10">
                     {trendingTopics.length > 0 ? (
-                      <div className="flex flex-wrap gap-2.5 justify-center items-center">
+                      <div className="flex flex-wrap gap-2">
                         {trendingTopics.map((topic, index) => (
                           <motion.span
                             key={topic}
@@ -585,92 +567,75 @@ function InsightsPageContent() {
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{
                               duration: 0.3,
-                              delay: 0.5 + index * 0.05,
+                              delay: 0.3 + index * 0.04,
                             }}
-                            className="px-4 py-2 rounded-lg bg-white/[0.04] border border-white/10 text-sm font-medium text-gray-200 hover:border-primary/40 hover:text-white transition-colors cursor-pointer whitespace-nowrap"
+                            className="cursor-pointer whitespace-nowrap rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-sm font-medium text-gray-200 transition-colors hover:border-primary/40 hover:text-white"
                           >
                             {topic}
                           </motion.span>
                         ))}
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center justify-center text-center">
-                        <p className="text-gray-400 text-sm">
-                          No trending topics yet
-                        </p>
-                      </div>
+                      <p className="fc-muted">
+                        No trending topics yet
+                      </p>
                     )}
                   </div>
-                </motion.section>
+                </GlowCard>
+              </motion.section>
 
-                <motion.section
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                  className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50 flex-1 flex flex-col min-h-0"
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                <GlowCard
+                  customSize
+                  glowColor="purple"
+                  className="w-full !gap-0 !p-5"
                 >
-                  <h3 className="text-xl font-bold text-white mb-6">
+                  <h3 className="fc-title-accent relative z-10 mb-3 text-lg">
                     Sentiment Overview
                   </h3>
 
-                  <div className="flex-1 flex flex-col min-h-0 justify-center">
-                    {sentimentData.total > 0 ? (
-                      <div className="space-y-4">
-                        <OverviewSentimentBar
-                          label="Positive"
-                          value={sentimentData.positive}
-                          total={sentimentData.total}
-                          color="green"
-                        />
-                        <OverviewSentimentBar
-                          label="Neutral"
-                          value={sentimentData.neutral}
-                          total={sentimentData.total}
-                          color="gray"
-                        />
-                        <OverviewSentimentBar
-                          label="Negative"
-                          value={sentimentData.negative}
-                          total={sentimentData.total}
-                          color="red"
-                        />
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <OverviewSentimentBar
-                          label="Positive"
-                          value={0}
-                          total={1}
-                          color="green"
-                        />
-                        <OverviewSentimentBar
-                          label="Neutral"
-                          value={0}
-                          total={1}
-                          color="gray"
-                        />
-                        <OverviewSentimentBar
-                          label="Negative"
-                          value={0}
-                          total={1}
-                          color="red"
-                        />
-                      </div>
-                    )}
+                  <div className="relative z-10 space-y-3">
+                    <OverviewSentimentBar
+                      label="Positive"
+                      value={sentimentData.total > 0 ? sentimentData.positive : 0}
+                      total={sentimentData.total > 0 ? sentimentData.total : 1}
+                      color="green"
+                    />
+                    <OverviewSentimentBar
+                      label="Neutral"
+                      value={sentimentData.total > 0 ? sentimentData.neutral : 0}
+                      total={sentimentData.total > 0 ? sentimentData.total : 1}
+                      color="gray"
+                    />
+                    <OverviewSentimentBar
+                      label="Negative"
+                      value={sentimentData.total > 0 ? sentimentData.negative : 0}
+                      total={sentimentData.total > 0 ? sentimentData.total : 1}
+                      color="red"
+                    />
                   </div>
-                </motion.section>
+                </GlowCard>
+              </motion.section>
 
-                <motion.section
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                  className="bg-gradient-to-br from-primary/10 to-purple-500/10 backdrop-blur-xl rounded-2xl p-6 border border-primary/30 flex-1 flex flex-col min-h-0 justify-center"
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.35 }}
+              >
+                <GlowCard
+                  customSize
+                  glowColor="purple"
+                  className="w-full !gap-0 !p-5"
                 >
-                  <div className="text-center">
-                    <h3 className="text-lg font-bold text-white mb-2">
+                  <div className="relative z-10 text-center">
+                    <h3 className="fc-title-accent mb-2 text-lg">
                       Full archive
                     </h3>
-                    <p className="text-gray-300 text-sm mb-6 leading-relaxed">
+                    <p className="fc-body mb-4">
                       Browse every saved article with filters and search
                     </p>
                     <Link
@@ -678,35 +643,33 @@ function InsightsPageContent() {
                       className="fc-btn-gradient-primary px-5 py-2.5"
                     >
                       Browse All Articles
-                      <FiArrowRight className="w-4 h-4" />
+                      <FiArrowRight className="h-4 w-4" />
                     </Link>
                   </div>
-                </motion.section>
-              </div>
+                </GlowCard>
+              </motion.section>
             </div>
           </div>
+        </div>
+      </div>
 
-          <Footer />
+      <FinTechChatBot articles={articles} />
 
-          <FinTechChatBot articles={articles} />
+      <WeeklyDigestModal
+        isOpen={digestOpen}
+        onClose={() => setDigestOpen(false)}
+        articles={articles}
+        stats={weeklyStats}
+        weekStart={weeklyDigestData?.weekStart}
+        weekEnd={weeklyDigestData?.weekEnd}
+      />
 
-          <WeeklyDigestModal
-            isOpen={digestOpen}
-            onClose={() => setDigestOpen(false)}
-            articles={articles}
-            stats={weeklyStats}
-            weekStart={weeklyDigestData?.weekStart}
-            weekEnd={weeklyDigestData?.weekEnd}
-          />
-
-          <ArticleDetailModal
-            isOpen={articleModalOpen}
-            onClose={() => setArticleModalOpen(false)}
-            article={selectedArticle}
-          />
-        </main>
-      </ChatBotProvider>
-    </ErrorBoundary>
+      <ArticleDetailModal
+        isOpen={articleModalOpen}
+        onClose={() => setArticleModalOpen(false)}
+        article={selectedArticle}
+      />
+    </PublicPageShell>
   );
 }
 
@@ -748,11 +711,11 @@ function DigestSnapshotStrip({ keyInsights, totalArchiveArticles }) {
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
         <div className="relative flex flex-col items-center gap-4 px-2 py-6 md:gap-5 md:px-6 md:py-8">
-          <p className="text-center text-xs font-medium text-gray-500 md:text-sm">
+          <p className="fc-muted text-center text-xs md:text-sm">
             This week at a glance
           </p>
 
-          <p className="mx-auto max-w-3xl text-center text-[15px] leading-relaxed text-gray-400 md:text-lg md:leading-[1.75]">
+          <p className="fc-body mx-auto max-w-3xl text-center md:text-lg md:leading-[1.75]">
             {segments.map((seg, i) => (
               <span key={seg.phrase} className="inline">
                 {i > 0 && (
@@ -763,10 +726,10 @@ function DigestSnapshotStrip({ keyInsights, totalArchiveArticles }) {
                     ·
                   </span>
                 )}
-                <span className="font-semibold tabular-nums text-white">
+                <span className="font-semibold tabular-nums tracking-tight text-white">
                   {seg.value}
                 </span>
-                <span className="text-gray-500"> {seg.phrase}</span>
+                <span className="fc-muted"> {seg.phrase}</span>
               </span>
             ))}
           </p>
@@ -810,7 +773,7 @@ function FeaturedArticleCardInner({ article, featured = false, onReadMore }) {
 
   return (
     <div
-      className="relative group"
+      className="group relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -821,24 +784,26 @@ function FeaturedArticleCardInner({ article, featured = false, onReadMore }) {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleCheckoutToAI}
-          className="absolute bottom-3 right-3 z-20 w-9 h-9 rounded-xl bg-primary/90 hover:bg-primary flex items-center justify-center text-white border border-white/10 transition-colors duration-200"
+          className="absolute bottom-3 right-3 z-20 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-primary/90 text-white transition-colors duration-200 hover:bg-primary"
           title="Analyze with AI"
         >
-          <FiSearch className="w-4 h-4" />
+          <FiSearch className="h-4 w-4" />
         </motion.button>
       )}
 
       <div
-        className={`relative bg-gray-900/30 rounded-xl border border-gray-700/30 overflow-hidden transition-all duration-300 min-h-36 ${
-          isHovered ? "border-primary/50" : ""
+        className={`fc-card relative overflow-hidden !rounded-xl p-0 ${
+          isHovered ? "!border-primary/50" : ""
         }`}
       >
         <div
-          className={`flex ${featured ? "flex-col md:flex-row" : "flex-row"} gap-4 p-4 h-full`}
+          className={`flex gap-4 p-3.5 ${
+            featured ? "flex-col md:flex-row" : "flex-row"
+          }`}
         >
-          <div className="flex-1 min-w-0 overflow-hidden flex flex-col">
-            <div className="flex items-center gap-2 mb-1 text-xs text-gray-400 flex-wrap">
-              <span className="font-medium uppercase">
+          <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+            <div className="mb-1 flex flex-wrap items-center gap-2 fc-muted text-xs">
+              <span className="font-medium uppercase tracking-wide">
                 {extractReadableSource(article)}
               </span>
               <span>•</span>
@@ -846,53 +811,51 @@ function FeaturedArticleCardInner({ article, featured = false, onReadMore }) {
               {featured && (
                 <>
                   <span>•</span>
-                  <span className="px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30 text-xs">
+                  <span className="rounded-md border border-primary/30 bg-primary/20 px-2 py-0.5 text-xs text-primary">
                     Featured
                   </span>
                 </>
               )}
             </div>
-            <h3
-              className={`font-semibold text-white group-hover:text-primary transition-colors mb-2 text-lg line-clamp-2`}
-            >
+            <h3 className="fc-title mb-2 line-clamp-2 text-lg transition-colors group-hover:text-primary">
               {article.title}
             </h3>
             <button
               onClick={(e) => onReadMore(e, article, summary)}
-              className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary/10 border border-primary/30 rounded-xl text-xs text-primary hover:bg-primary/20 hover:border-primary/50 transition-all duration-200 w-fit"
+              className="inline-flex w-fit items-center gap-1 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 to-purple-500/10 px-3 py-1.5 text-xs text-primary transition-all duration-200 hover:border-primary/50 hover:from-primary/20 hover:to-purple-500/20"
             >
               Read more
-              <FiArrowRight className="w-3 h-3" />
+              <FiArrowRight className="h-3 w-3" />
             </button>
           </div>
         </div>
 
         <div
-          className={`absolute inset-0 p-4 bg-gray-900/95 transition-opacity duration-150 ${
+          className={`absolute inset-0 bg-gray-900/95 p-4 transition-opacity duration-150 ${
             isHovered
-              ? "opacity-100 pointer-events-auto"
-              : "opacity-0 pointer-events-none"
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-0"
           }`}
         >
-          <div className="flex flex-col h-full">
-            <div className="flex-1 min-h-0 overflow-hidden">
+          <div className="flex h-full flex-col">
+            <div className="min-h-0 flex-1 overflow-hidden">
               {summary ? (
-                <p className="text-gray-300 leading-relaxed line-clamp-3 text-sm">
+                <p className="fc-body line-clamp-3">
                   {truncateWords(summary, 60)}
                 </p>
               ) : (
-                <p className="text-xs text-gray-500 italic">
+                <p className="fc-muted text-xs italic">
                   Summary will be available after the weekly digest refresh.
                 </p>
               )}
             </div>
-            <div className="flex items-center gap-2 text-xs text-primary mt-2 flex-shrink-0">
+            <div className="mt-2 flex shrink-0 items-center gap-2 text-xs text-primary">
               <button
                 onClick={(e) => onReadMore(e, article, summary)}
                 className="fc-btn-read-more-subtle"
               >
                 <span>Read more</span>
-                <FiArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
+                <FiArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
               </button>
             </div>
           </div>
@@ -904,9 +867,9 @@ function FeaturedArticleCardInner({ article, featured = false, onReadMore }) {
 
 function InsightCard({ title, description }) {
   return (
-    <div className="p-4 rounded-lg border border-white/[0.06] hover:border-white/10 transition-colors">
-      <h4 className="font-semibold text-white mb-1">{title}</h4>
-      <p className="text-sm text-gray-400 leading-relaxed">{description}</p>
+    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-3.5 py-3 transition-colors hover:border-primary/30 hover:bg-white/[0.04]">
+      <h4 className="fc-title mb-0.5 text-base">{title}</h4>
+      <p className="fc-muted">{description}</p>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiArrowLeft } from "react-icons/fi";
+import { LoadingState } from "@/components/ui/Spinner";
 
 export default function RegisterEventForm({ eventId }) {
   const router = useRouter();
@@ -59,11 +60,7 @@ export default function RegisterEventForm({ eventId }) {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center py-8 px-4">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <LoadingState fullScreen />;
   }
 
   if (error) {
@@ -77,7 +74,7 @@ export default function RegisterEventForm({ eventId }) {
           >
             <Link
               href="/"
-              className="inline-flex items-center text-gray-400 hover:text-white transition-all duration-200 hover:translate-x-[-4px] mb-4 group"
+              className="fc-muted inline-flex items-center hover:text-white transition-all duration-200 hover:translate-x-[-4px] mb-4 group"
             >
               <FiArrowLeft className="w-5 h-5 mr-2 transition-transform duration-200 group-hover:translate-x-[-2px]" />
               Back to Home
@@ -124,7 +121,7 @@ export default function RegisterEventForm({ eventId }) {
       <div className="w-full max-w-4xl">
         <Link
           href="/"
-          className="inline-flex items-center text-gray-400 hover:text-white mb-6 transition-colors duration-200"
+          className="fc-muted inline-flex items-center hover:text-white mb-6 transition-colors duration-200"
         >
           <svg
             className="w-5 h-5 mr-2"
@@ -152,7 +149,7 @@ export default function RegisterEventForm({ eventId }) {
               <h2 className="text-lg font-semibold text-white mb-1">
                 {event.title}
               </h2>
-              <p className="text-sm text-gray-400">
+              <p className="fc-muted">
                 {new Date(event.date + "T00:00:00").toLocaleDateString(
                   "en-US",
                   {
@@ -271,13 +268,13 @@ export default function RegisterEventForm({ eventId }) {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Link
                 href="/"
-                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 text-center"
+                className="fc-btn-dashboard-cancel flex-1 !py-3 text-center"
               >
                 Cancel
               </Link>
               <button
                 type="submit"
-                className="flex-1 bg-primary hover:bg-primary/80 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 shadow-lg shadow-primary/15"
+                className="fc-btn-gradient-primary flex-1 !px-4 !py-3"
               >
                 {event && event.eventType === "webinar"
                   ? "Register for Webinar"

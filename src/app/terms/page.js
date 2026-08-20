@@ -1,6 +1,7 @@
 "use client";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import { PageTitle } from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function TermsPage() {
 
@@ -11,20 +12,25 @@ export default function TermsPage() {
         <div className="container relative z-10 mx-auto px-6 pb-16 pt-36 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-4xl">
             <div className="mb-12 text-center">
-              <PageTitle sizeClass="text-5xl font-extrabold mb-6">
+              <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
                 Terms of Service
               </PageTitle>
-              <p className="text-xl text-gray-300">
+              <p className="fc-lede">
                 Last updated: {new Date().toLocaleDateString()}
               </p>
             </div>
 
-            <div className="fc-card space-y-8 p-8 hover:border-gray-800/50">
+            <GlowCard
+              customSize
+              glowColor="purple"
+              className="w-full space-y-8 !gap-0 !p-8"
+            >
+              <div className="relative z-10 space-y-8">
               <section>
                 <h2 className="text-2xl font-bold text-white mb-4">
                   1. Acceptance of Terms
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   By accessing and using the FinTech Calgary website and
                   services, you accept and agree to be bound by the terms and
                   provision of this agreement. If you do not agree to abide by
@@ -36,14 +42,14 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   2. Use License
                 </h2>
-                <p className="text-gray-300 leading-relaxed mb-4">
+                <p className="fc-body-lg mb-4">
                   Permission is granted to temporarily download one copy of the
                   materials on FinTech Calgary&apos;s website for personal,
                   non-commercial transitory viewing only. This is the grant of a
                   license, not a transfer of title, and under this license you
                   may not:
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
                   <li>modify or copy the materials</li>
                   <li>
                     use the materials for any commercial purpose or for any
@@ -64,10 +70,10 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   3. Member Responsibilities
                 </h2>
-                <p className="text-gray-300 leading-relaxed mb-4">
+                <p className="fc-body-lg mb-4">
                   As a member of FinTech Calgary, you agree to:
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
                   <li>
                     Provide accurate and truthful information in your membership
                     application
@@ -93,7 +99,7 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   4. Privacy Policy
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   Your privacy is important to us. Please review our Privacy
                   Policy, which also governs your use of the website, to
                   understand our practices.
@@ -104,10 +110,10 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   5. Prohibited Uses
                 </h2>
-                <p className="text-gray-300 leading-relaxed mb-4">
+                <p className="fc-body-lg mb-4">
                   You may not use our website:
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
                   <li>
                     For any unlawful purpose or to solicit others to perform
                     unlawful acts
@@ -132,7 +138,7 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   6. Content and Intellectual Property
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   The content on this website, including but not limited to
                   text, graphics, logos, images, and software, is the property
                   of FinTech Calgary and is protected by copyright and other
@@ -146,7 +152,7 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   7. Disclaimer
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   The materials on FinTech Calgary&apos;s website are provided
                   on an &apos;as is&apos; basis. FinTech Calgary makes no
                   warranties, expressed or implied, and hereby disclaims and
@@ -161,7 +167,7 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   8. Limitations
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   In no event shall FinTech Calgary or its suppliers be liable
                   for any damages (including, without limitation, damages for
                   loss of data or profit, or due to business interruption)
@@ -176,7 +182,7 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   9. Revisions
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   FinTech Calgary may revise these terms of service for its
                   website at any time without notice. By using this website, you
                   are agreeing to be bound by the then current version of these
@@ -188,18 +194,19 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   10. Contact Information
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="fc-body-lg">
                   If you have any questions about these Terms of Service, please
                   contact us at{" "}
                   <a
                     href="mailto:fintech.calgary@gmail.com"
-                    className="text-primary hover:text-primary/80 transition-colors"
+                    className="fc-link underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
                   >
                     fintech.calgary@gmail.com
                   </a>
                 </p>
               </section>
-            </div>
+              </div>
+            </GlowCard>
           </div>
         </div>
       </div>

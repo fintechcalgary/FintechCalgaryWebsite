@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import Executives from "@/features/executives/Executives";
 import AdminCard from "@/features/dashboard/AdminCard";
 import { LoadingState } from "@/components/ui/Spinner";
+import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function AdminDashboardClient() {
   const { data: session, status } = useSession();
@@ -51,7 +52,7 @@ export default function AdminDashboardClient() {
           style={{ animationDelay: "1s" }}
         ></div>
         <div
-          className="absolute top-1/2 left-1/2 w-64 h-64 bg-blue-500/5 rounded-full blur-2xl animate-pulse"
+          className="absolute top-1/2 left-1/2 w-64 h-64 bg-violet-500/5 rounded-full blur-2xl animate-pulse"
           style={{ animationDelay: "0.5s" }}
         ></div>
       </div>
@@ -61,7 +62,7 @@ export default function AdminDashboardClient() {
         {/* Browser recommendation message */}
         <div
           className="mb-6 p-4 rounded-xl border border-gray-700/30 bg-gray-900/60 backdrop-blur-xl
-            flex items-center gap-3 text-sm text-gray-300 max-w-fit animate-fadeIn hover:bg-gray-800/60 transition-all duration-300"
+            flex items-center gap-3 text-sm fc-body max-w-fit animate-fadeIn hover:bg-gray-800/60 transition-all duration-300"
         >
           <svg
             viewBox="0 0 24 24"
@@ -74,27 +75,31 @@ export default function AdminDashboardClient() {
         </div>
 
         {/* Welcome section */}
-        <div className="relative overflow-hidden rounded-2xl mb-8 animate-fadeIn">
-          <div className="relative bg-gray-900/80 backdrop-blur-2xl p-8 rounded-2xl border border-gray-700/50 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10">
+        <div className="relative mb-8 animate-fadeIn">
+          <GlowCard
+            customSize
+            glowColor="purple"
+            className="w-full !gap-0 !p-8"
+          >
             <div className="relative z-10 space-y-4">
               <div className="inline-block px-4 py-2 rounded-xl bg-primary/20 text-primary text-sm font-medium backdrop-blur-sm hover:scale-105 transition-transform border border-primary/30">
                 Your Workspace
               </div>
               <div className="space-y-2">
-                <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight">
+                <h1 className="fc-title text-4xl sm:text-5xl font-bold tracking-tight">
                   Welcome back
-                  <span className="bg-gradient-to-r from-primary to-purple-400/75 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-primary to-violet-400/75 bg-clip-text text-transparent">
                     {session?.user?.email?.split("@")[0]
                       ? ` ${session.user.email.split("@")[0]}`
                       : ""}
                   </span>
                 </h1>
-                <p className="text-gray-300 text-lg">
+                <p className="fc-lede">
                   Track your events and collaborate with your team members
                 </p>
               </div>
             </div>
-          </div>
+          </GlowCard>
         </div>
 
         {/* Content grid */}
@@ -102,17 +107,17 @@ export default function AdminDashboardClient() {
           {/* Admin Section - Only visible to admins */}
           {session?.user?.role === "admin" && (
             <section className="group animate-fadeIn">
-              <div
-                className="relative h-full bg-gray-900/80 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 
-                          transition-all duration-500 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-primary/10
-                          hover:border-primary/50 overflow-hidden"
+              <GlowCard
+                customSize
+                glowColor="purple"
+                className="relative h-full w-full !gap-0 !p-8"
               >
                 <div className="relative z-10 flex items-center justify-between mb-8">
                   <div className="space-y-2">
-                    <h2 className="text-2xl font-semibold text-white">
+                    <h2 className="fc-title-accent text-2xl">
                       Admin Panel
                     </h2>
-                    <p className="text-sm text-gray-400">
+                    <p className="fc-body">
                       Manage system resources and user data
                     </p>
                   </div>
@@ -175,7 +180,7 @@ export default function AdminDashboardClient() {
                       </svg>
                     )}
                     href="/dashboard/executive-applications"
-                    color="orange"
+                    color="pink"
                   />
 
                   <AdminCard
@@ -197,26 +202,25 @@ export default function AdminDashboardClient() {
                       </svg>
                     )}
                     href="/dashboard/members"
-                    color="green"
+                    color="purple"
                   />
                 </div>
-              </div>
+              </GlowCard>
             </section>
           )}
 
-          <section className="group animate-fadeIn">
-            <div
-              className="relative h-full bg-gray-900/80 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 
-                            transition-all duration-500 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-primary/10
-                            hover:border-primary/50 overflow-hidden"
-              id="events"
+          <section className="group animate-fadeIn" id="events">
+            <GlowCard
+              customSize
+              glowColor="purple"
+              className="relative h-full w-full !gap-0 !p-8"
             >
               <div className="relative z-10 flex items-center justify-between mb-8">
                 <div className="space-y-1">
-                  <h2 className="text-2xl font-semibold text-white">
+                  <h2 className="fc-title-accent text-2xl">
                     Events and Webinars
                   </h2>
-                  <p className="text-sm text-gray-400">Manage your schedule</p>
+                  <p className="fc-body">Manage your schedule</p>
                 </div>
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary backdrop-blur-sm border border-primary/30">
                   <FontAwesomeIcon icon={faChartBar} className="h-6 w-6" />
@@ -233,10 +237,10 @@ export default function AdminDashboardClient() {
                     <FontAwesomeIcon icon={faClock} className="h-5 w-5" />
                   </div>
                   <div className="space-y-0.5">
-                    <h3 className="text-sm font-semibold text-white">
+                    <h3 className="fc-title text-sm">
                       Reminder
                     </h3>
-                    <p className="text-xs text-purple-100 leading-relaxed">
+                    <p className="fc-body text-xs leading-relaxed">
                       No need to delete past events—they&apos;ll remain on the
                       events page. Delete only those you no longer want to
                       display.
@@ -246,24 +250,24 @@ export default function AdminDashboardClient() {
               </div>
 
               <Events />
-            </div>
+            </GlowCard>
           </section>
 
           <section className="group animate-fadeIn">
-            <div
-              className="relative h-full bg-gray-900/80 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 
-                            transition-all duration-500 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-primary/10
-                            hover:border-primary/50 overflow-hidden"
+            <GlowCard
+              customSize
+              glowColor="purple"
+              className="relative h-full w-full !gap-0 !p-8"
             >
               <div className="relative z-10 flex items-center justify-between mb-8">
                 <div className="space-y-1">
                   <h2
-                    className="text-2xl font-semibold text-white"
+                    className="fc-title-accent text-2xl"
                     id="executives"
                   >
                     Team
                   </h2>
-                  <p className="text-sm text-gray-400">
+                  <p className="fc-body">
                     Collaborate with others
                   </p>
                 </div>
@@ -272,7 +276,7 @@ export default function AdminDashboardClient() {
                 </span>
               </div>
               <Executives />
-            </div>
+            </GlowCard>
           </section>
         </div>
       </main>

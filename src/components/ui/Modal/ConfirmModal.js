@@ -90,7 +90,7 @@ export default function ConfirmModal({
         </div>
 
         <div className="p-6">
-          <div className="text-gray-300 text-base leading-relaxed mb-6">
+          <div className="fc-body-lg mb-6">
             {typeof message === "string" ? <p>{message}</p> : message}
           </div>
 

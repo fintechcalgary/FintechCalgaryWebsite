@@ -205,12 +205,12 @@ export default function PartnerSignupPage() {
             <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 mb-6">
               Partner Sign Up
             </h1>
-            <p className="text-xl text-gray-300 mx-auto">
+            <p className="fc-lede mx-auto max-w-3xl">
               Interested in learning more about Partnership before
               applying? Contact us at{" "}
               <a
                 href="mailto:fintech.calgary@gmail.com"
-                className="text-primary hover:text-primary/80 transition-colors inline-flex items-center gap-1 ml-1"
+                className="fc-link inline-flex items-center gap-1 ml-1 underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
               >
                 <FaEnvelope className="w-4 h-4" />
                 fintech.calgary@gmail.com
@@ -228,7 +228,7 @@ export default function PartnerSignupPage() {
                   <h2 className="text-2xl font-bold text-white mb-2">
                     Thank you for your interest in becoming a Partner!
                   </h2>
-                  <p className="text-gray-300">
+                  <p className="fc-body">
                     We will be in contact with you shortly to discuss the next
                     steps.
                   </p>

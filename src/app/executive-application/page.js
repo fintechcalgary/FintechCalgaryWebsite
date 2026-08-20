@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import PublicPageShell from "@/components/layout/PublicPageShell";
+import { PageTitle } from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 import { FiCheck, FiAlertCircle } from "react-icons/fi";
 import Image from "next/image";
 import logger from "@/lib/logger";
@@ -19,6 +21,7 @@ import {
   FILE_TYPES,
   ERROR_MESSAGES,
 } from "@/lib/constants";
+import Spinner from "@/components/ui/Spinner";
 
 export default function ExecutiveApplicationPage() {
   const [form, setForm] = useState({
@@ -317,10 +320,10 @@ export default function ExecutiveApplicationPage() {
       <div className="relative flex-grow">
         <div className="container mx-auto px-6 pt-36 relative z-10">
           <div className="text-center animate-fadeIn">
-            <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 mb-6">
+            <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
               Executive Application
-            </h1>
-            <p className="text-xl text-gray-300 mx-auto">
+            </PageTitle>
+            <p className="fc-lede mx-auto max-w-3xl">
               Apply to join the FinTech Calgary executive team! Please fill out
               all required fields. We look forward to learning more about you.
             </p>
@@ -328,47 +331,52 @@ export default function ExecutiveApplicationPage() {
 
           <div className="flex justify-center items-center">
             <div className="container mx-auto px-4 py-16 max-w-4xl">
+              <GlowCard
+                customSize
+                glowColor="purple"
+                className="w-full !gap-0 !p-6 sm:!p-8"
+              >
               {!applicationsOpen ? (
-                <div className="text-center py-8 animate-fadeIn">
+                <div className="relative z-10 text-center py-8 animate-fadeIn">
                   <div className="w-16 h-16 bg-gray-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <FiAlertCircle className="w-8 h-8 text-gray-400" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-2">
+                  <h2 className="fc-title text-2xl mb-2">
                     Applications Currently Closed
                   </h2>
-                  <p className="text-gray-300">
+                  <p className="fc-body">
                     Executive applications are not currently open. Please check
                     back later for new opportunities.
                   </p>
                 </div>
               ) : status === "success" ? (
-                <div className="text-center py-8 animate-fadeIn">
+                <div className="relative z-10 text-center py-8 animate-fadeIn">
                   <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <FiCheck className="w-8 h-8 text-primary" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-2">
+                  <h2 className="fc-title text-2xl mb-2">
                     Thank you for your application!
                   </h2>
-                  <p className="text-gray-300">
+                  <p className="fc-body">
                     We will review your application and be in contact with you
                     shortly.
                   </p>
                 </div>
               ) : (
                 <>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="text-xl font-semibold">
+                  <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
+                    <div className="fc-title-accent text-xl">
                       Role Information
                     </div>
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
 
                     <div className="mb-5">
                       {rolesLoading ? (
-                        <div className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-gray-400">
-                          Loading available roles...
+                        <div className="flex w-full items-center justify-center rounded-xl border border-gray-700/50 bg-gray-800/50 px-4 py-6">
+                          <Spinner size="sm" />
                         </div>
                       ) : availableRoles.length === 0 ? (
-                        <div className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-gray-400">
+                        <div className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 fc-muted">
                           No roles currently available
                         </div>
                       ) : (
@@ -436,7 +444,7 @@ export default function ExecutiveApplicationPage() {
                       </div>
                     )}
 
-                    <div className="text-xl font-semibold">
+                    <div className="fc-title-accent text-xl">
                       Personal Information
                     </div>
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
@@ -495,7 +503,7 @@ export default function ExecutiveApplicationPage() {
                       />
                     </div>
 
-                    <div className="text-xl font-semibold">
+                    <div className="fc-title-accent text-xl">
                       Academic Information
                     </div>
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
@@ -581,7 +589,7 @@ export default function ExecutiveApplicationPage() {
                               <p className="text-white text-sm font-medium">
                                 {resumeFileName}
                               </p>
-                              <p className="text-gray-400 text-xs">
+                              <p className="fc-muted text-xs">
                                 Click to change file
                               </p>
                             </div>
@@ -603,13 +611,13 @@ export default function ExecutiveApplicationPage() {
                                 d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                               />
                             </svg>
-                            <p className="mb-2 text-sm text-gray-400">
+                            <p className="mb-2 fc-muted">
                               <span className="font-semibold">
                                 Click to upload
                               </span>{" "}
                               or drag and drop
                             </p>
-                            <p className="text-xs text-gray-400">
+                            <p className="fc-muted text-xs">
                               PDF only (max 5MB)
                             </p>
                           </div>
@@ -622,7 +630,7 @@ export default function ExecutiveApplicationPage() {
                       )}
                     </div>
 
-                    <div className="text-xl font-semibold">
+                    <div className="fc-title-accent text-xl">
                       Application Questions
                     </div>
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
@@ -786,14 +794,14 @@ export default function ExecutiveApplicationPage() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="w-full px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="fc-btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
                     >
                       {submitting ? "Submitting..." : "Submit Application"}
                     </button>
                   </form>
 
                   {status === "error" && (
-                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start max-w-4xl mx-auto mt-6">
+                    <div className="relative z-10 bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start max-w-4xl mx-auto mt-6">
                       <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
                       <div>
                         <h3 className="text-red-400 font-semibold mb-2">
@@ -834,6 +842,7 @@ export default function ExecutiveApplicationPage() {
                   )}
                 </>
               )}
+              </GlowCard>
             </div>
           </div>
         </div>

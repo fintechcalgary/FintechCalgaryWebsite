@@ -55,7 +55,7 @@ class ErrorBoundary extends React.Component {
               <h1 className="text-3xl font-bold text-white text-center mb-4">
                 Something went wrong
               </h1>
-              <p className="text-gray-300 text-center mb-8">
+              <p className="fc-body-lg text-center mb-8">
                 We encountered an unexpected error. Please try refreshing the page or returning to the home page.
               </p>
 
@@ -65,8 +65,8 @@ class ErrorBoundary extends React.Component {
                     {this.state.error.toString()}
                   </p>
                   {this.state.errorInfo && (
-                    <details className="text-xs text-gray-500">
-                      <summary className="cursor-pointer hover:text-gray-400">
+                    <details className="fc-muted text-xs">
+                      <summary className="cursor-pointer hover:text-white/55">
                         Stack trace
                       </summary>
                       <pre className="mt-2 overflow-auto max-h-48">

@@ -1,6 +1,7 @@
 "use client";
 
 import { FiEye, FiTrash2 } from "react-icons/fi";
+import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function ApplicationList({
   applications,
@@ -27,7 +28,7 @@ export default function ApplicationList({
             </div>
           ) : applications.length === 0 ? (
             <div className="p-6 sm:p-8 text-center">
-              <p className="text-gray-400 text-sm sm:text-base">
+              <p className="fc-body text-sm sm:text-base">
                 No applications found.
               </p>
             </div>
@@ -66,7 +67,7 @@ export default function ApplicationList({
                       >
                         <td className="px-6 py-4">
                           <div>
-                            <div className="text-sm font-medium text-white">
+                            <div className="fc-title text-sm">
                               {application.name}
                             </div>
                           </div>
@@ -79,28 +80,28 @@ export default function ApplicationList({
                             {application.role}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-300">
+                        <td className="px-6 py-4 fc-body">
                           <div>{application.program}</div>
-                          <div className="text-gray-400">
+                          <div className="fc-muted">
                             Year {application.year}
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-300">
+                        <td className="px-6 py-4 fc-body">
                           <div>{application.email}</div>
                           {application.phone && (
-                            <div className="text-gray-400">
+                            <div className="fc-muted">
                               {application.phone}
                             </div>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-300">
+                        <td className="px-6 py-4 fc-body">
                           {formatDate(application.createdAt)}
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex gap-2">
                             <button
                               onClick={() => onViewDetails(application)}
-                              className="text-primary hover:text-primary/80 text-sm font-medium flex items-center gap-1"
+                              className="fc-link text-sm flex items-center gap-1"
                             >
                               <FiEye className="w-4 h-4" />
                               View
@@ -125,71 +126,75 @@ export default function ApplicationList({
               <div className="lg:hidden">
                 <div className="p-4 sm:p-6 space-y-4">
                   {applications.map((application, index) => (
-                    <div
+                    <GlowCard
                       key={application._id || index}
-                      className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/30 hover:border-gray-600/50 transition-all duration-300"
+                      customSize
+                      glowColor="purple"
+                      className="w-full !gap-0 !p-4"
                     >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <h3 className="text-white font-medium text-base mb-1">
-                            {application.name}
-                          </h3>
-                          <span
-                            className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary max-w-[150px] truncate"
-                            title={application.role}
-                          >
-                            {application.role}
-                          </span>
+                      <div className="relative z-10">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <h3 className="fc-title text-base mb-1">
+                              {application.name}
+                            </h3>
+                            <span
+                              className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary max-w-[150px] truncate"
+                              title={application.role}
+                            >
+                              {application.role}
+                            </span>
+                          </div>
+                          <div className="flex gap-2 ml-3">
+                            <button
+                              onClick={() => onViewDetails(application)}
+                              className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-xl transition-colors"
+                              title="View Details"
+                            >
+                              <FiEye className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => onDeleteClick(application)}
+                              disabled={deletingId === application._id}
+                              className="p-2 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              title="Delete Application"
+                            >
+                              <FiTrash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex gap-2 ml-3">
-                          <button
-                            onClick={() => onViewDetails(application)}
-                            className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-xl transition-colors"
-                            title="View Details"
-                          >
-                            <FiEye className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => onDeleteClick(application)}
-                            disabled={deletingId === application._id}
-                            className="p-2 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            title="Delete Application"
-                          >
-                            <FiTrash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                        <div>
-                          <span className="text-gray-400">Program:</span>
-                          <div className="text-white">
-                            {application.program}
-                          </div>
-                          <div className="text-gray-400">
-                            Year {application.year}
-                          </div>
-                        </div>
-                        <div>
-                          <span className="text-gray-400">Contact:</span>
-                          <div className="text-white break-all">
-                            {application.email}
-                          </div>
-                          {application.phone && (
-                            <div className="text-gray-400">
-                              {application.phone}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <span className="fc-muted">Program:</span>
+                            <div className="text-white">
+                              {application.program}
                             </div>
-                          )}
+                            <div className="fc-muted">
+                              Year {application.year}
+                            </div>
+                          </div>
+                          <div>
+                            <span className="fc-muted">Contact:</span>
+                            <div className="text-white break-all">
+                              {application.email}
+                            </div>
+                            {application.phone && (
+                              <div className="fc-muted">
+                                {application.phone}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="mt-3 pt-3 border-t border-gray-700/30">
-                        <span className="text-gray-400 text-xs">Applied:</span>
-                        <div className="text-white text-sm">
-                          {formatDate(application.createdAt)}
+                        <div className="mt-3 pt-3 border-t border-gray-700/30">
+                          <span className="fc-muted text-xs">Applied:</span>
+                          <div className="text-white text-sm">
+                            {formatDate(application.createdAt)}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </GlowCard>
                   ))}
                 </div>
               </div>
@@ -198,7 +203,7 @@ export default function ApplicationList({
         </div>
 
         {/* Summary */}
-        <div className="mt-6 text-sm text-gray-400 text-center sm:text-left">
+        <div className="mt-6 fc-muted text-center sm:text-left">
           Total Applications: {applications.length}
         </div>
 

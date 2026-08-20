@@ -14,7 +14,7 @@ export function OverviewSentimentBar({ label, value, total, color }) {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-300">{label}</span>
+        <span className="fc-body font-medium">{label}</span>
         <div className="flex items-center gap-2">
           <span
             className={`text-xs px-2.5 py-1 rounded-md border font-medium ${colorClasses[color]}`}
@@ -22,7 +22,7 @@ export function OverviewSentimentBar({ label, value, total, color }) {
             {value}
           </span>
           {total > 0 && (
-            <span className="text-xs text-gray-500">{percentage}%</span>
+            <span className="fc-muted text-xs">{percentage}%</span>
           )}
         </div>
       </div>
@@ -57,7 +57,7 @@ export function CompactSentimentBar({
     <div>
       <div className="flex justify-between text-xs mb-1">
         <span className={colorClass}>{label}</span>
-        <span className="text-gray-400">{pct}%</span>
+        <span className="fc-muted">{pct}%</span>
       </div>
       <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
         <motion.div

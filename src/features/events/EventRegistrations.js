@@ -16,6 +16,7 @@ import useConfirmDelete from "@/hooks/useConfirmDelete";
 import useDocumentTitle from "@/hooks/useDocumentTitle";
 import { downloadCsv } from "@/lib/csv";
 import { formatDateShort, formatDateTime, formatEventDate } from "@/lib/dates";
+import { LoadingState } from "@/components/ui/Spinner";
 
 export default function EventRegistrations({ eventId }) {
   const [event, setEvent] = useState(null);
@@ -104,11 +105,7 @@ export default function EventRegistrations({ eventId }) {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
-      </div>
-    );
+    return <LoadingState fullScreen />;
   }
 
   if (error) {
@@ -132,7 +129,7 @@ export default function EventRegistrations({ eventId }) {
         <div className="mb-8 flex justify-between items-center">
           <Link
             href="/dashboard"
-            className="inline-flex items-center text-gray-300 hover:text-white transition-colors duration-200 group"
+            className="fc-muted inline-flex items-center hover:text-white transition-colors duration-200 group"
           >
             <FiArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
             Back to Dashboard
@@ -154,7 +151,7 @@ export default function EventRegistrations({ eventId }) {
           <h1 className="text-4xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-white">
             {event?.title}
           </h1>
-          <div className="flex items-center text-gray-300">
+          <div className="flex items-center fc-body text-lg">
             <FiCalendar className="w-5 h-5 mr-3 text-primary" />
             <span className="text-lg">
               {formatEventDate(event?.date)}
@@ -202,19 +199,19 @@ export default function EventRegistrations({ eventId }) {
 
                     {/* Contact Info */}
                     <div className="space-y-3">
-                      <div className="flex items-center text-gray-300">
+                      <div className="flex items-center fc-body text-lg">
                         <div className="w-8 h-8 bg-gray-800/50 rounded-full flex items-center justify-center mr-3">
                           <FiMail className="w-4 h-4 text-primary" />
                         </div>
-                        <span className="text-lg">{reg.userEmail}</span>
+                        <span>{reg.userEmail}</span>
                       </div>
 
                       {reg.ucid && (
-                        <div className="flex items-center text-gray-300">
+                        <div className="flex items-center fc-body text-lg">
                           <div className="w-8 h-8 bg-gray-800/50 rounded-full flex items-center justify-center mr-3">
                             <FiHash className="w-4 h-4 text-primary" />
                           </div>
-                          <span className="text-lg">UCID: {reg.ucid}</span>
+                          <span>UCID: {reg.ucid}</span>
                         </div>
                       )}
                     </div>
@@ -222,11 +219,11 @@ export default function EventRegistrations({ eventId }) {
                     {/* Comments */}
                     {reg.comments && (
                       <div className="mt-6 p-4 bg-gray-800/30 rounded-xl border border-gray-700/50">
-                        <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                        <div className="flex items-center gap-2 fc-muted mb-2">
                           <FiMessageSquare className="w-4 h-4 text-primary" />
                           Comments
                         </div>
-                        <p className="text-gray-300 leading-relaxed">
+                        <p className="fc-body">
                           {reg.comments}
                         </p>
                       </div>
@@ -235,11 +232,11 @@ export default function EventRegistrations({ eventId }) {
 
                   {/* Registration Date */}
                   <div className="ml-8 text-right">
-                    <div className="text-sm text-gray-400 mb-1">Registered</div>
+                    <div className="fc-muted mb-1">Registered</div>
                     <div className="text-lg font-medium text-white">
                       {formatDateShort(reg.registeredAt)}
                     </div>
-                    <div className="text-sm text-gray-500">
+                    <div className="fc-muted">
                       {new Date(reg.registeredAt).toLocaleTimeString("en-US", {
                         hour: "2-digit",
                         minute: "2-digit",
@@ -255,10 +252,10 @@ export default function EventRegistrations({ eventId }) {
                 <div className="w-16 h-16 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FiUser className="w-8 h-8 text-gray-500" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-400 mb-2">
+                <h3 className="text-xl font-semibold fc-muted mb-2">
                   No registrations yet
                 </h3>
-                <p className="text-gray-500">
+                <p className="fc-muted">
                   Registrations will appear here once people sign up for this
                   event.
                 </p>
@@ -281,7 +278,7 @@ export default function EventRegistrations({ eventId }) {
               </span>
               ?
             </p>
-            <div className="bg-gray-800/50 rounded-lg p-3 text-sm text-gray-400">
+            <div className="bg-gray-800/50 rounded-lg p-3 fc-muted">
               <div>
                 <strong>Email:</strong>{" "}
                 {event?.registrations?.[registrationToDelete]?.userEmail}

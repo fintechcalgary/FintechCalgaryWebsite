@@ -47,7 +47,7 @@ function PartnersPageContent() {
           <div className="min-h-[400px] sm:min-h-[500px] flex items-center justify-center">
             <div className="text-center px-4">
               <FiUsers className="mx-auto text-3xl sm:text-4xl text-primary mb-3 sm:mb-4" />
-              <p className="text-gray-400">
+              <p className="fc-body">
                 You don&apos;t have permission to view this page.
               </p>
             </div>
