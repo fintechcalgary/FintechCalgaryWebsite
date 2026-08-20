@@ -83,14 +83,27 @@ export default function Home() {
           />
 
           <div className="pointer-events-none absolute inset-0 z-[1] overflow-visible">
-            <Image
-              src="/globe.svg"
-              alt=""
-              width={900}
-              height={900}
-              priority
-              className="absolute left-1/2 top-[42%] min-h-[115vmin] min-w-[115vmin] -translate-x-1/2 -translate-y-1/2 opacity-[0.72] saturate-[1.05] contrast-[1.02] drop-shadow-[0_0_50px_rgba(139,92,246,0.2)] sm:opacity-[0.82] md:top-[44%] md:min-h-[132vmin] md:min-w-[132vmin] md:opacity-[0.92] lg:top-[51%] lg:min-h-[135vmin] lg:min-w-[135vmin] xl:top-[57%] xl:min-h-[138vmin] xl:min-w-[138vmin] 2xl:top-[60%] 2xl:min-h-[141vmin] 2xl:min-w-[141vmin]"
-            />
+            {/* CSS mask (Safari-safe); filters stay on the wrapper so -webkit-mask works. */}
+            <div className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 saturate-[1.05] contrast-[1.02] drop-shadow-[0_0_50px_rgba(139,92,246,0.2)] md:top-[44%] lg:top-[51%] xl:top-[57%] 2xl:top-[60%]">
+              <Image
+                src="/globe.svg"
+                alt=""
+                width={900}
+                height={900}
+                priority
+                className="min-h-[115vmin] min-w-[115vmin] opacity-[0.72] sm:opacity-[0.82] md:min-h-[132vmin] md:min-w-[132vmin] md:opacity-[0.92] lg:min-h-[135vmin] lg:min-w-[135vmin] xl:min-h-[138vmin] xl:min-w-[138vmin] 2xl:min-h-[141vmin] 2xl:min-w-[141vmin]"
+                style={{
+                  WebkitMaskImage:
+                    "linear-gradient(180deg, #000 42%, transparent 92%)",
+                  maskImage:
+                    "linear-gradient(180deg, #000 42%, transparent 92%)",
+                  WebkitMaskSize: "100% 100%",
+                  maskSize: "100% 100%",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                }}
+              />
+            </div>
           </div>
 
           <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">

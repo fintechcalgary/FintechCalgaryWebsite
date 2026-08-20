@@ -420,10 +420,17 @@ export default function SilkBackground() {
     let raf = 0;
     let running = true;
     let revealed = false;
+    let needsResize = true;
+    let lastFrame = 0;
     const start = performance.now();
+    // Cap pixel density + frame rate so the fullscreen shader stays affordable.
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const targetFps = reduceMotion ? 0 : 24;
+    const frameInterval = targetFps > 0 ? 1000 / targetFps : Infinity;
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Fixed 1× DPI — retina canvases burn a lot of VRAM for a soft backdrop.
+      const dpr = 1;
       const w = window.innerWidth;
       const h = window.innerHeight;
       const bw = Math.max(1, Math.floor(w * dpr));
@@ -435,10 +442,11 @@ export default function SilkBackground() {
         canvas.style.height = `${h}px`;
         gl.viewport(0, 0, bw, bh);
       }
+      needsResize = false;
     };
 
     const paint = (now) => {
-      resize();
+      if (needsResize) resize();
       const seconds = (now - start) / 1000;
       gl.uniform4f(
         uScene,
@@ -462,33 +470,57 @@ export default function SilkBackground() {
 
     const draw = (now) => {
       if (!running) return;
-      paint(now);
-      revealAfterPresent();
-      raf = requestAnimationFrame(draw);
-    };
-
-    const onVisibility = () => {
-      if (document.hidden) {
-        running = false;
-        cancelAnimationFrame(raf);
-      } else {
-        running = true;
+      if (now - lastFrame >= frameInterval) {
+        lastFrame = now;
+        paint(now);
+        revealAfterPresent();
+      }
+      if (running && targetFps > 0) {
         raf = requestAnimationFrame(draw);
       }
     };
 
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+      raf = 0;
+    };
+
+    const startLoop = () => {
+      if (running && raf) return;
+      running = true;
+      lastFrame = 0;
+      raf = requestAnimationFrame(draw);
+    };
+
+    const onVisibility = () => {
+      if (document.hidden) stop();
+      else if (targetFps > 0) startLoop();
+    };
+
+    const onResize = () => {
+      needsResize = true;
+      // Paint once on resize even when reduced-motion (static frame).
+      if (!running || targetFps === 0) {
+        resize();
+        paint(performance.now());
+      }
+    };
+
     // First paint before the browser commits this layout pass.
+    resize();
     paint(performance.now());
     revealAfterPresent();
-    raf = requestAnimationFrame(draw);
-    window.addEventListener("resize", resize);
+    if (targetFps > 0) {
+      raf = requestAnimationFrame(draw);
+    }
+    window.addEventListener("resize", onResize, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
-      running = false;
+      stop();
       window.clearTimeout(failOpen);
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
       gl.deleteBuffer(buffer);
       gl.deleteProgram(program);
