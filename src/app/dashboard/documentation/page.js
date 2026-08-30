@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { FiArrowLeft, FiDownload, FiFile, FiPlus, FiTrash2, FiUpload } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiDownload,
+  FiFile,
+  FiPlus,
+  FiTrash2,
+  FiUpload,
+} from "react-icons/fi";
 import PortalModal from "@/components/ui/Modal/ContentModal";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import useRoleAccess from "@/hooks/useRoleAccess";
@@ -11,10 +18,16 @@ import { API_ENDPOINTS, FILE_TYPES } from "@/lib/constants";
 import { PERMISSIONS } from "@/lib/permissions";
 
 export default function DocumentationPage() {
-  const { loading: authLoading, canAccess, canManageFinance } = useRoleAccess(
-    PERMISSIONS.DOCUMENTATION,
-  );
-  const { data: documents, loading, refetch } = useRoleResource(
+  const {
+    loading: authLoading,
+    canAccess,
+    canManageFinance,
+  } = useRoleAccess(PERMISSIONS.DOCUMENTATION);
+  const {
+    data: documents,
+    loading,
+    refetch,
+  } = useRoleResource(
     API_ENDPOINTS.DOCUMENTATION_FINANCE,
     PERMISSIONS.DOCUMENTATION,
   );
@@ -229,7 +242,9 @@ export default function DocumentationPage() {
             </label>
             <input
               type="file"
-              accept={FILE_TYPES.FINANCE.EXTENSIONS.map((e) => `.${e}`).join(",")}
+              accept={FILE_TYPES.FINANCE.EXTENSIONS.map((e) => `.${e}`).join(
+                ",",
+              )}
               onChange={(e) => setFile(e.target.files?.[0] || null)}
               className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary/20 file:text-primary"
               required
