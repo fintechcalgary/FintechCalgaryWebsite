@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FiArrowLeft, FiPlus, FiUser } from "react-icons/fi";
-import Navbar from "@/components/layout/AdminNavbar";
 import PortalModal from "@/components/ui/Modal/ContentModal";
 import useRoleAccess from "@/hooks/useRoleAccess";
 import useRoleResource from "@/hooks/useRoleResource";
@@ -24,7 +23,6 @@ export default function UsersPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
-    email: "",
     password: "",
     role: USER_ROLES.OUTREACH,
   });
@@ -52,7 +50,6 @@ export default function UsersPage() {
       setShowCreateModal(false);
       setFormData({
         username: "",
-        email: "",
         password: "",
         role: USER_ROLES.OUTREACH,
       });
@@ -81,7 +78,6 @@ export default function UsersPage() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen">
-        <Navbar />
         <div className="min-h-screen flex items-center justify-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary" />
         </div>
@@ -92,7 +88,6 @@ export default function UsersPage() {
   if (!canAccess) {
     return (
       <div className="min-h-screen">
-        <Navbar />
         <div className="container mx-auto px-6 py-8 text-center text-gray-400">
           Admin access required to manage users.
         </div>
@@ -102,7 +97,6 @@ export default function UsersPage() {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
       <main className="container mx-auto px-6 py-8 max-w-7xl">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
           <div className="space-y-2">
@@ -141,7 +135,9 @@ export default function UsersPage() {
                 </div>
                 <div>
                   <p className="text-white font-medium">{user.username}</p>
-                  <p className="text-sm text-gray-400">{user.email}</p>
+                  <p className="text-sm text-gray-400">
+                    {STAFF_ROLE_LABELS[user.role] || user.role}
+                  </p>
                 </div>
               </div>
               <select
@@ -176,20 +172,6 @@ export default function UsersPage() {
               value={formData.username}
               onChange={(e) =>
                 setFormData({ ...formData, username: e.target.value })
-              }
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
               }
               className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white"
               required

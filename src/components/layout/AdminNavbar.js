@@ -1,25 +1,18 @@
 "use client";
-import { useSession } from "next-auth/react";
+
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FiMenu, FiX } from "react-icons/fi";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import useConfirmLogout from "@/hooks/useConfirmLogout";
-import { getDashboardNavItems } from "@/lib/permissions";
 
 export default function Navbar() {
-  const { data: session } = useSession();
-  const role = session?.user?.role;
-  const navItems = getDashboardNavItems(role);
-
   const {
     isOpen: showLogoutModal,
     ask: handleLogoutClick,
     close: closeLogoutModal,
     confirm: handleLogout,
   } = useConfirmLogout();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -46,73 +39,45 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        className={`sticky top-0 z-50 transition-all duration-300 pt-2`}
+        className="sticky top-0 z-50 transition-all duration-300 pt-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
         <div className="container mx-auto px-4 max-w-7xl mt-4">
-          <div className="hidden md:flex items-center justify-between transition-all duration-300">
+          <div className="flex items-center justify-between gap-4 transition-all duration-300">
             <motion.div
-              className="flex items-center gap-3"
-              animate={{
-                scale: isScrolled ? 0.9 : 1,
-              }}
+              animate={{ scale: isScrolled ? 0.9 : 1 }}
               transition={{ duration: 0.3 }}
             >
               <Link
                 href="/"
-                className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+                className="flex items-center hover:opacity-90 transition-opacity"
+                title="Back to FinTech Calgary"
               >
                 <motion.img
                   src="/logo.svg"
                   alt="FinTech Calgary"
-                  className="w-16 h-16"
-                  whileHover={{ scale: 1.1 }}
+                  className={`transition-all duration-300 ${
+                    isScrolled ? "w-12 h-12 md:w-14 md:h-14" : "w-14 h-14"
+                  }`}
+                  whileHover={{ scale: 1.05 }}
                 />
               </Link>
             </motion.div>
 
             <motion.div
-              className="flex items-center justify-center flex-[2]"
-              animate={{
-                scale: isScrolled ? 0.95 : 1,
-              }}
+              animate={{ scale: isScrolled ? 0.9 : 1 }}
               transition={{ duration: 0.3 }}
-            >
-              <div
-                className={`flex items-center gap-8 py-3 px-8 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-700/30 ${
-                  isScrolled ? "bg-gray-800/50" : "bg-gray-800/70"
-                }`}
-              >
-                {navItems.map(({ label, href }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    className="tracking-wide text-white/55 text-base font-medium hover:text-primary transition-all relative group"
-                  >
-                    {label}
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-300 transition-all group-hover:w-full" />
-                  </Link>
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              animate={{
-                scale: isScrolled ? 0.9 : 1,
-              }}
-              transition={{ duration: 0.3 }}
-              className="flex justify-end"
             >
               <button
                 onClick={handleLogoutClick}
-                className="px-7 py-2.5 rounded-xl overflow-hidden bg-white/10 backdrop-blur-sm border border-white/10 text-white font-medium transition-all hover:bg-white/15 hover:scale-[1.02] whitespace-nowrap cursor-pointer"
+                className="relative px-5 py-2.5 md:px-6 rounded-xl overflow-hidden bg-white/10 backdrop-blur-sm border border-white/10 text-white text-sm md:text-base font-medium transition-all hover:bg-white/15 hover:scale-[1.02] whitespace-nowrap cursor-pointer"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   <span>Log Out</span>
                   <svg
-                    className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+                    className="w-4 h-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -125,70 +90,9 @@ export default function Navbar() {
                     />
                   </svg>
                 </span>
-                <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
             </motion.div>
           </div>
-
-          <div
-            className={`flex md:hidden justify-between items-center h-16 ${
-              isScrolled ? "py-2" : "py-4"
-            }`}
-          >
-            <Link href="/dashboard">
-              <motion.img
-                src="/logo.svg"
-                alt="FinTech Calgary"
-                className={`transition-all duration-300 ${
-                  isScrolled ? "w-12 h-12" : "w-14 h-14"
-                }`}
-                whileHover={{ scale: 1.1 }}
-              />
-            </Link>
-            <motion.button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`text-white text-3xl focus:outline-none p-2 rounded-xl ${
-                isScrolled
-                  ? "bg-gray-800/50 hover:bg-gray-800/70"
-                  : "hover:bg-gray-800/50"
-              }`}
-              whileTap={{ scale: 0.95 }}
-            >
-              {isMenuOpen ? <FiX /> : <FiMenu />}
-            </motion.button>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{
-              opacity: isMenuOpen ? 1 : 0,
-              height: isMenuOpen ? "auto" : 0,
-            }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden"
-          >
-            <div className="bg-gray-800/90 p-4 rounded-lg mt-2 backdrop-blur-sm border border-gray-700/30">
-              {navItems.map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block tracking-wide text-white/55 text-base font-medium mb-3 hover:text-primary"
-                >
-                  {label}
-                </Link>
-              ))}
-              <button
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  handleLogoutClick();
-                }}
-                className="block text-white text-base font-medium mb-3 hover:text-red-400"
-              >
-                Log Out
-              </button>
-            </div>
-          </motion.div>
         </div>
       </motion.nav>
 

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
-    "seed-admin": "node src/scripts/seed-admin.js",
+    "seed-admin": "node src/scripts/seed-staff-roles.js",
     "seed-staff-roles": "node src/scripts/seed-staff-roles.js",
     "seed-partners": "node src/scripts/seed-partners.js",
     "upload-partner-logos": "node src/scripts/upload-partner-logos.js",

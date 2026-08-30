@@ -20,7 +20,6 @@ import {
   FiX,
 } from "react-icons/fi";
 import Link from "next/link";
-import Navbar from "@/components/layout/AdminNavbar";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import PortalModal from "@/components/ui/Modal/ContentModal";
 import ContractPipeline from "@/components/ContractPipeline";
@@ -353,7 +352,6 @@ export default function ContractsPage() {
   if (status === "loading" || loading || authLoading) {
     return (
       <div className="min-h-screen">
-        <Navbar />
         <div className="min-h-screen flex items-center justify-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
         </div>
@@ -364,7 +362,6 @@ export default function ContractsPage() {
   if (status !== "authenticated" || !canAccess) {
     return (
       <div className="min-h-screen">
-        <Navbar />
         <div className="container mx-auto px-6 py-8">
           <div className="min-h-[500px] flex items-center justify-center">
             <div className="text-center">
@@ -391,7 +388,6 @@ export default function ContractsPage() {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
       <main className="container mx-auto px-6 py-8 max-w-7xl">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">

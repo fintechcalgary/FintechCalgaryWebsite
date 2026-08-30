@@ -11,7 +11,6 @@ function serializeUser(user) {
   return {
     _id: user._id.toString(),
     username: user.username,
-    email: user.email,
     role: user.role,
     roleLabel: STAFF_ROLE_LABELS[user.role] || user.role,
     createdAt: user.createdAt,
@@ -38,18 +37,14 @@ export const POST = withErrorHandler(async (req) => {
   if (error) return error;
 
   const body = await req.json();
-  const { username, email, password, role } = body;
+  const { username, password, role } = body;
 
   const requiredError = validators.requiredFields(body, [
     "username",
-    "email",
     "password",
     "role",
   ]);
   if (requiredError) return apiResponse.badRequest(requiredError);
-
-  const emailError = validators.email(email);
-  if (emailError) return apiResponse.badRequest(emailError);
 
   const passwordError = validators.password(password);
   if (passwordError) return apiResponse.badRequest(passwordError);
@@ -64,16 +59,13 @@ export const POST = withErrorHandler(async (req) => {
   }
 
   const db = await connectToDatabase();
-  const existing = await db.collection("users").findOne({
-    $or: [{ username }, { email }],
-  });
+  const existing = await db.collection("users").findOne({ username });
   if (existing) {
-    return apiResponse.badRequest("Username or email already exists");
+    return apiResponse.badRequest("Username already exists");
   }
 
   const result = await db.collection("users").insertOne({
     username,
-    email,
     password: bcrypt.hashSync(password, 10),
     role,
     createdAt: new Date(),

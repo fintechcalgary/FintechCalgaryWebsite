@@ -4,7 +4,6 @@ import { Suspense, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FiUsers } from "react-icons/fi";
-import Navbar from "@/components/layout/AdminNavbar";
 import { LoadingState } from "@/components/ui/Spinner";
 import useDocumentTitle from "@/hooks/useDocumentTitle";
 import PartnersPageHeader from "@/features/partners/admin/PartnersPageHeader";
@@ -36,7 +35,6 @@ function PartnersPageContent() {
   if (status === "loading") {
     return (
       <div className="min-h-screen">
-        <Navbar />
         <LoadingState fullScreen />
       </div>
     );
@@ -45,7 +43,6 @@ function PartnersPageContent() {
   if (status !== "authenticated" || !canAccessPartners) {
     return (
       <div className="min-h-screen">
-        <Navbar />
         <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
           <div className="min-h-[400px] sm:min-h-[500px] flex items-center justify-center">
             <div className="text-center px-4">
@@ -62,7 +59,6 @@ function PartnersPageContent() {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl">
         <PartnersPageHeader />
         <PartnersTabNav
@@ -88,7 +84,6 @@ export default function PartnersPage() {
     <Suspense
       fallback={
         <div className="min-h-screen">
-          <Navbar />
           <LoadingState fullScreen />
         </div>
       }

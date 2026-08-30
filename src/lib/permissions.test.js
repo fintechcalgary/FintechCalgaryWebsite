@@ -199,6 +199,8 @@ describe("permissions", () => {
   describe("navigation helpers", () => {
     it("returns contracts nav item for outreach", () => {
       const items = getDashboardNavItems(USER_ROLES.OUTREACH);
+      expect(items.some((i) => i.href === "/")).toBe(true);
+      expect(items.some((i) => i.href === "/dashboard")).toBe(true);
       expect(items.some((i) => i.href === "/dashboard/contracts")).toBe(true);
       expect(items.some((i) => i.href === "/dashboard/partners")).toBe(false);
     });

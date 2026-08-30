@@ -38,7 +38,6 @@ export const authOptions = {
           if (passwordMatch) {
             return {
               id: user._id.toString(),
-              email: user.email,
               username: user.username,
               role: user.role,
             };
@@ -60,7 +59,6 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.email = user.email;
         token.username = user.username;
         token.role = user.role;
         token.id = user.id;
@@ -70,7 +68,6 @@ export const authOptions = {
     async session({ session, token }) {
       if (token) {
         session.user = {
-          email: token.email,
           username: token.username,
           role: token.role,
           id: token.id,

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FiArrowLeft, FiDownload, FiFile, FiPlus, FiTrash2, FiUpload } from "react-icons/fi";
-import Navbar from "@/components/layout/AdminNavbar";
 import PortalModal from "@/components/ui/Modal/ContentModal";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import useRoleAccess from "@/hooks/useRoleAccess";
@@ -87,7 +86,6 @@ export default function DocumentationPage() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen">
-        <Navbar />
         <div className="min-h-screen flex items-center justify-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary" />
         </div>
@@ -98,7 +96,6 @@ export default function DocumentationPage() {
   if (!canAccess) {
     return (
       <div className="min-h-screen">
-        <Navbar />
         <div className="container mx-auto px-6 py-8 text-center text-gray-400">
           You don&apos;t have permission to view documentation.
         </div>
@@ -108,7 +105,6 @@ export default function DocumentationPage() {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
       <main className="container mx-auto px-6 py-8 max-w-7xl">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
           <div className="space-y-2">

@@ -156,9 +156,14 @@ export function canAccessApiRoute(role, pathname, method = "GET") {
 }
 
 export function getDashboardNavItems(role) {
-  if (!isStaffRole(role)) return [];
+  const baseline = [
+    { label: "Home", href: "/" },
+    { label: "Dashboard", href: "/dashboard" },
+  ];
 
-  const items = [];
+  if (!isStaffRole(role)) return baseline;
+
+  const items = [...baseline];
 
   if (hasPermission(role, PERMISSIONS.EVENTS)) {
     items.push({ label: "Events", href: "/dashboard#events" });

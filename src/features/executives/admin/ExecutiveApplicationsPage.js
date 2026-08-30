@@ -3,7 +3,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Navbar from "@/components/layout/AdminNavbar";
 import Link from "next/link";
 import {
   FiTrash2,
@@ -630,7 +629,6 @@ export default function ExecutiveApplicationsPage() {
   if (status === "loading" || loading) {
     return (
       <div className="min-h-screen">
-        <Navbar />
         <div className="min-h-screen flex items-center justify-center">
           <LoadingState size="lg" />
         </div>
@@ -644,7 +642,6 @@ export default function ExecutiveApplicationsPage() {
 
   return (
     <div className="min-h-screen relative">
-      <Navbar />
       <main className="container mx-auto px-6 py-8 max-w-7xl relative animate-fadeIn">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">

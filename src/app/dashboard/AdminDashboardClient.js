@@ -8,7 +8,6 @@ import {
   faClock,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
-import Navbar from "@/components/layout/AdminNavbar";
 import Events from "@/features/events/Events";
 import { useEffect } from "react";
 import Executives from "@/features/executives/Executives";
@@ -63,7 +62,7 @@ export default function AdminDashboardClient() {
         ></div>
       </div>
 
-      <Navbar />
+
       <main className="container mx-auto px-6 py-8 max-w-7xl relative animate-fadeIn">
         <div
           className="mb-6 p-4 rounded-xl border border-gray-700/30 bg-gray-900/60 backdrop-blur-xl
@@ -89,8 +88,8 @@ export default function AdminDashboardClient() {
                 <h1 className="fc-title text-4xl sm:text-5xl font-bold tracking-tight">
                   Welcome back
                   <span className="bg-gradient-to-r from-primary to-violet-400/75 bg-clip-text text-transparent">
-                    {session?.user?.email?.split("@")[0]
-                      ? ` ${session.user.email.split("@")[0]}`
+                    {session?.user?.username
+                      ? ` ${session.user.username}`
                       : ""}
                   </span>
                 </h1>
