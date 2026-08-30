@@ -115,16 +115,12 @@ function InsightsPageContent() {
     shouldRetryOnError: false,
   });
 
-  const { data: refreshData } = useSWR(
-    "/api/articles/refresh",
-    fetcher,
-    {
-      refreshInterval: 15 * 60 * 1000,
-      revalidateOnFocus: false,
-      dedupingInterval: 10000,
-      shouldRetryOnError: false,
-    },
-  );
+  const { data: refreshData } = useSWR("/api/articles/refresh", fetcher, {
+    refreshInterval: 15 * 60 * 1000,
+    revalidateOnFocus: false,
+    dedupingInterval: 10000,
+    shouldRetryOnError: false,
+  });
 
   const [topStories, setTopStories] = useState([]);
   const [trendingTopics, setTrendingTopics] = useState([]);
@@ -492,9 +488,7 @@ function InsightsPageContent() {
                       </div>
                     ) : (
                       <div className="py-8 text-center">
-                        <p className="fc-muted">
-                          No top stories available yet
-                        </p>
+                        <p className="fc-muted">No top stories available yet</p>
                         <p className="mt-2 fc-muted">
                           Check back soon for the latest FinTech news
                         </p>
@@ -576,9 +570,7 @@ function InsightsPageContent() {
                         ))}
                       </div>
                     ) : (
-                      <p className="fc-muted">
-                        No trending topics yet
-                      </p>
+                      <p className="fc-muted">No trending topics yet</p>
                     )}
                   </div>
                 </GlowCard>
@@ -601,19 +593,25 @@ function InsightsPageContent() {
                   <div className="relative z-10 space-y-3">
                     <OverviewSentimentBar
                       label="Positive"
-                      value={sentimentData.total > 0 ? sentimentData.positive : 0}
+                      value={
+                        sentimentData.total > 0 ? sentimentData.positive : 0
+                      }
                       total={sentimentData.total > 0 ? sentimentData.total : 1}
                       color="green"
                     />
                     <OverviewSentimentBar
                       label="Neutral"
-                      value={sentimentData.total > 0 ? sentimentData.neutral : 0}
+                      value={
+                        sentimentData.total > 0 ? sentimentData.neutral : 0
+                      }
                       total={sentimentData.total > 0 ? sentimentData.total : 1}
                       color="gray"
                     />
                     <OverviewSentimentBar
                       label="Negative"
-                      value={sentimentData.total > 0 ? sentimentData.negative : 0}
+                      value={
+                        sentimentData.total > 0 ? sentimentData.negative : 0
+                      }
                       total={sentimentData.total > 0 ? sentimentData.total : 1}
                       color="red"
                     />

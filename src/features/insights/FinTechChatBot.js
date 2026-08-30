@@ -347,10 +347,10 @@ export default function FinTechChatBot({ articles = [] }) {
             setIsOpen(true);
             setContextIsOpen(true);
           }}
-          className="fixed bottom-4 right-4 z-[60] flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-white/20 bg-gradient-to-br from-primary to-purple-500/80 text-white shadow-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-primary/20 sm:bottom-8 sm:right-8 sm:h-16 sm:w-16"
+          className="fixed bottom-4 right-4 z-[60] flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border-2 border-white/20 bg-gradient-to-br from-primary to-purple-500/80 text-white backdrop-blur-sm transition-all duration-300 sm:bottom-8 sm:right-8 sm:h-16 sm:w-16"
           style={{
             boxShadow:
-              "0 20px 40px rgba(139, 92, 246, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)",
+              "inset 0 1px 0 rgba(255, 255, 255, 0.25), inset 0 -8px 20px rgba(88, 28, 135, 0.45), 0 4px 12px rgba(0, 0, 0, 0.35)",
           }}
         >
           <FiMessageCircle className="w-7 h-7 drop-shadow-lg" />
@@ -364,8 +364,10 @@ export default function FinTechChatBot({ articles = [] }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 12 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className={`fixed bottom-8 right-8 z-[60] flex flex-col overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-gray-900 via-gray-900 to-gray-950/95 shadow-2xl backdrop-blur-xl ${
-              isMinimized ? "h-20 w-80" : "h-[680px] w-[420px]"
+            className={`fixed bottom-4 left-4 right-4 z-[60] flex max-h-[calc(100dvh-1.5rem)] flex-col overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-gray-900 via-gray-900 to-gray-950/95 shadow-2xl backdrop-blur-xl sm:bottom-8 sm:left-auto sm:right-8 sm:max-h-[calc(100dvh-4rem)] ${
+              isMinimized
+                ? "h-20 w-auto sm:w-80"
+                : "h-[min(680px,calc(100dvh-1.5rem))] w-auto sm:h-[min(680px,calc(100dvh-4rem))] sm:w-[min(420px,calc(100vw-4rem))]"
             }`}
             style={{
               boxShadow:

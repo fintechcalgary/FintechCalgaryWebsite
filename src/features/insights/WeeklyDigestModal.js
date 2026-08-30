@@ -19,20 +19,32 @@ function getIssueNumber(weekStart) {
   if (!weekStart) return null;
   const origin = new Date("2024-09-02"); // FinTech Calgary season start
   const start = new Date(weekStart);
-  const weeks = Math.max(1, Math.round((start - origin) / (7 * 24 * 60 * 60 * 1000)) + 1);
+  const weeks = Math.max(
+    1,
+    Math.round((start - origin) / (7 * 24 * 60 * 60 * 1000)) + 1,
+  );
   return weeks;
 }
 
 function formatWeekRange(weekStart, weekEnd) {
   if (!weekStart) return null;
   const fmt = (d) =>
-    new Date(d).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
-  return weekEnd
-    ? `${fmt(weekStart)} – ${fmt(weekEnd)}`
-    : fmt(weekStart);
+    new Date(d).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  return weekEnd ? `${fmt(weekStart)} – ${fmt(weekEnd)}` : fmt(weekStart);
 }
 
-export default function WeeklyDigestModal({ isOpen, onClose, articles = [], weekStart, weekEnd, stats = null }) {
+export default function WeeklyDigestModal({
+  isOpen,
+  onClose,
+  articles = [],
+  weekStart,
+  weekEnd,
+  stats = null,
+}) {
   const scrollRef = useRef(null);
   const { setIsOpen: setChatOpen } = useChatBot();
 
@@ -71,15 +83,21 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
 
   // MongoDB stats take priority; client-calculated as fallback
   const sentiment = stats?.sentiment || calculatedStats.sentiment;
-  const topics = (stats?.topics?.length ? stats.topics : calculatedStats.topics).slice(0, 6);
+  const topics = (
+    stats?.topics?.length ? stats.topics : calculatedStats.topics
+  ).slice(0, 6);
 
-  const sources = articles.length > 0
-    ? new Set(articles.map((a) => a.source).filter(Boolean)).size
-    : 0;
+  const sources =
+    articles.length > 0
+      ? new Set(articles.map((a) => a.source).filter(Boolean)).size
+      : 0;
 
   const formatDate = (d) => {
     if (!d) return "";
-    return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    return new Date(d).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
   };
 
   const handleOpenChat = () => {
@@ -144,8 +162,7 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
                 </div>
 
                 <h2 className="fc-title-lg mb-1.5">
-                  Weekly{" "}
-                  <span className="fc-title-accent">FinTech Digest</span>
+                  Weekly <span className="fc-title-accent">FinTech Digest</span>
                 </h2>
 
                 {weekRange && (
@@ -157,7 +174,10 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
 
                 <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
                   <span className="fc-muted flex items-center gap-1.5 text-xs">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
+                    <span
+                      className="h-1.5 w-1.5 rounded-full bg-primary"
+                      aria-hidden
+                    />
                     {articles.length} curated stories
                   </span>
                   <span className="fc-muted flex items-center gap-1.5 text-xs">
@@ -169,7 +189,10 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
                     AI-summarized
                   </span>
                   <span className="fc-muted flex items-center gap-1.5 text-xs">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/80" aria-hidden />
+                    <span
+                      className="h-1.5 w-1.5 rounded-full bg-emerald-400/80"
+                      aria-hidden
+                    />
                     Refreshed every Friday
                   </span>
                 </div>
@@ -270,7 +293,9 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
                             }`}
                           >
                             {topic}
-                            <span className="ml-1 text-[10px] opacity-60">{count}</span>
+                            <span className="ml-1 text-[10px] opacity-60">
+                              {count}
+                            </span>
                           </span>
                         ))}
                       </div>
@@ -283,7 +308,8 @@ export default function WeeklyDigestModal({ isOpen, onClose, articles = [], week
                       <span className="fc-title text-sm">Ask the Digest</span>
                     </div>
                     <p className="fc-muted mb-3 text-xs leading-relaxed">
-                      Chat with AI about this week&apos;s stories — ask questions, get deeper analysis.
+                      Chat with AI about this week&apos;s stories — ask
+                      questions, get deeper analysis.
                     </p>
                     <button
                       type="button"
@@ -360,7 +386,9 @@ function DigestArticleRow({ article, rank, formatDate }) {
         </a>
 
         {hasSummary ? (
-          <p className="fc-body line-clamp-2 !text-xs">{truncate(article.summary, 160)}</p>
+          <p className="fc-body line-clamp-2 !text-xs">
+            {truncate(article.summary, 160)}
+          </p>
         ) : (
           <p className="fc-muted text-xs italic">No summary available yet.</p>
         )}
