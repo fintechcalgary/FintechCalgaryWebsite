@@ -1,15 +1,20 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { signIn, getSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
+import { useSession, signIn } from "next-auth/react";
 import Image from "next/image";
 import { FiArrowLeft } from "react-icons/fi";
 import Link from "next/link";
+import { STAFF_ROLES } from "@/lib/permissions";
+
+function destinationForRole(role) {
+  if (role === "associate") return "/partner-dashboard";
+  if (STAFF_ROLES.includes(role)) return "/dashboard";
+  return null;
+}
 
 export default function Login() {
-  const { data: session, status } = useSession(); // Check session status
-  const router = useRouter();
+  const { data: session, status } = useSession();
+  const redirectedRef = useRef(false);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -18,24 +23,19 @@ export default function Login() {
 
   useEffect(() => {
     document.title = "Login | FinTech Calgary";
+    if (new URLSearchParams(window.location.search).get("error")) {
+      setError("Invalid username or password");
+    }
   }, []);
 
-  const redirectForRole = (userRole) => {
-    if (userRole === "associate") {
-      router.push("/partner-dashboard");
-    } else if (
-      ["admin", "outreach", "finance", "events", "marketing"].includes(userRole)
-    ) {
-      router.push("/dashboard");
-    }
-  };
-
-  // Redirect to /dashboard if already logged in
+  // Already signed in — one replace to the right dashboard (no client polling).
   useEffect(() => {
-    if (status === "authenticated") {
-      redirectForRole(session?.user?.role);
-    }
-  }, [status, router, session]);
+    if (status !== "authenticated" || redirectedRef.current) return;
+    const destination = destinationForRole(session?.user?.role);
+    if (!destination) return;
+    redirectedRef.current = true;
+    window.location.replace(destination);
+  }, [status, session?.user?.role]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -43,29 +43,15 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const result = await signIn("credentials", {
+      // Default redirect: true — NextAuth sets the cookie and navigates in one
+      // response, which avoids the Safari soft-nav / getSession race.
+      await signIn("credentials", {
         username,
         password,
-        redirect: false,
+        callbackUrl: "/auth/continue",
       });
-
-      if (result?.error) {
-        setError("Invalid username or password");
-      } else if (result?.ok) {
-        const updatedSession = await getSession(); // get the updated session
-        const role = updatedSession?.user?.role;
-
-        if (role === "associate") {
-          router.push("/partner-dashboard");
-        } else if (
-          ["admin", "outreach", "finance", "events", "marketing"].includes(role)
-        ) {
-          router.push("/dashboard");
-        }
-      }
     } catch {
       setError("An error occurred. Please try again.");
-    } finally {
       setIsLoading(false);
     }
   };

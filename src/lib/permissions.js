@@ -68,7 +68,11 @@ export const API_ROUTE_PERMISSIONS = [
     permission: PERMISSIONS.PARTNERS,
   },
   { prefix: "/api/members", permission: PERMISSIONS.MEMBERS },
-  { prefix: "/api/executives", permission: PERMISSIONS.EXECUTIVES },
+  {
+    prefix: "/api/executives",
+    permission: PERMISSIONS.EXECUTIVES,
+    publicGet: true,
+  },
   {
     prefix: "/api/executive-roles",
     permission: PERMISSIONS.EXECUTIVE_APPLICATIONS,

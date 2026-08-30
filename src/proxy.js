@@ -61,6 +61,11 @@ function isProtectedApiRoute(pathname, method) {
 }
 
 function checkApiAccess(token, pathname, method) {
+  // publicGet routes (events, partners, settings, …) are intentionally open
+  if (canAccessApiRoute(token?.role ?? null, pathname, method)) {
+    return null;
+  }
+
   if (!token) {
     return NextResponse.json(
       { error: "Authentication required" },
@@ -68,11 +73,7 @@ function checkApiAccess(token, pathname, method) {
     );
   }
 
-  if (!canAccessApiRoute(token.role, pathname, method)) {
-    return NextResponse.json({ error: "Access denied" }, { status: 403 });
-  }
-
-  return null;
+  return NextResponse.json({ error: "Access denied" }, { status: 403 });
 }
 
 function checkDashboardAccess(token, pathname) {
@@ -126,20 +127,11 @@ export default withAuth(
   {
     callbacks: {
       authorized: ({ token, req }) => {
-        const { pathname, method } = req.nextUrl;
-
-        if (isPublicPostEndpoint(pathname, method)) {
-          return true;
-        }
-
-        if (pathname.startsWith("/dashboard")) {
+        // Only gate the dashboard here. API auth is enforced in the handler
+        // with JSON 401/403 — returning false would HTML-redirect to sign-in.
+        if (req.nextUrl.pathname.startsWith("/dashboard")) {
           return !!token;
         }
-
-        if (isProtectedApiRoute(pathname, method)) {
-          return !!token;
-        }
-
         return true;
       },
     },

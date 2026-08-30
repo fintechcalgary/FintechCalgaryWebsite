@@ -25,9 +25,10 @@ function PartnerCard({ partner }) {
             alt={partner.name}
             width={180}
             height={90}
-            loading="lazy"
+            // Safari skips native lazy-load for imgs inside CSS-transformed marquees
+            loading="eager"
             sizes="180px"
-            className="max-h-28 object-contain"
+            className="h-auto max-h-28 w-auto max-w-full object-contain"
           />
         ) : (
           <span

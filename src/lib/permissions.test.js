@@ -142,6 +142,21 @@ describe("permissions", () => {
       expect(canAccessApiRoute(null, "/api/events", "GET")).toBe(true);
     });
 
+    it("allows public GET on partners, settings, and executives", () => {
+      expect(canAccessApiRoute(null, "/api/partners", "GET")).toBe(true);
+      expect(canAccessApiRoute(null, "/api/settings", "GET")).toBe(true);
+      expect(canAccessApiRoute(null, "/api/executives", "GET")).toBe(true);
+    });
+
+    it("requires partners permission for partner mutations", () => {
+      expect(
+        canAccessApiRoute(USER_ROLES.MARKETING, "/api/partners", "POST"),
+      ).toBe(true);
+      expect(
+        canAccessApiRoute(USER_ROLES.OUTREACH, "/api/partners", "POST"),
+      ).toBe(false);
+    });
+
     it("requires events permission for event mutations", () => {
       expect(
         canAccessApiRoute(USER_ROLES.EVENTS, "/api/events", "POST"),
