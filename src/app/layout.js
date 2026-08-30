@@ -77,6 +77,17 @@ export const metadata = {
     index: true,
     follow: true,
   },
+  appleWebApp: {
+    statusBarStyle: "black-translucent",
+  },
+};
+
+/* iOS Safari paints the status-bar / notch chrome from theme-color, not the
+   fixed silk canvas — match the dark navy of the silk so the top edge blends. */
+export const viewport = {
+  themeColor: "#030738",
+  colorScheme: "dark",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }) {

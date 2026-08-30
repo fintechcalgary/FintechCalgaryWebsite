@@ -105,7 +105,8 @@
 }
 
 :root {
-  --background: #02010a;
+  /* Silk navy (matches shader + theme-color) so status-bar / overscroll edges blend */
+  --background: #030738;
   --foreground: #ededed;
   font-size: 90%;
 }
@@ -113,6 +114,9 @@
 html {
   overscroll-behavior: none;
   background: var(--background);
+  /* Let content / fixed layers paint under the iOS status bar */
+  min-height: 100%;
+  min-height: 100dvh;
 }
 
 body {
@@ -122,6 +126,8 @@ body {
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100%;
+  min-height: 100dvh;
 }
 
 /* Hold UI until Silk's first WebGL frame is presented (see SilkBackground). */
