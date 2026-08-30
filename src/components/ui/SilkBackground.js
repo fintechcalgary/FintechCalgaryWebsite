@@ -424,7 +424,9 @@ export default function SilkBackground() {
     let lastFrame = 0;
     const start = performance.now();
     // Cap pixel density + frame rate so the fullscreen shader stays affordable.
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     const targetFps = reduceMotion ? 0 : 24;
     const frameInterval = targetFps > 0 ? 1000 / targetFps : Infinity;
 
@@ -448,13 +450,7 @@ export default function SilkBackground() {
     const paint = (now) => {
       if (needsResize) resize();
       const seconds = (now - start) / 1000;
-      gl.uniform4f(
-        uScene,
-        canvas.width,
-        canvas.height,
-        seconds * 0.76,
-        4.0,
-      );
+      gl.uniform4f(uScene, canvas.width, canvas.height, seconds * 0.76, 4.0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
@@ -534,10 +530,7 @@ export default function SilkBackground() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden opacity-[0.72]"
     >
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 h-full w-full"
-      />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
     </div>
   );
 }

@@ -20,15 +20,20 @@ export default function Login() {
     document.title = "Login | FinTech Calgary";
   }, []);
 
+  const redirectForRole = (userRole) => {
+    if (userRole === "associate") {
+      router.push("/partner-dashboard");
+    } else if (
+      ["admin", "outreach", "finance", "events", "marketing"].includes(userRole)
+    ) {
+      router.push("/dashboard");
+    }
+  };
+
   // Redirect to /dashboard if already logged in
   useEffect(() => {
     if (status === "authenticated") {
-      const role = session?.user?.role;
-      if (role === "associate") {
-        router.push("/partner-dashboard");
-      } else if (role === "member" || role === "admin") {
-        router.push("/dashboard");
-      }
+      redirectForRole(session?.user?.role);
     }
   }, [status, router, session]);
 
@@ -52,7 +57,9 @@ export default function Login() {
 
         if (role === "associate") {
           router.push("/partner-dashboard");
-        } else if (role === "member" || role === "admin") {
+        } else if (
+          ["admin", "outreach", "finance", "events", "marketing"].includes(role)
+        ) {
           router.push("/dashboard");
         }
       }

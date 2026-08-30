@@ -1,13 +1,14 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { createEvent } from "@/lib/models/event";
-import { apiResponse, requireAuth, validators, withErrorHandler } from "@/lib/api-helpers";
+import { apiResponse, requirePermission, validators, withErrorHandler } from "@/lib/api-helpers";
 import logger from "@/lib/logger";
+import { PERMISSIONS } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const POST = withErrorHandler(async (req) => {
-  const { session, error } = await requireAuth();
+  const { session, error } = await requirePermission(PERMISSIONS.EVENTS);
   if (error) return error;
 
   const db = await connectToDatabase();

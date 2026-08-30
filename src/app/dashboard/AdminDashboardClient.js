@@ -15,16 +15,19 @@ import Executives from "@/features/executives/Executives";
 import AdminCard from "@/features/dashboard/AdminCard";
 import { LoadingState } from "@/components/ui/Spinner";
 import { GlowCard } from "@/components/ui/spotlight-card";
+import { getAdminPanelCards, hasPermission, isStaffRole } from "@/lib/permissions";
+import { PERMISSIONS } from "@/lib/permissions";
 
 export default function AdminDashboardClient() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const role = session?.user?.role;
 
   useEffect(() => {
-    if (status === "unauthenticated" || session?.user?.role !== "admin") {
+    if (status === "unauthenticated" || (status === "authenticated" && !isStaffRole(role))) {
       router.push("/login");
     }
-  }, [status, router, session]);
+  }, [status, router, role]);
 
   useEffect(() => {
     document.title = "Dashboard | FinTech Calgary";
@@ -38,13 +41,16 @@ export default function AdminDashboardClient() {
     );
   }
 
-  if (status !== "authenticated") {
+  if (status !== "authenticated" || !isStaffRole(role)) {
     return null;
   }
 
+  const panelCards = getAdminPanelCards(role);
+  const showEvents = hasPermission(role, PERMISSIONS.EVENTS);
+  const showExecutives = hasPermission(role, PERMISSIONS.EXECUTIVES);
+
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
         <div
@@ -59,7 +65,6 @@ export default function AdminDashboardClient() {
 
       <Navbar />
       <main className="container mx-auto px-6 py-8 max-w-7xl relative animate-fadeIn">
-        {/* Browser recommendation message */}
         <div
           className="mb-6 p-4 rounded-xl border border-gray-700/30 bg-gray-900/60 backdrop-blur-xl
             flex items-center gap-3 text-sm fc-body max-w-fit animate-fadeIn hover:bg-gray-800/60 transition-all duration-300"
@@ -74,13 +79,8 @@ export default function AdminDashboardClient() {
           Best experience with Google Chrome
         </div>
 
-        {/* Welcome section */}
         <div className="relative mb-8 animate-fadeIn">
-          <GlowCard
-            customSize
-            glowColor="purple"
-            className="w-full !gap-0 !p-8"
-          >
+          <GlowCard customSize glowColor="purple" className="w-full !gap-0 !p-8">
             <div className="relative z-10 space-y-4">
               <div className="inline-block px-4 py-2 rounded-xl bg-primary/20 text-primary text-sm font-medium backdrop-blur-sm hover:scale-105 transition-transform border border-primary/30">
                 Your Workspace
@@ -102,10 +102,8 @@ export default function AdminDashboardClient() {
           </GlowCard>
         </div>
 
-        {/* Content grid */}
         <div className="grid grid-cols-1 gap-8">
-          {/* Admin Section - Only visible to admins */}
-          {session?.user?.role === "admin" && (
+          {panelCards.length > 0 && (
             <section className="group animate-fadeIn">
               <GlowCard
                 customSize
@@ -114,9 +112,7 @@ export default function AdminDashboardClient() {
               >
                 <div className="relative z-10 flex items-center justify-between mb-8">
                   <div className="space-y-2">
-                    <h2 className="fc-title-accent text-2xl">
-                      Admin Panel
-                    </h2>
+                    <h2 className="fc-title-accent text-2xl">Admin Panel</h2>
                     <p className="fc-body">
                       Manage system resources and user data
                     </p>
@@ -139,167 +135,100 @@ export default function AdminDashboardClient() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <AdminCard
-                    title="Contracts"
-                    description="Track contracts through the approvals pipeline, from outreach to execution"
-                    icon={(props) => (
-                      <svg
-                        {...props}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2zM9 8h2"
-                        />
-                      </svg>
-                    )}
-                    href="/dashboard/contracts"
-                    color="blue"
-                  />
-
-                  <AdminCard
-                    title="Partners"
-                    description="Manage the public partners list and review organization applications"
-                    icon={(props) => (
-                      <svg
-                        {...props}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h3M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                        />
-                      </svg>
-                    )}
-                    href="/dashboard/partners"
-                    color="purple"
-                  />
-
-                  <AdminCard
-                    title="Executive Applications"
-                    description="Review executive team applications, manage roles, and control application settings"
-                    icon={(props) => (
-                      <svg
-                        {...props}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        />
-                      </svg>
-                    )}
-                    href="/dashboard/executive-applications"
-                    color="pink"
-                  />
-
-                  <AdminCard
-                    title="Members"
-                    description="Manage general members, mailing lists, and export member data"
-                    icon={(props) => (
-                      <svg
-                        {...props}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                        />
-                      </svg>
-                    )}
-                    href="/dashboard/members"
-                    color="purple"
-                  />
+                  {panelCards.map((card) => (
+                    <AdminCard
+                      key={card.href}
+                      title={card.title}
+                      description={card.description}
+                      href={card.href}
+                      color={card.color}
+                      icon={(props) => (
+                        <svg
+                          {...props}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                          />
+                        </svg>
+                      )}
+                    />
+                  ))}
                 </div>
               </GlowCard>
             </section>
           )}
 
-          <section className="group animate-fadeIn" id="events">
-            <GlowCard
-              customSize
-              glowColor="purple"
-              className="relative h-full w-full !gap-0 !p-8"
-            >
-              <div className="relative z-10 flex items-center justify-between mb-8">
-                <div className="space-y-1">
-                  <h2 className="fc-title-accent text-2xl">
-                    Events and Webinars
-                  </h2>
-                  <p className="fc-body">Manage your schedule</p>
-                </div>
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary backdrop-blur-sm border border-primary/30">
-                  <FontAwesomeIcon icon={faChartBar} className="h-6 w-6" />
-                </span>
-              </div>
-
-              {/* Enhanced Reminder Section */}
-              <div
-                className="mb-6 p-4 rounded-xl border border-gray-700/30 hover:border-primary/50 bg-gradient-to-br from-gray-800/60 via-purple-900/10 to-gray-800/40
-             shadow-lg hover:shadow-purple-600/20 duration-300 backdrop-blur-xl max-w-md sm:max-w-full transition-all"
+          {showEvents && (
+            <section className="group animate-fadeIn" id="events">
+              <GlowCard
+                customSize
+                glowColor="purple"
+                className="relative h-full w-full !gap-0 !p-8"
               >
-                <div className="flex items-center space-x-3">
-                  <div className="hidden md:flex h-9 w-9 items-center justify-center rounded-xl bg-purple-700/20 text-purple-300 backdrop-blur-sm border border-purple-500/30">
-                    <FontAwesomeIcon icon={faClock} className="h-5 w-5" />
+                <div className="relative z-10 flex items-center justify-between mb-8">
+                  <div className="space-y-1">
+                    <h2 className="fc-title-accent text-2xl">
+                      Events and Webinars
+                    </h2>
+                    <p className="fc-body">Manage your schedule</p>
                   </div>
-                  <div className="space-y-0.5">
-                    <h3 className="fc-title text-sm">
-                      Reminder
-                    </h3>
-                    <p className="fc-body text-xs leading-relaxed">
-                      No need to delete past events—they&apos;ll remain on the
-                      events page. Delete only those you no longer want to
-                      display.
-                    </p>
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary backdrop-blur-sm border border-primary/30">
+                    <FontAwesomeIcon icon={faChartBar} className="h-6 w-6" />
+                  </span>
+                </div>
+
+                <div
+                  className="mb-6 p-4 rounded-xl border border-gray-700/30 hover:border-primary/50 bg-gradient-to-br from-gray-800/60 via-purple-900/10 to-gray-800/40
+             shadow-lg hover:shadow-purple-600/20 duration-300 backdrop-blur-xl max-w-md sm:max-w-full transition-all"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="hidden md:flex h-9 w-9 items-center justify-center rounded-xl bg-purple-700/20 text-purple-300 backdrop-blur-sm border border-purple-500/30">
+                      <FontAwesomeIcon icon={faClock} className="h-5 w-5" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <h3 className="fc-title text-sm">Reminder</h3>
+                      <p className="fc-body text-xs leading-relaxed">
+                        No need to delete past events—they&apos;ll remain on the
+                        events page. Delete only those you no longer want to
+                        display.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <Events />
-            </GlowCard>
-          </section>
+                <Events />
+              </GlowCard>
+            </section>
+          )}
 
-          <section className="group animate-fadeIn">
-            <GlowCard
-              customSize
-              glowColor="purple"
-              className="relative h-full w-full !gap-0 !p-8"
-            >
-              <div className="relative z-10 flex items-center justify-between mb-8">
-                <div className="space-y-1">
-                  <h2
-                    className="fc-title-accent text-2xl"
-                    id="executives"
-                  >
-                    Team
-                  </h2>
-                  <p className="fc-body">
-                    Collaborate with others
-                  </p>
+          {showExecutives && (
+            <section className="group animate-fadeIn">
+              <GlowCard
+                customSize
+                glowColor="purple"
+                className="relative h-full w-full !gap-0 !p-8"
+              >
+                <div className="relative z-10 flex items-center justify-between mb-8">
+                  <div className="space-y-1">
+                    <h2 className="fc-title-accent text-2xl" id="executives">
+                      Team
+                    </h2>
+                    <p className="fc-body">Collaborate with others</p>
+                  </div>
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary backdrop-blur-sm border border-primary/30">
+                    <FontAwesomeIcon icon={faUsers} className="h-6 w-6" />
+                  </span>
                 </div>
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary backdrop-blur-sm border border-primary/30">
-                  <FontAwesomeIcon icon={faUsers} className="h-6 w-6" />
-                </span>
-              </div>
-              <Executives />
-            </GlowCard>
-          </section>
+                <Executives />
+              </GlowCard>
+            </section>
+          )}
         </div>
       </main>
     </div>

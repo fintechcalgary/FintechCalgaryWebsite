@@ -6,9 +6,13 @@ import { motion } from "framer-motion";
 import { FiMenu, FiX } from "react-icons/fi";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import useConfirmLogout from "@/hooks/useConfirmLogout";
+import { getDashboardNavItems } from "@/lib/permissions";
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const role = session?.user?.role;
+  const navItems = getDashboardNavItems(role);
+
   const {
     isOpen: showLogoutModal,
     ask: handleLogoutClick,
@@ -49,7 +53,6 @@ export default function Navbar() {
       >
         <div className="container mx-auto px-4 max-w-7xl mt-4">
           <div className="hidden md:flex items-center justify-between transition-all duration-300">
-            {/* Logo - adjusted for vertical centering when scrolled */}
             <motion.div
               className="flex items-center gap-3"
               animate={{
@@ -70,7 +73,6 @@ export default function Navbar() {
               </Link>
             </motion.div>
 
-            {/* Centered Navigation Links - adjusted for vertical centering */}
             <motion.div
               className="flex items-center justify-center flex-[2]"
               animate={{
@@ -83,31 +85,19 @@ export default function Navbar() {
                   isScrolled ? "bg-gray-800/50" : "bg-gray-800/70"
                 }`}
               >
-                {[
-                  ["Events", "/dashboard#events"],
-                  ["Executives", "/dashboard#executives"],
-                  ["Info", "/info"],
-                  ...(session?.user?.role === "admin"
-                    ? [
-                        ["Members", "/dashboard/members"],
-                        ["Contracts", "/dashboard/contracts"],
-                        ["Partners", "/dashboard/partners"],
-                      ]
-                    : []),
-                ].map(([title, path]) => (
+                {navItems.map(({ label, href }) => (
                   <Link
-                    key={path}
-                    href={path}
+                    key={href}
+                    href={href}
                     className="tracking-wide text-white/55 text-base font-medium hover:text-primary transition-all relative group"
                   >
-                    {title}
+                    {label}
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-300 transition-all group-hover:w-full" />
                   </Link>
                 ))}
               </div>
             </motion.div>
 
-            {/* Logout Button - adjusted for vertical centering */}
             <motion.div
               animate={{
                 scale: isScrolled ? 0.9 : 1,
@@ -140,7 +130,6 @@ export default function Navbar() {
             </motion.div>
           </div>
 
-          {/* Mobile Menu Toggle - enhanced styling */}
           <div
             className={`flex md:hidden justify-between items-center h-16 ${
               isScrolled ? "py-2" : "py-4"
@@ -169,7 +158,6 @@ export default function Navbar() {
             </motion.button>
           </div>
 
-          {/* Mobile Menu - enhanced styling */}
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{
@@ -180,18 +168,7 @@ export default function Navbar() {
             className="md:hidden overflow-hidden"
           >
             <div className="bg-gray-800/90 p-4 rounded-lg mt-2 backdrop-blur-sm border border-gray-700/30">
-              {[
-                { href: "/dashboard#events", label: "Events" },
-                { href: "/dashboard#executives", label: "Executives" },
-                { href: "/info", label: "Info" },
-                ...(session?.user?.role === "admin"
-                  ? [
-                      { href: "/dashboard/members", label: "Members" },
-                      { href: "/dashboard/contracts", label: "Contracts" },
-                      { href: "/dashboard/partners", label: "Partners" },
-                    ]
-                  : []),
-              ].map(({ href, label }) => (
+              {navItems.map(({ href, label }) => (
                 <Link
                   key={href}
                   href={href}
@@ -215,7 +192,6 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* Log Out Modal */}
       <Modal
         isOpen={showLogoutModal}
         onClose={closeLogoutModal}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -33,6 +32,9 @@ import {
   CONTRACT_EOI_STAGE_INDEX,
   FILE_TYPES,
 } from "@/lib/constants";
+
+import useRoleAccess from "@/hooks/useRoleAccess";
+import { PERMISSIONS } from "@/lib/permissions";
 
 const EMPTY_FORM = { title: "", partnerName: "", description: "" };
 
@@ -67,7 +69,9 @@ function validatePdfFile(file) {
 }
 
 export default function ContractsPage() {
-  const { data: session, status } = useSession();
+  const { session, status, canAccess, isLoading: authLoading } = useRoleAccess(
+    PERMISSIONS.CONTRACTS,
+  );
   const router = useRouter();
 
   const [contracts, setContracts] = useState([]);
@@ -125,12 +129,12 @@ export default function ContractsPage() {
       }
     };
 
-    if (session?.user?.role === "admin") {
+    if (canAccess) {
       fetchContracts();
-    } else if (session && session.user.role !== "admin") {
+    } else if (session && !canAccess) {
       setLoading(false);
     }
-  }, [session, router]);
+  }, [session, router, canAccess]);
 
   const replaceContractInList = (updated) => {
     setContracts((prev) =>
@@ -346,7 +350,7 @@ export default function ContractsPage() {
     }));
   };
 
-  if (status === "loading" || loading) {
+  if (status === "loading" || loading || authLoading) {
     return (
       <div className="min-h-screen">
         <Navbar />
@@ -357,7 +361,7 @@ export default function ContractsPage() {
     );
   }
 
-  if (status !== "authenticated" || session?.user?.role !== "admin") {
+  if (status !== "authenticated" || !canAccess) {
     return (
       <div className="min-h-screen">
         <Navbar />

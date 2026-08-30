@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import logger from "@/lib/logger";
 import { VALIDATION, ERROR_MESSAGES } from "@/lib/constants";
+import { hasPermission, hasAnyPermission } from "@/lib/permissions";
 
 /**
  * Standard API response helpers
@@ -20,7 +21,7 @@ export const apiResponse = {
     return NextResponse.json({ error: message }, { status: 401 });
   },
 
-  forbidden: (message = "Admin access required") => {
+  forbidden: (message = "Access denied") => {
     return NextResponse.json({ error: message }, { status: 403 });
   },
 
@@ -53,6 +54,28 @@ export async function requireAdmin() {
   if (error) return { session: null, error };
 
   if (session.user.role !== "admin") {
+    return { session: null, error: apiResponse.forbidden("Admin access required") };
+  }
+
+  return { session, error: null };
+}
+
+export async function requirePermission(permission) {
+  const { session, error } = await requireAuth();
+  if (error) return { session: null, error };
+
+  if (!hasPermission(session.user.role, permission)) {
+    return { session: null, error: apiResponse.forbidden() };
+  }
+
+  return { session, error: null };
+}
+
+export async function requireAnyPermission(permissions) {
+  const { session, error } = await requireAuth();
+  if (error) return { session: null, error };
+
+  if (!hasAnyPermission(session.user.role, permissions)) {
     return { session: null, error: apiResponse.forbidden() };
   }
 

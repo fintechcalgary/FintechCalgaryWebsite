@@ -8,8 +8,11 @@
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
     "seed-admin": "node src/scripts/seed-admin.js",
+    "seed-staff-roles": "node src/scripts/seed-staff-roles.js",
     "seed-partners": "node src/scripts/seed-partners.js",
-    "upload-partner-logos": "node src/scripts/upload-partner-logos.js"
+    "upload-partner-logos": "node src/scripts/upload-partner-logos.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
@@ -41,6 +44,7 @@
     "eslint-config-next": "^16.0.7",
     "postcss": "^8.5.6",
     "tailwind-scrollbar": "^3.1.0",
-    "tailwindcss": "^3.4.18"
+    "tailwindcss": "^3.4.18",
+    "vitest": "^3.2.7"
   }
 }

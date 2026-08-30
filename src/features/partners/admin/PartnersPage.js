@@ -13,14 +13,17 @@ import DisplayPartnersPanel from "@/features/partners/admin/DisplayPartnersPanel
 import PartnerApplicationsPanel from "@/features/partners/admin/PartnerApplicationsPanel";
 import usePartnersTab from "@/features/partners/admin/usePartnersTab";
 import usePendingApplicationsBadge from "@/features/partners/admin/usePendingApplicationsBadge";
+import { hasPermission } from "@/lib/permissions";
+import { PERMISSIONS } from "@/lib/permissions";
 
 function PartnersPageContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const isAdmin = session?.user?.role === "admin";
+  const role = session?.user?.role;
+  const canAccessPartners = hasPermission(role, PERMISSIONS.PARTNERS);
   const { activeTab, setTab, tabs } = usePartnersTab();
   const { pendingCount, refresh: refreshPendingCount } =
-    usePendingApplicationsBadge(status === "authenticated" && isAdmin);
+    usePendingApplicationsBadge(status === "authenticated" && canAccessPartners);
 
   useDocumentTitle("Partners | FinTech Calgary");
 
@@ -39,7 +42,7 @@ function PartnersPageContent() {
     );
   }
 
-  if (status !== "authenticated" || !isAdmin) {
+  if (status !== "authenticated" || !canAccessPartners) {
     return (
       <div className="min-h-screen">
         <Navbar />

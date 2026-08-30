@@ -19,6 +19,10 @@ export const API_ENDPOINTS = {
   MEMBERS: "/api/members",
   EXECUTIVE_ROLES: "/api/executive-roles",
   CONTRACTS: "/api/contracts",
+  DOCUMENTATION: "/api/documentation",
+  DOCUMENTATION_FINANCE: "/api/documentation/finance",
+  MARKETING_APPROVALS: "/api/marketing-approvals",
+  USERS: "/api/users",
 };
 
 // MongoDB Collection Names
@@ -34,6 +38,8 @@ export const COLLECTIONS = {
   MEMBERS: "members",
   LOGS: "logs",
   CONTRACTS: "contracts",
+  FINANCE_DOCUMENTS: "financeDocuments",
+  MARKETING_APPROVALS: "marketingApprovals",
 };
 
 // File Upload Folders
@@ -45,6 +51,8 @@ export const UPLOAD_FOLDERS = {
   EXECUTIVE_IMAGES: "executiveImages",
   ROLE_IMAGES: "roleImages",
   ROLE_RESPONSIBILITIES: "role-responsibilities",
+  FINANCE_DOCUMENTS: "finance-documents",
+  MARKETING_CONTENT: "marketing-content",
 };
 
 // File Type Constants
@@ -58,6 +66,33 @@ export const FILE_TYPES = {
     MIME_TYPES: ["image/jpeg", "image/jpg", "image/png", "image/svg+xml"],
     EXTENSIONS: ["jpg", "jpeg", "png", "svg"],
     MAX_SIZE: 10 * 1024 * 1024, // 10MB
+  },
+  FINANCE: {
+    MIME_TYPES: [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/msword",
+      "text/csv",
+      "text/plain",
+    ],
+    EXTENSIONS: ["pdf", "xlsx", "xls", "docx", "doc", "csv", "txt"],
+    MAX_SIZE: 15 * 1024 * 1024, // 15MB
+  },
+  MARKETING: {
+    MIME_TYPES: [
+      "application/pdf",
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/msword",
+      "message/rfc822",
+      "application/octet-stream",
+    ],
+    EXTENSIONS: ["pdf", "jpg", "jpeg", "png", "docx", "doc", "eml"],
+    MAX_SIZE: 15 * 1024 * 1024, // 15MB
   },
 };
 
@@ -156,8 +191,20 @@ export const STATUS = {
 // User Roles
 export const USER_ROLES = {
   ADMIN: "admin",
+  OUTREACH: "outreach",
+  FINANCE: "finance",
+  EVENTS: "events",
+  MARKETING: "marketing",
   MEMBER: "member",
   ASSOCIATE: "associate",
+};
+
+export const STAFF_ROLE_LABELS = {
+  [USER_ROLES.ADMIN]: "Admin",
+  [USER_ROLES.OUTREACH]: "Outreach",
+  [USER_ROLES.FINANCE]: "Finance",
+  [USER_ROLES.EVENTS]: "Events",
+  [USER_ROLES.MARKETING]: "Marketing",
 };
 
 // Application Status
@@ -238,5 +285,17 @@ export const CONTRACT_STATUS = {
 export const CONTRACT_STAGE_ACTIONS = {
   APPROVE: "approve",
   DO_NOT_PROCEED: "do-not-proceed",
+};
+
+// Marketing approval workflow statuses
+export const MARKETING_APPROVAL_STATUS = {
+  PENDING: "pending",
+  APPROVED: "approved",
+  REJECTED: "rejected",
+};
+
+// Documentation sections
+export const DOCUMENTATION_SECTIONS = {
+  FINANCE: "finance",
 };
 

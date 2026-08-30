@@ -1,31 +1,10 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
-
-// Constants for route configuration
-const PROTECTED_API_ROUTES = [
-  "/api/executive-application",
-  "/api/executive-roles",
-  "/api/settings",
-  "/api/partners",
-  "/api/partner-applications",
-  "/api/executives",
-  "/api/members",
-  "/api/contracts",
-];
-
-const ADMIN_ONLY_ROUTES = [
-  "/api/executive-application",
-  "/api/executive-roles",
-  "/api/settings",
-  "/api/partners",
-  "/api/partner-applications",
-  "/api/executives",
-  "/api/events",
-  "/api/members",
-  "/api/contracts",
-];
-
-const PUBLIC_GET_ROUTES = ["/api/settings", "/api/executive-roles", "/api/partners"];
+import {
+  canAccessApiRoute,
+  canAccessDashboardRoute,
+  isStaffRole,
+} from "@/lib/permissions";
 
 const PUBLIC_POST_ENDPOINTS = [
   { path: "/api/executive-application", method: "POST" },
@@ -33,26 +12,27 @@ const PUBLIC_POST_ENDPOINTS = [
   { path: "/api/subscribe", method: "POST" },
   { path: "/api/partner-applications", method: "POST" },
   { path: "/api/events/", method: "POST", suffix: "/register" },
-  { path: "/api/upload", method: "POST" },
   { path: "/api/auth/register", method: "POST" },
   { path: "/api/logs", method: "POST" },
 ];
 
-const PROTECTED_METHODS = ["POST", "PUT", "DELETE"];
+const PROTECTED_API_PREFIXES = [
+  "/api/executive-application",
+  "/api/executive-roles",
+  "/api/settings",
+  "/api/partners",
+  "/api/partner-applications",
+  "/api/executives",
+  "/api/members",
+  "/api/contracts",
+  "/api/events",
+  "/api/documentation",
+  "/api/marketing-approvals",
+  "/api/users",
+  "/api/upload",
+];
 
-// Helper functions
-function isProtectedApiRoute(pathname, method) {
-  const isStandardProtectedRoute = PROTECTED_API_ROUTES.some((route) =>
-    pathname.startsWith(route)
-  );
-
-  const isEventDeleteRoute =
-    pathname.startsWith("/api/events/") &&
-    pathname.endsWith("/register") &&
-    method === "DELETE";
-
-  return isStandardProtectedRoute || isEventDeleteRoute;
-}
+const PROTECTED_METHODS = ["POST", "PUT", "DELETE", "PATCH"];
 
 function isPublicPostEndpoint(pathname, method) {
   return PUBLIC_POST_ENDPOINTS.some((endpoint) => {
@@ -63,33 +43,52 @@ function isPublicPostEndpoint(pathname, method) {
         method === endpoint.method
       );
     }
-    return (
-      pathname.startsWith(endpoint.path) && method === endpoint.method
-    );
+    return pathname.startsWith(endpoint.path) && method === endpoint.method;
   });
 }
 
-function isPublicGetRoute(pathname) {
-  return PUBLIC_GET_ROUTES.some((route) => pathname.startsWith(route));
+function isProtectedApiRoute(pathname, method) {
+  const isStandardProtected = PROTECTED_API_PREFIXES.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  const isEventDeleteRoute =
+    pathname.startsWith("/api/events/") &&
+    pathname.endsWith("/register") &&
+    method === "DELETE";
+
+  return isStandardProtected || isEventDeleteRoute;
 }
 
-function isAdminRoute(pathname) {
-  return ADMIN_ONLY_ROUTES.some((route) => pathname.startsWith(route));
-}
-
-function checkAuthAndRole(token, pathname) {
+function checkApiAccess(token, pathname, method) {
   if (!token) {
     return NextResponse.json(
       { error: "Authentication required" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
-  if (isAdminRoute(pathname) && token.role !== "admin") {
-    return NextResponse.json(
-      { error: "Admin access required" },
-      { status: 403 }
-    );
+  if (!canAccessApiRoute(token.role, pathname, method)) {
+    return NextResponse.json({ error: "Access denied" }, { status: 403 });
+  }
+
+  return null;
+}
+
+function checkDashboardAccess(token, pathname) {
+  if (!token) {
+    return NextResponse.redirect(new URL("/login", pathname));
+  }
+
+  if (!isStaffRole(token.role)) {
+    if (token.role === "associate") {
+      return NextResponse.redirect(new URL("/partner-dashboard", pathname));
+    }
+    return NextResponse.redirect(new URL("/login", pathname));
+  }
+
+  if (!canAccessDashboardRoute(token.role, pathname)) {
+    return NextResponse.redirect(new URL("/dashboard", pathname));
   }
 
   return null;
@@ -99,32 +98,26 @@ export default withAuth(
   function proxy(req) {
     const { pathname, method } = req.nextUrl;
 
-    // Allow public GET routes
-    if (method === "GET" && isPublicGetRoute(pathname)) {
+    if (pathname.startsWith("/dashboard")) {
+      const dashboardError = checkDashboardAccess(req.nextauth.token, req.url);
+      if (dashboardError) return dashboardError;
       return NextResponse.next();
     }
 
-    // Allow public POST endpoints (must check before protected route check)
     if (isPublicPostEndpoint(pathname, method)) {
       return NextResponse.next();
     }
 
-    // Check if route needs protection
     if (!isProtectedApiRoute(pathname, method)) {
       return NextResponse.next();
     }
 
     const isProtectedMethod = PROTECTED_METHODS.includes(method);
+    const isProtectedGet =
+      method === "GET" && isProtectedApiRoute(pathname, method);
 
-    // Handle protected methods (POST, PUT, DELETE)
-    if (isProtectedMethod) {
-      const authError = checkAuthAndRole(req.nextauth.token, pathname);
-      if (authError) return authError;
-    }
-
-    // Handle GET requests to protected routes (except public GET routes)
-    if (method === "GET" && !isPublicGetRoute(pathname)) {
-      const authError = checkAuthAndRole(req.nextauth.token, pathname);
+    if (isProtectedMethod || isProtectedGet) {
+      const authError = checkApiAccess(req.nextauth.token, pathname, method);
       if (authError) return authError;
     }
 
@@ -134,33 +127,27 @@ export default withAuth(
     callbacks: {
       authorized: ({ token, req }) => {
         const { pathname, method } = req.nextUrl;
-        
-        // Allow public POST endpoints without authentication
+
         if (isPublicPostEndpoint(pathname, method)) {
           return true;
         }
-        
-        // Allow public GET routes without authentication
-        if (method === "GET" && isPublicGetRoute(pathname)) {
-          return true;
-        }
-        
-        // For API routes, authentication is handled in the proxy function above
-        // For non-API routes (like dashboard), require authentication
-        if (req.nextUrl.pathname.startsWith("/dashboard")) {
+
+        if (pathname.startsWith("/dashboard")) {
           return !!token;
         }
-        
-        // Allow other routes (authentication will be checked in proxy function if needed)
+
+        if (isProtectedApiRoute(pathname, method)) {
+          return !!token;
+        }
+
         return true;
       },
     },
-  }
+  },
 );
 
 export const config = {
   matcher: [
-    // Protect API routes
     "/api/executive-application/:path*",
     "/api/executive-roles/:path*",
     "/api/settings/:path*",
@@ -170,12 +157,10 @@ export const config = {
     "/api/members/:path*",
     "/api/contracts/:path*",
     "/api/events/:path*",
+    "/api/documentation/:path*",
+    "/api/marketing-approvals/:path*",
+    "/api/users/:path*",
     "/api/upload/:path*",
-    "/api/auth/:path*",
-    "/api/logs/:path*",
-    "/api/contact/:path*",
-    // Note: /api/subscribe is excluded from matcher as it's a public endpoint
-    // Protect dashboard routes
     "/dashboard/:path*",
   ],
 };

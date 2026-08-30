@@ -5,20 +5,21 @@ import {
   approveStage,
   markDoNotProceed,
 } from "@/lib/models/contract";
-import { apiResponse, requireAdmin, withErrorHandler } from "@/lib/api-helpers";
+import { apiResponse, requirePermission, withErrorHandler } from "@/lib/api-helpers";
 import {
   CONTRACT_STAGES,
   CONTRACT_STATUS,
   CONTRACT_STAGE_ACTIONS,
   CONTRACT_EOI_STAGE_INDEX,
 } from "@/lib/constants";
+import { PERMISSIONS } from "@/lib/permissions";
 import logger from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const POST = withErrorHandler(async (req, context) => {
-  const { session, error } = await requireAdmin();
+  const { session, error } = await requirePermission(PERMISSIONS.CONTRACTS);
   if (error) return error;
 
   const { contractId } = await context.params;
@@ -39,13 +40,14 @@ export const POST = withErrorHandler(async (req, context) => {
 
   if (contract.status !== CONTRACT_STATUS.ACTIVE) {
     return apiResponse.badRequest(
-      "This contract is no longer active and cannot be moved"
+      "This contract is no longer active and cannot be moved",
     );
   }
 
   const approval = {
     stage: contract.stage,
-    stageLabel: CONTRACT_STAGES[contract.stage]?.label || `Stage ${contract.stage + 1}`,
+    stageLabel:
+      CONTRACT_STAGES[contract.stage]?.label || `Stage ${contract.stage + 1}`,
     action,
     approvedBy: session.user.username || session.user.email,
     approvedAt: new Date(),
@@ -53,10 +55,9 @@ export const POST = withErrorHandler(async (req, context) => {
   };
 
   if (action === CONTRACT_STAGE_ACTIONS.APPROVE) {
-    // The EOI Submission stage cannot be approved until the PDF is attached.
     if (contract.stage >= CONTRACT_EOI_STAGE_INDEX && !contract.eoiPdf) {
       return apiResponse.badRequest(
-        "Attach the EOI PDF before advancing past EOI Submission"
+        "Attach the EOI PDF before advancing past EOI Submission",
       );
     }
 

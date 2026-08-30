@@ -5,7 +5,8 @@ import {
   updateContract,
   deleteContract,
 } from "@/lib/models/contract";
-import { apiResponse, requireAdmin, withErrorHandler } from "@/lib/api-helpers";
+import { apiResponse, requirePermission, withErrorHandler } from "@/lib/api-helpers";
+import { PERMISSIONS } from "@/lib/permissions";
 import logger from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +15,7 @@ export const revalidate = 0;
 const EDITABLE_FIELDS = ["title", "partnerName", "description"];
 
 export const GET = withErrorHandler(async (req, context) => {
-  const { error } = await requireAdmin();
+  const { error } = await requirePermission(PERMISSIONS.CONTRACTS);
   if (error) return error;
 
   const { contractId } = await context.params;
@@ -33,7 +34,7 @@ export const GET = withErrorHandler(async (req, context) => {
 });
 
 export const PUT = withErrorHandler(async (req, context) => {
-  const { error } = await requireAdmin();
+  const { error } = await requirePermission(PERMISSIONS.CONTRACTS);
   if (error) return error;
 
   const { contractId } = await context.params;
@@ -43,8 +44,6 @@ export const PUT = withErrorHandler(async (req, context) => {
 
   const body = await req.json();
 
-  // Only metadata is editable here; stage/status changes go through the
-  // dedicated stage route so the approval history stays consistent.
   const updates = {};
   for (const field of EDITABLE_FIELDS) {
     if (typeof body[field] === "string") {
@@ -76,7 +75,7 @@ export const PUT = withErrorHandler(async (req, context) => {
 });
 
 export const DELETE = withErrorHandler(async (req, context) => {
-  const { error } = await requireAdmin();
+  const { error } = await requirePermission(PERMISSIONS.CONTRACTS);
   if (error) return error;
 
   const { contractId } = await context.params;
