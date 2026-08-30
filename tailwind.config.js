@@ -35,8 +35,9 @@ module.exports = {
         ],
       },
       colors: {
-        background: "#02010A",
-        foreground: "#ededed",
+        // Keep in sync with :root --background (Safari chrome samples this)
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         primary: "#8B5CF6",
       },
       animation: {

@@ -77,17 +77,15 @@ export const metadata = {
     index: true,
     follow: true,
   },
-  appleWebApp: {
-    statusBarStyle: "black-translucent",
-  },
 };
 
-/* iOS Safari paints the status-bar / notch chrome from theme-color, not the
-   fixed silk canvas — match the dark navy of the silk so the top edge blends. */
+/* viewport-fit=cover is required for content to extend under iOS chrome.
+   Do NOT set colorScheme:"dark" — with no readable page bg Safari falls back
+   to solid black chrome in dark color-scheme. */
 export const viewport = {
-  themeColor: "#030738",
-  colorScheme: "dark",
   viewportFit: "cover",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }) {
@@ -97,7 +95,7 @@ export default function RootLayout({ children }) {
       className={`${plusJakarta.variable} ${spaceGrotesk.variable} ${syne.variable} ${jetbrainsMono.variable}`}
     >
       <body
-        className={`silk-boot ${plusJakarta.className} bg-background text-foreground min-h-screen relative font-sans antialiased`}
+        className={`silk-boot ${plusJakarta.className} text-foreground relative min-h-screen font-sans antialiased`}
       >
         <noscript>
           <style>{`body.silk-boot .site-content{opacity:1!important}`}</style>

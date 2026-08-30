@@ -1,10 +1,12 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 const READY_CLASS = "silk-ready";
 const BOOT_CLASS = "silk-boot";
 const READY_TIMEOUT_MS = 2000;
+/* Match Tailwind `md` — no WebGL silk on phones / small tablets */
+const SILK_MIN_WIDTH_MQ = "(min-width: 768px)";
 
 function markSilkReady() {
   const { body } = document;
@@ -328,8 +330,23 @@ function compileShader(gl, type, source) {
 
 export default function SilkBackground() {
   const canvasRef = useRef(null);
+  const [enabled, setEnabled] = useState(false);
 
   useLayoutEffect(() => {
+    const mq = window.matchMedia(SILK_MIN_WIDTH_MQ);
+    const sync = () => {
+      const next = mq.matches;
+      setEnabled(next);
+      if (!next) markSilkReady();
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!enabled) return;
+
     const canvas = canvasRef.current;
     const failOpen = window.setTimeout(markSilkReady, READY_TIMEOUT_MS);
 
@@ -432,16 +449,14 @@ export default function SilkBackground() {
 
     const resize = () => {
       // Fixed 1× DPI — retina canvases burn a lot of VRAM for a soft backdrop.
-      const dpr = 1;
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const bw = Math.max(1, Math.floor(w * dpr));
-      const bh = Math.max(1, Math.floor(h * dpr));
+      const shell = canvas.parentElement;
+      const w = Math.max(1, shell?.clientWidth || window.innerWidth);
+      const h = Math.max(1, shell?.clientHeight || window.innerHeight);
+      const bw = Math.floor(w);
+      const bh = Math.floor(h);
       if (canvas.width !== bw || canvas.height !== bh) {
         canvas.width = bw;
         canvas.height = bh;
-        canvas.style.width = `${w}px`;
-        canvas.style.height = `${h}px`;
         gl.viewport(0, 0, bw, bh);
       }
       needsResize = false;
@@ -512,25 +527,31 @@ export default function SilkBackground() {
     }
     window.addEventListener("resize", onResize, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
+    const shell = canvas.parentElement;
+    const ro =
+      shell && typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(onResize)
+        : null;
+    ro?.observe(shell);
 
     return () => {
       stop();
       window.clearTimeout(failOpen);
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
+      ro?.disconnect();
       gl.deleteBuffer(buffer);
       gl.deleteProgram(program);
       gl.deleteShader(vs);
       gl.deleteShader(fs);
     };
-  }, []);
+  }, [enabled]);
+
+  if (!enabled) return null;
 
   return (
-    <div
-      aria-hidden
-      className="pointer-events-none fixed inset-0 z-0 h-[100dvh] min-h-[100dvh] w-full overflow-hidden opacity-[0.72]"
-    >
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+    <div aria-hidden className="silk-bg pointer-events-none z-0">
+      <canvas ref={canvasRef} />
     </div>
   );
 }

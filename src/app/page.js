@@ -59,13 +59,13 @@ export default function Home() {
     >
       <div className="relative flex-grow">
         <section className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden pt-24 pb-20 md:pt-28 md:pb-24">
-          {/* Layered backdrop */}
+          {/* Desktop-only atmosphere — keep mobile as a flat solid page bg */}
           <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_-10%,rgba(139,92,246,0.24),transparent),radial-gradient(ellipse_60%_45%_at_100%_40%,rgba(124,58,237,0.14),transparent),radial-gradient(ellipse_50%_40%_at_0%_60%,rgba(192,132,252,0.08),transparent)]"
+            className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(ellipse_80%_55%_at_50%_-10%,rgba(139,92,246,0.24),transparent),radial-gradient(ellipse_60%_45%_at_100%_40%,rgba(124,58,237,0.14),transparent),radial-gradient(ellipse_50%_40%_at_0%_60%,rgba(192,132,252,0.08),transparent)] md:block"
             aria-hidden
           />
           <div
-            className="pointer-events-none absolute inset-0 opacity-[0.35]"
+            className="pointer-events-none absolute inset-0 hidden opacity-[0.35] md:block"
             style={{
               backgroundImage:
                 "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)",
@@ -78,7 +78,7 @@ export default function Home() {
             aria-hidden
           />
           <div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent"
+            className="pointer-events-none absolute inset-0 hidden bg-gradient-to-b from-black/20 via-transparent to-transparent md:block"
             aria-hidden
           />
 
