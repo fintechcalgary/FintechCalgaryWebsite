@@ -1,4 +1,4 @@
-const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.1-8b-instant";
+const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
 
 export async function callGroq(apiKey, prompt, options = {}) {
   const response = await fetch(
