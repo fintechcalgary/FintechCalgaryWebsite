@@ -1,7 +1,6 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import {
   createFinanceDocument,
-  deleteFinanceDocument,
   getFinanceDocuments,
 } from "@/lib/models/financeDocument";
 import { apiResponse, requireAnyPermission, withErrorHandler } from "@/lib/api-helpers";

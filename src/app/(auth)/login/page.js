@@ -18,14 +18,16 @@ export default function Login() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(() => {
+    if (typeof window === "undefined") return "";
+    return new URLSearchParams(window.location.search).get("error")
+      ? "Invalid username or password"
+      : "";
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     document.title = "Login | FinTech Calgary";
-    if (new URLSearchParams(window.location.search).get("error")) {
-      setError("Invalid username or password");
-    }
   }, []);
 
   // Already signed in — one replace to the right dashboard (no client polling).

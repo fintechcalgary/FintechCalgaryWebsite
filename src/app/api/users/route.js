@@ -1,6 +1,6 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { apiResponse, requireAdmin, validators, withErrorHandler } from "@/lib/api-helpers";
-import { STAFF_ROLE_LABELS, USER_ROLES, VALIDATION } from "@/lib/constants";
+import { STAFF_ROLE_LABELS, VALIDATION } from "@/lib/constants";
 import { STAFF_ROLES } from "@/lib/permissions";
 import bcrypt from "bcryptjs";
 
