@@ -5,7 +5,7 @@
 const STAFF_USERS = [
   {
     username: "fintechcalgary",
-    password: "ucalgary210",
+    password: "ucalgary$210",
     role: "admin",
   },
   {
