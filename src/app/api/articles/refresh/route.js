@@ -29,7 +29,7 @@ async function generateSummaryWithGroq({ apiKey, article }) {
     "Respond with only the summary text. No markdown, no asterisks, no bullet points.",
   ].join("\n");
 
-  return callGroq(apiKey, prompt, { maxTokens: 200, timeoutMs: 20000 });
+  return callGroq(apiKey, prompt, { maxTokens: 800, timeoutMs: 20000 });
 }
 
 // ─── Week boundary helpers ────────────────────────────────────────────────────

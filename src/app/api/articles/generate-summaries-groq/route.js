@@ -23,7 +23,7 @@ async function generateSummaryWithGroq(article) {
 
   const cleaned = await callGroq(apiKey, prompt, {
     temperature: 0.3,
-    maxTokens: 200,
+    maxTokens: 800,
     timeoutMs: 20000,
   });
   if (!isUsableSummary(cleaned)) return null;

@@ -18,7 +18,7 @@ async function generateSummaryWithGroq({ apiKey, article }) {
     "Respond with only the summary text. No markdown, no asterisks, no bullet points.",
   ].join("\n");
 
-  const cleaned = await callGroq(apiKey, prompt, { maxTokens: 200, timeoutMs: 20000 });
+  const cleaned = await callGroq(apiKey, prompt, { maxTokens: 800, timeoutMs: 20000 });
   if (!isUsableSummary(cleaned)) return null;
   return cleaned.length > 500 ? `${cleaned.slice(0, 500)}...` : cleaned;
 }
