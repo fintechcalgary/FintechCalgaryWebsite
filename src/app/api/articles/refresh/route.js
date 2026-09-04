@@ -13,6 +13,7 @@ import { queueRefreshRequest } from "@/lib/requestQueue";
 import { callGroq } from "@/lib/groq";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 
 // ─── Groq summary generation ───────────────────────────────────────────────
 
