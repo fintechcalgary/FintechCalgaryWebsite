@@ -51,7 +51,7 @@ export default function FinTechChatBot({ articles = [] }) {
   const inputRef = useRef(null);
   const abortControllerRef = useRef(null);
 
-  const { canSend, retryAfter, recordRequest } = useRateLimit(2, 60000);
+  const { canSend, retryAfter, recordRequest } = useRateLimit(6, 60000);
   const costTracker = useRef(new CostTracker());
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function FinTechChatBot({ articles = [] }) {
       if (saved) {
         const parsedMessages = JSON.parse(saved);
         if (Array.isArray(parsedMessages) && parsedMessages.length > 0) {
-          setMessages(parsedMessages);
+          setMessages(parsedMessages.filter((message) => !message.error));
         }
       }
     } catch (error) {
@@ -71,7 +71,10 @@ export default function FinTechChatBot({ articles = [] }) {
   useEffect(() => {
     if (messages.length > 0) {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify(messages.filter((message) => !message.error)),
+        );
       } catch (error) {
         console.error("Failed to save messages to localStorage:", error);
       }
@@ -399,7 +402,7 @@ export default function FinTechChatBot({ articles = [] }) {
               </div>
             </div>
 
-            {!isMinimized && costStatus && (
+            {!isMinimized && costStatus?.isNearLimit && (
               <div
                 className={`px-4 py-3 border-b border-gray-800/50 ${
                   costStatus.isAtLimit
@@ -442,7 +445,7 @@ export default function FinTechChatBot({ articles = [] }) {
                               : "fc-muted"
                         }`}
                       >
-                        $${(costStatus.costSoFar || 0).toFixed(3)} / $$
+                        ${(costStatus.costSoFar || 0).toFixed(3)} / $
                         {(costStatus.budget || 0).toFixed(2)}
                       </span>
                     </div>
@@ -643,12 +646,6 @@ export default function FinTechChatBot({ articles = [] }) {
                       {errorMessage && (
                         <div className="absolute -top-8 left-0 right-0 text-xs text-red-400 bg-red-900/30 px-2 py-1 rounded border border-red-500/30">
                           {errorMessage}
-                        </div>
-                      )}
-                      {!canSend && (
-                        <div className="absolute -top-8 left-0 right-0 text-xs text-yellow-400 bg-yellow-900/30 px-2 py-1 rounded border border-yellow-500/30">
-                          Rate limit: Please wait {retryAfter}s before sending
-                          another message.
                         </div>
                       )}
                       <textarea

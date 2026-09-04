@@ -5,6 +5,7 @@ import { callGroq } from "@/lib/groq";
 import crypto from "crypto";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 const MAX_HISTORY = 10;
 const MAX_ARTICLES = 30;
@@ -135,7 +136,10 @@ export async function POST(req) {
         .filter(Boolean)
         .join("\n");
 
-      const responseText = await callGroq(groqApiKey, prompt);
+      const responseText = await callGroq(groqApiKey, prompt, {
+        maxTokens: 1200,
+        timeoutMs: 50000,
+      });
 
       chatCache.set(cacheKey, {
         response: responseText,
