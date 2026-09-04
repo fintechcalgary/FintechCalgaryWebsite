@@ -4,6 +4,7 @@ import { fetchGoogleNewsArticles, isMongoConnectionError } from "@/lib/googleNew
 import { callGroq, isUsableSummary } from "@/lib/groq";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 
 async function generateSummaryWithGroq({ apiKey, article }) {
   const prompt = [
@@ -97,7 +98,7 @@ export async function POST(req) {
             JSON.stringify({
               success: false,
               error: "Groq summary generation failed",
-              details: process.env.NODE_ENV === "development" ? error.message : undefined,
+              details: error.message,
               suggestion: "Check that GROQ_API_KEY is valid, then restart the server.",
             }),
             { status: 502, headers: { "Content-Type": "application/json" } }

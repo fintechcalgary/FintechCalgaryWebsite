@@ -3,6 +3,7 @@ import { getArticles, updateArticleSummary } from "@/lib/models/article";
 import { callGroq, isUsableSummary } from "@/lib/groq";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 
 async function generateSummaryWithGroq({ apiKey, article }) {
   const prompt = [
