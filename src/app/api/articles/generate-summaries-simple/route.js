@@ -4,7 +4,7 @@ import { fetchGoogleNewsArticles, isMongoConnectionError } from "@/lib/googleNew
 import { callGroq, isUsableSummary } from "@/lib/groq";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 300;
+export const maxDuration = 60;
 
 async function generateSummaryWithGroq({ apiKey, article }) {
   const prompt = [
