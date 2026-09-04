@@ -1,5 +1,6 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { getArticles, updateArticleSummary } from "@/lib/models/article";
+import { callGroq, isUsableSummary } from "@/lib/groq";
 
 export const dynamic = "force-dynamic";
 
@@ -20,39 +21,13 @@ async function generateSummaryWithGroq(article) {
     "Respond with only the summary text. No markdown, no asterisks, no bullet points.",
   ].join("\n");
 
-  try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.3,
-        max_tokens: 150
-      }),
-      signal: AbortSignal.timeout(10000)
-    });
-
-    if (!response.ok) {
-      throw new Error(`Groq request failed (${response.status})`);
-    }
-
-    const data = await response.json();
-    const summary = data.choices?.[0]?.message?.content?.trim();
-
-    if (!summary) return null;
-
-    const cleaned = summary.replace(/\*\*/g, "").replace(/\*/g, "").replace(/^Summary:\s*/i, "").trim();
-    if (cleaned.length < 20) return null;
-    return cleaned.length > 500 ? `${cleaned.slice(0, 500)}...` : cleaned;
-    
-  } catch (error) {
-    console.error('Groq generation error:', error.message);
-    throw error;
-  }
+  const cleaned = await callGroq(apiKey, prompt, {
+    temperature: 0.3,
+    maxTokens: 200,
+    timeoutMs: 20000,
+  });
+  if (!isUsableSummary(cleaned)) return null;
+  return cleaned.length > 500 ? `${cleaned.slice(0, 500)}...` : cleaned;
 }
 
 export async function POST(_req) {

@@ -10,7 +10,7 @@ import {
 } from "@/lib/models/weeklyDigest";
 import { logError, logInfo, logWarn } from "@/lib/serverLogger";
 import { queueRefreshRequest } from "@/lib/requestQueue";
-import { callGroq } from "@/lib/groq";
+import { callGroq, isUsableSummary } from "@/lib/groq";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -243,7 +243,7 @@ export async function POST(req) {
         for (const article of digestResult.topArticles.slice(0, WEEKLY_DIGEST_ARTICLE_LIMIT)) {
           if (!article.url) continue;
 
-          const hasSummary = article.summary && article.summary.trim().length > 20;
+          const hasSummary = isUsableSummary(article.summary);
           if (hasSummary) {
             summariesGenerated += 1;
             continue;
