@@ -54,6 +54,7 @@ export default function ConfirmModal({
   cancelText = "Cancel",
   showCancel = true,
   type = "info",
+  confirmDisabled = false,
 }) {
   const typeStyles = getTypeStyles(type);
 
@@ -96,13 +97,14 @@ export default function ConfirmModal({
 
           <div className="flex flex-col sm:flex-row gap-3 justify-end">
             {showCancel && (
-              <Button variant="secondary" onClick={onClose}>
+              <Button variant="secondary" onClick={onClose} disabled={confirmDisabled}>
                 {cancelText}
               </Button>
             )}
             <Button
               variant={typeStyles.buttonVariant}
               onClick={onConfirm || onClose}
+              disabled={confirmDisabled}
             >
               {confirmText}
             </Button>

@@ -40,8 +40,9 @@ describe("permissions", () => {
       );
     });
 
-    it("grants outreach contracts access only", () => {
+    it("grants outreach contracts and community access", () => {
       expect(hasPermission(USER_ROLES.OUTREACH, PERMISSIONS.CONTRACTS)).toBe(true);
+      expect(hasPermission(USER_ROLES.OUTREACH, PERMISSIONS.COMMUNITY)).toBe(true);
       expect(hasPermission(USER_ROLES.OUTREACH, PERMISSIONS.EVENTS)).toBe(false);
       expect(hasPermission(USER_ROLES.OUTREACH, PERMISSIONS.PARTNERS)).toBe(false);
     });
@@ -166,6 +167,22 @@ describe("permissions", () => {
       ).toBe(false);
     });
 
+    it("allows public GET on community posts and requires permission to mutate", () => {
+      expect(canAccessApiRoute(null, "/api/community-posts", "GET")).toBe(true);
+      expect(
+        canAccessApiRoute(USER_ROLES.OUTREACH, "/api/community-posts", "POST"),
+      ).toBe(true);
+      expect(
+        canAccessApiRoute(USER_ROLES.ADMIN, "/api/community-posts", "POST"),
+      ).toBe(true);
+      expect(
+        canAccessApiRoute(USER_ROLES.EVENTS, "/api/community-posts", "POST"),
+      ).toBe(false);
+      expect(
+        canAccessApiRoute(USER_ROLES.MARKETING, "/api/community-posts", "DELETE"),
+      ).toBe(false);
+    });
+
     it("requires admin for marketing approval PUT", () => {
       expect(
         canAccessApiRoute(
@@ -217,6 +234,7 @@ describe("permissions", () => {
       expect(items.some((i) => i.href === "/")).toBe(true);
       expect(items.some((i) => i.href === "/dashboard")).toBe(true);
       expect(items.some((i) => i.href === "/dashboard/contracts")).toBe(true);
+      expect(items.some((i) => i.href === "/dashboard/community")).toBe(true);
       expect(items.some((i) => i.href === "/dashboard/partners")).toBe(false);
     });
 
@@ -229,11 +247,37 @@ describe("permissions", () => {
 
     it("returns admin panel cards based on role", () => {
       const outreachCards = getAdminPanelCards(USER_ROLES.OUTREACH);
-      expect(outreachCards).toHaveLength(1);
-      expect(outreachCards[0].href).toBe("/dashboard/contracts");
+      expect(outreachCards).toHaveLength(2);
+      expect(outreachCards.map((c) => c.href)).toEqual([
+        "/dashboard/contracts",
+        "/dashboard/community",
+      ]);
 
       const adminCards = getAdminPanelCards(USER_ROLES.ADMIN);
       expect(adminCards.length).toBeGreaterThan(4);
+      expect(adminCards.some((c) => c.href === "/dashboard/community")).toBe(
+        true,
+      );
+    });
+  });
+
+  describe("canAccessDashboardRoute community", () => {
+    it("allows outreach and admin to access community dashboard", () => {
+      expect(
+        canAccessDashboardRoute(USER_ROLES.OUTREACH, "/dashboard/community"),
+      ).toBe(true);
+      expect(
+        canAccessDashboardRoute(USER_ROLES.ADMIN, "/dashboard/community"),
+      ).toBe(true);
+    });
+
+    it("denies events and marketing from community dashboard", () => {
+      expect(
+        canAccessDashboardRoute(USER_ROLES.EVENTS, "/dashboard/community"),
+      ).toBe(false);
+      expect(
+        canAccessDashboardRoute(USER_ROLES.MARKETING, "/dashboard/community"),
+      ).toBe(false);
     });
   });
 
@@ -254,6 +298,7 @@ describe("permissions", () => {
     it("matches documented role permission map", () => {
       expect(ROLE_PERMISSIONS[USER_ROLES.OUTREACH]).toEqual([
         PERMISSIONS.CONTRACTS,
+        PERMISSIONS.COMMUNITY,
       ]);
       expect(ROLE_PERMISSIONS[USER_ROLES.EVENTS]).toEqual([
         PERMISSIONS.EVENTS,

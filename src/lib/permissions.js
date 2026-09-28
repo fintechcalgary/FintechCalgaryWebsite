@@ -16,6 +16,7 @@ export const PERMISSIONS = {
   EXECUTIVE_APPLICATIONS: "executive-applications",
   SETTINGS: "settings",
   USERS: "users",
+  COMMUNITY: "community",
 };
 
 /** Roles that can access the internal staff dashboard */
@@ -30,7 +31,7 @@ export const STAFF_ROLES = [
 /** Maps each staff role to its granted permissions */
 export const ROLE_PERMISSIONS = {
   [USER_ROLES.ADMIN]: Object.values(PERMISSIONS),
-  [USER_ROLES.OUTREACH]: [PERMISSIONS.CONTRACTS],
+  [USER_ROLES.OUTREACH]: [PERMISSIONS.CONTRACTS, PERMISSIONS.COMMUNITY],
   [USER_ROLES.FINANCE]: [
     PERMISSIONS.DOCUMENTATION,
     PERMISSIONS.DOCUMENTATION_FINANCE,
@@ -52,6 +53,7 @@ export const DASHBOARD_ROUTE_PERMISSIONS = {
   "/dashboard/marketing-submissions": PERMISSIONS.MARKETING_SUBMIT,
   "/dashboard/marketing-approvals": PERMISSIONS.MARKETING_APPROVE,
   "/dashboard/users": PERMISSIONS.USERS,
+  "/dashboard/community": PERMISSIONS.COMMUNITY,
 };
 
 /** API route prefixes and required permissions (admin bypasses all) */
@@ -94,6 +96,11 @@ export const API_ROUTE_PERMISSIONS = [
     approvePermission: PERMISSIONS.MARKETING_APPROVE,
   },
   { prefix: "/api/users", permission: PERMISSIONS.USERS },
+  {
+    prefix: "/api/community-posts",
+    permission: PERMISSIONS.COMMUNITY,
+    publicGet: true,
+  },
 ];
 
 export function isStaffRole(role) {
@@ -178,6 +185,9 @@ export function getDashboardNavItems(role) {
   if (hasPermission(role, PERMISSIONS.CONTRACTS)) {
     items.push({ label: "Contracts", href: "/dashboard/contracts" });
   }
+  if (hasPermission(role, PERMISSIONS.COMMUNITY)) {
+    items.push({ label: "Community", href: "/dashboard/community" });
+  }
   if (hasPermission(role, PERMISSIONS.PARTNERS)) {
     items.push({ label: "Partners", href: "/dashboard/partners" });
   }
@@ -220,6 +230,15 @@ export function getAdminPanelCards(role) {
         "Track contracts through the approvals pipeline, from outreach to execution",
       href: "/dashboard/contracts",
       color: "blue",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.COMMUNITY)) {
+    cards.push({
+      title: "Community",
+      description:
+        "Share partner and community events on the public Community Board",
+      href: "/dashboard/community",
+      color: "purple",
     });
   }
   if (hasPermission(role, PERMISSIONS.PARTNERS)) {

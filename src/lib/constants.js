@@ -23,6 +23,7 @@ export const API_ENDPOINTS = {
   DOCUMENTATION_FINANCE: "/api/documentation/finance",
   MARKETING_APPROVALS: "/api/marketing-approvals",
   USERS: "/api/users",
+  COMMUNITY_POSTS: "/api/community-posts",
 };
 
 // MongoDB Collection Names
@@ -40,6 +41,7 @@ export const COLLECTIONS = {
   CONTRACTS: "contracts",
   FINANCE_DOCUMENTS: "financeDocuments",
   MARKETING_APPROVALS: "marketingApprovals",
+  COMMUNITY_POSTS: "communityPosts",
 };
 
 // File Upload Folders
@@ -48,6 +50,7 @@ export const UPLOAD_FOLDERS = {
   PARTNER_LOGOS: "partnerLogos", // partner application org logos
   PARTNER_DISPLAY_LOGOS: "partner-logos", // display partners on public page
   EVENT_IMAGES: "eventImages",
+  COMMUNITY_BANNERS: "communityBanners",
   EXECUTIVE_IMAGES: "executiveImages",
   ROLE_IMAGES: "roleImages",
   ROLE_RESPONSIBILITIES: "role-responsibilities",

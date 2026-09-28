@@ -17,6 +17,7 @@ export default function PublicNavbar() {
       ["About", "/about"],
       ["Insights", "/insights"],
       ["Events", "/events"],
+      ["Community", "/community"],
       ["Executives", "/executives"],
       ["Partners", "/partners"],
       ["Contact", "/contact"],

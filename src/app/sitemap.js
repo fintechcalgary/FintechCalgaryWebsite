@@ -1,12 +1,13 @@
 import { connectToDatabase } from "@/lib/mongodb";
+import { COLLECTIONS } from "@/lib/constants";
 
 export default async function sitemap() {
   let eventUrls = [];
+  let communityUrls = [];
 
   try {
-    // Connect to database directly during build time
     const db = await connectToDatabase();
-    const events = await db.collection("events").find({}).toArray();
+    const events = await db.collection(COLLECTIONS.EVENTS).find({}).toArray();
 
     eventUrls = events.map((event) => ({
       url: `https://fintechcalgary.ca/events/${event._id}`,
@@ -14,16 +15,27 @@ export default async function sitemap() {
       changeFrequency: "weekly",
       priority: 0.7,
     }));
+
+    const posts = await db
+      .collection(COLLECTIONS.COMMUNITY_POSTS)
+      .find({})
+      .toArray();
+
+    communityUrls = posts.map((post) => ({
+      url: `https://fintechcalgary.ca/community/${post._id}`,
+      lastModified: post.updatedAt || post.createdAt || new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }));
   } catch (error) {
-    console.warn("Could not fetch events for sitemap:", error.message);
-    // Continue with static routes even if events fail
+    console.warn("Could not fetch sitemap entries:", error.message);
   }
 
-  // Static routes
   const routes = [
     "",
     "/about",
     "/events",
+    "/community",
     "/executives",
     "/partners",
     "/contact",
@@ -37,5 +49,5 @@ export default async function sitemap() {
     priority: route === "" ? 1.0 : 0.8,
   }));
 
-  return [...routes, ...eventUrls];
+  return [...routes, ...eventUrls, ...communityUrls];
 }

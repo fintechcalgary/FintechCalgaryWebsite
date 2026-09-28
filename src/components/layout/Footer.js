@@ -40,6 +40,7 @@ export default function Footer() {
               {[
                 { href: "/about", label: "About Us" },
                 { href: "/events", label: "Events" },
+                { href: "/community", label: "Community" },
                 { href: "/executives", label: "Executives" },
                 { href: "/partners", label: "Partners" },
                 { href: "/contact", label: "Contact" },

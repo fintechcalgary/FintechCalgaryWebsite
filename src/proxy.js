@@ -30,6 +30,7 @@ const PROTECTED_API_PREFIXES = [
   "/api/marketing-approvals",
   "/api/users",
   "/api/upload",
+  "/api/community-posts",
 ];
 
 const PROTECTED_METHODS = ["POST", "PUT", "DELETE", "PATCH"];
@@ -153,6 +154,7 @@ export const config = {
     "/api/marketing-approvals/:path*",
     "/api/users/:path*",
     "/api/upload/:path*",
+    "/api/community-posts/:path*",
     "/dashboard/:path*",
   ],
 };

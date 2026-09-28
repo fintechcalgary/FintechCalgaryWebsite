@@ -1,9 +1,12 @@
 import { describe, it, expect } from "vitest";
 import {
+  API_ENDPOINTS,
+  COLLECTIONS,
   MARKETING_APPROVAL_STATUS,
   FILE_TYPES,
   USER_ROLES,
   STAFF_ROLE_LABELS,
+  UPLOAD_FOLDERS,
 } from "@/lib/constants";
 
 describe("RBAC constants", () => {
@@ -30,5 +33,11 @@ describe("RBAC constants", () => {
   it("allows email proof files for marketing submissions", () => {
     expect(FILE_TYPES.MARKETING.EXTENSIONS).toContain("eml");
     expect(FILE_TYPES.MARKETING.EXTENSIONS).toContain("pdf");
+  });
+
+  it("defines community posts API and collection constants", () => {
+    expect(API_ENDPOINTS.COMMUNITY_POSTS).toBe("/api/community-posts");
+    expect(COLLECTIONS.COMMUNITY_POSTS).toBe("communityPosts");
+    expect(UPLOAD_FOLDERS.COMMUNITY_BANNERS).toBe("communityBanners");
   });
 });
