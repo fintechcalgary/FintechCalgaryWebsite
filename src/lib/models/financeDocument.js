@@ -1,64 +1,39 @@
-import { Binary, ObjectId } from "mongodb";
-import { COLLECTIONS } from "@/lib/constants";
+import {
+  createDocumentationDocument,
+  deleteDocumentationDocument,
+  getDocumentationDocumentById,
+  getDocumentationDocumentFileBuffer,
+  getDocumentationDocumentRawById,
+  getDocumentationDocumentsByFolder,
+} from "@/lib/models/documentationDocument";
+import {
+  ensureDefaultFolders,
+  getDocumentationFolderBySlug,
+} from "@/lib/models/documentationFolder";
+import { DOCUMENTATION_SECTIONS } from "@/lib/constants";
+
+async function getFinanceFolder(db) {
+  await ensureDefaultFolders(db);
+  return getDocumentationFolderBySlug(db, DOCUMENTATION_SECTIONS.FINANCE);
+}
 
 export async function buildFinanceDocumentFile(file) {
-  const bytes = await file.arrayBuffer();
-  return {
-    filename: file.name,
-    mimeType: file.type || "application/octet-stream",
-    size: file.size,
-    data: new Binary(Buffer.from(bytes)),
-    uploadedAt: new Date(),
-  };
-}
-
-export async function getFinanceDocuments(db) {
-  const docs = await db
-    .collection(COLLECTIONS.FINANCE_DOCUMENTS)
-    .find({})
-    .sort({ createdAt: -1 })
-    .toArray();
-
-  return docs.map(serializeFinanceDocument);
-}
-
-export async function getFinanceDocumentById(db, id) {
-  const doc = await db.collection(COLLECTIONS.FINANCE_DOCUMENTS).findOne({
-    _id: new ObjectId(id),
-  });
-  return doc ? serializeFinanceDocument(doc) : null;
-}
-
-export async function createFinanceDocument(db, { title, description, file, uploadedBy }) {
-  const now = new Date();
-  const fileData = await buildFinanceDocumentFile(file);
-  const result = await db.collection(COLLECTIONS.FINANCE_DOCUMENTS).insertOne({
-    title,
-    description: description || "",
-    section: "finance",
-    file: fileData,
-    uploadedBy,
-    createdAt: now,
-    updatedAt: now,
-  });
-
-  return getFinanceDocumentById(db, result.insertedId.toString());
-}
-
-export async function deleteFinanceDocument(db, id) {
-  const result = await db.collection(COLLECTIONS.FINANCE_DOCUMENTS).deleteOne({
-    _id: new ObjectId(id),
-  });
-  return result.deletedCount > 0;
+  const { buildDocumentationDocumentFile } = await import(
+    "@/lib/models/documentationDocument"
+  );
+  return buildDocumentationDocumentFile(file);
 }
 
 export function serializeFinanceDocument(doc) {
   if (!doc) return null;
+  const id =
+    typeof doc._id === "string" ? doc._id : doc._id?.toString?.() || doc._id;
   return {
-    _id: doc._id.toString(),
+    _id: id,
     title: doc.title,
-    description: doc.description,
-    section: doc.section,
+    description: doc.description || "",
+    section: doc.section || DOCUMENTATION_SECTIONS.FINANCE,
+    folderId: doc.folderId?.toString?.() || doc.folderId || null,
     uploadedBy: doc.uploadedBy,
     createdAt: doc.createdAt,
     updatedAt: doc.updatedAt,
@@ -73,7 +48,67 @@ export function serializeFinanceDocument(doc) {
   };
 }
 
+export async function getFinanceDocuments(db) {
+  const folder = await getFinanceFolder(db);
+  if (!folder) return [];
+  const docs = await getDocumentationDocumentsByFolder(db, folder._id);
+  return docs.map((doc) =>
+    serializeFinanceDocument({
+      ...doc,
+      section: DOCUMENTATION_SECTIONS.FINANCE,
+    }),
+  );
+}
+
+export async function getFinanceDocumentById(db, id) {
+  const folder = await getFinanceFolder(db);
+  if (!folder) return null;
+
+  const doc = await getDocumentationDocumentById(db, id);
+  if (!doc || doc.folderId !== folder._id) return null;
+
+  return serializeFinanceDocument({
+    ...doc,
+    section: DOCUMENTATION_SECTIONS.FINANCE,
+  });
+}
+
+export async function createFinanceDocument(
+  db,
+  { title, description, file, uploadedBy },
+) {
+  const folder = await getFinanceFolder(db);
+  if (!folder) throw new Error("Finance folder not found");
+
+  const created = await createDocumentationDocument(db, {
+    folderId: folder._id,
+    title,
+    description,
+    file,
+    uploadedBy,
+  });
+
+  return serializeFinanceDocument({
+    ...created,
+    section: DOCUMENTATION_SECTIONS.FINANCE,
+  });
+}
+
+export async function deleteFinanceDocument(db, id) {
+  const existing = await getFinanceDocumentById(db, id);
+  if (!existing) return false;
+  return deleteDocumentationDocument(db, id);
+}
+
 export function getFinanceDocumentFileBuffer(doc) {
-  if (!doc?.file?.data) return null;
-  return Buffer.from(doc.file.data.buffer);
+  return getDocumentationDocumentFileBuffer(doc);
+}
+
+export async function getFinanceDocumentRawById(db, id) {
+  const folder = await getFinanceFolder(db);
+  if (!folder) return null;
+
+  const doc = await getDocumentationDocumentRawById(db, id);
+  if (!doc || doc.folderId?.toString() !== folder._id) return null;
+  return doc;
 }

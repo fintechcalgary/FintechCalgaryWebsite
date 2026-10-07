@@ -5,6 +5,8 @@ import {
   STAFF_ROLES,
   canAccessApiRoute,
   canAccessDashboardRoute,
+  canManageDocumentation,
+  canManageDocumentationFolder,
   getAdminPanelCards,
   getDashboardNavItems,
   getPermissionsForRole,
@@ -57,6 +59,26 @@ describe("permissions", () => {
       expect(hasPermission(USER_ROLES.FINANCE, PERMISSIONS.CONTRACTS)).toBe(
         false,
       );
+    });
+
+    it("scopes documentation folder management by role", () => {
+      expect(canManageDocumentation(USER_ROLES.ADMIN)).toBe(true);
+      expect(canManageDocumentation(USER_ROLES.FINANCE)).toBe(false);
+      expect(
+        canManageDocumentationFolder(USER_ROLES.FINANCE, "finance"),
+      ).toBe(true);
+      expect(
+        canManageDocumentationFolder(
+          USER_ROLES.FINANCE,
+          "partnership-agreements",
+        ),
+      ).toBe(false);
+      expect(
+        canManageDocumentationFolder(
+          USER_ROLES.ADMIN,
+          "partnership-agreements",
+        ),
+      ).toBe(true);
     });
 
     it("grants events role events access only", () => {

@@ -9,6 +9,7 @@ export const PERMISSIONS = {
   PARTNERS: "partners",
   DOCUMENTATION: "documentation",
   DOCUMENTATION_FINANCE: "documentation:finance",
+  DOCUMENTATION_MANAGE: "documentation:manage",
   MARKETING_SUBMIT: "marketing:submit",
   MARKETING_APPROVE: "marketing:approve",
   MEMBERS: "members",
@@ -85,11 +86,19 @@ export const API_ROUTE_PERMISSIONS = [
     permission: PERMISSIONS.EXECUTIVE_APPLICATIONS,
   },
   { prefix: "/api/settings", permission: PERMISSIONS.SETTINGS, publicGet: true },
-  { prefix: "/api/documentation", permission: PERMISSIONS.DOCUMENTATION },
   {
     prefix: "/api/documentation/finance",
     permission: PERMISSIONS.DOCUMENTATION_FINANCE,
   },
+  {
+    prefix: "/api/documentation/folders",
+    permission: PERMISSIONS.DOCUMENTATION,
+  },
+  {
+    prefix: "/api/documentation/documents",
+    permission: PERMISSIONS.DOCUMENTATION,
+  },
+  { prefix: "/api/documentation", permission: PERMISSIONS.DOCUMENTATION },
   {
     prefix: "/api/marketing-approvals",
     permission: PERMISSIONS.MARKETING_SUBMIT,
@@ -125,6 +134,22 @@ export function hasPermission(role, permission) {
 
 export function hasAnyPermission(role, permissions) {
   return permissions.some((p) => hasPermission(role, p));
+}
+
+/** Whether the role can create folders / manage non-finance documentation */
+export function canManageDocumentation(role) {
+  return (
+    isAdmin(role) || hasPermission(role, PERMISSIONS.DOCUMENTATION_MANAGE)
+  );
+}
+
+/** Whether the role can upload/delete documents in a given folder slug */
+export function canManageDocumentationFolder(role, folderSlug) {
+  if (canManageDocumentation(role)) return true;
+  if (folderSlug === "finance") {
+    return hasPermission(role, PERMISSIONS.DOCUMENTATION_FINANCE);
+  }
+  return false;
 }
 
 export function canAccessDashboardRoute(role, pathname) {
@@ -270,7 +295,7 @@ export function getAdminPanelCards(role) {
   if (hasPermission(role, PERMISSIONS.DOCUMENTATION)) {
     cards.push({
       title: "Documentation",
-      description: "Club documentation and finance records",
+      description: "Club documentation folders, finance records, and agreements",
       href: "/dashboard/documentation",
       color: "blue",
     });

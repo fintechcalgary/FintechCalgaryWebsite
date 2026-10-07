@@ -3,10 +3,10 @@ import {
   deleteFinanceDocument,
   getFinanceDocumentById,
   getFinanceDocumentFileBuffer,
+  getFinanceDocumentRawById,
 } from "@/lib/models/financeDocument";
 import { apiResponse, requireAnyPermission, withErrorHandler } from "@/lib/api-helpers";
 import { PERMISSIONS } from "@/lib/permissions";
-import { ObjectId } from "mongodb";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -18,10 +18,9 @@ export const GET = withErrorHandler(async (_req, { params }) => {
   ]);
   if (error) return error;
 
+  const { documentId } = await params;
   const db = await connectToDatabase();
-  const doc = await db.collection("financeDocuments").findOne({
-    _id: new ObjectId(params.documentId),
-  });
+  const doc = await getFinanceDocumentRawById(db, documentId);
 
   if (!doc) return apiResponse.notFound("Document not found");
 
@@ -42,10 +41,11 @@ export const DELETE = withErrorHandler(async (_req, { params }) => {
   ]);
   if (error) return error;
 
+  const { documentId } = await params;
   const db = await connectToDatabase();
-  const existing = await getFinanceDocumentById(db, params.documentId);
+  const existing = await getFinanceDocumentById(db, documentId);
   if (!existing) return apiResponse.notFound("Document not found");
 
-  await deleteFinanceDocument(db, params.documentId);
+  await deleteFinanceDocument(db, documentId);
   return apiResponse.success({ deleted: true });
 });

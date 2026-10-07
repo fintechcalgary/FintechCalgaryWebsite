@@ -3,8 +3,12 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { hasPermission } from "@/lib/permissions";
-import { PERMISSIONS } from "@/lib/permissions";
+import {
+  canManageDocumentation,
+  canManageDocumentationFolder,
+  hasPermission,
+  PERMISSIONS,
+} from "@/lib/permissions";
 
 /**
  * Client-side role and permission checks for dashboard pages.
@@ -39,6 +43,9 @@ export default function useRoleAccess(requiredPermission) {
     isAdmin: role === "admin",
     hasPermission: (permission) => hasPermission(role, permission),
     canManageFinance: hasPermission(role, PERMISSIONS.DOCUMENTATION_FINANCE),
+    canManageDocumentation: canManageDocumentation(role),
+    canManageDocumentationFolder: (folderSlug) =>
+      canManageDocumentationFolder(role, folderSlug),
     canSubmitMarketing: hasPermission(role, PERMISSIONS.MARKETING_SUBMIT),
     canApproveMarketing: hasPermission(role, PERMISSIONS.MARKETING_APPROVE),
   };

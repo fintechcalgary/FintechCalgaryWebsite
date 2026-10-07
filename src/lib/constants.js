@@ -20,6 +20,8 @@ export const API_ENDPOINTS = {
   EXECUTIVE_ROLES: "/api/executive-roles",
   CONTRACTS: "/api/contracts",
   DOCUMENTATION: "/api/documentation",
+  DOCUMENTATION_FOLDERS: "/api/documentation/folders",
+  DOCUMENTATION_DOCUMENTS: "/api/documentation/documents",
   DOCUMENTATION_FINANCE: "/api/documentation/finance",
   MARKETING_APPROVALS: "/api/marketing-approvals",
   USERS: "/api/users",
@@ -40,6 +42,8 @@ export const COLLECTIONS = {
   LOGS: "logs",
   CONTRACTS: "contracts",
   FINANCE_DOCUMENTS: "financeDocuments",
+  DOCUMENTATION_FOLDERS: "documentationFolders",
+  DOCUMENTATION_DOCUMENTS: "documentationDocuments",
   MARKETING_APPROVALS: "marketingApprovals",
   COMMUNITY_POSTS: "communityPosts",
 };
@@ -297,8 +301,26 @@ export const MARKETING_APPROVAL_STATUS = {
   REJECTED: "rejected",
 };
 
-// Documentation sections
+// Documentation sections / default folders
 export const DOCUMENTATION_SECTIONS = {
   FINANCE: "finance",
+  PARTNERSHIP_AGREEMENTS: "partnership-agreements",
 };
+
+export const DEFAULT_DOCUMENTATION_FOLDERS = [
+  {
+    slug: DOCUMENTATION_SECTIONS.FINANCE,
+    name: "Finance",
+    description:
+      "Excel, Word, PDF, and other finance documents for tracking club finances.",
+    protected: true,
+  },
+  {
+    slug: DOCUMENTATION_SECTIONS.PARTNERSHIP_AGREEMENTS,
+    name: "Partnership Agreements",
+    description:
+      "Signed partnership agreements, MOUs, and related partner documents.",
+    protected: true,
+  },
+];
 
