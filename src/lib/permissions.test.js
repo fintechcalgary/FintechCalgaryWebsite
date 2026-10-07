@@ -19,12 +19,14 @@ import { USER_ROLES } from "@/lib/constants";
 
 describe("permissions", () => {
   describe("isStaffRole", () => {
-    it("returns true for all five staff roles", () => {
+    it("returns true for all staff roles", () => {
       expect(isStaffRole(USER_ROLES.ADMIN)).toBe(true);
       expect(isStaffRole(USER_ROLES.OUTREACH)).toBe(true);
       expect(isStaffRole(USER_ROLES.FINANCE)).toBe(true);
       expect(isStaffRole(USER_ROLES.EVENTS)).toBe(true);
       expect(isStaffRole(USER_ROLES.MARKETING)).toBe(true);
+      expect(isStaffRole(USER_ROLES.PROJECTS)).toBe(true);
+      expect(STAFF_ROLES).toHaveLength(6);
     });
 
     it("returns false for associate and member", () => {
@@ -99,6 +101,24 @@ describe("permissions", () => {
         hasPermission(USER_ROLES.MARKETING, PERMISSIONS.MARKETING_APPROVE),
       ).toBe(false);
     });
+
+    it("grants projects executive applications access only", () => {
+      expect(
+        hasPermission(USER_ROLES.PROJECTS, PERMISSIONS.EXECUTIVE_APPLICATIONS),
+      ).toBe(true);
+      expect(hasPermission(USER_ROLES.PROJECTS, PERMISSIONS.EXECUTIVES)).toBe(
+        false,
+      );
+      expect(hasPermission(USER_ROLES.PROJECTS, PERMISSIONS.PARTNERS)).toBe(
+        false,
+      );
+      expect(hasPermission(USER_ROLES.PROJECTS, PERMISSIONS.CONTRACTS)).toBe(
+        false,
+      );
+      expect(
+        hasPermission(USER_ROLES.PROJECTS, PERMISSIONS.MARKETING_SUBMIT),
+      ).toBe(false);
+    });
   });
 
   describe("canAccessDashboardRoute", () => {
@@ -150,6 +170,21 @@ describe("permissions", () => {
           USER_ROLES.MARKETING,
           "/dashboard/marketing-approvals",
         ),
+      ).toBe(false);
+    });
+
+    it("allows projects to access executive applications only", () => {
+      expect(
+        canAccessDashboardRoute(
+          USER_ROLES.PROJECTS,
+          "/dashboard/executive-applications",
+        ),
+      ).toBe(true);
+      expect(
+        canAccessDashboardRoute(USER_ROLES.PROJECTS, "/dashboard/partners"),
+      ).toBe(false);
+      expect(
+        canAccessDashboardRoute(USER_ROLES.PROJECTS, "/dashboard/contracts"),
       ).toBe(false);
     });
   });
@@ -265,6 +300,18 @@ describe("permissions", () => {
       expect(items.some((i) => i.href === "/dashboard/documentation")).toBe(
         true,
       );
+    });
+
+    it("returns executive applications nav and card for projects", () => {
+      const items = getDashboardNavItems(USER_ROLES.PROJECTS);
+      expect(
+        items.some((i) => i.href === "/dashboard/executive-applications"),
+      ).toBe(true);
+      expect(items.some((i) => i.href === "/dashboard/partners")).toBe(false);
+
+      const cards = getAdminPanelCards(USER_ROLES.PROJECTS);
+      expect(cards).toHaveLength(1);
+      expect(cards[0].href).toBe("/dashboard/executive-applications");
     });
 
     it("returns admin panel cards based on role", () => {

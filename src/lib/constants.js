@@ -202,6 +202,7 @@ export const USER_ROLES = {
   FINANCE: "finance",
   EVENTS: "events",
   MARKETING: "marketing",
+  PROJECTS: "projects",
   MEMBER: "member",
   ASSOCIATE: "associate",
 };
@@ -212,6 +213,7 @@ export const STAFF_ROLE_LABELS = {
   [USER_ROLES.FINANCE]: "Finance",
   [USER_ROLES.EVENTS]: "Events",
   [USER_ROLES.MARKETING]: "Marketing",
+  [USER_ROLES.PROJECTS]: "Projects",
 };
 
 // Application Status

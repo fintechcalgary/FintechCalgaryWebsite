@@ -8,6 +8,7 @@ import { STAFF_ROLES } from "@/lib/permissions";
 
 function destinationForRole(role) {
   if (role === "associate") return "/partner-dashboard";
+  if (role === "projects") return "/dashboard/executive-applications";
   if (STAFF_ROLES.includes(role)) return "/dashboard";
   return null;
 }

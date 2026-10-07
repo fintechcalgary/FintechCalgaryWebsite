@@ -27,6 +27,7 @@ export const STAFF_ROLES = [
   USER_ROLES.FINANCE,
   USER_ROLES.EVENTS,
   USER_ROLES.MARKETING,
+  USER_ROLES.PROJECTS,
 ];
 
 /** Maps each staff role to its granted permissions */
@@ -42,6 +43,7 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.PARTNERS,
     PERMISSIONS.MARKETING_SUBMIT,
   ],
+  [USER_ROLES.PROJECTS]: [PERMISSIONS.EXECUTIVE_APPLICATIONS],
 };
 
 /** Dashboard routes and required permissions */
@@ -206,6 +208,12 @@ export function getDashboardNavItems(role) {
   }
   if (hasPermission(role, PERMISSIONS.EXECUTIVES)) {
     items.push({ label: "Executives", href: "/dashboard#executives" });
+  }
+  if (hasPermission(role, PERMISSIONS.EXECUTIVE_APPLICATIONS)) {
+    items.push({
+      label: "Executive Applications",
+      href: "/dashboard/executive-applications",
+    });
   }
   if (hasPermission(role, PERMISSIONS.CONTRACTS)) {
     items.push({ label: "Contracts", href: "/dashboard/contracts" });

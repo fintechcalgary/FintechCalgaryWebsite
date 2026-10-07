@@ -28,6 +28,13 @@ const STAFF_USERS = [
     password: "marketing123",
     role: "marketing",
   },
+  {
+    username: "projects",
+    password: "projects123",
+    role: "projects",
+    // Existing DB account: update role only; do not reset password on seed.
+    preservePassword: true,
+  },
 ];
 
 module.exports = { STAFF_USERS };

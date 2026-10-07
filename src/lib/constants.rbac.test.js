@@ -10,12 +10,13 @@ import {
 } from "@/lib/constants";
 
 describe("RBAC constants", () => {
-  it("defines all five staff roles with labels", () => {
+  it("defines all staff roles with labels", () => {
     expect(STAFF_ROLE_LABELS[USER_ROLES.ADMIN]).toBe("Admin");
     expect(STAFF_ROLE_LABELS[USER_ROLES.OUTREACH]).toBe("Outreach");
     expect(STAFF_ROLE_LABELS[USER_ROLES.FINANCE]).toBe("Finance");
     expect(STAFF_ROLE_LABELS[USER_ROLES.EVENTS]).toBe("Events");
     expect(STAFF_ROLE_LABELS[USER_ROLES.MARKETING]).toBe("Marketing");
+    expect(STAFF_ROLE_LABELS[USER_ROLES.PROJECTS]).toBe("Projects");
   });
 
   it("defines marketing approval workflow statuses", () => {
