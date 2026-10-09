@@ -1,42 +1,56 @@
 "use client";
 
-import { FiX } from "react-icons/fi";
 import ModalRoot from "./ModalRoot";
+import ModalCloseButton from "./ModalCloseButton";
+
+const SIZE_MAX_WIDTH = {
+  sm: "max-w-md",
+  md: "max-w-3xl",
+  lg: "max-w-5xl",
+  xl: "max-w-6xl",
+};
 
 /**
- * Content modal with optional title — preserves the PortalModal API.
+ * General content / form modal with optional title header and sticky footer.
+ * Prefer `size` ("sm" | "md" | "lg" | "xl"); `maxWidth` remains for callers
+ * that already pass Tailwind classes.
  */
 export default function ContentModal({
   isOpen,
   onClose,
   children,
   title,
-  maxWidth = "max-w-4xl",
+  footer,
+  size,
+  maxWidth,
   showCloseButton = true,
+  panelClassName = "",
+  bodyClassName = "",
 }) {
+  const widthClass =
+    maxWidth || SIZE_MAX_WIDTH[size] || SIZE_MAX_WIDTH.lg;
+
   return (
-    <ModalRoot isOpen={isOpen} onClose={onClose} usePortal>
+    <ModalRoot isOpen={isOpen} onClose={onClose}>
       <div
-        className={`w-full ${maxWidth} mx-auto bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-gray-800/50 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col pointer-events-auto`}
+        className={`fc-modal-panel mx-auto flex max-h-[90vh] flex-col border-gray-800/50 ${widthClass} ${panelClassName}`.trim()}
         onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label={typeof title === "string" ? title : undefined}
       >
-        {title && (
-          <div className="sticky top-0 z-10 bg-gray-900/95 backdrop-blur-sm p-6 border-b border-gray-800/50 flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-white">
-              {title}
-            </h2>
-            {showCloseButton && (
-              <button
-                type="button"
-                onClick={onClose}
-                className="p-3 hover:bg-gray-800/50 rounded-xl transition-all duration-200 text-gray-400 hover:text-white hover:scale-110"
-              >
-                <FiX className="w-5 h-5" />
-              </button>
-            )}
+        {title ? (
+          <div className="fc-modal-header">
+            <h2 className="fc-modal-title">{title}</h2>
+            {showCloseButton ? <ModalCloseButton onClick={onClose} /> : null}
           </div>
-        )}
-        <div className="flex-1 overflow-y-auto">{children}</div>
+        ) : null}
+        <div
+          className={`min-h-0 flex-1 overflow-y-auto ${bodyClassName}`.trim()}
+        >
+          {children}
+        </div>
+        {footer ? <div className="fc-modal-footer">{footer}</div> : null}
       </div>
     </ModalRoot>
   );

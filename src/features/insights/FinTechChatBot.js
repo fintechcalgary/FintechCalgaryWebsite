@@ -7,7 +7,6 @@ import {
   FiMessageCircle,
   FiSend,
   FiZap,
-  FiMinimize2,
   FiTrendingUp,
   FiBook,
   FiBriefcase,
@@ -20,6 +19,7 @@ import {
 import { useChatBot } from "@/contexts/ChatBotContext";
 import { useRateLimit } from "@/hooks/useRateLimit";
 import { CostTracker } from "@/lib/costTracker";
+import ModalCloseButton from "@/components/ui/Modal/ModalCloseButton";
 
 const MAX_MESSAGE_LENGTH = 2000;
 const STORAGE_KEY = "fintech_chat_messages";
@@ -387,18 +387,15 @@ export default function FinTechChatBot({ articles = [] }) {
                 </p>
               </div>
               <div className="flex items-center gap-1.5">
-                <button
+                <ModalCloseButton
+                  size="sm"
                   onClick={() => {
                     setIsOpen(false);
                     setIsMinimized(false);
                     setContextIsOpen(false);
                     setContextIsMinimized(false);
                   }}
-                  className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200 text-gray-400 hover:text-primary hover:scale-110"
-                  title="Close"
-                >
-                  <FiMinimize2 className="w-4 h-4" />
-                </button>
+                />
               </div>
             </div>
 

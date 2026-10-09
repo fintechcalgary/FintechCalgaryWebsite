@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  FiX,
   FiExternalLink,
   FiZap,
   FiCalendar,
@@ -11,8 +10,8 @@ import {
   FiMessageCircle,
 } from "react-icons/fi";
 import { useChatBot } from "@/contexts/ChatBotContext";
-import { useModalBodyEffects } from "@/hooks/useModalBodyEffects";
-import FramerModalBackdrop from "@/components/ui/FramerModalBackdrop";
+import ModalRoot from "@/components/ui/Modal/ModalRoot";
+import ModalCloseButton from "@/components/ui/Modal/ModalCloseButton";
 import { CompactSentimentBar } from "@/features/insights/SentimentBars";
 
 function getIssueNumber(weekStart) {
@@ -47,8 +46,6 @@ export default function WeeklyDigestModal({
 }) {
   const scrollRef = useRef(null);
   const { setIsOpen: setChatOpen } = useChatBot();
-
-  useModalBodyEffects(isOpen, onClose);
 
   const issueNumber = getIssueNumber(weekStart);
   const weekRange = formatWeekRange(weekStart, weekEnd);
@@ -106,27 +103,19 @@ export default function WeeklyDigestModal({
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <FramerModalBackdrop
-            motionKey="backdrop"
-            onClose={onClose}
-            className="bg-black/70 backdrop-blur-sm"
-          />
-
-          <motion.div
-            key="modal"
-            initial={{ opacity: 0, y: 40, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 30, scale: 0.97 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Weekly FinTech Digest"
-            className="fixed inset-4 z-[60] flex flex-col overflow-hidden rounded-2xl border border-gray-700/50 bg-gradient-to-br from-gray-900/95 via-gray-900 to-gray-950 shadow-2xl shadow-black/50 md:inset-8 lg:inset-x-16 lg:inset-y-8 xl:inset-x-28"
-            onClick={(e) => e.stopPropagation()}
-          >
+    <ModalRoot isOpen={isOpen} onClose={onClose} layout="none">
+      <motion.div
+        key="modal"
+        initial={{ opacity: 0, y: 40, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 30, scale: 0.97 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Weekly FinTech Digest"
+        className="fc-modal-panel fixed inset-4 z-[999999] flex max-h-none flex-col border-gray-700/50 bg-gradient-to-br from-gray-900/95 via-gray-900 to-gray-950 shadow-black/50 md:inset-8 lg:inset-x-16 lg:inset-y-8 xl:inset-x-28"
+        onClick={(e) => e.stopPropagation()}
+      >
             {/* Soft ambient glows */}
             <div
               className="pointer-events-none absolute -left-16 top-0 h-40 w-40 rounded-full bg-primary/15 blur-3xl"
@@ -137,14 +126,12 @@ export default function WeeklyDigestModal({
               aria-hidden
             />
 
-            <button
-              type="button"
-              aria-label="Close weekly digest"
+            <ModalCloseButton
               onClick={onClose}
-              className="fc-modal-icon-close absolute right-4 top-4 z-20"
-            >
-              <FiX className="h-4 w-4" />
-            </button>
+              label="Close weekly digest"
+              size="sm"
+              className="absolute right-4 top-4 z-20"
+            />
 
             {/* Header */}
             <div className="relative flex-shrink-0 border-b border-gray-800/50 px-6 pb-5 pt-6">
@@ -321,11 +308,9 @@ export default function WeeklyDigestModal({
                   </div>
                 </aside>
               </div>
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+      </div>
+      </motion.div>
+    </ModalRoot>
   );
 }
 

@@ -9,14 +9,17 @@ const spring = { type: "spring", damping: 25, stiffness: 300 };
 
 /**
  * Shared portal modal shell: backdrop, body lock, Escape-to-close.
+ * layout="center" wraps children in a centered overlay (default).
+ * layout="none" portals backdrop + children only (for custom full-bleed panels).
  */
 export default function ModalRoot({
   isOpen,
   onClose,
   children,
-  backdropClassName = "bg-black/70 backdrop-blur-2xl z-[999998]",
-  containerClassName = "z-[999999]",
+  layout = "center",
   usePortal = true,
+  backdropClassName = "",
+  containerClassName = "",
 }) {
   const mounted = useSyncExternalStore(
     () => () => {},
@@ -34,18 +37,22 @@ export default function ModalRoot({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`fixed inset-0 ${backdropClassName}`.trim()}
+            className={`fc-modal-backdrop ${backdropClassName}`.trim()}
             onClick={onClose}
           />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={spring}
-            className={`fixed inset-0 flex items-center justify-center p-4 pointer-events-none ${containerClassName}`.trim()}
-          >
-            {children}
-          </motion.div>
+          {layout === "center" ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={spring}
+              className={`fc-modal-container ${containerClassName}`.trim()}
+            >
+              {children}
+            </motion.div>
+          ) : (
+            children
+          )}
         </>
       )}
     </AnimatePresence>
