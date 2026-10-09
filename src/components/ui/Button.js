@@ -8,6 +8,7 @@ const VARIANT_CLASSES = {
   danger:
     "inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-gradient-to-r from-red-500 to-rose-600 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-red-500/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110 hover:shadow-xl hover:shadow-red-500/30 active:translate-y-0 active:scale-[0.98]",
   cancel: "fc-btn-dashboard-cancel",
+  soft: "fc-btn-soft-chip",
   ghost:
     "inline-flex items-center justify-center gap-2 rounded-xl border border-transparent bg-transparent px-4 py-2 text-sm font-medium text-gray-300 transition-all duration-200 hover:border-white/10 hover:bg-white/[0.06] hover:text-white active:scale-[0.98]",
   success:

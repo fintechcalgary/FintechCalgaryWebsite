@@ -8,6 +8,19 @@ export default function Spinner({ size = "md", className = "", text = "Loading" 
 }
 
 /**
+ * Tiny CSS spinner for buttons / compact UI (not the branded AiLoader).
+ */
+export function InlineSpinner({ className = "", label = "Loading" }) {
+  return (
+    <span
+      className={`fc-spinner-inline ${className}`.trim()}
+      role="status"
+      aria-label={label}
+    />
+  );
+}
+
+/**
  * Full-area centered loading state.
  */
 export function LoadingState({

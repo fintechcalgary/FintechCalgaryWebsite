@@ -83,4 +83,27 @@ export function PageTitle({
   );
 }
 
+/**
+ * Admin dashboard page H1 — matches Community accent title treatment.
+ */
+export function AdminPageTitle({
+  children,
+  as: Tag = "h1",
+  className = "",
+  sizeClass = "text-3xl sm:text-4xl",
+}) {
+  return (
+    <Tag className={`fc-title-accent ${sizeClass} ${className}`.trim()}>
+      {children}
+    </Tag>
+  );
+}
+
+/**
+ * Admin page intro line under the title.
+ */
+export function AdminPageLede({ children, className = "" }) {
+  return <p className={`fc-lede ${className}`.trim()}>{children}</p>;
+}
+
 export default SectionHeading;

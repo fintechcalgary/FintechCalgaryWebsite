@@ -2,19 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Shared dashboard modal shell (see components/ui/Modal/DashboardModal) */
+/* Shared modal shell (see components/ui/Modal) */
 @layer components {
-  .fc-dashboard-modal-backdrop {
-    @apply fixed inset-0 z-50 flex animate-fadeIn items-center justify-center bg-black/50 p-4 backdrop-blur-sm;
+  .fc-modal-backdrop {
+    @apply fixed inset-0 z-[999998] bg-black/70 backdrop-blur-xl;
   }
 
-  .fc-dashboard-modal-panel {
-    @apply mx-4 w-full animate-slideInUp border border-gray-700/50 bg-gray-900/95;
+  .fc-modal-container {
+    @apply fixed inset-0 z-[999999] flex items-center justify-center p-3 pointer-events-none sm:p-4 md:p-6;
   }
 
-  /* Icon-only close control inside modals (dashboard forms, etc.) */
+  .fc-modal-panel {
+    @apply w-full overflow-hidden rounded-2xl border bg-gray-900/95 shadow-2xl backdrop-blur-xl pointer-events-auto;
+  }
+
+  .fc-modal-header {
+    @apply sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-gray-800/50 bg-gray-900/95 px-4 py-4 backdrop-blur-sm sm:px-6 sm:py-5;
+  }
+
+  .fc-modal-title {
+    @apply text-lg font-bold text-white sm:text-xl;
+  }
+
+  .fc-modal-body {
+    @apply p-4 sm:p-6;
+  }
+
+  .fc-modal-footer {
+    @apply sticky bottom-0 z-10 flex flex-col-reverse gap-3 border-t border-gray-800/50 bg-gray-900/95 px-4 py-4 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-end sm:px-6 sm:py-5;
+  }
+
+  /* Icon-only close control inside modals */
   .fc-modal-icon-close {
-    @apply rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800/50 hover:text-white;
+    @apply rounded-xl p-2 text-gray-400 transition-all duration-200 hover:bg-gray-800/50 hover:text-white hover:scale-105;
+  }
+
+  /* File-picker control used inside form modals */
+  .fc-modal-file-btn {
+    @apply inline-flex cursor-pointer items-center gap-2 rounded-xl border border-gray-700 bg-gray-900/50 px-3 py-2 text-white transition-all duration-200 hover:border-primary hover:bg-gray-700;
   }
 
   /* Dashboard form dialogs — secondary / cancel */
@@ -45,6 +70,21 @@
     @apply rounded-2xl border border-gray-800/50 bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-sm transition-all duration-500 hover:border-primary/30;
   }
 
+  /* Admin dashboard list / empty panels */
+  .fc-admin-panel {
+    @apply rounded-2xl border border-white/10 bg-gray-900/60 backdrop-blur-xl;
+  }
+
+  /* Admin page back link — left-aligned text control */
+  .fc-admin-back {
+    @apply mb-6 inline-flex items-center gap-2 text-sm text-gray-300 transition-colors hover:text-primary;
+  }
+
+  /* Soft / chip-style admin action (toolbar buttons) */
+  .fc-btn-soft-chip {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/20 px-4 py-2 text-sm font-medium text-primary transition-all duration-200 hover:bg-primary/30 hover:border-primary/50 active:scale-[0.98];
+  }
+
   /* Page / section intro under titles — light, open, secondary to display headers */
   .fc-lede {
     @apply text-base font-light leading-relaxed tracking-wide text-white/55 sm:text-lg md:text-xl md:leading-[1.7];
@@ -67,6 +107,20 @@
   /* Inline / “learn more” links — clear accent without competing with CTAs */
   .fc-link {
     @apply font-medium tracking-wide text-primary transition-colors duration-300 hover:text-violet-300;
+  }
+
+  .fc-link-underline {
+    @apply font-medium tracking-wide text-primary underline decoration-primary/30 underline-offset-[3px] transition-colors duration-300 hover:text-violet-300 hover:decoration-violet-300/50;
+  }
+
+  /* Form field labels (admin + public forms) */
+  .fc-form-label {
+    @apply mb-1 block text-sm font-medium text-gray-300;
+  }
+
+  /* Compact spinner for buttons / inline busy states */
+  .fc-spinner-inline {
+    @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent;
   }
 
   /* In-section / card titles — keep weight moderate so they don’t overwhelm cards */
@@ -223,8 +277,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   transition: all 0.3s ease-in-out;
 }
 
+/* Canonical form control for admin/modals (overrides base input styles) */
 .form-input {
-  @apply w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all;
+  @apply w-full rounded-xl border border-gray-700/50 bg-gray-800/50 px-4 py-3 text-white placeholder-gray-400 shadow-none transition-all duration-200 hover:border-gray-600/50 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20;
+}
+
+/* Inline filter / toolbar controls — size to content, not full row */
+.form-input-auto,
+select.form-input-auto {
+  width: auto;
+  max-width: 100%;
 }
 
 /* Safari-specific input resets */
