@@ -12,7 +12,9 @@ export default function RegisterEventForm({ eventId }) {
   const [formData, setFormData] = useState({
     email: "",
     name: "",
+    isUofCStudent: "",
     ucid: "",
+    school: "",
     comments: "",
     companyName: "",
     companyRole: "",
@@ -36,15 +38,31 @@ export default function RegisterEventForm({ eventId }) {
     fetchEvent();
   }, [eventId]);
 
+  const handleStudentStatusChange = (value) => {
+    setFormData({
+      ...formData,
+      isUofCStudent: value,
+      ucid: value === "yes" ? formData.ucid : "",
+      school: value === "no" ? formData.school : "",
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const payload = {
+        ...formData,
+        isUofCStudent: formData.isUofCStudent === "yes",
+        ucid: formData.isUofCStudent === "yes" ? formData.ucid : "",
+        school: formData.isUofCStudent === "no" ? formData.school : "",
+      };
+
       const response = await fetch(`/api/events/${eventId}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -222,24 +240,39 @@ export default function RegisterEventForm({ eventId }) {
                       placeholder="Your role or position at the company"
                     />
                   </div>
-
-                  <div className="input-group">
-                    <label>UCID (if applicable)</label>
-                    <input
-                      type="text"
-                      value={formData.ucid}
-                      onChange={(e) =>
-                        setFormData({ ...formData, ucid: e.target.value })
-                      }
-                      placeholder="Your UCID (e.g., 12345678)"
-                    />
-                  </div>
                 </>
               )}
 
-              {event && event.eventType !== "webinar" && (
+              <div className="input-group">
+                <label>
+                  Are you a University of Calgary student?{" "}
+                  <span className="text-red-400">*</span>
+                </label>
+                <select
+                  value={formData.isUofCStudent}
+                  onChange={(e) => handleStudentStatusChange(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Select an option
+                  </option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              {formData.isUofCStudent === "yes" && (
                 <div className="input-group">
-                  <label>UCID (Optional)</label>
+                  <label>
+                    UCID{" "}
+                    {event?.eventType === "webinar" ? (
+                      "(if applicable)"
+                    ) : (
+                      <span className="text-gray-500 font-normal">
+                        (Optional)
+                      </span>
+                    )}
+                  </label>
                   <input
                     type="text"
                     value={formData.ucid}
@@ -247,6 +280,23 @@ export default function RegisterEventForm({ eventId }) {
                       setFormData({ ...formData, ucid: e.target.value })
                     }
                     placeholder="Your UCID (e.g., 12345678)"
+                  />
+                </div>
+              )}
+
+              {formData.isUofCStudent === "no" && (
+                <div className="input-group">
+                  <label>
+                    School <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.school}
+                    onChange={(e) =>
+                      setFormData({ ...formData, school: e.target.value })
+                    }
+                    required
+                    placeholder="Your school or university"
                   />
                 </div>
               )}

@@ -92,11 +92,25 @@ export default function EventRegistrations({ eventId }) {
     if (!event?.registrations) return;
 
     downloadCsv({
-      headers: ["Name", "Email", "UCID", "Registration Date", "Comments"],
+      headers: [
+        "Name",
+        "Email",
+        "UofC Student",
+        "UCID",
+        "School",
+        "Registration Date",
+        "Comments",
+      ],
       rows: event.registrations.map((reg) => [
         reg.name,
         reg.userEmail,
+        reg.isUofCStudent === true
+          ? "Yes"
+          : reg.isUofCStudent === false
+            ? "No"
+            : "",
         reg.ucid || "",
+        reg.school || "",
         formatDateTime(reg.registeredAt),
         reg.comments || "",
       ]),
@@ -214,6 +228,15 @@ export default function EventRegistrations({ eventId }) {
                           <span>UCID: {reg.ucid}</span>
                         </div>
                       )}
+
+                      {reg.school && (
+                        <div className="flex items-center fc-body text-lg">
+                          <div className="w-8 h-8 bg-gray-800/50 rounded-full flex items-center justify-center mr-3">
+                            <FiUser className="w-4 h-4 text-primary" />
+                          </div>
+                          <span>School: {reg.school}</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Comments */}
@@ -287,6 +310,12 @@ export default function EventRegistrations({ eventId }) {
                 <div>
                   <strong>UCID:</strong>{" "}
                   {event?.registrations?.[registrationToDelete]?.ucid}
+                </div>
+              )}
+              {event?.registrations?.[registrationToDelete]?.school && (
+                <div>
+                  <strong>School:</strong>{" "}
+                  {event?.registrations?.[registrationToDelete]?.school}
                 </div>
               )}
             </div>
