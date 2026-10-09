@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 import Spinner from "@/components/ui/Spinner";
+import Button from "@/components/ui/Button";
 import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function RoleManager({
@@ -31,13 +32,15 @@ export default function RoleManager({
               </p>
             </div>
             {executiveApplicationsOpen && (
-              <button
+              <Button
+                type="button"
+                variant="primary"
                 onClick={onAddClick}
-                className="px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium"
+                className="!px-4 !py-2"
               >
                 <FiPlus className="w-4 h-4" />
                 Add an Opening
-              </button>
+              </Button>
             )}
           </div>
 
@@ -47,18 +50,20 @@ export default function RoleManager({
               <Spinner size="md" />
             </div>
           ) : roles.length === 0 ? (
-            <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-white/10 p-12 text-center">
+            <div className="fc-admin-panel p-12 text-center">
               <p className="fc-body-lg mb-6">
                 No executive roles have been created yet.
               </p>
               {executiveApplicationsOpen && (
-                <button
+                <Button
+                  type="button"
+                  variant="primary"
                   onClick={onAddClick}
-                  className="px-6 py-3 rounded-xl bg-primary text-white hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium mx-auto"
+                  className="mx-auto"
                 >
                   <FiPlus className="w-4 h-4" />
                   Create First Role
-                </button>
+                </Button>
               )}
             </div>
           ) : (

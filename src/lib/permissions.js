@@ -163,7 +163,16 @@ export function canAccessDashboardRoute(role, pathname) {
   if (isAdmin(role)) return true;
 
   const normalized = pathname.split("?")[0].split("#")[0];
-  const permission = DASHBOARD_ROUTE_PERMISSIONS[normalized];
+  let permission = DASHBOARD_ROUTE_PERMISSIONS[normalized];
+
+  // Nested dashboard routes (e.g. /dashboard/executive-applications/[id])
+  if (!permission) {
+    const match = Object.keys(DASHBOARD_ROUTE_PERMISSIONS)
+      .filter((route) => normalized.startsWith(`${route}/`))
+      .sort((a, b) => b.length - a.length)[0];
+    if (match) permission = DASHBOARD_ROUTE_PERMISSIONS[match];
+  }
+
   if (!permission) return true;
 
   return hasPermission(role, permission);

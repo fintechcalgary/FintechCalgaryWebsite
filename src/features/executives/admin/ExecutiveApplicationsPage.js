@@ -3,20 +3,24 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import {
-  FiTrash2,
   FiDownload,
   FiX,
-  FiEye,
-  FiArrowLeft,
   FiUpload,
 } from "react-icons/fi";
 import Image from "next/image";
 import DashboardCenterModal from "@/components/ui/Modal/DashboardModal";
+import ConfirmModal from "@/components/ui/Modal/ConfirmModal";
+import ModalCloseButton from "@/components/ui/Modal/ModalCloseButton";
+import AdminBackLink from "@/components/ui/AdminBackLink";
+import {
+  AdminPageTitle,
+  AdminPageLede,
+} from "@/components/ui/SectionHeading";
+import Button from "@/components/ui/Button";
 import RoleManager from "@/features/executives/admin/RoleManager";
 import ApplicationList from "@/features/executives/admin/ApplicationList";
-import { LoadingState } from "@/components/ui/Spinner";
+import { LoadingState, InlineSpinner } from "@/components/ui/Spinner";
 import { useSettings } from "@/contexts/SettingsContext";
 import useConfirmDelete from "@/hooks/useConfirmDelete";
 import useFileUpload from "@/hooks/useFileUpload";
@@ -52,8 +56,6 @@ export default function ExecutiveApplicationsPage() {
     close: closeDeleteRoleModal,
   } = useConfirmDelete();
   const { upload, uploading: uploadingImage } = useFileUpload();
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [selectedApplication, setSelectedApplication] = useState(null);
 
   // Role management state
   const [roles, setRoles] = useState([]);
@@ -336,16 +338,6 @@ export default function ExecutiveApplicationsPage() {
     } finally {
       setSettingsLoading(false);
     }
-  };
-
-  const openDetailsModal = (application) => {
-    setSelectedApplication(application);
-    setShowDetailsModal(true);
-  };
-
-  const closeDetailsModal = () => {
-    setShowDetailsModal(false);
-    setSelectedApplication(null);
   };
 
   const handleDeleteApplication = async () => {
@@ -643,36 +635,26 @@ export default function ExecutiveApplicationsPage() {
   return (
     <div className="min-h-screen relative">
       <main className="container mx-auto px-6 py-8 max-w-7xl relative animate-fadeIn">
+        <AdminBackLink />
+
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-white">
-              Executive Applications
-            </h1>
-            <p className="fc-body-lg">
+            <AdminPageTitle>Executive Applications</AdminPageTitle>
+            <AdminPageLede>
               Review and manage executive team applications
-            </p>
+            </AdminPageLede>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+          {applications.length > 0 ? (
+            <button
+              onClick={exportToCSV}
+              className="flex items-center justify-center gap-2 rounded-lg border border-green-500/30 bg-green-600/20 px-4 py-2 text-sm text-green-400 transition-all duration-300 hover:bg-green-600/30"
             >
-              <FiArrowLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">Back to Dashboard</span>
-              <span className="sm:hidden">Back</span>
-            </Link>
-            {applications.length > 0 && (
-              <button
-                onClick={exportToCSV}
-                className="px-4 py-2 rounded-lg bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
-              >
-                <FiDownload className="w-4 h-4" />
-                <span className="hidden sm:inline">Export CSV</span>
-                <span className="sm:hidden">Export</span>
-              </button>
-            )}
-          </div>
+              <FiDownload className="h-4 w-4" />
+              <span className="hidden sm:inline">Export CSV</span>
+              <span className="sm:hidden">Export</span>
+            </button>
+          ) : null}
         </div>
 
         {/* Executive Applications Toggle */}
@@ -731,526 +713,45 @@ export default function ExecutiveApplicationsPage() {
           error={error}
           fetchApplications={fetchApplications}
           formatDate={formatDateTimeShort}
-          onViewDetails={openDetailsModal}
           onDeleteClick={openDeleteModal}
           deletingId={deletingId}
         />
       </main>
 
-      {/* Delete Confirmation Modal */}
-      <DashboardCenterModal
+      <ConfirmModal
         isOpen={showDeleteModal}
         onClose={closeDeleteModal}
-        size="sm"
-      >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg sm:text-xl font-semibold text-white">
-                Delete Application
-              </h3>
-              <button
-                onClick={closeDeleteModal}
-                className="fc-modal-icon-close"
-              >
-                <FiX className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="mb-6">
-              <p className="fc-body mb-4 text-sm sm:text-base">
-                Are you sure you want to delete the application for{" "}
-                <span className="text-white font-medium">
-                  {applicationToDelete?.name}
-                </span>
-                ?
-              </p>
-              <div className="bg-gray-800/50 rounded-lg p-3 fc-muted">
-                <div>
-                  <strong>Role:</strong> {applicationToDelete?.role}
-                </div>
-                <div>
-                  <strong>Program:</strong> {applicationToDelete?.program}
-                </div>
-                <div>
-                  <strong>Email:</strong> {applicationToDelete?.email}
-                </div>
+        onConfirm={handleDeleteApplication}
+        title="Delete Application"
+        type="danger"
+        confirmText={
+          deletingId === applicationToDelete?._id ? "Deleting..." : "Delete"
+        }
+        confirmDisabled={deletingId === applicationToDelete?._id}
+        message={
+          <>
+            <p className="mb-4">
+              Are you sure you want to delete the application for{" "}
+              <span className="font-medium text-white">
+                {applicationToDelete?.name}
+              </span>
+              ?
+            </p>
+            <div className="mb-3 rounded-lg bg-gray-800/50 p-3 fc-muted">
+              <div>
+                <strong>Role:</strong> {applicationToDelete?.role}
               </div>
-              <p className="text-red-400 text-xs sm:text-sm mt-3">
-                This action cannot be undone.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={closeDeleteModal}
-                className="fc-btn-dashboard-cancel"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteApplication}
-                disabled={deletingId === applicationToDelete?._id}
-                className="flex-1 px-4 py-2 rounded-lg bg-red-600/20 border border-red-500/30 text-red-400 hover:bg-red-600/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
-              >
-                <FiTrash2 className="w-4 h-4" />
-                {deletingId === applicationToDelete?._id
-                  ? "Deleting..."
-                  : "Delete"}
-              </button>
-            </div>
-      </DashboardCenterModal>
-
-      {/* Application Details Modal */}
-      <DashboardCenterModal
-        isOpen={showDetailsModal}
-        onClose={closeDetailsModal}
-        size="lg"
-      >
-            {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-                  <FiEye className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white">
-                    Application Details
-                  </h3>
-                  <p className="fc-muted">
-                    {selectedApplication?.name} • {selectedApplication?.role}
-                  </p>
-                </div>
+              <div>
+                <strong>Program:</strong> {applicationToDelete?.program}
               </div>
-              <button
-                onClick={closeDetailsModal}
-                className="fc-modal-icon-close"
-              >
-                <FiX className="w-5 h-5" />
-              </button>
-            </div>
-
-            {selectedApplication && (
-              <div className="space-y-6">
-                {/* Applicant Header Card */}
-                <div className="bg-gradient-to-r from-primary/10 to-purple-500/10 border border-primary/20 rounded-xl p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center text-2xl font-bold text-primary">
-                        {selectedApplication.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-bold text-white">
-                          {selectedApplication.name}
-                        </h2>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-primary/20 text-primary border border-primary/30">
-                            {selectedApplication.role}
-                          </span>
-                          <span className="fc-muted">•</span>
-                          <span className="fc-body">
-                            {selectedApplication.program} • Year{" "}
-                            {selectedApplication.year}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="fc-muted">Applied</div>
-                      <div className="text-white font-medium">
-                        {formatDateTimeShort(selectedApplication.createdAt)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Contact & Academic Info */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Contact Information */}
-                  <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                        <svg
-                          className="w-4 h-4 text-blue-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                          />
-                        </svg>
-                      </div>
-                      <h4 className="text-lg font-semibold text-white">
-                        Contact Information
-                      </h4>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3 p-3 bg-gray-900/50 rounded-lg">
-                        <svg
-                          className="w-4 h-4 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                          />
-                        </svg>
-                        <div>
-                          <div className="text-xs fc-muted">Email</div>
-                          <div className="text-white break-all">
-                            {selectedApplication.email}
-                          </div>
-                        </div>
-                      </div>
-                      {selectedApplication.phone && (
-                        <div className="flex items-center gap-3 p-3 bg-gray-900/50 rounded-lg">
-                          <svg
-                            className="w-4 h-4 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                            />
-                          </svg>
-                          <div>
-                            <div className="text-xs fc-muted">Phone</div>
-                            <div className="text-white">
-                              {selectedApplication.phone}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Academic Information */}
-                  <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-                        <svg
-                          className="w-4 h-4 text-green-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M12 14l9-5-9-5-9 5 9 5z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
-                          />
-                        </svg>
-                      </div>
-                      <h4 className="text-lg font-semibold text-white">
-                        Academic Information
-                      </h4>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3 p-3 bg-gray-900/50 rounded-lg">
-                        <svg
-                          className="w-4 h-4 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                          />
-                        </svg>
-                        <div>
-                          <div className="text-xs fc-muted">Program</div>
-                          <div className="text-white">
-                            {selectedApplication.program}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-3 bg-gray-900/50 rounded-lg">
-                        <svg
-                          className="w-4 h-4 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        <div>
-                          <div className="text-xs fc-muted">
-                            Year of Study
-                          </div>
-                          <div className="text-white">
-                            Year {selectedApplication.year}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Links */}
-                <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                      <svg
-                        className="w-4 h-4 text-purple-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-                        />
-                      </svg>
-                    </div>
-                    <h4 className="text-lg font-semibold text-white">
-                      Links & Documents
-                    </h4>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="flex items-center gap-3 p-3 bg-gray-900/50 rounded-lg">
-                      <svg
-                        className="w-4 h-4 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6"
-                        />
-                      </svg>
-                      <div className="flex-1">
-                        <div className="text-xs fc-muted">LinkedIn</div>
-                        {selectedApplication.linkedin ? (
-                          <a
-                            href={selectedApplication.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="fc-link break-all text-sm"
-                          >
-                            View Profile
-                          </a>
-                        ) : (
-                          <div className="fc-muted">
-                            Not provided
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-gray-900/50 rounded-lg">
-                      <svg
-                        className="w-4 h-4 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        />
-                      </svg>
-                      <div className="flex-1">
-                        <div className="text-xs fc-muted">Resume</div>
-                        {selectedApplication.resume ? (
-                          <a
-                            href={selectedApplication.resume}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="fc-link text-sm flex items-center gap-1"
-                          >
-                            <FiEye className="w-3 h-3" />
-                            View Resume
-                          </a>
-                        ) : (
-                          <div className="fc-muted">
-                            Not provided
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Application Questions */}
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold text-white flex items-center gap-3">
-                    <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center">
-                      <svg
-                        className="w-4 h-4 text-orange-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    </div>
-                    Application Questions
-                  </h4>
-
-                  {(() => {
-                    // Get questions for the selected role
-                    const selectedRole = roles.find(
-                      (role) => role.title === selectedApplication.role
-                    );
-                    const questionsToShow = selectedRole?.questions || [];
-
-                    return questionsToShow.length > 0 ? (
-                      questionsToShow.map((question) => (
-                        <div
-                          key={question.id}
-                          className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6"
-                        >
-                          <h5 className="text-primary font-semibold mb-3 flex items-center gap-2">
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
-                            {question.label}
-                          </h5>
-                          <div className="bg-gray-900/50 rounded-lg p-4 fc-body">
-                            {selectedApplication[question.id] ||
-                              "No response provided"}
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      // Fallback to default questions if no custom questions are set
-                      <>
-                        {/* Why Executive */}
-                        <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6">
-                          <h5 className="text-primary font-semibold mb-3 flex items-center gap-2">
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                              />
-                            </svg>
-                            Why do you want to be an executive?
-                          </h5>
-                          <div className="bg-gray-900/50 rounded-lg p-4 fc-body">
-                            {selectedApplication.why || "No response provided"}
-                          </div>
-                        </div>
-
-                        {/* Fintech Vision */}
-                        <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6">
-                          <h5 className="text-primary font-semibold mb-3 flex items-center gap-2">
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M13 10V3L4 14h7v7l9-11h-7z"
-                              />
-                            </svg>
-                            What does &apos;fintech&apos; mean to you, and how
-                            do you see its role in the future of business and
-                            innovation?
-                          </h5>
-                          <div className="bg-gray-900/50 rounded-lg p-4 fc-body">
-                            {selectedApplication.fintechVision ||
-                              "No response provided"}
-                          </div>
-                        </div>
-
-                        {/* Other Commitments */}
-                        <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6">
-                          <h5 className="text-primary font-semibold mb-3 flex items-center gap-2">
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
-                            Are you currently involved with any other clubs or
-                            commitments? How do you plan to balance your
-                            responsibilities?
-                          </h5>
-                          <div className="bg-gray-900/50 rounded-lg p-4 fc-body">
-                            {selectedApplication.otherCommitments ||
-                              "No response provided"}
-                          </div>
-                        </div>
-                      </>
-                    );
-                  })()}
-                </div>
+              <div>
+                <strong>Email:</strong> {applicationToDelete?.email}
               </div>
-            )}
-
-            <div className="mt-8 flex justify-end">
-              <button
-                onClick={closeDetailsModal}
-                className="px-6 py-3 rounded-xl bg-gray-700/50 border border-gray-600/50 text-white hover:bg-gray-600/50 transition-all duration-300 font-medium"
-              >
-                Close
-              </button>
             </div>
-      </DashboardCenterModal>
+            <p className="text-sm text-red-400">This action cannot be undone.</p>
+          </>
+        }
+      />
 
       {/* Add Role Modal */}
       <DashboardCenterModal
@@ -1262,17 +763,12 @@ export default function ExecutiveApplicationsPage() {
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Add Executive Role
               </h3>
-              <button
-                onClick={closeAddRoleModal}
-                className="fc-modal-icon-close"
-              >
-                <FiX className="w-5 h-5" />
-              </button>
+              <ModalCloseButton onClick={closeAddRoleModal} />
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="fc-form-label">
                   Role Title
                 </label>
                 <input
@@ -1280,7 +776,7 @@ export default function ExecutiveApplicationsPage() {
                   name="title"
                   value={roleForm.title}
                   onChange={handleRoleFormChange}
-                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
+                  className="form-input"
                   placeholder="e.g., VP Finance, President, etc."
                 />
                 {roleFormErrors.title && (
@@ -1291,7 +787,7 @@ export default function ExecutiveApplicationsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="fc-form-label">
                   Responsibilities Image
                 </label>
                 {imagePreview ? (
@@ -1354,26 +850,30 @@ export default function ExecutiveApplicationsPage() {
             </div>
 
             <div className="flex gap-3 mt-6">
-              <button
+              <Button
+                type="button"
+                variant="cancel"
                 onClick={closeAddRoleModal}
-                className="fc-btn-dashboard-cancel"
+                className="!flex-none"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
+                type="button"
+                variant="primary"
                 onClick={handleAddRole}
                 disabled={uploadingImage}
-                className="flex-1 px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                className="flex-1 !px-4 !py-2"
               >
                 {uploadingImage ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                    <InlineSpinner className="text-white" />
                     Uploading...
                   </>
                 ) : (
                   "Add Role"
                 )}
-              </button>
+              </Button>
             </div>
       </DashboardCenterModal>
 
@@ -1387,17 +887,12 @@ export default function ExecutiveApplicationsPage() {
               <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Edit Executive Role
               </h3>
-              <button
-                onClick={closeEditRoleModal}
-                className="fc-modal-icon-close"
-              >
-                <FiX className="w-5 h-5" />
-              </button>
+              <ModalCloseButton onClick={closeEditRoleModal} />
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="fc-form-label">
                   Role Title
                 </label>
                 <input
@@ -1405,7 +900,7 @@ export default function ExecutiveApplicationsPage() {
                   name="title"
                   value={roleForm.title}
                   onChange={handleRoleFormChange}
-                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
+                  className="form-input"
                   placeholder="e.g., VP Finance, President, etc."
                 />
                 {roleFormErrors.title && (
@@ -1416,7 +911,7 @@ export default function ExecutiveApplicationsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="fc-form-label">
                   Responsibilities Image
                 </label>
                 {imagePreview ? (
@@ -1479,87 +974,64 @@ export default function ExecutiveApplicationsPage() {
             </div>
 
             <div className="flex gap-3 mt-6">
-              <button
+              <Button
+                type="button"
+                variant="cancel"
                 onClick={closeEditRoleModal}
-                className="fc-btn-dashboard-cancel"
+                className="!flex-none"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
+                type="button"
+                variant="primary"
                 onClick={handleEditRole}
                 disabled={uploadingImage}
-                className="flex-1 px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                className="flex-1 !px-4 !py-2"
               >
                 {uploadingImage ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                    <InlineSpinner className="text-white" />
                     Uploading...
                   </>
                 ) : (
                   "Update Role"
                 )}
-              </button>
+              </Button>
             </div>
       </DashboardCenterModal>
 
-      {/* Delete Role Modal */}
-      <DashboardCenterModal
+      <ConfirmModal
         isOpen={showDeleteRoleModal}
         onClose={closeDeleteRoleModal}
-        size="sm"
-      >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg sm:text-xl font-semibold text-white">
-                Delete Role
-              </h3>
-              <button
-                onClick={closeDeleteRoleModal}
-                className="fc-modal-icon-close"
-              >
-                <FiX className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="mb-6">
-              <p className="fc-body mb-4 text-sm sm:text-base">
-                Are you sure you want to delete the role{" "}
-                <span className="text-white font-medium">
-                  {roleToDelete?.title}
-                </span>
-                ?
-              </p>
-              <div className="bg-gray-800/50 rounded-lg p-3 fc-muted">
-                <div>
-                  <strong>Role:</strong> {roleToDelete?.title}
-                </div>
-                <div>
-                  <strong>Created:</strong>{" "}
-                  {roleToDelete?.createdAt
-                    ? formatDateTimeShort(roleToDelete.createdAt)
-                    : "Unknown"}
-                </div>
+        onConfirm={handleDeleteRole}
+        title="Delete Role"
+        type="danger"
+        confirmText="Delete Role"
+        message={
+          <>
+            <p className="mb-4">
+              Are you sure you want to delete the role{" "}
+              <span className="font-medium text-white">
+                {roleToDelete?.title}
+              </span>
+              ?
+            </p>
+            <div className="mb-3 rounded-lg bg-gray-800/50 p-3 fc-muted">
+              <div>
+                <strong>Role:</strong> {roleToDelete?.title}
               </div>
-              <p className="text-red-400 text-xs sm:text-sm mt-3">
-                This action cannot be undone.
-              </p>
+              <div>
+                <strong>Created:</strong>{" "}
+                {roleToDelete?.createdAt
+                  ? formatDateTimeShort(roleToDelete.createdAt)
+                  : "Unknown"}
+              </div>
             </div>
-
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={closeDeleteRoleModal}
-                className="fc-btn-dashboard-cancel"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteRole}
-                className="flex-1 px-4 py-2 rounded-lg bg-red-600/20 border border-red-500/30 text-red-400 hover:bg-red-600/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
-              >
-                <FiTrash2 className="w-4 h-4" />
-                Delete Role
-              </button>
-            </div>
-      </DashboardCenterModal>
+            <p className="text-sm text-red-400">This action cannot be undone.</p>
+          </>
+        }
+      />
 
       {/* Role Question Modal */}
       <DashboardCenterModal
@@ -1572,12 +1044,7 @@ export default function ExecutiveApplicationsPage() {
                 {editingRoleQuestion ? "Edit Question" : "Add Question"} -{" "}
                 {currentRoleForQuestions?.title}
               </h3>
-              <button
-                onClick={closeRoleQuestionModal}
-                className="fc-modal-icon-close"
-              >
-                <FiX className="w-5 h-5" />
-              </button>
+              <ModalCloseButton onClick={closeRoleQuestionModal} />
             </div>
 
             <div className="space-y-4">
@@ -1590,7 +1057,7 @@ export default function ExecutiveApplicationsPage() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="fc-form-label">
                   Question Label *
                 </label>
                 <textarea
@@ -1598,7 +1065,7 @@ export default function ExecutiveApplicationsPage() {
                   value={roleQuestionForm.label}
                   onChange={handleRoleQuestionFormChange}
                   rows={3}
-                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors resize-none"
+                  className="form-input resize-none"
                   placeholder="Enter the question text..."
                 />
                 {roleQuestionFormErrors.label && (
@@ -1609,7 +1076,7 @@ export default function ExecutiveApplicationsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="fc-form-label">
                   Placeholder Text *
                 </label>
                 <textarea
@@ -1617,7 +1084,7 @@ export default function ExecutiveApplicationsPage() {
                   value={roleQuestionForm.placeholder}
                   onChange={handleRoleQuestionFormChange}
                   rows={2}
-                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors resize-none"
+                  className="form-input resize-none"
                   placeholder="Enter placeholder text for the textarea..."
                 />
                 {roleQuestionFormErrors.placeholder && (
@@ -1671,22 +1138,26 @@ export default function ExecutiveApplicationsPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 mt-6">
-              <button
+              <Button
+                type="button"
+                variant="cancel"
                 onClick={closeRoleQuestionModal}
-                className="fc-btn-dashboard-cancel"
+                className="!flex-none"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
+                type="button"
+                variant="primary"
                 onClick={
                   editingRoleQuestion
                     ? handleEditRoleQuestion
                     : handleAddRoleQuestion
                 }
-                className="flex-1 px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+                className="flex-1 !px-4 !py-2"
               >
                 {editingRoleQuestion ? "Update Question" : "Add Question"}
-              </button>
+              </Button>
             </div>
       </DashboardCenterModal>
     </div>

@@ -7,6 +7,7 @@ const mockCollections = {
   executiveApplications: {
     insertOne: vi.fn(),
     find: vi.fn(),
+    findOne: vi.fn(),
     deleteOne: vi.fn(),
   },
 };
@@ -158,6 +159,68 @@ describe("GET /api/executive-application", () => {
       createdAt: applications[1].createdAt.toISOString(),
     });
     expect(mockCollections.executiveApplications.find).toHaveBeenCalledWith({});
+  });
+
+  it("returns a single application when id is provided", async () => {
+    const id = new ObjectId();
+    const application = {
+      _id: id,
+      name: "Alice",
+      email: "alice@example.com",
+      createdAt: new Date("2026-01-02"),
+    };
+    mockCollections.executiveApplications.findOne.mockResolvedValue(application);
+
+    const response = await GET(
+      createMockRequest(
+        null,
+        "GET",
+        `http://localhost/api/executive-application?id=${id.toString()}`,
+      ),
+    );
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data).toEqual({
+      _id: id.toString(),
+      name: "Alice",
+      email: "alice@example.com",
+      createdAt: application.createdAt.toISOString(),
+    });
+    expect(mockCollections.executiveApplications.findOne).toHaveBeenCalledWith({
+      _id: id,
+    });
+  });
+
+  it("returns 400 for an invalid application id", async () => {
+    const response = await GET(
+      createMockRequest(
+        null,
+        "GET",
+        "http://localhost/api/executive-application?id=not-valid",
+      ),
+    );
+    const data = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(data.error).toBe("Invalid application ID");
+  });
+
+  it("returns 404 when application id is not found", async () => {
+    const id = new ObjectId().toString();
+    mockCollections.executiveApplications.findOne.mockResolvedValue(null);
+
+    const response = await GET(
+      createMockRequest(
+        null,
+        "GET",
+        `http://localhost/api/executive-application?id=${id}`,
+      ),
+    );
+    const data = await response.json();
+
+    expect(response.status).toBe(404);
+    expect(data.error).toBe("Application not found");
   });
 });
 

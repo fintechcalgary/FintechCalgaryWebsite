@@ -48,8 +48,27 @@ export const POST = withErrorHandler(async (req) => {
   return apiResponse.success({ success: true });
 });
 
-export const GET = withErrorHandler(async () => {
+export const GET = withErrorHandler(async (req) => {
   const db = await connectToDatabase();
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  if (id) {
+    if (!ObjectId.isValid(id)) {
+      return apiResponse.badRequest("Invalid application ID");
+    }
+
+    const application = await db
+      .collection(COLLECTIONS.EXECUTIVE_APPLICATIONS)
+      .findOne({ _id: new ObjectId(id) });
+
+    if (!application) {
+      return apiResponse.notFound("Application not found");
+    }
+
+    return apiResponse.success(application);
+  }
+
   const applications = await db
     .collection(COLLECTIONS.EXECUTIVE_APPLICATIONS)
     .find({})

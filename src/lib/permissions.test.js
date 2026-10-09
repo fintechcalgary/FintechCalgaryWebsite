@@ -128,6 +128,21 @@ describe("permissions", () => {
       ).toBe(true);
     });
 
+    it("applies parent route permissions to nested dashboard paths", () => {
+      expect(
+        canAccessDashboardRoute(
+          USER_ROLES.PROJECTS,
+          "/dashboard/executive-applications/abc123",
+        ),
+      ).toBe(true);
+      expect(
+        canAccessDashboardRoute(
+          USER_ROLES.EVENTS,
+          "/dashboard/executive-applications/abc123",
+        ),
+      ).toBe(false);
+    });
+
     it("denies events role from contracts", () => {
       expect(
         canAccessDashboardRoute(USER_ROLES.EVENTS, "/dashboard/contracts"),
