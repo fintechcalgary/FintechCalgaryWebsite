@@ -3,6 +3,7 @@
 import { FiImage, FiPlus } from "react-icons/fi";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import PortalModal from "@/components/ui/Modal/ContentModal";
+import Button from "@/components/ui/Button";
 import PartnersGrid from "@/features/partners/PartnersGrid";
 import { LoadingState } from "@/components/ui/Spinner";
 import PanelSectionHeader from "@/features/partners/admin/PanelSectionHeader";
@@ -68,18 +69,19 @@ export default function DisplayPartnersPanel() {
       />
 
       {partners.length === 0 ? (
-        <div className="text-center py-12 sm:py-16 bg-gray-900/60 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/10 px-4">
+        <div className="fc-admin-panel text-center py-12 sm:py-16 px-4">
           <FiImage className="mx-auto text-3xl sm:text-4xl text-primary mb-3 sm:mb-4" />
           <p className="fc-body mb-4">
             No partners yet
           </p>
-          <button
+          <Button
             onClick={openAdd}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white text-sm sm:text-base w-full max-w-xs mx-auto justify-center"
+            variant="primary"
+            className="mx-auto w-full max-w-xs !px-4 !py-2.5"
           >
-            <FiPlus className="w-4 h-4 flex-shrink-0" />
+            <FiPlus className="h-4 w-4 flex-shrink-0" />
             Add your first partner
-          </button>
+          </Button>
         </div>
       ) : (
         <PartnersGrid

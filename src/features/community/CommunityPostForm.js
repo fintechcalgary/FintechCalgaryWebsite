@@ -81,8 +81,38 @@ export default function CommunityPostForm({
       onClose={onClose}
       title={editingPost ? "Edit Community Post" : "Share Community Event"}
       maxWidth="max-w-2xl"
+      footer={
+        <>
+          <Button
+            variant="cancel"
+            type="button"
+            onClick={onClose}
+            disabled={submitting || uploading}
+            className="!flex-none"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            type="submit"
+            form="communityPostForm"
+            disabled={submitting || uploading}
+            className="!flex-none"
+          >
+            {submitting
+              ? "Saving..."
+              : editingPost
+                ? "Save Changes"
+                : "Publish Post"}
+          </Button>
+        </>
+      }
     >
-      <form onSubmit={handleSubmit} className="space-y-4 p-6">
+      <form
+        id="communityPostForm"
+        onSubmit={handleSubmit}
+        className="fc-modal-body space-y-4"
+      >
         <p className="fc-body text-sm">
           Promote partner and community events with event details, an optional
           banner, and a registration link.
@@ -95,7 +125,7 @@ export default function CommunityPostForm({
         ) : null}
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-300">
+          <label className="fc-form-label">
             Event Title
           </label>
           <input
@@ -109,7 +139,7 @@ export default function CommunityPostForm({
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-300">
+          <label className="fc-form-label">
             Event Info
           </label>
           <textarea
@@ -123,7 +153,7 @@ export default function CommunityPostForm({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-300">
+            <label className="fc-form-label">
               Event Date
             </label>
             <input
@@ -135,7 +165,7 @@ export default function CommunityPostForm({
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-300">
+            <label className="fc-form-label">
               Event Time (optional)
             </label>
             <input
@@ -150,7 +180,7 @@ export default function CommunityPostForm({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-300">
+            <label className="fc-form-label">
               Organization (optional)
             </label>
             <input
@@ -162,7 +192,7 @@ export default function CommunityPostForm({
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-300">
+            <label className="fc-form-label">
               Location (optional)
             </label>
             <input
@@ -176,7 +206,7 @@ export default function CommunityPostForm({
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-300">
+          <label className="fc-form-label">
             Registration Link
           </label>
           <input
@@ -190,7 +220,7 @@ export default function CommunityPostForm({
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-300">
+          <label className="fc-form-label">
             Event Banner (optional)
           </label>
           {formData.bannerUrl ? (
@@ -224,23 +254,6 @@ export default function CommunityPostForm({
               disabled={uploading || submitting}
             />
           </label>
-        </div>
-
-        <div className="flex justify-end gap-3 pt-2">
-          <Button variant="cancel" type="button" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            disabled={submitting || uploading}
-          >
-            {submitting
-              ? "Saving..."
-              : editingPost
-                ? "Save Changes"
-                : "Publish Post"}
-          </Button>
         </div>
       </form>
     </ContentModal>

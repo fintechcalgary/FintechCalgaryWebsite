@@ -14,7 +14,7 @@ export default function PartnersTabNav({
       <div
         role="tablist"
         aria-label="Partners sections"
-        className="flex flex-col gap-1 rounded-2xl border border-gray-800/50 bg-gradient-to-br from-gray-900/40 to-gray-800/20 p-1.5 backdrop-blur-sm sm:flex-row"
+        className="fc-card flex flex-col gap-1 p-1.5 sm:flex-row"
       >
         {tabs.map((tab) => {
           const Icon = tab.icon;

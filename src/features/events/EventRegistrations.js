@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Modal from "@/components/ui/Modal/ConfirmModal";
+import Button from "@/components/ui/Button";
+import AdminBackLink from "@/components/ui/AdminBackLink";
+import IconButton from "@/components/ui/IconButton";
 import {
-  FiArrowLeft,
   FiMail,
   FiCalendar,
   FiUser,
@@ -16,7 +17,7 @@ import useConfirmDelete from "@/hooks/useConfirmDelete";
 import useDocumentTitle from "@/hooks/useDocumentTitle";
 import { downloadCsv } from "@/lib/csv";
 import { formatDateShort, formatDateTime, formatEventDate } from "@/lib/dates";
-import { LoadingState } from "@/components/ui/Spinner";
+import { LoadingState, InlineSpinner } from "@/components/ui/Spinner";
 
 export default function EventRegistrations({ eventId }) {
   const [event, setEvent] = useState(null);
@@ -139,29 +140,16 @@ export default function EventRegistrations({ eventId }) {
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
-        {/* Header */}
-        <div className="mb-8 flex justify-between items-center">
-          <Link
-            href="/dashboard"
-            className="fc-muted inline-flex items-center hover:text-white transition-colors duration-200 group"
-          >
-            <FiArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
-            Back to Dashboard
-          </Link>
-
-          <button
-            onClick={exportToCSV}
-            className="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary/80 
-            text-white rounded-lg transition-all duration-200 gap-2 shadow-lg 
-            hover:shadow-primary/15 hover:-translate-y-0.5"
-          >
-            <FiDownload className="w-4 h-4" />
+        <div className="mb-8 flex items-center justify-between gap-4">
+          <AdminBackLink className="!mb-0" />
+          <Button onClick={exportToCSV} variant="primary" className="!px-4 !py-2">
+            <FiDownload className="h-4 w-4" />
             Export CSV
-          </button>
+          </Button>
         </div>
 
         {/* Event Info Card */}
-        <div className="bg-gray-900/40 backdrop-blur-xl rounded-2xl p-8 shadow-xl mb-8 border border-gray-800/50">
+        <div className="fc-admin-panel mb-8 p-8 shadow-xl">
           <h1 className="text-4xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-white">
             {event?.title}
           </h1>
@@ -197,18 +185,18 @@ export default function EventRegistrations({ eventId }) {
                       <h3 className="text-xl font-semibold text-white group-hover:text-primary transition-colors duration-300">
                         {reg.name}
                       </h3>
-                      <button
-                        onClick={() => handleDeleteRegistration(index)}
+                      <IconButton
+                        variant="danger"
+                        label="Delete registration"
                         disabled={deletingRegistration === index}
-                        className="text-red-400 hover:text-red-300 transition-all duration-200 p-2 rounded-full hover:bg-red-500/10 disabled:opacity-50 group/delete"
-                        title="Delete registration"
+                        onClick={() => handleDeleteRegistration(index)}
                       >
                         {deletingRegistration === index ? (
-                          <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-red-400"></div>
+                          <InlineSpinner className="text-red-400" />
                         ) : (
-                          <FiTrash2 className="w-5 h-5 group-hover/delete:scale-110 transition-transform duration-200" />
+                          <FiTrash2 className="w-5 h-5" />
                         )}
-                      </button>
+                      </IconButton>
                     </div>
 
                     {/* Contact Info */}

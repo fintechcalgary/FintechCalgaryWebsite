@@ -17,6 +17,7 @@ import { SiLinkedin, SiFacebook, SiX } from "react-icons/si";
 import Image from "next/image";
 import { formatDateLocale } from "@/lib/dates";
 import { getApprovalStatusMeta } from "@/features/partners/approvalStatus";
+import StatusBadge from "@/components/ui/StatusBadge";
 import { GlowCard } from "@/components/ui/spotlight-card";
 
 function externalUrl(url) {
@@ -112,11 +113,9 @@ export default function PartnerApplicationCard({
 
         <div className="mb-6">
           <div className="flex items-center gap-2 flex-wrap">
-            <span
-              className={`px-3 py-1 rounded-full text-xs font-medium ${statusMeta.badgeClass}`}
-            >
+            <StatusBadge tone={statusMeta.tone} size="sm">
               {statusMeta.shortLabel}
-            </span>
+            </StatusBadge>
             {member.approvalStatus === "accepted" && member.approvedAt && (
               <span className="fc-muted">
                 Approved on {formatDateLocale(member.approvedAt)}

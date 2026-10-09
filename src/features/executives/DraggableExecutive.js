@@ -2,6 +2,7 @@ import { useDrag, useDrop } from "react-dnd";
 import { motion } from "framer-motion";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import Image from "next/image";
+import IconButton from "@/components/ui/IconButton";
 
 const DEFAULT_PROFILE_IMAGE = "/default-profile.webp";
 
@@ -53,28 +54,28 @@ function DraggableExecutive({
         </h4>
         <p className="text-primary font-medium mb-1">{executive.position}</p>
         <p className="fc-muted mb-4">{executive.major}</p>
-        <div className="flex gap-2">
-          <button
+        <div className="flex gap-2 relative z-20">
+          <IconButton
+            variant="edit"
+            label="Edit"
             onClick={(e) => {
               e.stopPropagation();
               handleEdit(executive);
             }}
-            className="text-gray-400 hover:text-primary transition-all duration-200 p-2 rounded-xl hover:bg-primary/10 hover:scale-105 relative z-20 border border-transparent hover:border-primary/20"
-            title="Edit"
           >
             <FiEdit2 />
-          </button>
-          <button
+          </IconButton>
+          <IconButton
+            variant="danger"
+            label="Delete"
+            disabled={session?.user?.username == executive.username}
             onClick={(e) => {
               e.stopPropagation();
               handleDelete(executive._id);
             }}
-            className="text-gray-400 hover:text-red-500 transition-all duration-200 p-2 rounded-lg hover:bg-red-500/10 hover:scale-105 relative z-20 border border-transparent hover:border-red-500/20"
-            disabled={session?.user?.username == executive.username}
-            title="Delete"
           >
             <FiTrash2 />
-          </button>
+          </IconButton>
         </div>
       </div>
     </motion.div>

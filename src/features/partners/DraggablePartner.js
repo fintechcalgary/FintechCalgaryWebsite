@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { FiEdit2, FiTrash2, FiDownload, FiGlobe, FiImage } from "react-icons/fi";
 import Image from "next/image";
 import { GlowCard } from "@/components/ui/spotlight-card";
+import IconButton from "@/components/ui/IconButton";
 
 function DraggablePartner({
   partner,
@@ -102,28 +103,28 @@ function DraggablePartner({
                   <FiDownload className="w-4 h-4" />
                 </button>
               )}
-              <button
-                type="button"
+              <IconButton
+                variant="edit"
+                label="Edit"
+                className="touch-manipulation"
                 onClick={(e) => {
                   e.stopPropagation();
                   onEdit(partner);
                 }}
-                className="p-1.5 sm:p-2 rounded-xl text-gray-400 hover:text-primary hover:bg-primary/10 transition-all touch-manipulation"
-                title="Edit"
               >
                 <FiEdit2 className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
+              </IconButton>
+              <IconButton
+                variant="danger"
+                label="Delete"
+                className="touch-manipulation"
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete(partner);
                 }}
-                className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all touch-manipulation"
-                title="Delete"
               >
                 <FiTrash2 className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
           </div>
           {partner.description && (

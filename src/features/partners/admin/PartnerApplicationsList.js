@@ -12,7 +12,7 @@ export default function PartnerApplicationsList({
 }) {
   if (partners.length === 0) {
     return (
-      <div className="text-center py-12 sm:py-16 bg-gray-900/60 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/10 px-4">
+      <div className="fc-admin-panel text-center py-12 sm:py-16 px-4">
         <FiUsers className="mx-auto text-3xl sm:text-4xl text-primary mb-3 sm:mb-4" />
         <p className="fc-body">
           No partner applications found

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { formatEventDate } from "@/lib/dates";
 import { GlowCard } from "@/components/ui/spotlight-card";
+import StatusBadge from "@/components/ui/StatusBadge";
 
 export default function EventCard({ event }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -84,14 +85,18 @@ export default function EventCard({ event }) {
         <div className="relative z-10 flex h-full flex-col justify-end p-8">
           <div className="space-y-4">
             <div className="flex flex-wrap gap-2">
-              <div className="inline-block rounded-full border border-primary/20 bg-primary/20 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
+              <StatusBadge
+                tone="info"
+                size="sm"
+                className="backdrop-blur-sm text-white"
+              >
                 {formatEventDate(event.date)}
                 {event.time && ` • ${event.time}`}
-              </div>
+              </StatusBadge>
               {event.eventType === "webinar" && (
-                <div className="inline-block rounded-full border border-purple-500/20 bg-purple-500/20 px-3 py-2 text-sm font-medium text-purple-200 backdrop-blur-sm">
+                <StatusBadge tone="primary" size="sm" className="backdrop-blur-sm">
                   Webinar
-                </div>
+                </StatusBadge>
               )}
             </div>
 
@@ -103,7 +108,7 @@ export default function EventCard({ event }) {
               {event.description}
             </p>
 
-            <div className="inline-flex items-center rounded-xl bg-primary/90 px-6 py-3 font-medium text-white transition-all duration-300 hover:bg-primary hover:shadow-lg hover:shadow-primary/15">
+            <div className="fc-btn-gradient-primary px-4 py-2 pointer-events-none">
               {event.eventType === "webinar" ? "View Webinar" : "View Event"}
             </div>
           </div>

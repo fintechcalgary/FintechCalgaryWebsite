@@ -21,6 +21,7 @@ import {
 import { faChartBar, faClock } from "@fortawesome/free-solid-svg-icons";
 import { SiLinkedin, SiFacebook, SiX } from "react-icons/si";
 import Modal from "@/components/ui/Modal/ConfirmModal";
+import Button from "@/components/ui/Button";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Events from "@/features/events/Events";
@@ -30,7 +31,9 @@ import {
   INITIAL_PARTNER_FORM,
 } from "@/features/partners/partnerFormFields";
 import { getApprovalStatusMeta } from "@/features/partners/approvalStatus";
+import StatusBadge from "@/components/ui/StatusBadge";
 import PublicPageShell from "@/components/layout/PublicPageShell";
+import { PageTitle } from "@/components/ui/SectionHeading";
 import { LoadingState } from "@/components/ui/Spinner";
 import useConfirmLogout from "@/hooks/useConfirmLogout";
 import { formatDateLocale } from "@/lib/dates";
@@ -152,7 +155,12 @@ export default function PartnerDashboardClient() {
   };
 
   const statusMeta = getApprovalStatusMeta(memberData?.approvalStatus);
-  const StatusIcon = STATUS_ICONS[statusMeta.icon] || FiClock;
+  const approvalKey =
+    memberData?.approvalStatus === "accepted" ||
+    memberData?.approvalStatus === "rejected"
+      ? memberData.approvalStatus
+      : "pending";
+  const StatusIcon = STATUS_ICONS[approvalKey] || FiClock;
 
   if (loading) {
     return (
@@ -202,9 +210,9 @@ export default function PartnerDashboardClient() {
           >
             {/* Header */}
             <div className="text-center mb-16 animate-fadeIn">
-              <h1 className="text-5xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
+              <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-4">
                 Partner Dashboard
-              </h1>
+              </PageTitle>
               <div className="flex items-center justify-center gap-6">
                 <p className="fc-lede">
                   Welcome back, {memberData.firstName} {memberData.lastName}
@@ -234,15 +242,15 @@ export default function PartnerDashboardClient() {
             </div>
 
             {/* Status Card */}
-            <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-8 border border-white/10 hover:border-primary/30 transition-all duration-500 mb-8 animate-slideInUp">
+            <div className="fc-admin-panel p-8 hover:border-primary/30 transition-all duration-500 mb-8 animate-slideInUp">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
                     <StatusIcon
                       className={`w-5 h-5 ${
-                        statusMeta.icon === "accepted"
+                        approvalKey === "accepted"
                           ? "text-green-500"
-                          : statusMeta.icon === "rejected"
+                          : approvalKey === "rejected"
                             ? "text-red-500"
                             : "text-yellow-500"
                       }`}
@@ -252,11 +260,9 @@ export default function PartnerDashboardClient() {
                     <h3 className="text-xl font-semibold text-white mb-2">
                       Membership Status
                     </h3>
-                    <span
-                      className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium border ${statusMeta.colorClass}`}
-                    >
+                    <StatusBadge tone={statusMeta.tone} size="lg">
                       {statusMeta.label}
-                    </span>
+                    </StatusBadge>
                   </div>
                 </div>
                 {memberData.approvedAt && (
@@ -274,9 +280,7 @@ export default function PartnerDashboardClient() {
             {memberData.approvalStatus === "accepted" && (
               <section className="group animate-fadeIn">
                 <div
-                  className="relative h-full bg-gray-900/80 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 
-                                        transition-all duration-500 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-primary/10
-                                        hover:border-primary/50 overflow-hidden"
+                  className="fc-admin-panel relative h-full overflow-hidden p-8 transition-all duration-500 hover:border-primary/30"
                   id="events"
                 >
                   <div className="relative z-10 flex items-center justify-between mb-8">
@@ -321,7 +325,7 @@ export default function PartnerDashboardClient() {
             )}
 
             {/* Member Information Card */}
-            <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-8 border border-white/10 hover:border-primary/30 transition-all duration-500 mb-8 animate-slideInUp animation-delay-300">
+            <div className="fc-admin-panel p-8 hover:border-primary/30 transition-all duration-500 mb-8 animate-slideInUp animation-delay-300">
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <h2 className="text-3xl font-bold text-white mb-2">
@@ -331,13 +335,15 @@ export default function PartnerDashboardClient() {
                     View and manage your organization details
                   </p>
                 </div>
-                <button
+                <Button
+                  type="button"
+                  variant="primary"
                   onClick={handleEditClick}
-                  className="group flex items-center space-x-3 px-6 py-3 bg-gradient-to-r from-primary to-purple-500/80 hover:from-primary/85 hover:to-purple-500/75 text-white rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/15 border border-primary/30"
+                  className="group"
                 >
                   <FiEdit2 className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                   <span className="font-medium">Edit Information</span>
-                </button>
+                </Button>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">

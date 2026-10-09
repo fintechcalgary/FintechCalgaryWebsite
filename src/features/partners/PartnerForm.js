@@ -30,7 +30,7 @@ function Field({
   return (
     <div className={className}>
       {showLabel && label ? (
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="fc-form-label">
           {label}
         </label>
       ) : null}
@@ -102,7 +102,7 @@ export default function PartnerForm({
       {showLogoUpload ? (
         <div>
           {mode === "signup" ? (
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Upload your Logo
             </label>
           ) : null}
@@ -485,11 +485,7 @@ export default function PartnerForm({
           type="submit"
           variant="primary"
           disabled={submitting}
-          className={
-            mode === "signup"
-              ? "px-8 py-3"
-              : "px-8 py-3 bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 border border-primary/30"
-          }
+          className="px-8 py-3"
         >
           {submitting ? "Saving..." : submitLabel || defaultSubmit}
         </Button>

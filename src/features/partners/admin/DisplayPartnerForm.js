@@ -2,6 +2,7 @@
 
 import { FiEdit2, FiUpload } from "react-icons/fi";
 import Image from "next/image";
+import Button from "@/components/ui/Button";
 import {
   displayColorValue,
   normalizeHexColor,
@@ -23,7 +24,7 @@ export default function DisplayPartnerForm({
     <form onSubmit={onSubmit} className="space-y-4 sm:space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
+          <label className="fc-form-label">
             Name *
           </label>
           <input
@@ -38,7 +39,7 @@ export default function DisplayPartnerForm({
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
+          <label className="fc-form-label">
             Accent color
           </label>
           <p className="fc-muted mb-2">
@@ -72,7 +73,7 @@ export default function DisplayPartnerForm({
         </div>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="fc-form-label">
           Website
         </label>
         <input
@@ -86,7 +87,7 @@ export default function DisplayPartnerForm({
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="fc-form-label">
           Description
         </label>
         <textarea
@@ -100,7 +101,7 @@ export default function DisplayPartnerForm({
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="fc-form-label">
           Logo
         </label>
         <div className="flex flex-col sm:flex-row gap-4 items-start">
@@ -133,21 +134,23 @@ export default function DisplayPartnerForm({
         </div>
       </div>
       <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-4 border-t border-gray-700">
-        <button
+        <Button
           type="button"
+          variant="cancel"
           onClick={onCancel}
-          className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gray-700 hover:bg-gray-600 text-white transition-all text-sm sm:text-base"
+          className="!flex-none w-full sm:w-auto"
         >
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
           type="submit"
+          variant="primary"
           disabled={submitting || uploadingLogo}
-          className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base"
+          className="!flex-none w-full sm:w-auto !px-4 !py-2.5"
         >
           <FiEdit2 className="w-4 h-4 flex-shrink-0" />
           {submitting ? "Saving..." : submitLabel}
-        </button>
+        </Button>
       </div>
     </form>
   );

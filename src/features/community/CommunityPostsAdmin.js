@@ -6,6 +6,7 @@ import Link from "next/link";
 import Button from "@/components/ui/Button";
 import ConfirmModal from "@/components/ui/Modal/ConfirmModal";
 import { LoadingState } from "@/components/ui/Spinner";
+import EmptyState from "@/components/ui/EmptyState";
 import CommunityPostCard from "@/features/community/CommunityPostCard";
 import CommunityPostForm from "@/features/community/CommunityPostForm";
 import { API_ENDPOINTS } from "@/lib/constants";
@@ -94,7 +95,7 @@ export default function CommunityPostsAdmin() {
           Posts appear on the public{" "}
           <Link
             href="/community"
-            className="inline-flex items-center gap-1 text-primary hover:underline"
+            className="fc-link-underline inline-flex items-center gap-1"
           >
             Community Board
             <FiExternalLink className="h-3.5 w-3.5" />
@@ -113,14 +114,14 @@ export default function CommunityPostsAdmin() {
       </div>
 
       {posts.length === 0 ? (
-        <div className="rounded-2xl border border-gray-700/40 bg-gray-800/30 px-8 py-14 text-center">
-          <FiMessageCircle className="mx-auto mb-4 h-12 w-12 text-primary/50" />
-          <h3 className="fc-title mb-2 text-xl">No community posts yet</h3>
-          <p className="fc-body mx-auto max-w-md">
-            Share an upcoming partner or community event to promote it on the
-            public board.
-          </p>
-        </div>
+        <EmptyState
+          variant="admin"
+          icon={FiMessageCircle}
+          title="No community posts yet"
+        >
+          Share an upcoming partner or community event to promote it on the
+          public board.
+        </EmptyState>
       ) : (
         <div className="grid gap-6 md:grid-cols-2">
           {posts.map((post) => (

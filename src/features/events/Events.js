@@ -13,11 +13,14 @@ import {
 } from "react-icons/fi";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import PortalModal from "@/components/ui/Modal/ContentModal";
+import Button from "@/components/ui/Button";
+import IconButton from "@/components/ui/IconButton";
 import Link from "next/link";
 import Image from "next/image";
 import { uploadFile } from "@/lib/frontend-helpers";
 import { UPLOAD_FOLDERS } from "@/lib/constants";
 import { formatEventDate } from "@/lib/dates";
+import EmptyState from "@/components/ui/EmptyState";
 
 export default function Events({ mode }) {
   const pathname = usePathname();
@@ -178,65 +181,81 @@ export default function Events({ mode }) {
   return (
     <div className="min-h-[500px]">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
+        <h3 className="fc-title text-2xl flex items-center gap-2">
           <FiCalendar className="text-primary" />
           Your Events
         </h3>
-        <button
+        <Button
+          type="button"
+          variant={showForm ? "cancel" : "primary"}
           onClick={(e) => {
             e.stopPropagation();
             showForm ? resetForm() : setShowForm(true);
           }}
-          className="flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-xl transition-all duration-200 hover:scale-105"
+          className="!flex-none !px-4 !py-2"
         >
           {showForm ? <FiX /> : <FiPlus />}
           {showForm ? "Cancel" : "Add"}
-        </button>
+        </Button>
       </div>
 
       <PortalModal
         isOpen={showForm}
         onClose={resetForm}
         title={editingEvent ? "Edit Event" : "Create Event"}
-        maxWidth="max-w-2xl"
+        size="lg"
+        footer={
+          <>
+            <Button
+              type="button"
+              variant="cancel"
+              onClick={resetForm}
+              disabled={uploading}
+              className="!flex-none"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              form="eventForm"
+              variant="primary"
+              disabled={uploading}
+              className="!flex-none"
+            >
+              {editingEvent ? <FiEdit2 className="h-4 w-4" /> : <FiPlus className="h-4 w-4" />}
+              {uploading
+                ? "Please wait..."
+                : editingEvent
+                  ? "Update Event"
+                  : "Add Event"}
+            </Button>
+          </>
+        }
       >
-        <div className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex items-start space-x-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
-              <div className="flex-shrink-0 pt-0.5">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-primary"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
+        <form id="eventForm" onSubmit={handleSubmit} className="fc-modal-body">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-5 lg:gap-8">
+            {/* Primary fields — left on desktop */}
+            <div className="space-y-4 lg:col-span-3">
+              <div
+                className={`grid gap-4 ${
+                  formData.eventType === "webinar"
+                    ? "sm:grid-cols-5"
+                    : "sm:grid-cols-2"
+                }`}
+              >
+                <div
+                  className={
+                    formData.eventType === "webinar" ? "sm:col-span-2" : ""
+                  }
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p className="fc-body">
-                  <span className="font-medium">Important:</span> Please use
-                  high-resolution images for the best display quality. When
-                  specifying time, ensure to include{" "}
-                  <span className="font-medium">AM / PM</span> for clarity.
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="grid grid-cols-5 gap-4">
-                <div className="col-span-2">
                   <label
                     htmlFor="eventType"
-                    className="block text-sm font-medium text-gray-300 mb-1"
+                    className="fc-form-label"
                   >
                     Event Type
                   </label>
                   <select
+                    id="eventType"
                     value={formData.eventType}
                     onChange={(e) =>
                       setFormData({
@@ -244,21 +263,23 @@ export default function Events({ mode }) {
                         eventType: e.target.value,
                       })
                     }
+                    className="form-input"
                     required
                   >
                     <option value="event">Event</option>
                     <option value="webinar">Webinar</option>
                   </select>
                 </div>
-                {formData.eventType === "webinar" && (
-                  <div className="col-span-3">
+                {formData.eventType === "webinar" ? (
+                  <div className="sm:col-span-3">
                     <label
                       htmlFor="recordingUrl"
-                      className="block text-sm font-medium text-gray-300 mb-1"
+                      className="fc-form-label"
                     >
                       Webinar Link (Optional)
                     </label>
                     <input
+                      id="recordingUrl"
                       type="text"
                       placeholder="Webinar link (can be added later)"
                       value={formData.recordingUrl}
@@ -271,11 +292,11 @@ export default function Events({ mode }) {
                       className="form-input"
                     />
                   </div>
-                )}
+                ) : null}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
+                <label className="fc-form-label">
                   Title
                 </label>
                 <input
@@ -291,7 +312,7 @@ export default function Events({ mode }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
+                <label className="fc-form-label">
                   Description
                 </label>
                 <textarea
@@ -303,14 +324,14 @@ export default function Events({ mode }) {
                       description: e.target.value,
                     })
                   }
-                  className="form-input min-h-[80px]"
+                  className="form-input min-h-[120px] lg:min-h-[160px]"
                   required
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                  <label className="fc-form-label">
                     Date
                   </label>
                   <input
@@ -324,12 +345,12 @@ export default function Events({ mode }) {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                  <label className="fc-form-label">
                     Time
                   </label>
                   <input
                     type="text"
-                    placeholder="Event Time"
+                    placeholder="e.g. 5:30PM-7:30PM"
                     value={formData.time}
                     onChange={(e) =>
                       setFormData({ ...formData, time: e.target.value })
@@ -339,99 +360,105 @@ export default function Events({ mode }) {
                   />
                 </div>
               </div>
+            </div>
 
-              <div className="flex flex-col space-y-4">
-                <div className="flex items-center gap-4">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    id="imageUpload"
-                    multiple
-                    required={formData.images.length === 0}
-                  />
-                  <label
-                    htmlFor="imageUpload"
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl cursor-pointer bg-gray-900/50 hover:bg-gray-700 text-white border border-gray-700"
+            {/* Media / tip — right rail on desktop */}
+            <div className="flex flex-col gap-4 lg:col-span-2">
+              <div className="flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/10 p-3">
+                <div className="flex-shrink-0 pt-0.5">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-primary"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
                   >
-                    <FiImage />
-                    {uploading ? "Uploading..." : "Choose Images"}
-                  </label>
+                    <path
+                      fillRule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
                 </div>
+                <p className="fc-muted text-xs leading-relaxed sm:text-sm">
+                  <span className="font-medium text-white">Tip:</span> Use
+                  high-resolution images. Include{" "}
+                  <span className="font-medium text-white">AM / PM</span> in the
+                  time.
+                </p>
+              </div>
 
-                {formData.images.length > 0 && (
-                  <div className="relative">
-                    <div className="flex gap-4 overflow-x-auto pt-3 pb-4">
-                      {formData.images.map((imageUrl, index) => (
-                        <div
-                          key={index}
-                          className="relative w-40 h-40 flex-shrink-0 mt-2"
+              <div className="flex min-h-0 flex-1 flex-col rounded-xl border border-gray-700/50 bg-gray-900/40 p-4">
+                <label className="fc-form-label">
+                  Images
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="eventImageUpload"
+                  multiple
+                  required={formData.images.length === 0}
+                />
+                <label
+                  htmlFor="eventImageUpload"
+                  className={`fc-modal-file-btn w-full justify-center ${
+                    uploading ? "pointer-events-none opacity-60" : ""
+                  }`}
+                >
+                  <FiImage className="h-5 w-5" />
+                  {uploading ? "Uploading..." : "Choose Images"}
+                </label>
+
+                {formData.images.length > 0 ? (
+                  <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2">
+                    {formData.images.map((imageUrl, index) => (
+                      <div
+                        key={index}
+                        className="relative aspect-square w-full"
+                      >
+                        <Image
+                          src={imageUrl}
+                          alt={`Preview ${index + 1}`}
+                          className="rounded-lg border border-gray-700 object-cover"
+                          fill
+                          sizes="(max-width: 1024px) 33vw, 160px"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              images: prev.images.filter((_, i) => i !== index),
+                              imageUrl:
+                                index === 0
+                                  ? prev.images[1] || ""
+                                  : prev.imageUrl,
+                            }))
+                          }
+                          className="absolute -right-2 -top-2 rounded-full bg-red-500 hover:bg-red-600 p-1.5 text-white"
                         >
-                          <Image
-                            src={imageUrl}
-                            alt={`Preview ${index + 1}`}
-                            className="object-cover rounded-lg border border-gray-700"
-                            fill
-                            sizes="160px"
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setFormData((prev) => ({
-                                ...prev,
-                                images: prev.images.filter(
-                                  (_, i) => i !== index
-                                ),
-                                imageUrl:
-                                  index === 0
-                                    ? prev.images[1] || ""
-                                    : prev.imageUrl,
-                              }))
-                            }
-                            className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg"
-                          >
-                            <FiX size={12} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                          <FiX size={12} />
+                        </button>
+                      </div>
+                    ))}
                   </div>
+                ) : (
+                  <p className="fc-muted mt-4 text-center text-xs">
+                    Add at least one image for the event banner.
+                  </p>
                 )}
               </div>
             </div>
-
-            <div className="flex justify-end gap-3 pt-4 border-t border-gray-700">
-              <button
-                type="button"
-                onClick={resetForm}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-xl"
-                disabled={uploading}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={uploading}
-                className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-xl"
-              >
-                {editingEvent ? <FiEdit2 /> : <FiPlus />}
-                {uploading
-                  ? "Please wait..."
-                  : editingEvent
-                  ? "Update Event"
-                  : "Add Event"}
-              </button>
-            </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </PortalModal>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {events.map((event) => (
           <div
             key={event._id}
-            className="bg-gray-800/50 rounded-lg overflow-hidden"
+            className="fc-admin-panel overflow-hidden"
           >
             <div className="aspect-video w-full relative group">
               {event.images?.length > 0 ? (
@@ -466,27 +493,27 @@ export default function Events({ mode }) {
                 <h4 className="text-xl font-semibold text-foreground">
                   {event.title}
                 </h4>
-                <div className="flex gap-2">
-                  <button
+                <div className="flex gap-2 relative z-20">
+                  <IconButton
+                    variant="edit"
+                    label="Edit"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleEdit(event);
                     }}
-                    className="text-gray-400 hover:text-primary transition-all duration-200 p-2 rounded-xl hover:bg-primary/10 hover:scale-105 relative z-20 border border-transparent hover:border-primary/20"
-                    title="Edit"
                   >
                     <FiEdit2 />
-                  </button>
-                  <button
+                  </IconButton>
+                  <IconButton
+                    variant="danger"
+                    label="Delete"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDelete(event._id);
                     }}
-                    className="text-gray-400 hover:text-red-500 transition-all duration-200 p-2 rounded-lg hover:bg-red-500/10 hover:scale-105 relative z-20 border border-transparent hover:border-red-500/20"
-                    title="Delete"
                   >
                     <FiTrash2 />
-                  </button>
+                  </IconButton>
                 </div>
               </div>
               <p className="fc-body mb-4 line-clamp-3">
@@ -508,7 +535,7 @@ export default function Events({ mode }) {
                     <Link
                       href={`/events/register/${event._id}`}
                       onClick={(e) => e.stopPropagation()}
-                      className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-xl transition-all duration-200 text-sm font-medium hover:scale-105"
+                      className="fc-btn-gradient-primary !px-4 !py-2 text-sm"
                     >
                       Register for Event
                     </Link>
@@ -534,12 +561,13 @@ export default function Events({ mode }) {
       </div>
 
       {events.length === 0 && !showForm && (
-        <div className="text-center py-12 bg-gray-800/50 rounded-xl min-h-[400px] flex flex-col items-center justify-center">
-          <FiCalendar className="mx-auto text-4xl text-primary mb-4" />
-          <p className="fc-muted">
-            No events yet. Create your first event!
-          </p>
-        </div>
+        <EmptyState
+          variant="public"
+          icon={FiCalendar}
+          minHeightClass="min-h-[400px]"
+        >
+          No events yet. Create your first event!
+        </EmptyState>
       )}
 
       <Modal
