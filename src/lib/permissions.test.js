@@ -44,11 +44,11 @@ describe("permissions", () => {
       );
     });
 
-    it("grants outreach contracts and community access", () => {
+    it("grants outreach contracts, community, and partners access", () => {
       expect(hasPermission(USER_ROLES.OUTREACH, PERMISSIONS.CONTRACTS)).toBe(true);
       expect(hasPermission(USER_ROLES.OUTREACH, PERMISSIONS.COMMUNITY)).toBe(true);
+      expect(hasPermission(USER_ROLES.OUTREACH, PERMISSIONS.PARTNERS)).toBe(true);
       expect(hasPermission(USER_ROLES.OUTREACH, PERMISSIONS.EVENTS)).toBe(false);
-      expect(hasPermission(USER_ROLES.OUTREACH, PERMISSIONS.PARTNERS)).toBe(false);
     });
 
     it("grants finance documentation access", () => {
@@ -212,6 +212,9 @@ describe("permissions", () => {
       ).toBe(true);
       expect(
         canAccessApiRoute(USER_ROLES.OUTREACH, "/api/partners", "POST"),
+      ).toBe(true);
+      expect(
+        canAccessApiRoute(USER_ROLES.EVENTS, "/api/partners", "POST"),
       ).toBe(false);
     });
 
@@ -286,13 +289,13 @@ describe("permissions", () => {
   });
 
   describe("navigation helpers", () => {
-    it("returns contracts nav item for outreach", () => {
+    it("returns contracts, community, and partners nav items for outreach", () => {
       const items = getDashboardNavItems(USER_ROLES.OUTREACH);
       expect(items.some((i) => i.href === "/")).toBe(true);
       expect(items.some((i) => i.href === "/dashboard")).toBe(true);
       expect(items.some((i) => i.href === "/dashboard/contracts")).toBe(true);
       expect(items.some((i) => i.href === "/dashboard/community")).toBe(true);
-      expect(items.some((i) => i.href === "/dashboard/partners")).toBe(false);
+      expect(items.some((i) => i.href === "/dashboard/partners")).toBe(true);
     });
 
     it("returns documentation nav item for finance", () => {
@@ -316,10 +319,11 @@ describe("permissions", () => {
 
     it("returns admin panel cards based on role", () => {
       const outreachCards = getAdminPanelCards(USER_ROLES.OUTREACH);
-      expect(outreachCards).toHaveLength(2);
+      expect(outreachCards).toHaveLength(3);
       expect(outreachCards.map((c) => c.href)).toEqual([
         "/dashboard/contracts",
         "/dashboard/community",
+        "/dashboard/partners",
       ]);
 
       const adminCards = getAdminPanelCards(USER_ROLES.ADMIN);
@@ -368,6 +372,7 @@ describe("permissions", () => {
       expect(ROLE_PERMISSIONS[USER_ROLES.OUTREACH]).toEqual([
         PERMISSIONS.CONTRACTS,
         PERMISSIONS.COMMUNITY,
+        PERMISSIONS.PARTNERS,
       ]);
       expect(ROLE_PERMISSIONS[USER_ROLES.EVENTS]).toEqual([
         PERMISSIONS.EVENTS,

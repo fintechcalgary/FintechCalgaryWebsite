@@ -33,7 +33,7 @@ const STAFF_ROLES = [
 
 const ROLE_PRIVILEGES = {
   admin: "Full access — all dashboard areas and settings",
-  outreach: "Contracts; Community board",
+  outreach: "Contracts; Community board; Partners",
   finance: "Documentation (view); Finance folder upload/delete",
   events: "Events management",
   marketing: "Partners; Marketing Submissions (not approvals)",
