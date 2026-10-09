@@ -1,9 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { FiArrowLeft, FiPlus, FiUser } from "react-icons/fi";
+import { FiPlus, FiUser } from "react-icons/fi";
 import PortalModal from "@/components/ui/Modal/ContentModal";
+import Button from "@/components/ui/Button";
+import AdminBackLink from "@/components/ui/AdminBackLink";
+import {
+  AdminPageTitle,
+  AdminPageLede,
+} from "@/components/ui/SectionHeading";
+import { LoadingState } from "@/components/ui/Spinner";
 import useRoleAccess from "@/hooks/useRoleAccess";
 import useRoleResource from "@/hooks/useRoleResource";
 import { API_ENDPOINTS, STAFF_ROLE_LABELS, USER_ROLES } from "@/lib/constants";
@@ -78,9 +84,7 @@ export default function UsersPage() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen">
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary" />
-        </div>
+        <LoadingState fullScreen />
       </div>
     );
   }
@@ -98,29 +102,23 @@ export default function UsersPage() {
   return (
     <div className="min-h-screen">
       <main className="container mx-auto px-6 py-8 max-w-7xl">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
+        <AdminBackLink />
+
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-white">Users</h1>
-            <p className="text-gray-400 text-lg">
+            <AdminPageTitle>Users</AdminPageTitle>
+            <AdminPageLede>
               Manage staff accounts and role-based access
-            </p>
+            </AdminPageLede>
           </div>
-          <div className="flex gap-3">
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all flex items-center gap-2 text-sm"
-            >
-              <FiArrowLeft className="w-4 h-4" />
-              Back
-            </Link>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="px-4 py-2 rounded-lg bg-primary/20 border border-primary/30 text-primary hover:bg-primary/30 transition-all flex items-center gap-2 text-sm"
-            >
-              <FiPlus className="w-4 h-4" />
-              Add User
-            </button>
-          </div>
+          <Button
+            type="button"
+            variant="soft"
+            onClick={() => setShowCreateModal(true)}
+          >
+            <FiPlus className="h-4 w-4" />
+            Add User
+          </Button>
         </div>
 
         <div className="grid gap-4">
@@ -164,7 +162,7 @@ export default function UsersPage() {
       >
         <form onSubmit={handleCreate} className="p-6 space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Username
             </label>
             <input
@@ -173,12 +171,12 @@ export default function UsersPage() {
               onChange={(e) =>
                 setFormData({ ...formData, username: e.target.value })
               }
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white"
+              className="form-input"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Password
             </label>
             <input
@@ -187,12 +185,12 @@ export default function UsersPage() {
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white"
+              className="form-input"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Role
             </label>
             <select
@@ -200,7 +198,7 @@ export default function UsersPage() {
               onChange={(e) =>
                 setFormData({ ...formData, role: e.target.value })
               }
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white"
+              className="form-input"
             >
               {ROLE_OPTIONS.map((role) => (
                 <option key={role} value={role}>
@@ -215,20 +213,22 @@ export default function UsersPage() {
             </p>
           )}
           <div className="flex justify-end gap-3">
-            <button
+            <Button
               type="button"
+              variant="cancel"
               onClick={() => setShowCreateModal(false)}
-              className="px-6 py-3 bg-gray-800/50 text-white rounded-xl border border-gray-700/50"
+              className="!flex-none"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
+              variant="primary"
               disabled={submitting}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white disabled:opacity-50"
+              className="!flex-none"
             >
               {submitting ? "Creating..." : "Create User"}
-            </button>
+            </Button>
           </div>
         </form>
       </PortalModal>

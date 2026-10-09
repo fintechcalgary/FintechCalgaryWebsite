@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
-import { FiArrowLeft } from "react-icons/fi";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import { LoadingState } from "@/components/ui/Spinner";
+import AdminBackLink from "@/components/ui/AdminBackLink";
+import {
+  AdminPageTitle,
+  AdminPageLede,
+} from "@/components/ui/SectionHeading";
 import CommunityPostsAdmin from "@/features/community/CommunityPostsAdmin";
 import useRoleAccess from "@/hooks/useRoleAccess";
 import { PERMISSIONS } from "@/lib/permissions";
@@ -36,20 +39,14 @@ export default function CommunityDashboardPage() {
       </div>
 
       <main className="container relative mx-auto max-w-7xl animate-fadeIn px-6 py-8">
-        <Link
-          href="/dashboard"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-gray-300 transition-colors hover:text-primary"
-        >
-          <FiArrowLeft className="h-4 w-4" />
-          Back to Dashboard
-        </Link>
+        <AdminBackLink />
 
         <GlowCard customSize glowColor="purple" className="w-full !gap-0 !p-8">
           <div className="relative z-10 mb-8 space-y-2">
-            <h1 className="fc-title-accent text-3xl">Community Posts</h1>
-            <p className="fc-body">
+            <AdminPageTitle>Community Posts</AdminPageTitle>
+            <AdminPageLede>
               Promote partner and community events on the public Community Board.
-            </p>
+            </AdminPageLede>
           </div>
           <CommunityPostsAdmin />
         </GlowCard>

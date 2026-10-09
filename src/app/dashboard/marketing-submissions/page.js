@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import {
-  FiArrowLeft,
   FiCheckCircle,
   FiClock,
   FiDownload,
@@ -11,27 +9,25 @@ import {
   FiXCircle,
 } from "react-icons/fi";
 import PortalModal from "@/components/ui/Modal/ContentModal";
+import Button from "@/components/ui/Button";
+import StatusBadge from "@/components/ui/StatusBadge";
+import AdminBackLink from "@/components/ui/AdminBackLink";
+import {
+  AdminPageTitle,
+  AdminPageLede,
+} from "@/components/ui/SectionHeading";
+import EmptyState from "@/components/ui/EmptyState";
+import { LoadingState } from "@/components/ui/Spinner";
 import useRoleAccess from "@/hooks/useRoleAccess";
 import useRoleResource from "@/hooks/useRoleResource";
 import { API_ENDPOINTS, FILE_TYPES, MARKETING_APPROVAL_STATUS } from "@/lib/constants";
 import { PERMISSIONS } from "@/lib/permissions";
+import { getMarketingStatusMeta } from "@/lib/statusBadges";
 
-const STATUS_BADGES = {
-  [MARKETING_APPROVAL_STATUS.PENDING]: {
-    label: "Pending Admin Review",
-    className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-    icon: FiClock,
-  },
-  [MARKETING_APPROVAL_STATUS.APPROVED]: {
-    label: "Approved",
-    className: "bg-green-500/20 text-green-400 border-green-500/30",
-    icon: FiCheckCircle,
-  },
-  [MARKETING_APPROVAL_STATUS.REJECTED]: {
-    label: "Rejected",
-    className: "bg-red-500/20 text-red-400 border-red-500/30",
-    icon: FiXCircle,
-  },
+const MARKETING_STATUS_ICONS = {
+  [MARKETING_APPROVAL_STATUS.PENDING]: FiClock,
+  [MARKETING_APPROVAL_STATUS.APPROVED]: FiCheckCircle,
+  [MARKETING_APPROVAL_STATUS.REJECTED]: FiXCircle,
 };
 
 export default function MarketingSubmissionsPage() {
@@ -102,9 +98,7 @@ export default function MarketingSubmissionsPage() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen">
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary" />
-        </div>
+        <LoadingState fullScreen />
       </div>
     );
   }
@@ -122,50 +116,49 @@ export default function MarketingSubmissionsPage() {
   return (
     <div className="min-h-screen">
       <main className="container mx-auto px-6 py-8 max-w-7xl">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
+        <AdminBackLink />
+
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-white">Marketing Submissions</h1>
-            <p className="text-gray-400 text-lg">
+            <AdminPageTitle>Marketing Submissions</AdminPageTitle>
+            <AdminPageLede>
               Upload marketing content and partner approval proof for admin review
-            </p>
+            </AdminPageLede>
           </div>
-          <div className="flex gap-3">
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all flex items-center gap-2 text-sm"
-            >
-              <FiArrowLeft className="w-4 h-4" />
-              Back
-            </Link>
-            <button
-              onClick={() => setShowFormModal(true)}
-              className="px-4 py-2 rounded-lg bg-primary/20 border border-primary/30 text-primary hover:bg-primary/30 transition-all flex items-center gap-2 text-sm"
-            >
-              <FiPlus className="w-4 h-4" />
-              New Submission
-            </button>
-          </div>
+          <Button
+            type="button"
+            variant="soft"
+            onClick={() => setShowFormModal(true)}
+          >
+            <FiPlus className="h-4 w-4" />
+            New Submission
+          </Button>
         </div>
 
         {submissions.length === 0 ? (
-          <div className="text-center py-16 bg-gray-900/60 rounded-2xl border border-white/10 text-gray-400">
-            <p className="mb-4">No submissions yet.</p>
-            <button
-              onClick={() => setShowFormModal(true)}
-              className="px-6 py-3 rounded-xl bg-primary/20 border border-primary/30 text-primary"
-            >
-              Create your first submission
-            </button>
-          </div>
+          <EmptyState
+            variant="admin"
+            title="No submissions yet."
+            action={
+              <Button
+                type="button"
+                variant="soft"
+                onClick={() => setShowFormModal(true)}
+              >
+                Create your first submission
+              </Button>
+            }
+          />
         ) : (
           <div className="grid gap-6">
             {submissions.map((item) => {
-              const badge = STATUS_BADGES[item.status] || STATUS_BADGES.pending;
-              const BadgeIcon = badge.icon;
+              const statusMeta = getMarketingStatusMeta(item.status);
+              const StatusIcon =
+                MARKETING_STATUS_ICONS[item.status] || FiClock;
               return (
                 <div
                   key={item._id}
-                  className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10"
+                  className="fc-admin-panel p-6"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                     <div>
@@ -186,12 +179,13 @@ export default function MarketingSubmissionsPage() {
                         </p>
                       )}
                     </div>
-                    <span
-                      className={`px-3 py-1.5 rounded-lg border text-xs font-medium flex items-center gap-1.5 ${badge.className}`}
+                    <StatusBadge
+                      tone={statusMeta.tone}
+                      size="sm"
+                      icon={StatusIcon}
                     >
-                      <BadgeIcon className="w-3.5 h-3.5" />
-                      {badge.label}
-                    </span>
+                      {statusMeta.label}
+                    </StatusBadge>
                   </div>
                   <div className="flex flex-wrap gap-3 mt-4">
                     <a
@@ -224,7 +218,7 @@ export default function MarketingSubmissionsPage() {
       >
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Title <span className="text-red-400">*</span>
             </label>
             <input
@@ -233,12 +227,12 @@ export default function MarketingSubmissionsPage() {
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
               }
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white"
+              className="form-input"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Partner name <span className="text-red-400">*</span>
             </label>
             <input
@@ -247,12 +241,12 @@ export default function MarketingSubmissionsPage() {
               onChange={(e) =>
                 setFormData({ ...formData, partnerName: e.target.value })
               }
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white"
+              className="form-input"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Description
             </label>
             <textarea
@@ -261,11 +255,11 @@ export default function MarketingSubmissionsPage() {
                 setFormData({ ...formData, description: e.target.value })
               }
               rows={3}
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white resize-none"
+              className="form-input resize-none"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Marketing content <span className="text-red-400">*</span>
             </label>
             <input
@@ -277,7 +271,7 @@ export default function MarketingSubmissionsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Partner approval proof (e.g. email) <span className="text-red-400">*</span>
             </label>
             <input
@@ -294,20 +288,22 @@ export default function MarketingSubmissionsPage() {
             </p>
           )}
           <div className="flex justify-end gap-3">
-            <button
+            <Button
               type="button"
+              variant="cancel"
               onClick={() => setShowFormModal(false)}
-              className="px-6 py-3 bg-gray-800/50 text-white rounded-xl border border-gray-700/50"
+              className="!flex-none"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
+              variant="primary"
               disabled={submitting}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white disabled:opacity-50"
+              className="!flex-none"
             >
               {submitting ? "Submitting..." : "Submit for Approval"}
-            </button>
+            </Button>
           </div>
         </form>
       </PortalModal>

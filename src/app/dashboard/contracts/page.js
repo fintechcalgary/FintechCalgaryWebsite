@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
-  FiArrowLeft,
   FiPlus,
   FiFileText,
   FiTrash2,
@@ -19,9 +18,15 @@ import {
   FiCheck,
   FiX,
 } from "react-icons/fi";
-import Link from "next/link";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import PortalModal from "@/components/ui/Modal/ContentModal";
+import Button from "@/components/ui/Button";
+import AdminBackLink from "@/components/ui/AdminBackLink";
+import IconButton from "@/components/ui/IconButton";
+import {
+  AdminPageTitle,
+  AdminPageLede,
+} from "@/components/ui/SectionHeading";
 import ContractPipeline from "@/components/ContractPipeline";
 import {
   API_ENDPOINTS,
@@ -34,25 +39,17 @@ import {
 
 import useRoleAccess from "@/hooks/useRoleAccess";
 import { PERMISSIONS } from "@/lib/permissions";
+import StatusBadge from "@/components/ui/StatusBadge";
+import EmptyState from "@/components/ui/EmptyState";
+import { LoadingState } from "@/components/ui/Spinner";
+import { getContractStatusMeta } from "@/lib/statusBadges";
 
 const EMPTY_FORM = { title: "", partnerName: "", description: "" };
 
-const STATUS_BADGES = {
-  [CONTRACT_STATUS.ACTIVE]: {
-    label: "In Progress",
-    className: "bg-primary/20 text-primary border-primary/30",
-    icon: FiClock,
-  },
-  [CONTRACT_STATUS.COMPLETED]: {
-    label: "Completed",
-    className: "bg-green-500/20 text-green-400 border-green-500/30",
-    icon: FiCheckCircle,
-  },
-  [CONTRACT_STATUS.DO_NOT_PROCEED]: {
-    label: "Do Not Proceed",
-    className: "bg-red-500/20 text-red-400 border-red-500/30",
-    icon: FiXCircle,
-  },
+const CONTRACT_STATUS_ICONS = {
+  [CONTRACT_STATUS.ACTIVE]: FiClock,
+  [CONTRACT_STATUS.COMPLETED]: FiCheckCircle,
+  [CONTRACT_STATUS.DO_NOT_PROCEED]: FiXCircle,
 };
 
 function validatePdfFile(file) {
@@ -352,9 +349,7 @@ export default function ContractsPage() {
   if (status === "loading" || loading || authLoading) {
     return (
       <div className="min-h-screen">
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
-        </div>
+        <LoadingState fullScreen />
       </div>
     );
   }
@@ -389,33 +384,22 @@ export default function ContractsPage() {
   return (
     <div className="min-h-screen">
       <main className="container mx-auto px-6 py-8 max-w-7xl">
+        <AdminBackLink />
+
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-white">Contracts</h1>
-            <p className="text-gray-400 text-lg">
+            <AdminPageTitle>Contracts</AdminPageTitle>
+            <AdminPageLede>
               Track contracts through the approvals pipeline, from outreach to
               execution
-            </p>
+            </AdminPageLede>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
-            >
-              <FiArrowLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">Back to Dashboard</span>
-              <span className="sm:hidden">Back</span>
-            </Link>
-            <button
-              onClick={openCreateModal}
-              className="px-4 py-2 rounded-lg bg-primary/20 border border-primary/30 text-primary hover:bg-primary/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
-            >
-              <FiPlus className="w-4 h-4" />
-              New Contract
-            </button>
-          </div>
+          <Button type="button" variant="soft" onClick={openCreateModal}>
+            <FiPlus className="h-4 w-4" />
+            New Contract
+          </Button>
         </div>
 
         {/* Stats */}
@@ -481,24 +465,23 @@ export default function ContractsPage() {
 
         {/* Contracts list */}
         {contracts.length === 0 ? (
-          <div className="text-center py-16 bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-white/10">
-            <FiFileText className="mx-auto text-4xl text-primary mb-4" />
-            <p className="text-gray-400 text-lg mb-6">No contracts yet</p>
-            <button
-              onClick={openCreateModal}
-              className="px-6 py-3 rounded-xl bg-primary/20 border border-primary/30 text-primary hover:bg-primary/30 transition-all duration-300 inline-flex items-center gap-2"
-            >
-              <FiPlus className="w-4 h-4" />
-              Create your first contract
-            </button>
-          </div>
+          <EmptyState
+            variant="admin"
+            icon={FiFileText}
+            title="No contracts yet"
+            action={
+              <Button type="button" variant="soft" onClick={openCreateModal}>
+                <FiPlus className="w-4 h-4" />
+                Create your first contract
+              </Button>
+            }
+          />
         ) : (
           <div className="grid gap-6">
             {contracts.map((contract, index) => {
-              const badge =
-                STATUS_BADGES[contract.status] ||
-                STATUS_BADGES[CONTRACT_STATUS.ACTIVE];
-              const BadgeIcon = badge.icon;
+              const statusMeta = getContractStatusMeta(contract.status);
+              const StatusIcon =
+                CONTRACT_STATUS_ICONS[contract.status] || FiClock;
               const isActive = contract.status === CONTRACT_STATUS.ACTIVE;
               const currentStage = CONTRACT_STAGES[contract.stage];
               const isFinalStage =
@@ -514,7 +497,7 @@ export default function ContractsPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
+                  className="fc-admin-panel p-6 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
                 >
                   {/* Card header */}
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
@@ -540,26 +523,27 @@ export default function ContractsPage() {
                     </div>
 
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <span
-                        className={`px-3 py-1.5 rounded-lg border text-xs font-medium flex items-center gap-1.5 ${badge.className}`}
+                      <StatusBadge
+                        tone={statusMeta.tone}
+                        size="sm"
+                        icon={StatusIcon}
                       >
-                        <BadgeIcon className="w-3.5 h-3.5" />
-                        {badge.label}
-                      </span>
-                      <button
+                        {statusMeta.label}
+                      </StatusBadge>
+                      <IconButton
+                        variant="edit"
+                        label="Edit contract"
                         onClick={() => openEditModal(contract)}
-                        className="text-gray-400 hover:text-primary transition-all duration-200 p-2 rounded-lg hover:bg-primary/10 border border-transparent hover:border-primary/20"
-                        title="Edit contract"
                       >
                         <FiEdit2 className="w-4 h-4" />
-                      </button>
-                      <button
+                      </IconButton>
+                      <IconButton
+                        variant="danger"
+                        label="Delete contract"
                         onClick={() => setContractToDelete(contract)}
-                        className="text-gray-400 hover:text-red-400 transition-all duration-200 p-2 rounded-lg hover:bg-red-500/10 border border-transparent hover:border-red-500/20"
-                        title="Delete contract"
                       >
                         <FiTrash2 className="w-4 h-4" />
-                      </button>
+                      </IconButton>
                     </div>
                   </div>
 
@@ -752,7 +736,7 @@ export default function ContractsPage() {
       >
         <form onSubmit={handleFormSubmit} className="p-6 space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Title <span className="text-red-400">*</span>
             </label>
             <input
@@ -762,13 +746,13 @@ export default function ContractsPage() {
                 setFormData({ ...formData, title: e.target.value })
               }
               placeholder="e.g. Sponsorship Agreement 2026"
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+              className="form-input"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Partner name <span className="text-red-400">*</span>
             </label>
             <input
@@ -778,13 +762,13 @@ export default function ContractsPage() {
                 setFormData({ ...formData, partnerName: e.target.value })
               }
               placeholder="Organization this contract is with"
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+              className="form-input"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Description
             </label>
             <textarea
@@ -794,13 +778,13 @@ export default function ContractsPage() {
               }
               placeholder="Optional notes about this contract"
               rows={3}
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all resize-none"
+              className="form-input resize-none"
             />
           </div>
 
           {!editingContract && (
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="fc-form-label">
                 EOI PDF (optional, max 5MB)
               </label>
               <input
@@ -823,24 +807,26 @@ export default function ContractsPage() {
           )}
 
           <div className="flex justify-end gap-3 pt-2">
-            <button
+            <Button
               type="button"
+              variant="cancel"
               onClick={() => setShowFormModal(false)}
-              className="px-6 py-3 bg-gray-800/50 hover:bg-gray-700/50 text-white rounded-xl transition-all duration-200 font-medium text-sm border border-gray-700/50"
+              className="!flex-none"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
+              variant="primary"
               disabled={submitting}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white font-medium text-sm shadow-lg shadow-primary/20 transition-all duration-200 disabled:opacity-50"
+              className="!flex-none"
             >
               {submitting
                 ? "Saving..."
                 : editingContract
                 ? "Save Changes"
                 : "Create Contract"}
-            </button>
+            </Button>
           </div>
         </form>
       </PortalModal>
@@ -904,7 +890,7 @@ export default function ContractsPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="fc-form-label">
                 Note (optional)
               </label>
               <textarea
@@ -912,7 +898,7 @@ export default function ContractsPage() {
                 onChange={(e) => setStageNote(e.target.value)}
                 placeholder="Add context for this decision..."
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all resize-none"
+                className="form-input resize-none"
               />
             </div>
 
@@ -923,28 +909,31 @@ export default function ContractsPage() {
             )}
 
             <div className="flex justify-end gap-3">
-              <button
+              <Button
                 type="button"
+                variant="cancel"
                 onClick={() => setStageAction(null)}
-                className="px-6 py-3 bg-gray-800/50 hover:bg-gray-700/50 text-white rounded-xl transition-all duration-200 font-medium text-sm border border-gray-700/50"
+                className="!flex-none"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
+                type="button"
+                variant={
+                  stageAction.action === CONTRACT_STAGE_ACTIONS.APPROVE
+                    ? "success"
+                    : "danger"
+                }
                 onClick={handleStageConfirm}
                 disabled={stageSubmitting}
-                className={`px-6 py-3 rounded-xl text-white font-medium text-sm shadow-lg transition-all duration-200 disabled:opacity-50 ${
-                  stageAction.action === CONTRACT_STAGE_ACTIONS.APPROVE
-                    ? "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-500/20"
-                    : "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-red-500/20"
-                }`}
+                className="!flex-none"
               >
                 {stageSubmitting
                   ? "Saving..."
                   : stageAction.action === CONTRACT_STAGE_ACTIONS.APPROVE
                   ? "Confirm Approval"
                   : "Confirm Do Not Proceed"}
-              </button>
+              </Button>
             </div>
           </div>
         )}

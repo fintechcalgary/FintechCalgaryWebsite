@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import {
   FiArrowLeft,
   FiChevronRight,
@@ -15,6 +14,15 @@ import {
 } from "react-icons/fi";
 import PortalModal from "@/components/ui/Modal/ContentModal";
 import Modal from "@/components/ui/Modal/ConfirmModal";
+import Button from "@/components/ui/Button";
+import AdminBackLink from "@/components/ui/AdminBackLink";
+import IconButton from "@/components/ui/IconButton";
+import EmptyState from "@/components/ui/EmptyState";
+import { LoadingState } from "@/components/ui/Spinner";
+import {
+  AdminPageTitle,
+  AdminPageLede,
+} from "@/components/ui/SectionHeading";
 import useRoleAccess from "@/hooks/useRoleAccess";
 import useRoleResource from "@/hooks/useRoleResource";
 import { API_ENDPOINTS, FILE_TYPES } from "@/lib/constants";
@@ -224,9 +232,7 @@ export default function DocumentationPage() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen">
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary" />
-        </div>
+        <LoadingState fullScreen />
       </div>
     );
   }
@@ -244,47 +250,44 @@ export default function DocumentationPage() {
   return (
     <div className="min-h-screen">
       <main className="container mx-auto px-6 py-8 max-w-7xl">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
+        <AdminBackLink />
+
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-white">Documentation</h1>
-            <p className="text-gray-400 text-lg">
+            <AdminPageTitle>Documentation</AdminPageTitle>
+            <AdminPageLede>
               Club documentation folders and uploaded records
-            </p>
+            </AdminPageLede>
           </div>
-          <div className="flex gap-3 flex-wrap">
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50 transition-all flex items-center gap-2 text-sm"
+          {canManageDocumentation ? (
+            <Button
+              type="button"
+              variant="soft"
+              onClick={() => setShowFolderModal(true)}
             >
-              <FiArrowLeft className="w-4 h-4" />
-              Back
-            </Link>
-            {canManageDocumentation && (
-              <button
-                onClick={() => setShowFolderModal(true)}
-                className="px-4 py-2 rounded-lg bg-primary/20 border border-primary/30 text-primary hover:bg-primary/30 transition-all flex items-center gap-2 text-sm"
-              >
-                <FiFolderPlus className="w-4 h-4" />
-                New Folder
-              </button>
-            )}
-          </div>
+              <FiFolderPlus className="h-4 w-4" />
+              New Folder
+            </Button>
+          ) : null}
         </div>
 
         {!selectedFolder ? (
           <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {folders.length === 0 ? (
-              <div className="sm:col-span-2 lg:col-span-3 text-center py-16 text-gray-400 bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-white/10">
-                <FiFolder className="mx-auto text-4xl mb-4 text-primary" />
-                <p>No documentation folders yet.</p>
-              </div>
+              <EmptyState
+                variant="admin"
+                icon={FiFolder}
+                className="sm:col-span-2 lg:col-span-3"
+              >
+                No documentation folders yet.
+              </EmptyState>
             ) : (
               folders.map((folder) => (
                 <button
                   key={folder._id}
                   type="button"
                   onClick={() => setSelectedFolder(folder)}
-                  className="text-left bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-primary/40 hover:bg-gray-900/80 transition-all group"
+                  className="fc-admin-panel text-left p-6 hover:border-primary/40 hover:bg-gray-900/80 transition-all group"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
@@ -315,7 +318,7 @@ export default function DocumentationPage() {
             )}
           </section>
         ) : (
-          <section className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+          <section className="fc-admin-panel p-6">
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
               <div>
                 <button
@@ -337,13 +340,14 @@ export default function DocumentationPage() {
               </div>
               <div className="flex gap-2 flex-wrap">
                 {canManageSelected && (
-                  <button
+                  <Button
+                    type="button"
+                    variant="soft"
                     onClick={() => setShowUploadModal(true)}
-                    className="px-4 py-2 rounded-lg bg-primary/20 border border-primary/30 text-primary hover:bg-primary/30 transition-all flex items-center gap-2 text-sm"
                   >
                     <FiPlus className="w-4 h-4" />
                     Upload Document
-                  </button>
+                  </Button>
                 )}
                 {canManageDocumentation && !selectedFolder.protected && (
                   <button
@@ -358,9 +362,7 @@ export default function DocumentationPage() {
             </div>
 
             {documentsLoading ? (
-              <div className="flex justify-center py-12">
-                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary" />
-              </div>
+              <LoadingState size="md" className="py-12" />
             ) : documents.length === 0 ? (
               <div className="text-center py-12 text-gray-400">
                 <FiFile className="mx-auto text-4xl mb-4 text-primary" />
@@ -394,13 +396,13 @@ export default function DocumentationPage() {
                         Download
                       </a>
                       {canManageSelected && (
-                        <button
+                        <IconButton
+                          variant="danger"
+                          label="Delete"
                           onClick={() => setDocToDelete(doc)}
-                          className="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all"
-                          title="Delete"
                         >
                           <FiTrash2 className="w-4 h-4" />
-                        </button>
+                        </IconButton>
                       )}
                     </div>
                   </div>
@@ -419,7 +421,7 @@ export default function DocumentationPage() {
       >
         <form onSubmit={handleCreateFolder} className="p-6 space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Folder name <span className="text-red-400">*</span>
             </label>
             <input
@@ -428,13 +430,13 @@ export default function DocumentationPage() {
               onChange={(e) =>
                 setFolderForm({ ...folderForm, name: e.target.value })
               }
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white"
+              className="form-input"
               placeholder="e.g. Legal Templates"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Description
             </label>
             <textarea
@@ -443,7 +445,7 @@ export default function DocumentationPage() {
                 setFolderForm({ ...folderForm, description: e.target.value })
               }
               rows={3}
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white resize-none"
+              className="form-input resize-none"
               placeholder="What belongs in this folder?"
             />
           </div>
@@ -453,20 +455,22 @@ export default function DocumentationPage() {
             </p>
           )}
           <div className="flex justify-end gap-3">
-            <button
+            <Button
               type="button"
+              variant="cancel"
               onClick={() => setShowFolderModal(false)}
-              className="px-6 py-3 bg-gray-800/50 text-white rounded-xl border border-gray-700/50"
+              className="!flex-none"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
+              variant="primary"
               disabled={folderSubmitting}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white disabled:opacity-50"
+              className="!flex-none"
             >
               {folderSubmitting ? "Creating..." : "Create Folder"}
-            </button>
+            </Button>
           </div>
         </form>
       </PortalModal>
@@ -479,7 +483,7 @@ export default function DocumentationPage() {
       >
         <form onSubmit={handleUpload} className="p-6 space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Title <span className="text-red-400">*</span>
             </label>
             <input
@@ -488,12 +492,12 @@ export default function DocumentationPage() {
               onChange={(e) =>
                 setUploadForm({ ...uploadForm, title: e.target.value })
               }
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white"
+              className="form-input"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Description
             </label>
             <textarea
@@ -502,11 +506,11 @@ export default function DocumentationPage() {
                 setUploadForm({ ...uploadForm, description: e.target.value })
               }
               rows={3}
-              className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white resize-none"
+              className="form-input resize-none"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               File <span className="text-red-400">*</span>
             </label>
             <input
@@ -529,20 +533,22 @@ export default function DocumentationPage() {
             </p>
           )}
           <div className="flex justify-end gap-3">
-            <button
+            <Button
               type="button"
+              variant="cancel"
               onClick={() => setShowUploadModal(false)}
-              className="px-6 py-3 bg-gray-800/50 text-white rounded-xl border border-gray-700/50"
+              className="!flex-none"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
+              variant="primary"
               disabled={uploading}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white disabled:opacity-50"
+              className="!flex-none"
             >
               {uploading ? "Uploading..." : "Upload"}
-            </button>
+            </Button>
           </div>
         </form>
       </PortalModal>
