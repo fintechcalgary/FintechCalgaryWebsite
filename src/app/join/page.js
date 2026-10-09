@@ -354,7 +354,7 @@ export default function JoinPage() {
                               <button
                                 type="button"
                                 onClick={() => setMembershipType("free")}
-                                className="fc-link hover:underline"
+                                className="fc-link-underline"
                               >
                                 Free Membership
                               </button>{" "}
@@ -380,7 +380,7 @@ export default function JoinPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label className="text-sm font-medium text-gray-300 mb-1 block">
+                            <label className="fc-form-label">
                               First Name <span className="text-red-400">*</span>
                             </label>
                             <input
@@ -393,13 +393,13 @@ export default function JoinPage() {
                                 })
                               }
                               required
-                              className="w-full px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                              className="form-input"
                               placeholder="Your first name"
                             />
                           </div>
 
                           <div>
-                            <label className="text-sm font-medium text-gray-300 mb-1 block">
+                            <label className="fc-form-label">
                               Last Name <span className="text-red-400">*</span>
                             </label>
                             <input
@@ -412,13 +412,13 @@ export default function JoinPage() {
                                 })
                               }
                               required
-                              className="w-full px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                              className="form-input"
                               placeholder="Your last name"
                             />
                           </div>
 
                           <div>
-                            <label className="text-sm font-medium text-gray-300 mb-1 block">
+                            <label className="fc-form-label">
                               UCID <span className="text-red-400">*</span>
                             </label>
                             <input
@@ -431,13 +431,13 @@ export default function JoinPage() {
                                 })
                               }
                               required
-                              className="w-full px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                              className="form-input"
                               placeholder="Your UCID"
                             />
                           </div>
 
                           <div>
-                            <label className="text-sm font-medium text-gray-300 mb-1 block">
+                            <label className="fc-form-label">
                               Email <span className="text-red-400">*</span>
                             </label>
                             <input
@@ -450,7 +450,7 @@ export default function JoinPage() {
                                 })
                               }
                               required
-                              className="w-full px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                              className="form-input"
                               placeholder="Your email address"
                             />
                           </div>
@@ -458,7 +458,7 @@ export default function JoinPage() {
 
                         {/* Resume Upload */}
                         <div>
-                          <label className="text-sm font-medium text-gray-300 mb-1 block">
+                          <label className="fc-form-label">
                             Resume (PDF, max 5MB){" "}
                             <span className="text-red-400">*</span>
                           </label>

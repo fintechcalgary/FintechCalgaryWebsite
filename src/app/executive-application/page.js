@@ -311,9 +311,7 @@ export default function ExecutiveApplicationPage() {
     }
   };
 
-  // Update the base input class styling to match associate signup
-  const inputClassName =
-    "w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200 hover:border-gray-600/50";
+  const inputClassName = "form-input";
 
   return (
     <PublicPageShell>
@@ -547,7 +545,7 @@ export default function ExecutiveApplicationPage() {
                     <div className="mb-5">
                       <label
                         htmlFor="resumeFile"
-                        className="block text-sm font-medium text-gray-300 mb-2"
+                        className="fc-form-label"
                       >
                         Resume/CV
                       </label>
@@ -645,7 +643,7 @@ export default function ExecutiveApplicationPage() {
                           <div className="w-full">
                             <label
                               htmlFor={question.id}
-                              className="block text-sm font-medium text-gray-300 mb-2"
+                              className="fc-form-label"
                             >
                               {question.label}
                               {question.required && (
@@ -676,7 +674,7 @@ export default function ExecutiveApplicationPage() {
                           <div className="w-full">
                             <label
                               htmlFor="why"
-                              className="block text-sm font-medium text-gray-300 mb-2"
+                              className="fc-form-label"
                             >
                               Why do you want to be an executive?
                             </label>
@@ -701,7 +699,7 @@ export default function ExecutiveApplicationPage() {
                           <div className="w-full">
                             <label
                               htmlFor="fintechVision"
-                              className="block text-sm font-medium text-gray-300 mb-2"
+                              className="fc-form-label"
                             >
                               What does &apos;fintech&apos; mean to you, and how
                               do you see its role in the future of business and
@@ -728,7 +726,7 @@ export default function ExecutiveApplicationPage() {
                           <div className="w-full">
                             <label
                               htmlFor="otherCommitments"
-                              className="block text-sm font-medium text-gray-300 mb-2"
+                              className="fc-form-label"
                             >
                               Are you currently involved with any other clubs or
                               commitments? How do you plan to balance your

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiCheck, FiArrowLeft } from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
+import { PageTitle } from "@/components/ui/SectionHeading";
 
 export default function RegistrationSuccess() {
 
@@ -18,33 +19,26 @@ export default function RegistrationSuccess() {
           >
             <Link
               href="/"
-              className="inline-flex items-center fc-muted hover:text-white transition-all duration-200 hover:translate-x-[-4px] mb-8 group"
+              className="fc-link mb-8 inline-flex items-center transition-transform duration-200 hover:translate-x-[-4px] group"
             >
               <FiArrowLeft className="w-5 h-5 mr-2 transition-transform duration-200 group-hover:translate-x-[-2px]" />
               Back to Home
             </Link>
 
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 shadow-2xl border border-gray-700/50 animate-fade-in">
+            <div className="fc-card p-8 shadow-2xl animate-fade-in">
               <div className="flex items-center justify-center mb-6">
                 <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center">
                   <FiCheck className="w-8 h-8 text-primary" />
                 </div>
               </div>
 
-              <h1 className="text-3xl font-bold text-white text-center mb-4">
+              <PageTitle sizeClass="text-3xl mb-4" className="text-center">
                 Registration Successful!
-              </h1>
+              </PageTitle>
 
-              <div className="space-y-4 text-center">
-                <p className="fc-body">
-                  Thank you for registering. You will receive a confirmation
-                  email shortly.
-                </p>
-                <p className="fc-muted">
-                  If you don&apos;t see the email, please check your spam or
-                  junk folder.
-                </p>
-              </div>
+              <p className="fc-body text-center">
+                Thank you for registering.
+              </p>
             </div>
           </motion.div>
         </div>

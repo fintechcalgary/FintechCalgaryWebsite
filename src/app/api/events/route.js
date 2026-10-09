@@ -37,7 +37,7 @@ export const GET = withErrorHandler(async () => {
   const events = await db
     .collection("events")
     .find({})
-    .sort({ date: 1 })
+    .sort({ date: -1 })
     .toArray();
 
   return apiResponse.success(events);

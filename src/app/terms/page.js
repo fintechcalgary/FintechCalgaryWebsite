@@ -27,7 +27,7 @@ export default function TermsPage() {
             >
               <div className="relative z-10 space-y-8">
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   1. Acceptance of Terms
                 </h2>
                 <p className="fc-body-lg">
@@ -39,7 +39,7 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   2. Use License
                 </h2>
                 <p className="fc-body-lg mb-4">
@@ -67,7 +67,7 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   3. Member Responsibilities
                 </h2>
                 <p className="fc-body-lg mb-4">
@@ -96,7 +96,7 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   4. Privacy Policy
                 </h2>
                 <p className="fc-body-lg">
@@ -107,7 +107,7 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   5. Prohibited Uses
                 </h2>
                 <p className="fc-body-lg mb-4">
@@ -135,7 +135,7 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   6. Content and Intellectual Property
                 </h2>
                 <p className="fc-body-lg">
@@ -149,7 +149,7 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   7. Disclaimer
                 </h2>
                 <p className="fc-body-lg">
@@ -164,7 +164,7 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   8. Limitations
                 </h2>
                 <p className="fc-body-lg">
@@ -179,7 +179,7 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   9. Revisions
                 </h2>
                 <p className="fc-body-lg">
@@ -191,7 +191,7 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   10. Contact Information
                 </h2>
                 <p className="fc-body-lg">

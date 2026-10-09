@@ -17,6 +17,7 @@ import {
   INITIAL_PARTNER_FORM,
   createPartnerFieldChangeHandler,
 } from "@/features/partners/partnerFormFields";
+import { PageTitle } from "@/components/ui/SectionHeading";
 
 export default function PartnerSignupPage() {
 
@@ -202,15 +203,15 @@ export default function PartnerSignupPage() {
       <div className="relative flex-grow">
         <div className="container mx-auto px-6 pt-36 relative z-10">
           <div className="text-center animate-fadeIn">
-            <h1 className="text-6xl font-extrabold text-white bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75 mb-6">
+            <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6">
               Partner Sign Up
-            </h1>
+            </PageTitle>
             <p className="fc-lede mx-auto max-w-3xl">
               Interested in learning more about Partnership before
               applying? Contact us at{" "}
               <a
                 href="mailto:fintech.calgary@gmail.com"
-                className="fc-link inline-flex items-center gap-1 ml-1 underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
+                className="fc-link-underline inline-flex items-center gap-1 ml-1"
               >
                 <FaEnvelope className="w-4 h-4" />
                 fintech.calgary@gmail.com
@@ -225,7 +226,7 @@ export default function PartnerSignupPage() {
                   <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <FiCheck className="w-8 h-8 text-primary" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-2">
+                  <h2 className="fc-title text-2xl mb-2">
                     Thank you for your interest in becoming a Partner!
                   </h2>
                   <p className="fc-body">

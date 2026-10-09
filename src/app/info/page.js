@@ -3,9 +3,7 @@
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import {
-  FiArrowLeft,
   FiArrowUpRight,
   FiBookOpen,
   FiCheckCircle,
@@ -15,6 +13,11 @@ import {
 import Navbar from "@/components/layout/AdminNavbar";
 import { LoadingState } from "@/components/ui/Spinner";
 import { GlowCard } from "@/components/ui/spotlight-card";
+import AdminBackLink from "@/components/ui/AdminBackLink";
+import {
+  AdminPageTitle,
+  AdminPageLede,
+} from "@/components/ui/SectionHeading";
 import useDocumentTitle from "@/hooks/useDocumentTitle";
 
 const REPO_URL = "https://github.com/fintechcalgary/website";
@@ -100,23 +103,13 @@ export default function InfoPage() {
 
       <Navbar />
       <main className="relative z-10 mx-auto max-w-6xl animate-fadeIn px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-        <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0 space-y-1 sm:space-y-2">
-            <h1 className="truncate text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-              Info
-            </h1>
-            <p className="text-sm text-gray-400 sm:text-base md:text-lg">
-              Repository access and contribution guide
-            </p>
-          </div>
-          <Link
-            href="/dashboard"
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-700/50 bg-gray-800/50 px-4 py-2.5 text-sm text-white transition-all duration-300 hover:bg-gray-700/50 sm:w-auto"
-          >
-            <FiArrowLeft className="h-4 w-4 flex-shrink-0" />
-            <span className="hidden sm:inline">Back to Dashboard</span>
-            <span className="sm:hidden">Back</span>
-          </Link>
+        <AdminBackLink />
+
+        <div className="mb-6 min-w-0 space-y-1 sm:mb-8 sm:space-y-2">
+          <AdminPageTitle className="truncate">Info</AdminPageTitle>
+          <AdminPageLede>
+            Repository access and contribution guide
+          </AdminPageLede>
         </div>
 
         <div className="relative mb-8 animate-fadeIn sm:mb-10">
@@ -170,7 +163,7 @@ export default function InfoPage() {
                   href={REPO_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex max-w-full items-center gap-2 rounded-xl border border-primary/35 bg-gradient-to-r from-primary/15 to-purple-500/15 px-4 py-3 text-sm font-medium text-primary backdrop-blur-md transition-all duration-300 hover:border-primary/55 hover:from-primary/25 hover:to-purple-500/25 hover:shadow-lg hover:shadow-primary/15"
+                  className="fc-btn-soft-chip group max-w-full"
                 >
                   <span className="truncate">{REPO_URL}</span>
                   <FiArrowUpRight className="h-4 w-4 flex-shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

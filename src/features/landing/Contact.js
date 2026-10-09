@@ -56,7 +56,7 @@ export default function Contact() {
                   </p>
                   <a
                     href="mailto:fintech.calgary@gmail.com"
-                    className="fc-link group/link inline-flex items-center gap-2 underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
+                    className="fc-link-underline group/link inline-flex items-center gap-2"
                   >
                     <span className="text-base">fintech.calgary@gmail.com</span>
                     <FiArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1" />

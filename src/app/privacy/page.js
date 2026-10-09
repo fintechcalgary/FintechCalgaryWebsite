@@ -27,7 +27,7 @@ export default function PrivacyPage() {
             >
               <div className="relative z-10 space-y-8">
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   1. Information We Collect
                 </h2>
                 <p className="fc-body-lg mb-4">
@@ -48,7 +48,7 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   2. How We Use Your Information
                 </h2>
                 <p className="fc-body-lg mb-4">
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   3. Information Sharing
                 </h2>
                 <p className="fc-body-lg mb-4">
@@ -95,7 +95,7 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   4. Data Security
                 </h2>
                 <p className="fc-body-lg">
@@ -108,7 +108,7 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   5. Cookies and Tracking
                 </h2>
                 <p className="fc-body-lg mb-4">
@@ -127,7 +127,7 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   6. Third-Party Services
                 </h2>
                 <p className="fc-body-lg">
@@ -139,7 +139,7 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   7. Data Retention
                 </h2>
                 <p className="fc-body-lg">
@@ -152,7 +152,7 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   8. Your Rights
                 </h2>
                 <p className="fc-body-lg mb-4">
@@ -174,7 +174,7 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   9. Children&apos;s Privacy
                 </h2>
                 <p className="fc-body-lg">
@@ -187,7 +187,7 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   10. Changes to This Policy
                 </h2>
                 <p className="fc-body-lg">
@@ -200,7 +200,7 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="fc-title text-2xl mb-4">
                   11. Contact Us
                 </h2>
                 <p className="fc-body-lg">

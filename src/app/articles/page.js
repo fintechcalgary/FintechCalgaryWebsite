@@ -13,6 +13,7 @@ import {
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { LoadingState } from "@/components/ui/Spinner";
+import { PageTitle } from "@/components/ui/SectionHeading";
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState([]);
@@ -119,9 +120,9 @@ export default function ArticlesPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-8"
           >
-            <h1 className="text-5xl md:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400/75">
+            <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4">
               Finance News Articles
-            </h1>
+            </PageTitle>
             <p className="fc-lede mx-auto max-w-2xl">
               Browse weekly highlights or the full FinTech archive
             </p>

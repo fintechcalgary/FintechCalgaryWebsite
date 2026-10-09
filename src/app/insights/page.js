@@ -820,7 +820,7 @@ function FeaturedArticleCardInner({ article, featured = false, onReadMore }) {
             </h3>
             <button
               onClick={(e) => onReadMore(e, article, summary)}
-              className="inline-flex w-fit items-center gap-1 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 to-purple-500/10 px-3 py-1.5 text-xs text-primary transition-all duration-200 hover:border-primary/50 hover:from-primary/20 hover:to-purple-500/20"
+              className="fc-btn-read-more-subtle w-fit !text-xs"
             >
               Read more
               <FiArrowRight className="h-3 w-3" />
