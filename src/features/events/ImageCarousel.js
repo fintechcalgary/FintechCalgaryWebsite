@@ -23,9 +23,19 @@ const toYouTubeEmbed = (url) => {
   return null;
 };
 
-export default function ImageCarousel({ images, title, recordingUrl }) {
+/**
+ * @param {"cover" | "contain"} [fit="cover"]
+ *   cover — crop to fill (list cards). contain — show full image with blurred fill (detail pages).
+ */
+export default function ImageCarousel({
+  images,
+  title,
+  recordingUrl,
+  fit = "cover",
+}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const contain = fit === "contain";
 
   // Build mixed media array (video first if present)
   const media = useMemo(() => {
@@ -104,7 +114,7 @@ export default function ImageCarousel({ images, title, recordingUrl }) {
   const current = media[currentIndex];
 
   return (
-    <div className="relative w-full h-full group overflow-hidden">
+    <div className="relative h-full w-full group overflow-hidden">
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={currentIndex}
@@ -123,11 +133,10 @@ export default function ImageCarousel({ images, title, recordingUrl }) {
           onDragEnd={handleDragEnd}
           className="absolute inset-0"
         >
-          {/* Render current slide */}
           {current?.type === "youtube" ? (
-            <div className="relative w-full h-full min-h-[400px] aspect-video">
+            <div className="relative aspect-video h-full min-h-[280px] w-full">
               <iframe
-                className="absolute inset-0 w-full h-full"
+                className="absolute inset-0 h-full w-full"
                 src={current.src}
                 title={title}
                 frameBorder="0"
@@ -137,16 +146,28 @@ export default function ImageCarousel({ images, title, recordingUrl }) {
               />
             </div>
           ) : current?.type === "image" ? (
-            <Image
-              src={current.src}
-              alt={`${title} - Slide ${currentIndex + 1}`}
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              priority
-              className="object-cover"
-            />
+            <>
+              {contain ? (
+                <Image
+                  src={current.src}
+                  alt=""
+                  fill
+                  sizes="100vw"
+                  aria-hidden
+                  className="object-cover opacity-40 blur-md scale-110"
+                  priority
+                />
+              ) : null}
+              <Image
+                src={current.src}
+                alt={`${title} - Slide ${currentIndex + 1}`}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                priority
+                className={contain ? "object-contain" : "object-cover"}
+              />
+            </>
           ) : (
-            // Fallback gradient if no media
             <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-indigo-600" />
           )}
         </motion.div>
@@ -154,31 +175,29 @@ export default function ImageCarousel({ images, title, recordingUrl }) {
 
       {showNavigation && (
         <>
-          {/* Arrows */}
           <button
             onClick={prev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+            className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 p-1.5 text-white opacity-0 transition-opacity duration-300 hover:bg-black/70 group-hover:opacity-100"
             aria-label="Previous"
           >
             <FiChevronLeft size={20} />
           </button>
           <button
             onClick={next}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+            className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 p-1.5 text-white opacity-0 transition-opacity duration-300 hover:bg-black/70 group-hover:opacity-100"
             aria-label="Next"
           >
             <FiChevronRight size={20} />
           </button>
 
-          {/* Dots */}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+          <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 gap-1.5">
             {media.map((m, idx) => (
               <button
                 key={`${m.type}-${idx}`}
                 onClick={(e) => handleIndicatorClick(e, idx)}
-                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${
                   idx === currentIndex
-                    ? "bg-white w-3"
+                    ? "w-3 bg-white"
                     : "bg-white/50 hover:bg-white/80"
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}

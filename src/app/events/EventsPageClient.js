@@ -9,6 +9,8 @@ import Image from "next/image";
 import ImageCarousel from "@/features/events/ImageCarousel";
 import { useRouter } from "next/navigation";
 import { normalizeDate, startOfToday } from "@/lib/dates";
+import StatusBadge from "@/components/ui/StatusBadge";
+import EmptyState from "@/components/ui/EmptyState";
 
 export default function EventsPageClient({ initialEvents }) {
   const [filter, setFilter] = useState("all");
@@ -106,14 +108,11 @@ export default function EventsPageClient({ initialEvents }) {
         </div>
 
         {/* Filter Dropdown - Enhanced styling */}
-        <div className="flex mb-8" style={{ animationDelay: "200ms" }}>
+        <div className="mb-8 flex justify-start" style={{ animationDelay: "200ms" }}>
           <select
             value={filter}
             onChange={handleFilterChange}
-            className="px-6 py-3 w-64 bg-gray-800/50 text-white rounded-xl border border-gray-600 
-            focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
-            shadow-lg backdrop-blur-sm
-            pl-6 pr-12 hover:bg-gray-700/50"
+            className="form-input form-input-auto"
           >
             <option value="all">All Events & Webinars</option>
             <option value="upcoming">Upcoming Events & Webinars</option>
@@ -154,20 +153,21 @@ export default function EventsPageClient({ initialEvents }) {
 
                     {/* Status Badge */}
                     <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
-                      <span
-                        className={`px-4 py-1.5 text-xs font-semibold rounded-full flex items-center justify-center
-                        ${
-                          isUpcoming
-                            ? "bg-purple-600/60 text-purple-100 border border-purple-500 backdrop-blur-md"
-                            : "bg-gray-800/60 text-gray-300 border border-gray-700 backdrop-blur-md"
-                        }`}
+                      <StatusBadge
+                        tone={isUpcoming ? "primary" : "muted"}
+                        size="sm"
+                        className="backdrop-blur-md justify-center"
                       >
                         {isUpcoming ? "Upcoming" : "Past"}
-                      </span>
+                      </StatusBadge>
                       {event.eventType === "webinar" && (
-                        <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-purple-600/60 text-purple-100 border border-purple-500 backdrop-blur-md flex items-center justify-center">
+                        <StatusBadge
+                          tone="primary"
+                          size="sm"
+                          className="backdrop-blur-md justify-center"
+                        >
                           Webinar
-                        </span>
+                        </StatusBadge>
                       )}
                     </div>
                   </div>
@@ -203,12 +203,14 @@ export default function EventsPageClient({ initialEvents }) {
         </div>
 
         {filteredEvents.length === 0 && (
-          <div className="text-center py-12 bg-gray-800/50 rounded-xl min-h-[400px] flex flex-col items-center justify-center mt-12 animate-fadeIn">
-            <FiCalendar className="mx-auto text-4xl text-primary mb-4" />
-            <p className="fc-muted">
-              No events or webinars available for the selected filter.
-            </p>
-          </div>
+          <EmptyState
+            variant="public"
+            icon={FiCalendar}
+            minHeightClass="min-h-[400px]"
+            className="mt-12 animate-fadeIn"
+          >
+            No events or webinars available for the selected filter.
+          </EmptyState>
         )}
       </div>
     </PublicPageShell>

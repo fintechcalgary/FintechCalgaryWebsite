@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { FiCalendar } from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import { PageTitle } from "@/components/ui/SectionHeading";
+import EmptyState from "@/components/ui/EmptyState";
 import CommunityPostCard from "@/features/community/CommunityPostCard";
 import { filterCommunityPosts } from "@/lib/communityPosts";
 
@@ -27,11 +28,11 @@ export default function CommunityPageClient({ initialPosts = [] }) {
           </p>
         </div>
 
-        <div className="mb-8 flex" style={{ animationDelay: "200ms" }}>
+        <div className="mb-8 flex justify-start" style={{ animationDelay: "200ms" }}>
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="w-64 rounded-xl border border-gray-600 bg-gray-800/50 px-6 py-3 pl-6 pr-12 text-white shadow-lg backdrop-blur-sm hover:bg-gray-700/50 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
+            className="form-input form-input-auto"
           >
             <option value="upcoming">Upcoming</option>
             <option value="past">Past</option>
@@ -40,12 +41,14 @@ export default function CommunityPageClient({ initialPosts = [] }) {
         </div>
 
         {filteredPosts.length === 0 ? (
-          <div className="mt-12 flex min-h-[400px] animate-fadeIn flex-col items-center justify-center rounded-xl bg-gray-800/50 py-12 text-center">
-            <FiCalendar className="mx-auto mb-4 text-4xl text-primary" />
-            <p className="fc-muted">
-              No community events available for the selected filter.
-            </p>
-          </div>
+          <EmptyState
+            variant="public"
+            icon={FiCalendar}
+            minHeightClass="min-h-[400px]"
+            className="mt-12 animate-fadeIn"
+          >
+            No community events available for the selected filter.
+          </EmptyState>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredPosts.map((post, index) => (
