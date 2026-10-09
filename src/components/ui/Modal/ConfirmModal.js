@@ -62,9 +62,7 @@ export default function ConfirmModal({
     <ModalRoot
       isOpen={isOpen}
       onClose={onClose}
-      usePortal={false}
-      backdropClassName="bg-black/60 backdrop-blur-xl z-40"
-      containerClassName="z-50"
+      usePortal
     >
       <div
         className={`bg-gray-900/90 backdrop-blur-xl rounded-2xl shadow-2xl border ${typeStyles.border} max-w-md w-full overflow-hidden pointer-events-auto`}
