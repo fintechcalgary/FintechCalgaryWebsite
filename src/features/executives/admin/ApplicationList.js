@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FiTrash2 } from "react-icons/fi";
+import { FiChevronRight, FiTrash2 } from "react-icons/fi";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import StatusBadge from "@/components/ui/StatusBadge";
 import IconButton from "@/components/ui/IconButton";
@@ -48,22 +48,22 @@ export default function ApplicationList({
               <table className="w-full">
                 <thead className="border-b border-gray-700/50 bg-gray-800/50">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-gray-300">
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
                       Applicant
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-gray-300">
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
                       Role
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-gray-300">
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
                       Program & Year
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-gray-300">
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
                       Contact
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-gray-300">
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
                       Applied
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-gray-300">
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
                       Actions
                     </th>
                   </tr>
@@ -74,6 +74,7 @@ export default function ApplicationList({
                       key={application._id || index}
                       role="link"
                       tabIndex={0}
+                      aria-label={`View application from ${application.name}`}
                       onClick={() => goToApplication(application._id)}
                       onKeyDown={(event) => {
                         if (event.key === "Enter" || event.key === " ") {
@@ -81,12 +82,17 @@ export default function ApplicationList({
                           goToApplication(application._id);
                         }
                       }}
-                      className="cursor-pointer transition-colors hover:bg-gray-800/30"
+                      className="group cursor-pointer transition-colors hover:bg-primary/10"
                     >
                       <td className="px-6 py-4">
-                        <span className="fc-title max-w-[220px] truncate text-sm underline decoration-white/40 underline-offset-2">
-                          {application.name}
-                        </span>
+                        <div className="flex flex-col gap-1">
+                          <span className="fc-title max-w-[220px] truncate text-sm text-primary group-hover:underline">
+                            {application.name}
+                          </span>
+                          <span className="text-xs text-gray-500 transition-colors group-hover:text-primary/80">
+                            Click to view application
+                          </span>
+                        </div>
                       </td>
                       <td className="px-6 py-4">
                         <span title={application.role}>
@@ -117,18 +123,24 @@ export default function ApplicationList({
                         {formatDate(application.createdAt)}
                       </td>
                       <td className="px-6 py-4">
-                        <button
-                          type="button"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onDeleteClick(application);
-                          }}
-                          disabled={deletingId === application._id}
-                          className="inline-flex items-center gap-1 text-sm font-medium text-red-400 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          <FiTrash2 className="h-4 w-4" />
-                          Delete
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">
+                            View
+                            <FiChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                          </span>
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              onDeleteClick(application);
+                            }}
+                            disabled={deletingId === application._id}
+                            className="inline-flex items-center gap-1 text-sm font-medium text-red-400 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <FiTrash2 className="h-4 w-4" />
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -144,6 +156,7 @@ export default function ApplicationList({
                     key={application._id || index}
                     role="link"
                     tabIndex={0}
+                    aria-label={`View application from ${application.name}`}
                     onClick={() => goToApplication(application._id)}
                     onKeyDown={(event) => {
                       if (event.key === "Enter" || event.key === " ") {
@@ -161,7 +174,7 @@ export default function ApplicationList({
                       <div className="relative z-10">
                         <div className="mb-3 flex items-start justify-between gap-3">
                           <div className="min-w-0 flex-1">
-                            <h3 className="fc-title mb-1 truncate text-base underline decoration-white/40 underline-offset-2">
+                            <h3 className="fc-title mb-1 truncate text-base text-primary">
                               {application.name}
                             </h3>
                             <span title={application.role}>
@@ -208,11 +221,17 @@ export default function ApplicationList({
                           </div>
                         </div>
 
-                        <div className="mt-3 border-t border-gray-700/30 pt-3">
-                          <span className="fc-muted text-xs">Applied:</span>
-                          <div className="text-sm text-white">
-                            {formatDate(application.createdAt)}
+                        <div className="mt-3 flex items-center justify-between gap-3 border-t border-gray-700/30 pt-3">
+                          <div>
+                            <span className="fc-muted text-xs">Applied:</span>
+                            <div className="text-sm text-white">
+                              {formatDate(application.createdAt)}
+                            </div>
                           </div>
+                          <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">
+                            Click to view
+                            <FiChevronRight className="h-4 w-4" />
+                          </span>
                         </div>
                       </div>
                     </GlowCard>

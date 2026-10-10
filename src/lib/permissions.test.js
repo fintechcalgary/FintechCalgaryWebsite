@@ -10,6 +10,7 @@ import {
   getAdminPanelCards,
   getDashboardNavItems,
   getPermissionsForRole,
+  getPostLoginDestination,
   hasAnyPermission,
   hasPermission,
   isAdmin,
@@ -32,6 +33,31 @@ describe("permissions", () => {
     it("returns false for associate and member", () => {
       expect(isStaffRole(USER_ROLES.ASSOCIATE)).toBe(false);
       expect(isStaffRole(USER_ROLES.MEMBER)).toBe(false);
+    });
+  });
+
+  describe("getPostLoginDestination", () => {
+    it("sends associates to the partner dashboard", () => {
+      expect(getPostLoginDestination(USER_ROLES.ASSOCIATE)).toBe(
+        "/partner-dashboard",
+      );
+    });
+
+    it("sends projects users to executive applications", () => {
+      expect(getPostLoginDestination(USER_ROLES.PROJECTS)).toBe(
+        "/dashboard/executive-applications",
+      );
+    });
+
+    it("sends other staff to the main dashboard", () => {
+      expect(getPostLoginDestination(USER_ROLES.ADMIN)).toBe("/dashboard");
+      expect(getPostLoginDestination(USER_ROLES.OUTREACH)).toBe("/dashboard");
+      expect(getPostLoginDestination(USER_ROLES.MARKETING)).toBe("/dashboard");
+    });
+
+    it("returns null for unknown roles", () => {
+      expect(getPostLoginDestination(USER_ROLES.MEMBER)).toBeNull();
+      expect(getPostLoginDestination(undefined)).toBeNull();
     });
   });
 

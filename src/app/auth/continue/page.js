@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { isStaffRole } from "@/lib/permissions";
+import { getPostLoginDestination } from "@/lib/permissions";
 
 /**
  * Post-login landing: NextAuth redirects here after credentials succeed so the
@@ -9,18 +9,11 @@ import { isStaffRole } from "@/lib/permissions";
  */
 export default async function AuthContinuePage() {
   const session = await getServerSession(authOptions);
+  const destination = getPostLoginDestination(session?.user?.role);
 
-  if (!session?.user?.role) {
+  if (!destination) {
     redirect("/login");
   }
 
-  if (session.user.role === "associate") {
-    redirect("/partner-dashboard");
-  }
-
-  if (isStaffRole(session.user.role)) {
-    redirect("/dashboard");
-  }
-
-  redirect("/login");
+  redirect(destination);
 }

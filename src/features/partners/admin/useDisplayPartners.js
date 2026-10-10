@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { UPLOAD_FOLDERS } from "@/lib/constants";
-import useAdminResource from "@/hooks/useAdminResource";
 import useConfirmDelete from "@/hooks/useConfirmDelete";
 import useFileUpload from "@/hooks/useFileUpload";
+import useRoleResource from "@/hooks/useRoleResource";
 import { downloadRemoteFile } from "@/lib/frontend-helpers";
+import { PERMISSIONS } from "@/lib/permissions";
 import {
   INITIAL_DISPLAY_PARTNER_FORM,
   partnerToDisplayForm,
@@ -19,7 +20,7 @@ export default function useDisplayPartners() {
     data: partners,
     setData: setPartners,
     loading,
-  } = useAdminResource("/api/partners");
+  } = useRoleResource("/api/partners", PERMISSIONS.PARTNERS);
   const {
     isOpen: showDeleteModal,
     target: partnerToDelete,

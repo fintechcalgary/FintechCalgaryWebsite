@@ -126,6 +126,16 @@ export function isAdmin(role) {
   return role === USER_ROLES.ADMIN;
 }
 
+/** Post-login / already-authenticated landing path for a role */
+export function getPostLoginDestination(role) {
+  if (role === USER_ROLES.ASSOCIATE) return "/partner-dashboard";
+  if (role === USER_ROLES.PROJECTS) {
+    return "/dashboard/executive-applications";
+  }
+  if (isStaffRole(role)) return "/dashboard";
+  return null;
+}
+
 export function getPermissionsForRole(role) {
   if (!role) return [];
   if (isAdmin(role)) return Object.values(PERMISSIONS);

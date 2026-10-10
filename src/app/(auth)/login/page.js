@@ -5,14 +5,7 @@ import Image from "next/image";
 import { FiArrowLeft } from "react-icons/fi";
 import Link from "next/link";
 import { InlineSpinner } from "@/components/ui/Spinner";
-import { STAFF_ROLES } from "@/lib/permissions";
-
-function destinationForRole(role) {
-  if (role === "associate") return "/partner-dashboard";
-  if (role === "projects") return "/dashboard/executive-applications";
-  if (STAFF_ROLES.includes(role)) return "/dashboard";
-  return null;
-}
+import { getPostLoginDestination } from "@/lib/permissions";
 
 export default function Login() {
   const { data: session, status } = useSession();
@@ -35,7 +28,7 @@ export default function Login() {
   // Already signed in — one replace to the right dashboard (no client polling).
   useEffect(() => {
     if (status !== "authenticated" || redirectedRef.current) return;
-    const destination = destinationForRole(session?.user?.role);
+    const destination = getPostLoginDestination(session?.user?.role);
     if (!destination) return;
     redirectedRef.current = true;
     window.location.replace(destination);

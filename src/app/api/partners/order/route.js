@@ -1,10 +1,11 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { updateDisplayPartnerOrder } from "@/lib/models/displayPartner";
-import { apiResponse, requireAdmin, validators, withErrorHandler } from "@/lib/api-helpers";
+import { apiResponse, requirePermission, validators, withErrorHandler } from "@/lib/api-helpers";
 import logger from "@/lib/logger";
+import { PERMISSIONS } from "@/lib/permissions";
 
 export const PUT = withErrorHandler(async (req) => {
-  const { error } = await requireAdmin();
+  const { error } = await requirePermission(PERMISSIONS.PARTNERS);
   if (error) return error;
 
   const db = await connectToDatabase();

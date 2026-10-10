@@ -1,7 +1,5 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   FiDownload,
@@ -24,14 +22,17 @@ import { LoadingState, InlineSpinner } from "@/components/ui/Spinner";
 import { useSettings } from "@/contexts/SettingsContext";
 import useConfirmDelete from "@/hooks/useConfirmDelete";
 import useFileUpload from "@/hooks/useFileUpload";
+import useRoleAccess from "@/hooks/useRoleAccess";
 import { downloadCsv } from "@/lib/csv";
 import { formatDateShort, formatDateTimeShort, todayIsoDate } from "@/lib/dates";
 import { UPLOAD_FOLDERS } from "@/lib/constants";
+import { PERMISSIONS } from "@/lib/permissions";
 import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function ExecutiveApplicationsPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { status, canAccess, isLoading: authLoading, isAdmin } = useRoleAccess(
+    PERMISSIONS.EXECUTIVE_APPLICATIONS,
+  );
   const {
     executiveApplicationsOpen,
     setExecutiveApplicationsOpen,
@@ -83,25 +84,17 @@ export default function ExecutiveApplicationsPage() {
   const [currentRoleForQuestions, setCurrentRoleForQuestions] = useState(null);
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    }
-  }, [status, router]);
-
-  useEffect(() => {
-    // Only redirect if session is loaded and user is not admin
-    if (status === "authenticated" && session?.user?.role !== "admin") {
-      router.push("/dashboard");
+    if (authLoading || status !== "authenticated" || !canAccess) {
       return;
     }
-  }, [session, status, router]);
 
-  useEffect(() => {
-    if (session?.user?.role === "admin") {
-      fetchApplications();
+    fetchApplications();
+    if (isAdmin) {
       fetchRoles();
+    } else {
+      setRolesLoading(false);
     }
-  }, [session]);
+  }, [authLoading, status, canAccess, isAdmin]);
 
   const fetchApplications = async () => {
     try {
@@ -618,7 +611,7 @@ export default function ExecutiveApplicationsPage() {
     }
   };
 
-  if (status === "loading" || loading) {
+  if (authLoading || status === "loading" || loading) {
     return (
       <div className="min-h-screen">
         <div className="min-h-screen flex items-center justify-center">
@@ -628,7 +621,7 @@ export default function ExecutiveApplicationsPage() {
     );
   }
 
-  if (status !== "authenticated" || session?.user?.role !== "admin") {
+  if (status !== "authenticated" || !canAccess) {
     return null;
   }
 
@@ -657,56 +650,64 @@ export default function ExecutiveApplicationsPage() {
           ) : null}
         </div>
 
-        {/* Executive Applications Toggle */}
-        <GlowCard
-          customSize
-          glowColor="purple"
-          className="mb-8 w-full max-w-md !gap-0 !p-6"
-        >
-          <div className="relative z-10">
-            <div className="flex items-center justify-between mb-2">
-              <span className="fc-title text-lg">
-                Executive Applications
-              </span>
-              <button
-                type="button"
-                onClick={handleToggleExecutiveApplications}
-                disabled={settingsLoading || !settingsLoaded}
-                className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none border-2 border-primary/40 ${
-                  executiveApplicationsOpen ? "bg-primary" : "bg-gray-600"
-                }`}
-                aria-pressed={executiveApplicationsOpen}
-              >
-                <span
-                  className={`inline-block h-7 w-7 transform rounded-full bg-white shadow transition-transform ${
-                    executiveApplicationsOpen ? "translate-x-8" : "translate-x-1"
-                  }`}
-                ></span>
-              </button>
-            </div>
-            <div className="fc-muted">
-              {executiveApplicationsOpen
-                ? "Executive applications are currently open and accepting submissions."
-                : "Executive applications are currently closed."}
-            </div>
-            {settingsError && (
-              <div className="text-red-400 text-sm mt-2">{settingsError}</div>
-            )}
-          </div>
-        </GlowCard>
+        {isAdmin ? (
+          <>
+            {/* Executive Applications Toggle */}
+            <GlowCard
+              customSize
+              glowColor="purple"
+              className="mb-8 w-full max-w-md !gap-0 !p-6"
+            >
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="fc-title text-lg">
+                    Executive Applications
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleToggleExecutiveApplications}
+                    disabled={settingsLoading || !settingsLoaded}
+                    className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none border-2 border-primary/40 ${
+                      executiveApplicationsOpen ? "bg-primary" : "bg-gray-600"
+                    }`}
+                    aria-pressed={executiveApplicationsOpen}
+                  >
+                    <span
+                      className={`inline-block h-7 w-7 transform rounded-full bg-white shadow transition-transform ${
+                        executiveApplicationsOpen
+                          ? "translate-x-8"
+                          : "translate-x-1"
+                      }`}
+                    ></span>
+                  </button>
+                </div>
+                <div className="fc-muted">
+                  {executiveApplicationsOpen
+                    ? "Executive applications are currently open and accepting submissions."
+                    : "Executive applications are currently closed."}
+                </div>
+                {settingsError && (
+                  <div className="text-red-400 text-sm mt-2">{settingsError}</div>
+                )}
+              </div>
+            </GlowCard>
 
-        <RoleManager
-          roles={roles}
-          rolesLoading={rolesLoading}
-          executiveApplicationsOpen={executiveApplicationsOpen}
-          onAddClick={openAddRoleModal}
-          onEditClick={openEditRoleModal}
-          onDeleteClick={openDeleteRoleModal}
-          onAddQuestion={(role) => openRoleQuestionModal(role)}
-          onEditQuestion={(role, question) => openRoleQuestionModal(role, question)}
-          onDeleteQuestion={handleDeleteRoleQuestion}
-          formatDate={formatDateTimeShort}
-        />
+            <RoleManager
+              roles={roles}
+              rolesLoading={rolesLoading}
+              executiveApplicationsOpen={executiveApplicationsOpen}
+              onAddClick={openAddRoleModal}
+              onEditClick={openEditRoleModal}
+              onDeleteClick={openDeleteRoleModal}
+              onAddQuestion={(role) => openRoleQuestionModal(role)}
+              onEditQuestion={(role, question) =>
+                openRoleQuestionModal(role, question)
+              }
+              onDeleteQuestion={handleDeleteRoleQuestion}
+              formatDate={formatDateTimeShort}
+            />
+          </>
+        ) : null}
 
         <ApplicationList
           applications={applications}
