@@ -1,7 +1,7 @@
 /**
  * Seed all staff RBAC role accounts
  * (Admin, Outreach, Finance, Events, Marketing, Projects).
- * Creates missing users and updates existing ones (role; password unless preservePassword).
+ * Creates missing users and updates existing ones (role + password).
  * Usage: npm run seed-staff-roles
  */
 require("dotenv").config({ path: ".env.local" });
@@ -22,24 +22,19 @@ async function seedStaffRoles() {
     const existing = await users.findOne({ username: user.username });
 
     if (existing) {
-      const $set = { role: user.role };
-      if (!user.preservePassword) {
-        $set.password = bcrypt.hashSync(user.password, 10);
-      }
-
       await users.updateOne(
         { username: user.username },
         {
-          $set,
+          $set: {
+            role: user.role,
+            password: bcrypt.hashSync(user.password, 10),
+          },
           $unset: { email: "" },
         },
       );
 
-      const passwordNote = user.preservePassword
-        ? "(password preserved)"
-        : `/ ${user.password}`;
       console.log(
-        `Updated ${user.role} user: ${user.username} ${passwordNote} (email removed)`,
+        `Updated ${user.role} user: ${user.username} / ${user.password} (email removed)`,
       );
       updated += 1;
       continue;

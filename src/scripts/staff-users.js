@@ -32,8 +32,6 @@ const STAFF_USERS = [
     username: "projects",
     password: "projects123",
     role: "projects",
-    // Existing DB account: update role only; do not reset password on seed.
-    preservePassword: true,
   },
 ];
 
