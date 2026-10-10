@@ -1,38 +1,62 @@
 /**
  * Staff users for each RBAC role.
+ * Passwords come from env (see passwordEnv) — never commit secrets here.
  * Used by seed-staff-roles.js
  */
 const STAFF_USERS = [
   {
     username: "fintechcalgary",
-    password: "ucalgary$210",
     role: "admin",
+    passwordEnv: "SEED_ADMIN_PASSWORD",
   },
   {
     username: "outreach",
-    password: "outreach123",
     role: "outreach",
+    passwordEnv: "SEED_OUTREACH_PASSWORD",
   },
   {
     username: "finance",
-    password: "finance123",
     role: "finance",
+    passwordEnv: "SEED_FINANCE_PASSWORD",
   },
   {
     username: "events",
-    password: "events123",
     role: "events",
+    passwordEnv: "SEED_EVENTS_PASSWORD",
   },
   {
     username: "marketing",
-    password: "marketing123",
     role: "marketing",
+    passwordEnv: "SEED_MARKETING_PASSWORD",
   },
   {
     username: "projects",
-    password: "projects123",
     role: "projects",
+    passwordEnv: "SEED_PROJECTS_PASSWORD",
   },
 ];
 
-module.exports = { STAFF_USERS };
+function resolveStaffUsersFromEnv(env = process.env) {
+  const missing = [];
+  const users = STAFF_USERS.map((user) => {
+    const password = env[user.passwordEnv];
+    if (!password) missing.push(user.passwordEnv);
+    return {
+      username: user.username,
+      role: user.role,
+      password,
+      passwordEnv: user.passwordEnv,
+    };
+  });
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing staff seed password env vars: ${missing.join(", ")}. ` +
+        "Add them to .env or .env.local before running npm run seed-staff-roles.",
+    );
+  }
+
+  return users;
+}
+
+module.exports = { STAFF_USERS, resolveStaffUsersFromEnv };
