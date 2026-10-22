@@ -15,6 +15,7 @@ export default function ExecutiveApplicationDetailPage() {
   );
   const [application, setApplication] = useState(null);
   const [roles, setRoles] = useState([]);
+  const [applicationQuestions, setApplicationQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -29,9 +30,10 @@ export default function ExecutiveApplicationDetailPage() {
       setLoading(true);
       setError(null);
       try {
-        const [appRes, rolesRes] = await Promise.all([
+        const [appRes, rolesRes, settingsRes] = await Promise.all([
           fetch(`/api/executive-application?id=${applicationId}`),
           fetch("/api/executive-roles"),
+          fetch("/api/settings"),
         ]);
 
         if (!appRes.ok) {
@@ -44,10 +46,16 @@ export default function ExecutiveApplicationDetailPage() {
 
         const appData = await appRes.json();
         const rolesData = rolesRes.ok ? await rolesRes.json() : [];
+        const settingsData = settingsRes.ok ? await settingsRes.json() : {};
 
         if (!cancelled) {
           setApplication(appData);
           setRoles(Array.isArray(rolesData) ? rolesData : []);
+          setApplicationQuestions(
+            Array.isArray(settingsData.executiveApplicationQuestions)
+              ? settingsData.executiveApplicationQuestions
+              : [],
+          );
         }
       } catch (err) {
         if (!cancelled) {
@@ -101,6 +109,7 @@ export default function ExecutiveApplicationDetailPage() {
           <ExecutiveApplicationDetail
             application={application}
             roles={roles}
+            applicationQuestions={applicationQuestions}
           />
         ) : null}
       </main>

@@ -69,9 +69,18 @@ function AnswerBlock({ label, answer }) {
 /**
  * Full-page application detail layout (replaces the old cramped modal).
  */
-export default function ExecutiveApplicationDetail({ application, roles = [] }) {
+export default function ExecutiveApplicationDetail({
+  application,
+  roles = [],
+  applicationQuestions = [],
+}) {
   const selectedRole = roles.find((role) => role.title === application.role);
-  const questionsToShow = selectedRole?.questions || [];
+  // A role's questions take precedence. Otherwise show the general application
+  // questions configured in Settings (for example, a project description).
+  const questionsToShow =
+    selectedRole?.questions?.length > 0
+      ? selectedRole.questions
+      : applicationQuestions;
 
   return (
     <div className="space-y-6">
