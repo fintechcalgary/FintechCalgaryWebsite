@@ -4,6 +4,7 @@ import {
   filterCommunityPosts,
   normalizeCommunityPostPayload,
   serializeCommunityPost,
+  toCommunityBoardEvent,
   toCommunityPostFormState,
   validateCommunityPostPayload,
 } from "@/lib/communityPosts";
@@ -137,6 +138,45 @@ describe("validateCommunityPostPayload", () => {
     expect(
       validateCommunityPostPayload({ ...validPayload, bannerUrl: "" }),
     ).toBeNull();
+  });
+});
+
+describe("toCommunityBoardEvent", () => {
+  it("maps a club event onto a board card without private fields", () => {
+    const item = toCommunityBoardEvent({
+      _id: { toString: () => "event123" },
+      title: "FinTalks 2026",
+      description: "A past club event",
+      date: "2026-10-20",
+      time: "5:30PM-7:30PM",
+      imageUrl: "https://res.cloudinary.com/demo/image/upload/talk.jpg",
+      registrations: [{ userEmail: "hidden@example.com" }],
+      ownerId: "staff-1",
+    });
+
+    expect(item).toEqual({
+      _id: "event123",
+      title: "FinTalks 2026",
+      description: "A past club event",
+      eventDate: "2026-10-20",
+      eventTime: "5:30PM-7:30PM",
+      organizationName: "FinTech Calgary",
+      location: "",
+      bannerUrl: "https://res.cloudinary.com/demo/image/upload/talk.jpg",
+      registrationUrl: "",
+      href: "/events/event123",
+    });
+    expect(item.registrations).toBeUndefined();
+  });
+
+  it("returns null without an id and falls back to the first image", () => {
+    expect(toCommunityBoardEvent(null)).toBeNull();
+    expect(
+      toCommunityBoardEvent({
+        _id: "abc",
+        images: ["https://res.cloudinary.com/demo/image/upload/a.jpg"],
+      }).bannerUrl,
+    ).toBe("https://res.cloudinary.com/demo/image/upload/a.jpg");
   });
 });
 

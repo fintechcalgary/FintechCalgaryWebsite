@@ -134,6 +134,33 @@ export function validateCommunityPostPayload(payload) {
   return null;
 }
 
+/**
+ * Public club events shown on the community board.
+ * Only fields safe to send to the browser — never registrations.
+ */
+export function toCommunityBoardEvent(event) {
+  if (!event?._id) return null;
+  const id = event._id?.toString?.() ?? String(event._id);
+  const image =
+    (typeof event.imageUrl === "string" && event.imageUrl) ||
+    (Array.isArray(event.images) && typeof event.images[0] === "string"
+      ? event.images[0]
+      : "");
+
+  return {
+    _id: id,
+    title: event.title ?? "",
+    description: event.description ?? "",
+    eventDate: event.date ? String(event.date).split("T")[0] : "",
+    eventTime: event.time ?? "",
+    organizationName: "FinTech Calgary",
+    location: event.location ?? "",
+    bannerUrl: image,
+    registrationUrl: "",
+    href: `/events/${id}`,
+  };
+}
+
 export function toCommunityPostFormState(post = null) {
   if (!post) {
     return {

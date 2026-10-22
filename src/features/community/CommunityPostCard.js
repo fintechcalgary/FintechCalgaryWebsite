@@ -20,7 +20,7 @@ export default function CommunityPostCard({
   onEdit,
   onDelete,
 }) {
-  const href = `/community/${post._id}`;
+  const href = post.href || `/community/${post._id}`;
   const isUpcoming = post.eventDate
     ? normalizeDate(post.eventDate) >= startOfToday()
     : true;
@@ -108,7 +108,7 @@ export default function CommunityPostCard({
           View Details
         </Link>
 
-        {post.registrationUrl ? (
+        {post.registrationUrl && isUpcoming ? (
           <a
             href={post.registrationUrl}
             target="_blank"

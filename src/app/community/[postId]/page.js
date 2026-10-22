@@ -211,7 +211,7 @@ export default async function CommunityPostPage({ params }) {
                 </p>
               </div>
 
-              {post.registrationUrl ? (
+              {post.registrationUrl && isUpcoming ? (
                 <a
                   href={post.registrationUrl}
                   target="_blank"
