@@ -9,6 +9,10 @@ import Image from "next/image";
 import ImageCarousel from "@/features/events/ImageCarousel";
 import { useRouter } from "next/navigation";
 import { normalizeDate, startOfToday } from "@/lib/dates";
+import {
+  isRegistrationOpen,
+  REGISTRATION_CLOSED_MESSAGE,
+} from "@/lib/eventRegistration";
 import StatusBadge from "@/components/ui/StatusBadge";
 import EmptyState from "@/components/ui/EmptyState";
 
@@ -177,6 +181,12 @@ export default function EventsPageClient({ initialEvents }) {
                     <h4 className="fc-title mb-3 line-clamp-2 min-h-[2.5em] text-xl transition-colors duration-300 group-hover:text-primary sm:text-2xl">
                       {event.title}
                     </h4>
+
+                    {!isRegistrationOpen(event) && isUpcoming && (
+                      <p className="mb-4 text-sm font-medium text-amber-200">
+                        {REGISTRATION_CLOSED_MESSAGE}
+                      </p>
+                    )}
 
                     <div className="mt-auto flex items-center space-x-2 fc-body">
                       <FiCalendar className="h-4 w-4 shrink-0 text-primary" />

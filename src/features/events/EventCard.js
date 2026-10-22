@@ -4,6 +4,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { formatEventDate } from "@/lib/dates";
+import {
+  isRegistrationOpen,
+  REGISTRATION_CLOSED_MESSAGE,
+} from "@/lib/eventRegistration";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import StatusBadge from "@/components/ui/StatusBadge";
 
@@ -107,6 +111,12 @@ export default function EventCard({ event }) {
             <p className="fc-body line-clamp-2">
               {event.description}
             </p>
+
+            {!isRegistrationOpen(event) && (
+              <p className="text-sm font-medium text-amber-200">
+                {REGISTRATION_CLOSED_MESSAGE}
+              </p>
+            )}
 
             <div className="fc-btn-gradient-primary px-4 py-2 pointer-events-none">
               {event.eventType === "webinar" ? "View Webinar" : "View Event"}

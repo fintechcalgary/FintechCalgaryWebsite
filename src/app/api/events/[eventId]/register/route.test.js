@@ -66,6 +66,24 @@ describe("POST /api/events/[eventId]/register", () => {
     expect(data.error).toBe("Event not found");
   });
 
+  it("returns 400 when registration is closed", async () => {
+    mockDbWithEvent({
+      title: "Summit",
+      date: "2025-06-01",
+      registrationOpen: false,
+    });
+
+    const res = await POST(
+      createRegisterRequest({ email: "user@example.com", name: "User" }),
+      { params: Promise.resolve({ eventId: EVENT_ID }) },
+    );
+    const data = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(data.error).toBe("Registration is closed");
+    expect(registerForEvent).not.toHaveBeenCalled();
+  });
+
   it("returns 400 when user is already registered", async () => {
     mockDbWithEvent({ title: "Summit", date: "2025-06-01" });
     isUserRegistered.mockResolvedValue(true);

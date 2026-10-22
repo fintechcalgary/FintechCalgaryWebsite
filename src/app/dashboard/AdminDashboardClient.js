@@ -195,7 +195,8 @@ export default function AdminDashboardClient() {
                       <p className="fc-body text-xs leading-relaxed">
                         No need to delete past events—they&apos;ll remain on the
                         events page. Delete only those you no longer want to
-                        display.
+                        display. If an event fills up, close registration on
+                        its card instead of deleting it.
                       </p>
                     </div>
                   </div>

@@ -19,13 +19,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { uploadFile } from "@/lib/frontend-helpers";
 import { UPLOAD_FOLDERS } from "@/lib/constants";
-import { formatEventDate } from "@/lib/dates";
+import { formatEventDate, normalizeDate, startOfToday } from "@/lib/dates";
+import {
+  isRegistrationOpen,
+  REGISTRATION_CLOSED_MESSAGE,
+} from "@/lib/eventRegistration";
 import EmptyState from "@/components/ui/EmptyState";
+import StatusBadge from "@/components/ui/StatusBadge";
 
 export default function Events({ mode }) {
   const pathname = usePathname();
   const isDashboard =
     pathname === "/dashboard" || pathname === "/partner-dashboard";
+  const today = startOfToday();
   const [events, setEvents] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -45,6 +51,7 @@ export default function Events({ mode }) {
     isOpen: false,
     eventId: null,
   });
+  const [togglingRegistrationId, setTogglingRegistrationId] = useState(null);
 
   const fetchEvents = useCallback(async () => {
     try {
@@ -120,6 +127,33 @@ export default function Events({ mode }) {
     if (response.ok) {
       fetchEvents();
       setDeleteModal({ isOpen: false, eventId: null });
+    }
+  };
+
+  const toggleRegistration = async (event) => {
+    const nextOpen = !isRegistrationOpen(event);
+    setTogglingRegistrationId(event._id);
+
+    try {
+      const response = await fetch(`/api/events/${event._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ registrationOpen: nextOpen }),
+      });
+
+      if (response.ok) {
+        setEvents((current) =>
+          current.map((item) =>
+            item._id === event._id
+              ? { ...item, registrationOpen: nextOpen }
+              : item
+          )
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setTogglingRegistrationId(null);
     }
   };
 
@@ -455,7 +489,10 @@ export default function Events({ mode }) {
       </PortalModal>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {events.map((event) => (
+        {events.map((event) => {
+          const isUpcoming = normalizeDate(event.date) >= today;
+
+          return (
           <div
             key={event._id}
             className="fc-admin-panel overflow-hidden"
@@ -525,13 +562,39 @@ export default function Events({ mode }) {
                 {/* Display time if available */}
               </div>
               <div className="mt-4 pt-4 border-t border-gray-700">
-                <div className="flex justify-between items-center">
-                  <div>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="space-y-2">
                     <p className="fc-muted">
                       {event.registrations?.length || 0} registered
                     </p>
+                    {isUpcoming && !isRegistrationOpen(event) && (
+                      <StatusBadge tone="warning" size="sm">
+                        {REGISTRATION_CLOSED_MESSAGE}
+                      </StatusBadge>
+                    )}
                   </div>
-                  {!isDashboard && (
+                  {isDashboard ? (
+                    isUpcoming && (
+                    <Button
+                      type="button"
+                      variant={
+                        isRegistrationOpen(event) ? "secondary" : "success"
+                      }
+                      disabled={togglingRegistrationId === event._id}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleRegistration(event);
+                      }}
+                      className="!px-3 !py-2 text-xs"
+                    >
+                      {togglingRegistrationId === event._id
+                        ? "Saving..."
+                        : isRegistrationOpen(event)
+                          ? "Close registration"
+                          : "Open registration"}
+                    </Button>
+                    )
+                  ) : isRegistrationOpen(event) ? (
                     <Link
                       href={`/events/register/${event._id}`}
                       onClick={(e) => e.stopPropagation()}
@@ -539,6 +602,10 @@ export default function Events({ mode }) {
                     >
                       Register for Event
                     </Link>
+                  ) : (
+                    <span className="text-sm font-medium text-amber-200">
+                      {REGISTRATION_CLOSED_MESSAGE}
+                    </span>
                   )}
                 </div>
                 {isDashboard && event.registrations?.length > 0 && (
@@ -557,7 +624,8 @@ export default function Events({ mode }) {
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {events.length === 0 && !showForm && (

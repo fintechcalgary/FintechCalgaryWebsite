@@ -5,6 +5,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiArrowLeft } from "react-icons/fi";
 import { LoadingState } from "@/components/ui/Spinner";
+import {
+  isRegistrationOpen,
+  REGISTRATION_CLOSED_MESSAGE,
+} from "@/lib/eventRegistration";
 
 export default function RegisterEventForm({ eventId }) {
   const router = useRouter();
@@ -79,6 +83,29 @@ export default function RegisterEventForm({ eventId }) {
 
   if (loading) {
     return <LoadingState fullScreen />;
+  }
+
+  if (event && !isRegistrationOpen(event)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center py-8 px-4">
+        <div className="w-full max-w-2xl">
+          <Link
+            href={`/events/${eventId}`}
+            className="fc-muted inline-flex items-center hover:text-white transition-all duration-200 hover:translate-x-[-4px] mb-4 group"
+          >
+            <FiArrowLeft className="w-5 h-5 mr-2 transition-transform duration-200 group-hover:translate-x-[-2px]" />
+            Back to Event
+          </Link>
+
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-2xl border border-amber-500/30">
+            <h1 className="text-2xl md:text-3xl font-bold text-white">
+              {REGISTRATION_CLOSED_MESSAGE}
+            </h1>
+            <p className="fc-muted mt-3">{event.title}</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (error) {

@@ -1,5 +1,9 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { registerForEvent, isUserRegistered } from "@/lib/models/event";
+import {
+  isRegistrationOpen,
+  REGISTRATION_CLOSED_MESSAGE,
+} from "@/lib/eventRegistration";
 import sgMail from "@sendgrid/mail";
 import { ObjectId } from "mongodb";
 import { apiResponse, requireAdmin, withErrorHandler } from "@/lib/api-helpers";
@@ -29,6 +33,10 @@ export const POST = withErrorHandler(async (req, { params }) => {
   const event = await getEventById(db, eventId);
   if (!event) {
     return apiResponse.notFound("Event not found");
+  }
+
+  if (!isRegistrationOpen(event)) {
+    return apiResponse.badRequest(REGISTRATION_CLOSED_MESSAGE);
   }
 
   const alreadyRegistered = await isUserRegistered(

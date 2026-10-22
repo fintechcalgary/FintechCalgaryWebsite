@@ -14,6 +14,10 @@ import { GlowCard } from "@/components/ui/spotlight-card";
 import ImageCarousel from "@/features/events/ImageCarousel";
 import Image from "next/image";
 import { normalizeDate, startOfToday } from "@/lib/dates";
+import {
+  isRegistrationOpen,
+  REGISTRATION_CLOSED_MESSAGE,
+} from "@/lib/eventRegistration";
 import StatusBadge from "@/components/ui/StatusBadge";
 
 // Generate metadata for the event
@@ -251,7 +255,7 @@ export default async function EventPage({ params }) {
                 </div>
 
                 <div className="flex flex-col gap-4 sm:flex-row">
-                  {isUpcoming ? (
+                  {isUpcoming && isRegistrationOpen(event) ? (
                     <Link
                       href={`/events/register/${event._id}`}
                       className="fc-btn-gradient-primary !px-6 !py-3"
@@ -260,6 +264,12 @@ export default async function EventPage({ params }) {
                         ? "Register for Webinar"
                         : "Register Now"}
                     </Link>
+                  ) : isUpcoming ? (
+                    <div className="w-full rounded-xl border border-amber-500/30 bg-amber-500/10 px-6 py-4 text-center">
+                      <span className="text-lg font-medium text-amber-100">
+                        {REGISTRATION_CLOSED_MESSAGE}
+                      </span>
+                    </div>
                   ) : (
                     <div className="w-full py-4 text-center">
                       <span className="fc-muted text-lg">
