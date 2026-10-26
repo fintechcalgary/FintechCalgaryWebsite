@@ -26,6 +26,12 @@ export const API_ENDPOINTS = {
   MARKETING_APPROVALS: "/api/marketing-approvals",
   USERS: "/api/users",
   COMMUNITY_POSTS: "/api/community-posts",
+  CONVERGE_SESSION_TOKEN: "/api/converge/session-token",
+};
+
+// Membership payments (charged via Elavon Converge hosted payment modal)
+export const MEMBERSHIP = {
+  PREMIUM_PRICE: "5.00",
 };
 
 // MongoDB Collection Names

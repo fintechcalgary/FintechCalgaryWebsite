@@ -1,13 +1,22 @@
 import { apiResponse, validators, withErrorHandler } from "@/lib/api-helpers";
 import logger from "@/lib/logger";
 import sgMail from "@sendgrid/mail";
-import { EMAIL } from "@/lib/constants";
+import { COLLECTIONS, EMAIL } from "@/lib/constants";
+import { connectToDatabase } from "@/lib/mongodb";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const POST = withErrorHandler(async (req) => {
-  const { email, firstName, lastName, ucid, membershipType, resume, hasPaid } =
-    await req.json();
+  const {
+    email,
+    firstName,
+    lastName,
+    ucid,
+    membershipType,
+    resume,
+    hasPaid,
+    payment,
+  } = await req.json();
 
   // Input validation
   const validationError = validators.validateRequiredAndEmail(
@@ -22,6 +31,46 @@ export const POST = withErrorHandler(async (req) => {
   if (!resume) {
     return apiResponse.badRequest("Resume is required");
   }
+
+  const isPaid = hasPaid === true;
+  const now = new Date();
+
+  // Upsert by email so repeat submissions update the existing member
+  // instead of creating duplicates
+  const memberUpdate = {
+    $set: {
+      firstName,
+      lastName,
+      ucid,
+      email,
+      membershipType: membershipType || "free",
+      resume,
+      updatedAt: now,
+    },
+    $setOnInsert: {
+      createdAt: now,
+    },
+  };
+
+  if (isPaid) {
+    memberUpdate.$set.has_paid = true;
+    memberUpdate.$set.payment = {
+      txnId: payment?.txnId || null,
+      approvalCode: payment?.approvalCode || null,
+      amount: payment?.amount || null,
+      cardNumber: payment?.cardNumber || null,
+      invoiceNumber: payment?.invoiceNumber || null,
+      paidAt: now,
+    };
+  } else {
+    // Never downgrade an existing paid member; only default on first insert
+    memberUpdate.$setOnInsert.has_paid = false;
+  }
+
+  const db = await connectToDatabase();
+  await db
+    .collection(COLLECTIONS.MEMBERS)
+    .updateOne({ email }, memberUpdate, { upsert: true });
 
   // Send welcome email (don't fail the request if email fails)
   try {
@@ -59,7 +108,8 @@ export const POST = withErrorHandler(async (req) => {
     lastName,
     ucid,
     membership_type: membershipType || "free",
-    has_paid: hasPaid || false,
+    has_paid: isPaid,
+    txn_id: payment?.txnId || null,
   });
   return apiResponse.success({ success: true });
 });
