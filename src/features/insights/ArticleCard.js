@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FiExternalLink, FiTrendingUp, FiTrendingDown, FiMinus, FiZap } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { GlowCard } from "@/components/ui/spotlight-card";
 
 /**
  * ArticleCard Component
@@ -180,12 +181,14 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className={`group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-gray-700/30 hover:border-primary/50 transition-all duration-300 overflow-hidden ${
-        isListView ? 'flex flex-row' : ''
-      }`}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-400/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
+      <GlowCard
+        customSize
+        glowColor="purple"
+        className={`group w-full !gap-0 !p-0 ${
+          isListView ? "flex flex-row" : ""
+        }`}
+      >
       <div className={`relative z-10 ${isListView ? 'flex-1 flex flex-row gap-4 min-h-[198px]' : 'min-h-[252px]'} p-5`}>
         {isListView && article.imageUrl && (
           <div className="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden">
@@ -202,25 +205,25 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
           <div className={`flex items-start justify-between ${isListView ? 'mb-2' : 'mb-3'}`}>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2 flex-wrap">
-                <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                <span className="fc-muted text-xs font-medium uppercase">
                   {article.source}
                 </span>
-                <span className="text-xs text-gray-500">•</span>
+                <span className="fc-muted text-xs">•</span>
                 {displayDate && (
-                  <span className="text-xs text-gray-500">
+                  <span className="fc-muted text-xs">
                     {formatDate(displayDate)}
                   </span>
                 )}
                 {displayTime && (
                   <>
-                    <span className="text-xs text-gray-500">•</span>
-                    <span className="text-xs text-gray-500">
+                    <span className="fc-muted text-xs">•</span>
+                    <span className="fc-muted text-xs">
                       {displayTime}
                     </span>
                   </>
                 )}
               </div>
-              <h4 className={`font-semibold text-white group-hover:text-primary transition-colors ${
+              <h4 className={`fc-title group-hover:text-primary transition-colors ${
                 isListView ? 'text-xl line-clamp-2' : 'text-lg line-clamp-2'
               }`}>
                 {article.title}
@@ -292,13 +295,13 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
               </div>
             ) : (
               <>
-                <p className={`text-sm text-gray-300 leading-relaxed ${isExpanded ? '' : isListView ? 'line-clamp-2' : 'line-clamp-4'}`}>
+                <p className={`fc-body ${isExpanded ? '' : isListView ? 'line-clamp-2' : 'line-clamp-4'}`}>
                   {normalizedSummary}
                 </p>
                 {normalizedSummary && normalizedSummary.length > 170 && (
                   <button
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="mt-2 text-xs text-primary hover:text-purple-400 transition-colors"
+                    className="fc-link mt-2 text-xs"
                   >
                     {isExpanded ? 'Show less' : 'Read more'}
                   </button>
@@ -320,7 +323,7 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
                 </span>
               ))}
               {article.categories?.length > (isListView ? 5 : 3) && (
-                <span className="px-2 py-1 rounded-md text-xs text-gray-500">
+                <span className="fc-muted px-2 py-1 rounded-md text-xs">
                   +{article.categories.length - (isListView ? 5 : 3)} more
                 </span>
               )}
@@ -335,6 +338,7 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
           </div>
         </div>
       </div>
+      </GlowCard>
     </motion.div>
   );
 }

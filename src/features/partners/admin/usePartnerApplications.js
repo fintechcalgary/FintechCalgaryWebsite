@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import useAdminResource from "@/hooks/useAdminResource";
 import useConfirmDelete from "@/hooks/useConfirmDelete";
+import useRoleResource from "@/hooks/useRoleResource";
 import { downloadRemoteFile } from "@/lib/frontend-helpers";
 import { exportPartnerApplicationsCsv } from "@/features/partners/admin/exportPartnerApplicationsCsv";
+import { PERMISSIONS } from "@/lib/permissions";
 import {
   INITIAL_PARTNER_APPLICATION_FORM,
   memberToPartnerApplicationForm,
@@ -21,7 +22,7 @@ export default function usePartnerApplications(options = {}) {
     setData: setPartners,
     loading,
     refetch,
-  } = useAdminResource("/api/partner-applications");
+  } = useRoleResource("/api/partner-applications", PERMISSIONS.PARTNERS);
   const {
     isOpen: showDeleteModal,
     target: memberToDelete,

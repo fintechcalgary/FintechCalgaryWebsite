@@ -63,7 +63,7 @@ export default function ExecutiveApplicationBanner() {
                 <h3 className="text-white font-semibold text-xs sm:text-sm mb-1">
                   Join Our Executive Team!
                 </h3>
-                <p className="text-gray-300 text-xs leading-relaxed">
+                <p className="fc-body text-xs">
                   Executive applications are now open. Apply to be part of our
                   leadership team.
                 </p>
@@ -72,7 +72,7 @@ export default function ExecutiveApplicationBanner() {
               <div className="flex-shrink-0">
                 <Link
                   href="/executive-application"
-                  className="inline-flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-primary hover:bg-primary/90 text-white text-xs font-medium rounded-xl transition-all duration-200"
+                  className="fc-btn-gradient-primary inline-flex items-center gap-1 !px-2.5 !py-1 sm:!px-3 sm:!py-1.5 !text-xs"
                 >
                   Apply Now
                   <FiArrowRight className="w-3 h-3" />

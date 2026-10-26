@@ -1,8 +1,9 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { getPartners } from "@/lib/models/partner";
 import bcrypt from "bcryptjs";
-import { apiResponse, requireAdmin, validators, withErrorHandler } from "@/lib/api-helpers";
+import { apiResponse, requirePermission, validators, withErrorHandler } from "@/lib/api-helpers";
 import logger from "@/lib/logger";
+import { PERMISSIONS } from "@/lib/permissions";
 import { COLLECTIONS, ERROR_MESSAGES } from "@/lib/constants";
 
 export const POST = withErrorHandler(async (req) => {
@@ -81,7 +82,7 @@ export const POST = withErrorHandler(async (req) => {
 });
 
 export const GET = withErrorHandler(async () => {
-  const { error } = await requireAdmin();
+  const { error } = await requirePermission(PERMISSIONS.PARTNERS);
   if (error) return error;
 
   const db = await connectToDatabase();

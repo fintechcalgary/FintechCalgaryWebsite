@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Modal from "@/components/ui/Modal/ConfirmModal";
+import Button from "@/components/ui/Button";
+import AdminBackLink from "@/components/ui/AdminBackLink";
+import IconButton from "@/components/ui/IconButton";
 import {
-  FiArrowLeft,
   FiMail,
   FiCalendar,
   FiUser,
@@ -16,6 +17,7 @@ import useConfirmDelete from "@/hooks/useConfirmDelete";
 import useDocumentTitle from "@/hooks/useDocumentTitle";
 import { downloadCsv } from "@/lib/csv";
 import { formatDateShort, formatDateTime, formatEventDate } from "@/lib/dates";
+import { LoadingState, InlineSpinner } from "@/components/ui/Spinner";
 
 export default function EventRegistrations({ eventId }) {
   const [event, setEvent] = useState(null);
@@ -91,11 +93,25 @@ export default function EventRegistrations({ eventId }) {
     if (!event?.registrations) return;
 
     downloadCsv({
-      headers: ["Name", "Email", "UCID", "Registration Date", "Comments"],
+      headers: [
+        "Name",
+        "Email",
+        "UofC Student",
+        "UCID",
+        "School",
+        "Registration Date",
+        "Comments",
+      ],
       rows: event.registrations.map((reg) => [
         reg.name,
         reg.userEmail,
+        reg.isUofCStudent === true
+          ? "Yes"
+          : reg.isUofCStudent === false
+            ? "No"
+            : "",
         reg.ucid || "",
+        reg.school || "",
         formatDateTime(reg.registeredAt),
         reg.comments || "",
       ]),
@@ -104,11 +120,7 @@ export default function EventRegistrations({ eventId }) {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
-      </div>
-    );
+    return <LoadingState fullScreen />;
   }
 
   if (error) {
@@ -128,33 +140,20 @@ export default function EventRegistrations({ eventId }) {
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
-        {/* Header */}
-        <div className="mb-8 flex justify-between items-center">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center text-gray-300 hover:text-white transition-colors duration-200 group"
-          >
-            <FiArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
-            Back to Dashboard
-          </Link>
-
-          <button
-            onClick={exportToCSV}
-            className="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary/80 
-            text-white rounded-lg transition-all duration-200 gap-2 shadow-lg 
-            hover:shadow-primary/15 hover:-translate-y-0.5"
-          >
-            <FiDownload className="w-4 h-4" />
+        <div className="mb-8 flex items-center justify-between gap-4">
+          <AdminBackLink className="!mb-0" />
+          <Button onClick={exportToCSV} variant="primary" className="!px-4 !py-2">
+            <FiDownload className="h-4 w-4" />
             Export CSV
-          </button>
+          </Button>
         </div>
 
         {/* Event Info Card */}
-        <div className="bg-gray-900/40 backdrop-blur-xl rounded-2xl p-8 shadow-xl mb-8 border border-gray-800/50">
+        <div className="fc-admin-panel mb-8 p-8 shadow-xl">
           <h1 className="text-4xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-white">
             {event?.title}
           </h1>
-          <div className="flex items-center text-gray-300">
+          <div className="flex items-center fc-body text-lg">
             <FiCalendar className="w-5 h-5 mr-3 text-primary" />
             <span className="text-lg">
               {formatEventDate(event?.date)}
@@ -186,35 +185,44 @@ export default function EventRegistrations({ eventId }) {
                       <h3 className="text-xl font-semibold text-white group-hover:text-primary transition-colors duration-300">
                         {reg.name}
                       </h3>
-                      <button
-                        onClick={() => handleDeleteRegistration(index)}
+                      <IconButton
+                        variant="danger"
+                        label="Delete registration"
                         disabled={deletingRegistration === index}
-                        className="text-red-400 hover:text-red-300 transition-all duration-200 p-2 rounded-full hover:bg-red-500/10 disabled:opacity-50 group/delete"
-                        title="Delete registration"
+                        onClick={() => handleDeleteRegistration(index)}
                       >
                         {deletingRegistration === index ? (
-                          <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-red-400"></div>
+                          <InlineSpinner className="text-red-400" />
                         ) : (
-                          <FiTrash2 className="w-5 h-5 group-hover/delete:scale-110 transition-transform duration-200" />
+                          <FiTrash2 className="w-5 h-5" />
                         )}
-                      </button>
+                      </IconButton>
                     </div>
 
                     {/* Contact Info */}
                     <div className="space-y-3">
-                      <div className="flex items-center text-gray-300">
+                      <div className="flex items-center fc-body text-lg">
                         <div className="w-8 h-8 bg-gray-800/50 rounded-full flex items-center justify-center mr-3">
                           <FiMail className="w-4 h-4 text-primary" />
                         </div>
-                        <span className="text-lg">{reg.userEmail}</span>
+                        <span>{reg.userEmail}</span>
                       </div>
 
                       {reg.ucid && (
-                        <div className="flex items-center text-gray-300">
+                        <div className="flex items-center fc-body text-lg">
                           <div className="w-8 h-8 bg-gray-800/50 rounded-full flex items-center justify-center mr-3">
                             <FiHash className="w-4 h-4 text-primary" />
                           </div>
-                          <span className="text-lg">UCID: {reg.ucid}</span>
+                          <span>UCID: {reg.ucid}</span>
+                        </div>
+                      )}
+
+                      {reg.school && (
+                        <div className="flex items-center fc-body text-lg">
+                          <div className="w-8 h-8 bg-gray-800/50 rounded-full flex items-center justify-center mr-3">
+                            <FiUser className="w-4 h-4 text-primary" />
+                          </div>
+                          <span>School: {reg.school}</span>
                         </div>
                       )}
                     </div>
@@ -222,11 +230,11 @@ export default function EventRegistrations({ eventId }) {
                     {/* Comments */}
                     {reg.comments && (
                       <div className="mt-6 p-4 bg-gray-800/30 rounded-xl border border-gray-700/50">
-                        <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                        <div className="flex items-center gap-2 fc-muted mb-2">
                           <FiMessageSquare className="w-4 h-4 text-primary" />
                           Comments
                         </div>
-                        <p className="text-gray-300 leading-relaxed">
+                        <p className="fc-body">
                           {reg.comments}
                         </p>
                       </div>
@@ -235,11 +243,11 @@ export default function EventRegistrations({ eventId }) {
 
                   {/* Registration Date */}
                   <div className="ml-8 text-right">
-                    <div className="text-sm text-gray-400 mb-1">Registered</div>
+                    <div className="fc-muted mb-1">Registered</div>
                     <div className="text-lg font-medium text-white">
                       {formatDateShort(reg.registeredAt)}
                     </div>
-                    <div className="text-sm text-gray-500">
+                    <div className="fc-muted">
                       {new Date(reg.registeredAt).toLocaleTimeString("en-US", {
                         hour: "2-digit",
                         minute: "2-digit",
@@ -255,10 +263,10 @@ export default function EventRegistrations({ eventId }) {
                 <div className="w-16 h-16 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FiUser className="w-8 h-8 text-gray-500" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-400 mb-2">
+                <h3 className="text-xl font-semibold fc-muted mb-2">
                   No registrations yet
                 </h3>
-                <p className="text-gray-500">
+                <p className="fc-muted">
                   Registrations will appear here once people sign up for this
                   event.
                 </p>
@@ -281,7 +289,7 @@ export default function EventRegistrations({ eventId }) {
               </span>
               ?
             </p>
-            <div className="bg-gray-800/50 rounded-lg p-3 text-sm text-gray-400">
+            <div className="bg-gray-800/50 rounded-lg p-3 fc-muted">
               <div>
                 <strong>Email:</strong>{" "}
                 {event?.registrations?.[registrationToDelete]?.userEmail}
@@ -290,6 +298,12 @@ export default function EventRegistrations({ eventId }) {
                 <div>
                   <strong>UCID:</strong>{" "}
                   {event?.registrations?.[registrationToDelete]?.ucid}
+                </div>
+              )}
+              {event?.registrations?.[registrationToDelete]?.school && (
+                <div>
+                  <strong>School:</strong>{" "}
+                  {event?.registrations?.[registrationToDelete]?.school}
                 </div>
               )}
             </div>

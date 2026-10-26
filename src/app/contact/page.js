@@ -10,6 +10,7 @@ import {
 } from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import { PageTitle } from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 import { FaTiktok } from "react-icons/fa";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { createFormChangeHandler } from "@/lib/frontend-helpers";
@@ -61,76 +62,92 @@ export default function ContactPage() {
       <div className="relative flex-grow">
         <div className="container relative z-10 mx-auto px-6 pb-24 pt-36 sm:px-8 lg:px-12">
           <div className="mb-16 animate-fadeIn text-center">
-            <PageTitle sizeClass="text-5xl md:text-6xl font-extrabold mb-6">
+            <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
               Contact Us
             </PageTitle>
-            <p className="mx-auto max-w-3xl text-xl text-gray-300">
+            <p className="fc-lede mx-auto max-w-3xl">
               Have questions? We&apos;d love to hear from you.
             </p>
           </div>
 
           <div className="mb-16 grid gap-8 md:grid-cols-2">
-            <div className="fc-card animate-slideInLeft p-8">
-              <FiMail className="mb-4 h-8 w-8 text-primary" />
-              <h3 className="mb-2 text-xl font-semibold text-white">Email</h3>
-              <a
-                href="mailto:fintech.calgary@gmail.com"
-                className="fc-link"
+            <div className="animate-slideInLeft">
+              <GlowCard
+                customSize
+                glowColor="purple"
+                className="h-full w-full !gap-0 !p-8"
               >
-                fintech.calgary@gmail.com
-              </a>
-            </div>
-
-            <div className="fc-card animate-slideInRight p-8">
-              <FiMessageSquare className="mb-4 h-8 w-8 text-primary" />
-              <h3 className="mb-2 text-xl font-semibold text-white">
-                Social Media
-              </h3>
-              <p className="mb-4 text-gray-300">
-                Follow us for the latest updates
-              </p>
-              <div>
-                <div className="flex space-x-4">
-                  <a
-                    href="https://www.linkedin.com/company/fintechcalgary/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-primary transition-colors"
-                  >
-                    <FiLinkedin className="w-6 h-6" />
-                  </a>
-                  <a
-                    href="https://www.instagram.com/fintech.calgary/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-primary transition-colors"
-                  >
-                    <FiInstagram className="w-6 h-6" />
-                  </a>
+                <div className="relative z-10">
+                  <FiMail className="mb-4 h-8 w-8 text-primary" />
+                  <h3 className="fc-title mb-2 text-xl">Email</h3>
                   <a
                     href="mailto:fintech.calgary@gmail.com"
-                    className="text-gray-400 hover:text-primary transition-colors"
+                    className="fc-link underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
                   >
-                    <FiMail className="w-6 h-6" />
-                  </a>
-                  <a
-                    href="https://github.com/fintech-calgary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-primary transition-colors"
-                  >
-                    <FiGithub className="w-6 h-6" />
-                  </a>
-                  <a
-                    href="https://www.tiktok.com/@fintech.calgary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-primary transition-colors"
-                  >
-                    <FaTiktok className="w-5 h-5" />
+                    fintech.calgary@gmail.com
                   </a>
                 </div>
-              </div>
+              </GlowCard>
+            </div>
+
+            <div className="animate-slideInRight">
+              <GlowCard
+                customSize
+                glowColor="purple"
+                className="h-full w-full !gap-0 !p-8"
+              >
+                <div className="relative z-10">
+                <FiMessageSquare className="mb-4 h-8 w-8 text-primary" />
+                <h3 className="fc-title mb-2 text-xl">
+                  Social Media
+                </h3>
+                <p className="fc-body mb-4">
+                  Follow us for the latest updates
+                </p>
+                <div>
+                  <div className="flex space-x-4">
+                    <a
+                      href="https://www.linkedin.com/company/fintechcalgary/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/45 transition-colors hover:text-primary"
+                    >
+                      <FiLinkedin className="w-6 h-6" />
+                    </a>
+                    <a
+                      href="https://www.instagram.com/fintech.calgary/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/45 transition-colors hover:text-primary"
+                    >
+                      <FiInstagram className="w-6 h-6" />
+                    </a>
+                    <a
+                      href="mailto:fintech.calgary@gmail.com"
+                      className="text-white/45 transition-colors hover:text-primary"
+                    >
+                      <FiMail className="w-6 h-6" />
+                    </a>
+                    <a
+                      href="https://github.com/fintech-calgary"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/45 transition-colors hover:text-primary"
+                    >
+                      <FiGithub className="w-6 h-6" />
+                    </a>
+                    <a
+                      href="https://www.tiktok.com/@fintech.calgary"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/45 transition-colors hover:text-primary"
+                    >
+                      <FaTiktok className="w-5 h-5" />
+                    </a>
+                  </div>
+                </div>
+                </div>
+              </GlowCard>
             </div>
           </div>
 

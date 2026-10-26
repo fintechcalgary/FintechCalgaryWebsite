@@ -35,9 +35,10 @@ module.exports = {
         ],
       },
       colors: {
-        background: "#121212",
-        foreground: "#ededed",
-        primary: "#CA3CFF",
+        // Keep in sync with :root --background (Safari chrome samples this)
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        primary: "#8B5CF6",
       },
       animation: {
         "gradient-x": "gradient-x 15s ease infinite",

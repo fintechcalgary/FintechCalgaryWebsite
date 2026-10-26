@@ -2,42 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Shared dashboard modal shell (see components/ui/Modal/DashboardModal) */
+/* Shared modal shell (see components/ui/Modal) */
 @layer components {
-  .fc-dashboard-modal-backdrop {
-    @apply fixed inset-0 z-50 flex animate-fadeIn items-center justify-center bg-black/50 p-4 backdrop-blur-sm;
+  .fc-modal-backdrop {
+    @apply fixed inset-0 z-[999998] bg-black/70 backdrop-blur-xl;
   }
 
-  .fc-dashboard-modal-panel {
-    @apply mx-4 w-full animate-slideInUp border border-gray-700/50 bg-gray-900/95;
+  .fc-modal-container {
+    @apply fixed inset-0 z-[999999] flex items-center justify-center p-3 pointer-events-none sm:p-4 md:p-6;
   }
 
-  /* Icon-only close control inside modals (dashboard forms, etc.) */
+  .fc-modal-panel {
+    @apply w-full overflow-hidden rounded-2xl border bg-gray-900/95 shadow-2xl backdrop-blur-xl pointer-events-auto;
+  }
+
+  .fc-modal-header {
+    @apply sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-gray-800/50 bg-gray-900/95 px-4 py-4 backdrop-blur-sm sm:px-6 sm:py-5;
+  }
+
+  .fc-modal-title {
+    @apply text-lg font-bold text-white sm:text-xl;
+  }
+
+  .fc-modal-body {
+    @apply p-4 sm:p-6;
+  }
+
+  .fc-modal-footer {
+    @apply sticky bottom-0 z-10 flex flex-col-reverse gap-3 border-t border-gray-800/50 bg-gray-900/95 px-4 py-4 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-end sm:px-6 sm:py-5;
+  }
+
+  /* Icon-only close control inside modals */
   .fc-modal-icon-close {
-    @apply rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800/50 hover:text-white;
+    @apply rounded-xl p-2 text-gray-400 transition-all duration-200 hover:bg-gray-800/50 hover:text-white hover:scale-105;
+  }
+
+  /* File-picker control used inside form modals */
+  .fc-modal-file-btn {
+    @apply inline-flex cursor-pointer items-center gap-2 rounded-xl border border-gray-700 bg-gray-900/50 px-3 py-2 text-white transition-all duration-200 hover:border-primary hover:bg-gray-700;
   }
 
   /* Dashboard form dialogs — secondary / cancel */
   .fc-btn-dashboard-cancel {
-    @apply flex-1 rounded-xl border border-gray-600/50 bg-gray-700/50 px-4 py-2 text-sm text-white transition-all duration-300 hover:bg-gray-600/50;
+    @apply flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-medium text-gray-200 backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-white/[0.08] hover:text-white active:scale-[0.98];
   }
 
   /* Primary gradient CTA (add padding with px-* py-* on the element) */
   .fc-btn-gradient-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-purple-500/80 text-sm font-medium text-white transition-all hover:shadow-xl hover:shadow-primary/15;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-gradient-to-r from-violet-500 via-primary to-purple-600 text-sm font-medium text-white shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/25 hover:shadow-xl hover:shadow-primary/30 hover:brightness-110 active:translate-y-0 active:scale-[0.98];
   }
 
   /* Public marketing CTAs */
   .fc-btn-primary {
-    @apply inline-flex items-center justify-center gap-3 rounded-xl bg-primary px-8 py-4 text-lg font-medium text-white transition-all duration-300 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/15 hover:-translate-y-0.5;
+    @apply inline-flex items-center justify-center gap-3 rounded-xl border border-white/15 bg-gradient-to-r from-violet-500 via-primary to-purple-600 px-8 py-4 text-lg font-medium tracking-wide text-white shadow-lg shadow-primary/25 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/25 hover:shadow-xl hover:shadow-primary/35 hover:brightness-110 active:translate-y-0 active:scale-[0.98];
   }
 
   .fc-btn-secondary {
-    @apply inline-flex items-center justify-center gap-3 rounded-xl border border-gray-700 bg-white/[0.04] px-8 py-4 text-lg font-medium text-white backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:bg-gray-800/50 hover:shadow-xl;
+    @apply inline-flex items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-8 py-4 text-lg font-medium tracking-wide text-white shadow-lg shadow-black/20 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/10 hover:shadow-xl hover:shadow-primary/10 active:translate-y-0 active:scale-[0.98];
   }
 
   .fc-btn-soft {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/20 to-purple-600/20 px-8 py-4 text-lg font-medium text-white backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/15;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-primary/35 bg-gradient-to-r from-primary/25 via-purple-600/20 to-violet-400/15 px-8 py-4 text-lg font-medium tracking-wide text-white shadow-lg shadow-primary/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/55 hover:from-primary/35 hover:via-purple-600/30 hover:to-violet-400/25 hover:shadow-xl hover:shadow-primary/20 active:translate-y-0 active:scale-[0.98];
   }
 
   /* Shared glass surface for public cards */
@@ -45,13 +70,75 @@
     @apply rounded-2xl border border-gray-800/50 bg-gradient-to-br from-gray-900/40 to-gray-800/20 backdrop-blur-sm transition-all duration-500 hover:border-primary/30;
   }
 
+  /* Admin dashboard list / empty panels */
+  .fc-admin-panel {
+    @apply rounded-2xl border border-white/10 bg-gray-900/60 backdrop-blur-xl;
+  }
+
+  /* Admin page back link — left-aligned text control */
+  .fc-admin-back {
+    @apply mb-6 inline-flex items-center gap-2 text-sm text-gray-300 transition-colors hover:text-primary;
+  }
+
+  /* Soft / chip-style admin action (toolbar buttons) */
+  .fc-btn-soft-chip {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/20 px-4 py-2 text-sm font-medium text-primary transition-all duration-200 hover:bg-primary/30 hover:border-primary/50 active:scale-[0.98];
+  }
+
+  /* Page / section intro under titles — light, open, secondary to display headers */
+  .fc-lede {
+    @apply text-base font-light leading-relaxed tracking-wide text-white/55 sm:text-lg md:text-xl md:leading-[1.7];
+  }
+
+  /* Card & section body copy */
+  .fc-body {
+    @apply text-sm font-normal leading-[1.7] tracking-[0.015em] text-white/65;
+  }
+
+  .fc-body-lg {
+    @apply text-base font-normal leading-[1.75] tracking-[0.015em] text-white/70 sm:text-lg;
+  }
+
+  /* Meta, captions, secondary lines */
+  .fc-muted {
+    @apply text-sm font-normal leading-relaxed tracking-wide text-white/45;
+  }
+
+  /* Inline / “learn more” links — clear accent without competing with CTAs */
   .fc-link {
-    @apply text-primary transition-colors duration-300 hover:text-purple-400;
+    @apply font-medium tracking-wide text-primary transition-colors duration-300 hover:text-violet-300;
+  }
+
+  .fc-link-underline {
+    @apply font-medium tracking-wide text-primary underline decoration-primary/30 underline-offset-[3px] transition-colors duration-300 hover:text-violet-300 hover:decoration-violet-300/50;
+  }
+
+  /* Form field labels (admin + public forms) */
+  .fc-form-label {
+    @apply mb-1 block text-sm font-medium text-gray-300;
+  }
+
+  /* Compact spinner for buttons / inline busy states */
+  .fc-spinner-inline {
+    @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent;
+  }
+
+  /* In-section / card titles — keep weight moderate so they don’t overwhelm cards */
+  .fc-title {
+    @apply font-display font-semibold tracking-tight text-white;
+  }
+
+  .fc-title-lg {
+    @apply font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl;
+  }
+
+  .fc-title-accent {
+    @apply font-display font-semibold tracking-tight bg-gradient-to-br from-white via-violet-200 to-primary bg-clip-text text-transparent;
   }
 
   /* Insights “Read more” on card hover overlay */
   .fc-btn-read-more-subtle {
-    @apply flex cursor-pointer items-center gap-2 self-start rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 to-purple-500/10 px-3 py-1.5 text-primary transition-all duration-200 hover:scale-105 hover:border-primary/50 hover:bg-gradient-to-r hover:from-primary/10 hover:to-purple-500/10 hover:shadow-lg hover:shadow-primary/10;
+    @apply flex cursor-pointer items-center gap-2 self-start rounded-xl border border-primary/35 bg-gradient-to-r from-primary/15 to-purple-500/15 px-3 py-1.5 text-sm font-medium text-primary backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-primary/55 hover:from-primary/25 hover:to-purple-500/25 hover:shadow-lg hover:shadow-primary/15;
   }
 }
 
@@ -72,22 +159,66 @@
 }
 
 :root {
-  --background: #121212;
+  /* Near-black with a cool tint — solid fill on mobile; under-silk on desktop */
+  --background: #0e0c1a;
   --foreground: #ededed;
   font-size: 90%;
 }
 
 html {
   overscroll-behavior: none;
+  min-height: 100%;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+  background-color: var(--background);
+  background-image: none;
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background-color: var(--background);
+  background-image: none;
   font-family: var(--font-sans), "Plus Jakarta Sans", system-ui, sans-serif;
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  min-height: 100%;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+}
+
+/* Desktop-only silk canvas (mounted only at ≥768px — see SilkBackground) */
+.silk-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  height: 100lvh;
+  overflow: hidden;
+  opacity: 0.72;
+}
+
+.silk-bg canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Hold UI until Silk's first WebGL frame is presented (see SilkBackground). */
+body.silk-boot .site-content {
+  opacity: 0;
+}
+
+body.silk-ready .site-content {
+  opacity: 1;
+  transition: opacity 280ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.silk-ready .site-content {
+    transition: none;
+  }
 }
 
 /* Modern Input Styles */
@@ -146,8 +277,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   transition: all 0.3s ease-in-out;
 }
 
+/* Canonical form control for admin/modals (overrides base input styles) */
 .form-input {
-  @apply w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all;
+  @apply w-full rounded-xl border border-gray-700/50 bg-gray-800/50 px-4 py-3 text-white placeholder-gray-400 shadow-none transition-all duration-200 hover:border-gray-600/50 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20;
+}
+
+/* Inline filter / toolbar controls — size to content, not full row */
+.form-input-auto,
+select.form-input-auto {
+  width: auto;
+  max-width: 100%;
 }
 
 /* Safari-specific input resets */
@@ -192,12 +331,13 @@ select::-ms-expand {
   }
 }
 
+/* Marquee track holds two identical halves; -50% loops seamlessly. */
 @keyframes scroll {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
@@ -335,4 +475,124 @@ select::-ms-expand {
 
 .animation-delay-600 {
   animation-delay: 600ms;
+}
+
+/* AI loader (src/components/ui/ai-loader.tsx) — Tailwind 3 globals extension */
+@keyframes loader-rotate {
+  0% {
+    transform: rotate(90deg);
+    box-shadow:
+      0 10px 20px 0 #fff inset,
+      0 20px 30px 0 #ad5fff inset,
+      0 60px 60px 0 #471eec inset;
+  }
+  50% {
+    transform: rotate(270deg);
+    box-shadow:
+      0 10px 20px 0 #fff inset,
+      0 20px 10px 0 #d60a47 inset,
+      0 40px 60px 0 #311e80 inset;
+  }
+  100% {
+    transform: rotate(450deg);
+    box-shadow:
+      0 10px 20px 0 #fff inset,
+      0 20px 30px 0 #ad5fff inset,
+      0 60px 60px 0 #471eec inset;
+  }
+}
+
+@keyframes loader-letter-anim {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  40% {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+}
+
+.ai-loader-root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.ai-loader-root.ai-loader--sm .loader-wrapper {
+  width: 96px;
+  height: 96px;
+  font-size: 0.65em;
+}
+
+.ai-loader-root.ai-loader--md .loader-wrapper {
+  width: 132px;
+  height: 132px;
+  font-size: 0.9em;
+}
+
+.ai-loader-root.ai-loader--lg .loader-wrapper {
+  width: 180px;
+  height: 180px;
+  font-size: 1.2em;
+}
+
+.loader-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  height: 180px;
+  font-family: var(--font-sans), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 1.2em;
+  font-weight: 300;
+  color: white;
+  border-radius: 50%;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background-color: transparent;
+  animation: loader-rotate 2s linear infinite;
+  z-index: 0;
+}
+
+.loader-letter {
+  display: inline-block;
+  opacity: 0.4;
+  transform: translateY(0);
+  animation: loader-letter-anim 2s infinite;
+  z-index: 1;
+  border: none;
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader {
+    animation: none;
+    box-shadow:
+      0 10px 20px 0 #fff inset,
+      0 20px 30px 0 #ad5fff inset,
+      0 60px 60px 0 #471eec inset;
+  }
+
+  .loader-letter {
+    animation: none;
+    opacity: 0.85;
+    transform: none;
+  }
 }

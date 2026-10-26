@@ -10,6 +10,7 @@ import {
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import Spinner from "@/components/ui/Spinner";
 import { PageTitle } from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -42,11 +43,11 @@ export default function PartnersPage() {
         <div className="container relative z-10 mx-auto px-6 pb-24 pt-36 sm:px-8 lg:px-12">
           <div className="mb-20 animate-fadeIn text-center">
             <PageTitle
-              sizeClass="text-5xl md:text-6xl font-extrabold mb-6 leading-tight"
+              sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6 leading-tight"
             >
               Our Partners & Sponsors
             </PageTitle>
-            <p className="mx-auto max-w-3xl text-xl text-gray-300">
+            <p className="fc-lede mx-auto max-w-3xl">
               Companies and campus groups we work with on events, sponsorships,
               and student projects.
             </p>
@@ -61,19 +62,20 @@ export default function PartnersPage() {
               <div className="mx-auto mb-12 grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
                 {partners.map((partner, index) => {
                   const isHidden = !showAll && index >= INITIAL_PARTNERS_COUNT;
+                  if (isHidden) return null;
                   return (
                     <div
                       key={partner._id || partner.name}
-                      className={`fc-card group relative flex flex-col overflow-hidden ${
-                        isHidden ? "hidden" : "animate-fadeIn p-8"
-                      }`}
-                      style={{
-                        animationDelay: isHidden ? "0ms" : `${index * 100}ms`,
-                        "--partner-color": partner.color,
-                      }}
+                      className="animate-fadeIn"
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    >
+                    <GlowCard
+                      customSize
+                      color={partner.color || "#8B5CF6"}
+                      className="group relative flex h-full w-full flex-col !gap-0 !p-8"
                     >
                       <div
-                        className="absolute inset-0 z-0 rounded-2xl scale-100 opacity-0 transition-all duration-500 group-hover:scale-110 group-hover:opacity-80"
+                        className="absolute inset-0 z-0 scale-100 rounded-2xl opacity-0 transition-all duration-500 group-hover:scale-110 group-hover:opacity-80"
                         style={{
                           background: `radial-gradient(circle at center, ${partner.color}20 0%, transparent 70%)`,
                         }}
@@ -102,10 +104,10 @@ export default function PartnersPage() {
                         </div>
                       </div>
 
-                      <h3 className="relative z-10 mb-4 text-2xl font-bold text-white">
+                      <h3 className="fc-title relative z-10 mb-4 text-2xl">
                         {partner.name}
                       </h3>
-                      <p className="relative z-10 mb-6 flex-grow text-gray-300">
+                      <p className="fc-body relative z-10 mb-6 flex-grow">
                         {partner.description}
                       </p>
 
@@ -114,11 +116,12 @@ export default function PartnersPage() {
                           href={partner.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="fc-link relative z-10 inline-flex items-center font-medium"
+                          className="fc-link relative z-10 inline-flex items-center"
                         >
                           Visit Website <FiArrowRight className="ml-2" />
                         </a>
                       ) : null}
+                    </GlowCard>
                     </div>
                   );
                 })}
@@ -152,15 +155,19 @@ export default function PartnersPage() {
           )}
 
           <div className="mx-auto max-w-4xl animate-slideInUp">
-            <div className="fc-card relative overflow-hidden p-12">
+            <GlowCard
+              customSize
+              glowColor="purple"
+              className="relative w-full !gap-0 !p-12"
+            >
               <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
               <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-purple-600/10 blur-[60px]" />
 
               <div className="relative z-10 text-center">
-                <h2 className="mb-6 bg-gradient-to-r from-primary to-purple-400/75 bg-clip-text text-4xl font-bold text-transparent">
+                <h2 className="fc-title-accent mb-6 text-2xl">
                   Become a Sponsor
                 </h2>
-                <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-300">
+                <p className="fc-lede mx-auto mb-8 max-w-2xl">
                   Sponsorship supports our events and student programs. Download
                   the package for tiers and benefits.
                 </p>
@@ -184,19 +191,19 @@ export default function PartnersPage() {
                   </a>
                 </div>
               </div>
-            </div>
+            </GlowCard>
           </div>
 
           <div
             className="mt-20 animate-fadeIn text-center"
             style={{ animationDelay: "300ms" }}
           >
-            <p className="mb-4 text-lg text-gray-300">
+            <p className="fc-lede mb-4">
               Interested in becoming a partner or sponsor?
             </p>
             <Link
               href="/contact"
-              className="fc-link inline-flex items-center font-medium"
+              className="fc-link inline-flex items-center"
             >
               Contact us to learn more <FiArrowRight className="ml-2" />
             </Link>

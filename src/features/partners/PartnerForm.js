@@ -2,7 +2,22 @@
 
 import FileUploadDropzone from "@/components/ui/FileUploadDropzone";
 import Button from "@/components/ui/Button";
+import {
+  PasswordStrength,
+  defaultPasswordRules,
+} from "@/components/ui/password-strength";
 import { PARTNER_FORM_INPUT_CLASS } from "@/features/partners/partnerFormFields";
+import { VALIDATION } from "@/lib/constants";
+
+const signupPasswordRules = [
+  {
+    id: "length",
+    label: `${VALIDATION.PASSWORD_MIN_LENGTH} characters or more`,
+    test: (v) => v.length >= VALIDATION.PASSWORD_MIN_LENGTH,
+  },
+  ...defaultPasswordRules.filter((rule) => rule.id !== "length"),
+];
+
 
 function Field({
   label,
@@ -15,7 +30,7 @@ function Field({
   return (
     <div className={className}>
       {showLabel && label ? (
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="fc-form-label">
           {label}
         </label>
       ) : null}
@@ -23,7 +38,7 @@ function Field({
       {error ? (
         <p className="mt-1 text-sm text-red-400">{error}</p>
       ) : hint ? (
-        <p className="mt-1 text-sm text-gray-400">{hint}</p>
+        <p className="mt-1 fc-muted">{hint}</p>
       ) : null}
     </div>
   );
@@ -87,7 +102,7 @@ export default function PartnerForm({
       {showLogoUpload ? (
         <div>
           {mode === "signup" ? (
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="fc-form-label">
               Upload your Logo
             </label>
           ) : null}
@@ -154,11 +169,6 @@ export default function PartnerForm({
               label="Password"
               showLabel={false}
               error={errors.password}
-              hint={
-                !errors.password
-                  ? "Password must be at least 6 characters long"
-                  : undefined
-              }
             >
               <input
                 type="password"
@@ -166,8 +176,15 @@ export default function PartnerForm({
                 value={values.password}
                 onChange={set("password")}
                 required
+                autoComplete="new-password"
+                spellCheck={false}
                 data-error="password"
                 className={errClass("password")}
+              />
+              <PasswordStrength
+                value={values.password ?? ""}
+                rules={signupPasswordRules}
+                className="mt-3"
               />
             </Field>
           ) : null}
@@ -191,7 +208,7 @@ export default function PartnerForm({
           {mode === "signup" ? "Contacts" : "Contact Information"}
         </SectionTitle>
         {mode === "signup" ? (
-          <div className="mb-2 text-gray-200 text-md">
+          <div className="mb-2 fc-body">
             <p>
               Please enter the information for the Main Contact of your
               organization.
@@ -468,11 +485,7 @@ export default function PartnerForm({
           type="submit"
           variant="primary"
           disabled={submitting}
-          className={
-            mode === "signup"
-              ? "px-8 py-3"
-              : "px-8 py-3 bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 border border-primary/30"
-          }
+          className="px-8 py-3"
         >
           {submitting ? "Saving..." : submitLabel || defaultSubmit}
         </Button>

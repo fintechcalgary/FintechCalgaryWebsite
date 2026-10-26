@@ -9,6 +9,7 @@ export async function createEvent(db, event) {
     imageUrl: event.imageUrl, // Keep for backward compatibility
     createdAt: new Date(),
     time: event.time, // Time represented by a string
+    registrationOpen: event.registrationOpen !== false,
     registrations: [],
   });
 }

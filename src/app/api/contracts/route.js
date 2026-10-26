@@ -1,7 +1,8 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { createContract, getContracts, buildEoiPdf } from "@/lib/models/contract";
-import { apiResponse, requireAdmin, withErrorHandler } from "@/lib/api-helpers";
+import { apiResponse, requirePermission, withErrorHandler } from "@/lib/api-helpers";
 import { FILE_TYPES } from "@/lib/constants";
+import { PERMISSIONS } from "@/lib/permissions";
 import logger from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -21,7 +22,7 @@ function validatePdfFile(file) {
 }
 
 export const GET = withErrorHandler(async () => {
-  const { error } = await requireAdmin();
+  const { error } = await requirePermission(PERMISSIONS.CONTRACTS);
   if (error) return error;
 
   const db = await connectToDatabase();
@@ -31,7 +32,7 @@ export const GET = withErrorHandler(async () => {
 });
 
 export const POST = withErrorHandler(async (req) => {
-  const { session, error } = await requireAdmin();
+  const { session, error } = await requirePermission(PERMISSIONS.CONTRACTS);
   if (error) return error;
 
   const formData = await req.formData();

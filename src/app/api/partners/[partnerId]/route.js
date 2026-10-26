@@ -4,7 +4,8 @@ import {
   updateDisplayPartner,
   deleteDisplayPartner,
 } from "@/lib/models/displayPartner";
-import { apiResponse, requireAdmin, withErrorHandler } from "@/lib/api-helpers";
+import { apiResponse, requirePermission, withErrorHandler } from "@/lib/api-helpers";
+import { PERMISSIONS } from "@/lib/permissions";
 
 export async function GET(req, context) {
   try {
@@ -21,7 +22,7 @@ export async function GET(req, context) {
 }
 
 export const PUT = withErrorHandler(async (req, context) => {
-  const { error } = await requireAdmin();
+  const { error } = await requirePermission(PERMISSIONS.PARTNERS);
   if (error) return error;
 
   const { partnerId } = await context.params;
@@ -46,7 +47,7 @@ export const PUT = withErrorHandler(async (req, context) => {
 });
 
 export const DELETE = withErrorHandler(async (req, context) => {
-  const { error } = await requireAdmin();
+  const { error } = await requirePermission(PERMISSIONS.PARTNERS);
   if (error) return error;
 
   const { partnerId } = await context.params;

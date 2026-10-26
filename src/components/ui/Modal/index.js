@@ -1,4 +1,5 @@
 export { default as ModalRoot } from "./ModalRoot";
+export { default as ModalCloseButton } from "./ModalCloseButton";
 export { default as ConfirmModal } from "./ConfirmModal";
 export { default as ContentModal } from "./ContentModal";
 export { default as DashboardModal } from "./DashboardModal";

@@ -67,3 +67,12 @@ Required environment variables:
 - `MONGODB_URI`
 - `CRON_SECRET`
 - `GEMINI_API` (optional but recommended for summary generation)
+
+Staff seed passwords (for `npm run seed-staff-roles` only — keep in `.env` / `.env.local`, never commit):
+
+- `SEED_ADMIN_PASSWORD`
+- `SEED_OUTREACH_PASSWORD`
+- `SEED_FINANCE_PASSWORD`
+- `SEED_EVENTS_PASSWORD`
+- `SEED_MARKETING_PASSWORD`
+- `SEED_PROJECTS_PASSWORD`

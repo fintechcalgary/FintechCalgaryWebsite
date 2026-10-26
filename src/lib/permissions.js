@@ -1,0 +1,361 @@
+import { USER_ROLES } from "@/lib/constants";
+
+/**
+ * Permission identifiers for role-based access control.
+ */
+export const PERMISSIONS = {
+  CONTRACTS: "contracts",
+  EVENTS: "events",
+  PARTNERS: "partners",
+  DOCUMENTATION: "documentation",
+  DOCUMENTATION_FINANCE: "documentation:finance",
+  DOCUMENTATION_MANAGE: "documentation:manage",
+  MARKETING_SUBMIT: "marketing:submit",
+  MARKETING_APPROVE: "marketing:approve",
+  MEMBERS: "members",
+  EXECUTIVES: "executives",
+  EXECUTIVE_APPLICATIONS: "executive-applications",
+  SETTINGS: "settings",
+  USERS: "users",
+  COMMUNITY: "community",
+};
+
+/** Roles that can access the internal staff dashboard */
+export const STAFF_ROLES = [
+  USER_ROLES.ADMIN,
+  USER_ROLES.OUTREACH,
+  USER_ROLES.FINANCE,
+  USER_ROLES.EVENTS,
+  USER_ROLES.MARKETING,
+  USER_ROLES.PROJECTS,
+];
+
+/** Maps each staff role to its granted permissions */
+export const ROLE_PERMISSIONS = {
+  [USER_ROLES.ADMIN]: Object.values(PERMISSIONS),
+  [USER_ROLES.OUTREACH]: [
+    PERMISSIONS.CONTRACTS,
+    PERMISSIONS.COMMUNITY,
+    PERMISSIONS.PARTNERS,
+  ],
+  [USER_ROLES.FINANCE]: [
+    PERMISSIONS.DOCUMENTATION,
+    PERMISSIONS.DOCUMENTATION_FINANCE,
+  ],
+  [USER_ROLES.EVENTS]: [PERMISSIONS.EVENTS],
+  [USER_ROLES.MARKETING]: [
+    PERMISSIONS.PARTNERS,
+    PERMISSIONS.MARKETING_SUBMIT,
+  ],
+  [USER_ROLES.PROJECTS]: [PERMISSIONS.EXECUTIVE_APPLICATIONS],
+};
+
+/** Dashboard routes and required permissions */
+export const DASHBOARD_ROUTE_PERMISSIONS = {
+  "/dashboard/contracts": PERMISSIONS.CONTRACTS,
+  "/dashboard/partners": PERMISSIONS.PARTNERS,
+  "/dashboard/members": PERMISSIONS.MEMBERS,
+  "/dashboard/executive-applications": PERMISSIONS.EXECUTIVE_APPLICATIONS,
+  "/dashboard/documentation": PERMISSIONS.DOCUMENTATION,
+  "/dashboard/marketing-submissions": PERMISSIONS.MARKETING_SUBMIT,
+  "/dashboard/marketing-approvals": PERMISSIONS.MARKETING_APPROVE,
+  "/dashboard/users": PERMISSIONS.USERS,
+  "/dashboard/community": PERMISSIONS.COMMUNITY,
+};
+
+/** API route prefixes and required permissions (admin bypasses all) */
+export const API_ROUTE_PERMISSIONS = [
+  { prefix: "/api/contracts", permission: PERMISSIONS.CONTRACTS },
+  { prefix: "/api/events", permission: PERMISSIONS.EVENTS, publicGet: true },
+  {
+    prefix: "/api/partners",
+    permission: PERMISSIONS.PARTNERS,
+    publicGet: true,
+  },
+  {
+    prefix: "/api/partner-applications",
+    permission: PERMISSIONS.PARTNERS,
+  },
+  { prefix: "/api/members", permission: PERMISSIONS.MEMBERS },
+  {
+    prefix: "/api/executives",
+    permission: PERMISSIONS.EXECUTIVES,
+    publicGet: true,
+  },
+  {
+    prefix: "/api/executive-roles",
+    permission: PERMISSIONS.EXECUTIVE_APPLICATIONS,
+    publicGet: true,
+  },
+  {
+    prefix: "/api/executive-application",
+    permission: PERMISSIONS.EXECUTIVE_APPLICATIONS,
+  },
+  { prefix: "/api/settings", permission: PERMISSIONS.SETTINGS, publicGet: true },
+  {
+    prefix: "/api/documentation/finance",
+    permission: PERMISSIONS.DOCUMENTATION_FINANCE,
+  },
+  {
+    prefix: "/api/documentation/folders",
+    permission: PERMISSIONS.DOCUMENTATION,
+  },
+  {
+    prefix: "/api/documentation/documents",
+    permission: PERMISSIONS.DOCUMENTATION,
+  },
+  { prefix: "/api/documentation", permission: PERMISSIONS.DOCUMENTATION },
+  {
+    prefix: "/api/marketing-approvals",
+    permission: PERMISSIONS.MARKETING_SUBMIT,
+    approvePermission: PERMISSIONS.MARKETING_APPROVE,
+  },
+  { prefix: "/api/users", permission: PERMISSIONS.USERS },
+  {
+    prefix: "/api/community-posts",
+    permission: PERMISSIONS.COMMUNITY,
+    publicGet: true,
+  },
+];
+
+export function isStaffRole(role) {
+  return STAFF_ROLES.includes(role);
+}
+
+export function isAdmin(role) {
+  return role === USER_ROLES.ADMIN;
+}
+
+/** Post-login / already-authenticated landing path for a role */
+export function getPostLoginDestination(role) {
+  if (role === USER_ROLES.ASSOCIATE) return "/partner-dashboard";
+  if (role === USER_ROLES.PROJECTS) {
+    return "/dashboard/executive-applications";
+  }
+  if (isStaffRole(role)) return "/dashboard";
+  return null;
+}
+
+export function getPermissionsForRole(role) {
+  if (!role) return [];
+  if (isAdmin(role)) return Object.values(PERMISSIONS);
+  return ROLE_PERMISSIONS[role] || [];
+}
+
+export function hasPermission(role, permission) {
+  if (!role || !permission) return false;
+  if (isAdmin(role)) return true;
+  return getPermissionsForRole(role).includes(permission);
+}
+
+export function hasAnyPermission(role, permissions) {
+  return permissions.some((p) => hasPermission(role, p));
+}
+
+/** Whether the role can create folders / manage non-finance documentation */
+export function canManageDocumentation(role) {
+  return (
+    isAdmin(role) || hasPermission(role, PERMISSIONS.DOCUMENTATION_MANAGE)
+  );
+}
+
+/** Whether the role can upload/delete documents in a given folder slug */
+export function canManageDocumentationFolder(role, folderSlug) {
+  if (canManageDocumentation(role)) return true;
+  if (folderSlug === "finance") {
+    return hasPermission(role, PERMISSIONS.DOCUMENTATION_FINANCE);
+  }
+  return false;
+}
+
+export function canAccessDashboardRoute(role, pathname) {
+  if (!isStaffRole(role)) return false;
+  if (isAdmin(role)) return true;
+
+  const normalized = pathname.split("?")[0].split("#")[0];
+  let permission = DASHBOARD_ROUTE_PERMISSIONS[normalized];
+
+  // Nested dashboard routes (e.g. /dashboard/executive-applications/[id])
+  if (!permission) {
+    const match = Object.keys(DASHBOARD_ROUTE_PERMISSIONS)
+      .filter((route) => normalized.startsWith(`${route}/`))
+      .sort((a, b) => b.length - a.length)[0];
+    if (match) permission = DASHBOARD_ROUTE_PERMISSIONS[match];
+  }
+
+  if (!permission) return true;
+
+  return hasPermission(role, permission);
+}
+
+export function getApiRoutePermission(pathname, method) {
+  for (const route of API_ROUTE_PERMISSIONS) {
+    if (!pathname.startsWith(route.prefix)) continue;
+
+    if (route.publicGet && method === "GET") {
+      return null;
+    }
+
+    if (
+      route.approvePermission &&
+      method === "PUT" &&
+      pathname.startsWith(`${route.prefix}/`) &&
+      pathname !== route.prefix
+    ) {
+      return route.approvePermission;
+    }
+
+    return route.permission;
+  }
+  return null;
+}
+
+export function canAccessApiRoute(role, pathname, method = "GET") {
+  const permission = getApiRoutePermission(pathname, method);
+  if (!permission) return true;
+  return hasPermission(role, permission);
+}
+
+export function getDashboardNavItems(role) {
+  const baseline = [
+    { label: "Home", href: "/" },
+    { label: "Dashboard", href: "/dashboard" },
+  ];
+
+  if (!isStaffRole(role)) return baseline;
+
+  const items = [...baseline];
+
+  if (hasPermission(role, PERMISSIONS.EVENTS)) {
+    items.push({ label: "Events", href: "/dashboard#events" });
+  }
+  if (hasPermission(role, PERMISSIONS.EXECUTIVES)) {
+    items.push({ label: "Executives", href: "/dashboard#executives" });
+  }
+  if (hasPermission(role, PERMISSIONS.EXECUTIVE_APPLICATIONS)) {
+    items.push({
+      label: "Executive Applications",
+      href: "/dashboard/executive-applications",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.CONTRACTS)) {
+    items.push({ label: "Contracts", href: "/dashboard/contracts" });
+  }
+  if (hasPermission(role, PERMISSIONS.COMMUNITY)) {
+    items.push({ label: "Community", href: "/dashboard/community" });
+  }
+  if (hasPermission(role, PERMISSIONS.PARTNERS)) {
+    items.push({ label: "Partners", href: "/dashboard/partners" });
+  }
+  if (hasPermission(role, PERMISSIONS.DOCUMENTATION)) {
+    items.push({ label: "Documentation", href: "/dashboard/documentation" });
+  }
+  if (hasPermission(role, PERMISSIONS.MARKETING_SUBMIT)) {
+    items.push({
+      label: "Marketing Submissions",
+      href: "/dashboard/marketing-submissions",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.MARKETING_APPROVE)) {
+    items.push({
+      label: "Marketing Approvals",
+      href: "/dashboard/marketing-approvals",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.MEMBERS)) {
+    items.push({ label: "Members", href: "/dashboard/members" });
+  }
+  if (hasPermission(role, PERMISSIONS.USERS)) {
+    items.push({ label: "Users", href: "/dashboard/users" });
+  }
+
+  items.push({ label: "Info", href: "/info" });
+
+  return items;
+}
+
+export function getAdminPanelCards(role) {
+  if (!isStaffRole(role)) return [];
+
+  const cards = [];
+
+  if (hasPermission(role, PERMISSIONS.CONTRACTS)) {
+    cards.push({
+      title: "Contracts",
+      description:
+        "Track contracts through the approvals pipeline, from outreach to execution",
+      href: "/dashboard/contracts",
+      color: "blue",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.COMMUNITY)) {
+    cards.push({
+      title: "Community",
+      description:
+        "Share partner and community events on the public Community Board",
+      href: "/dashboard/community",
+      color: "purple",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.PARTNERS)) {
+    cards.push({
+      title: "Partners",
+      description:
+        "Manage the public partners list and review organization applications",
+      href: "/dashboard/partners",
+      color: "purple",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.EXECUTIVE_APPLICATIONS)) {
+    cards.push({
+      title: "Executive Applications",
+      description:
+        "Review executive team applications, manage roles, and control application settings",
+      href: "/dashboard/executive-applications",
+      color: "pink",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.MEMBERS)) {
+    cards.push({
+      title: "Members",
+      description: "Manage general members, mailing lists, and export member data",
+      href: "/dashboard/members",
+      color: "purple",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.DOCUMENTATION)) {
+    cards.push({
+      title: "Documentation",
+      description: "Club documentation folders, finance records, and agreements",
+      href: "/dashboard/documentation",
+      color: "blue",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.MARKETING_SUBMIT)) {
+    cards.push({
+      title: "Marketing Submissions",
+      description:
+        "Upload marketing content and partner approval proof for admin review",
+      href: "/dashboard/marketing-submissions",
+      color: "pink",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.MARKETING_APPROVE)) {
+    cards.push({
+      title: "Marketing Approvals",
+      description: "Review and approve marketing submissions from the team",
+      href: "/dashboard/marketing-approvals",
+      color: "purple",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.USERS)) {
+    cards.push({
+      title: "Users",
+      description: "Manage staff accounts and role-based access",
+      href: "/dashboard/users",
+      color: "blue",
+    });
+  }
+
+  return cards;
+}

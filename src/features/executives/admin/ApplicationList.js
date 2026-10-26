@@ -1,207 +1,251 @@
 "use client";
 
-import { FiEye, FiTrash2 } from "react-icons/fi";
+import { useRouter } from "next/navigation";
+import { FiChevronRight, FiTrash2 } from "react-icons/fi";
+import { GlowCard } from "@/components/ui/spotlight-card";
+import StatusBadge from "@/components/ui/StatusBadge";
+import IconButton from "@/components/ui/IconButton";
+
+function applicationHref(id) {
+  return `/dashboard/executive-applications/${id}`;
+}
 
 export default function ApplicationList({
   applications,
   error,
   fetchApplications,
   formatDate,
-  onViewDetails,
   onDeleteClick,
   deletingId,
 }) {
+  const router = useRouter();
+
+  const goToApplication = (id) => {
+    router.push(applicationHref(id));
+  };
+
   return (
     <>
-        {/* Applications Table - Mobile Cards vs Desktop Table */}
-        <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
-          {error ? (
-            <div className="p-6 sm:p-8 text-center">
-              <p className="text-red-400 text-sm sm:text-base">{error}</p>
-              <button
-                onClick={fetchApplications}
-                className="mt-4 px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors text-sm"
-              >
-                Try Again
-              </button>
-            </div>
-          ) : applications.length === 0 ? (
-            <div className="p-6 sm:p-8 text-center">
-              <p className="text-gray-400 text-sm sm:text-base">
-                No applications found.
-              </p>
-            </div>
-          ) : (
-            <>
-              {/* Desktop Table */}
-              <div className="hidden lg:block overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-800/50 border-b border-gray-700/50">
-                    <tr>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Applicant
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Role
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Program & Year
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Contact
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Applied
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-700/50">
-                    {applications.map((application, index) => (
-                      <tr
-                        key={application._id || index}
-                        className="hover:bg-gray-800/30 transition-colors"
-                      >
-                        <td className="px-6 py-4">
-                          <div>
-                            <div className="text-sm font-medium text-white">
-                              {application.name}
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span
-                            className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary max-w-[200px] truncate"
-                            title={application.role}
-                          >
-                            {application.role}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-300">
-                          <div>{application.program}</div>
-                          <div className="text-gray-400">
-                            Year {application.year}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-300">
-                          <div>{application.email}</div>
-                          {application.phone && (
-                            <div className="text-gray-400">
-                              {application.phone}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-300">
-                          {formatDate(application.createdAt)}
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => onViewDetails(application)}
-                              className="text-primary hover:text-primary/80 text-sm font-medium flex items-center gap-1"
-                            >
-                              <FiEye className="w-4 h-4" />
-                              View
-                            </button>
-                            <button
-                              onClick={() => onDeleteClick(application)}
-                              disabled={deletingId === application._id}
-                              className="text-red-400 hover:text-red-300 text-sm font-medium flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                              <FiTrash2 className="w-4 h-4" />
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Mobile Cards */}
-              <div className="lg:hidden">
-                <div className="p-4 sm:p-6 space-y-4">
+      <div className="fc-admin-panel overflow-hidden">
+        {error ? (
+          <div className="p-6 text-center sm:p-8">
+            <p className="text-sm text-red-400 sm:text-base">{error}</p>
+            <button
+              onClick={fetchApplications}
+              className="mt-4 rounded-xl bg-primary px-4 py-2 text-sm text-white transition-colors hover:bg-primary/90"
+            >
+              Try Again
+            </button>
+          </div>
+        ) : applications.length === 0 ? (
+          <div className="p-6 text-center sm:p-8">
+            <p className="fc-body text-sm sm:text-base">No applications found.</p>
+          </div>
+        ) : (
+          <>
+            {/* Desktop Table */}
+            <div className="hidden overflow-x-auto lg:block">
+              <table className="w-full">
+                <thead className="border-b border-gray-700/50 bg-gray-800/50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Applicant
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Role
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Program & Year
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Contact
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Applied
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-700/50">
                   {applications.map((application, index) => (
-                    <div
+                    <tr
                       key={application._id || index}
-                      className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/30 hover:border-gray-600/50 transition-all duration-300"
+                      role="link"
+                      tabIndex={0}
+                      aria-label={`View application from ${application.name}`}
+                      onClick={() => goToApplication(application._id)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          goToApplication(application._id);
+                        }
+                      }}
+                      className="group cursor-pointer transition-colors hover:bg-primary/10"
                     >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <h3 className="text-white font-medium text-base mb-1">
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col gap-1">
+                          <span className="fc-title max-w-[220px] truncate text-sm text-primary group-hover:underline">
                             {application.name}
-                          </h3>
-                          <span
-                            className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary max-w-[150px] truncate"
-                            title={application.role}
-                          >
-                            {application.role}
+                          </span>
+                          <span className="text-xs text-gray-500 transition-colors group-hover:text-primary/80">
+                            Click to view application
                           </span>
                         </div>
-                        <div className="flex gap-2 ml-3">
-                          <button
-                            onClick={() => onViewDetails(application)}
-                            className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-xl transition-colors"
-                            title="View Details"
+                      </td>
+                      <td className="px-6 py-4">
+                        <span title={application.role}>
+                          <StatusBadge
+                            tone="info"
+                            size="sm"
+                            className="max-w-[200px] truncate"
                           >
-                            <FiEye className="w-4 h-4" />
-                          </button>
+                            {application.role}
+                          </StatusBadge>
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 fc-body">
+                        <div className="max-w-[180px] truncate">
+                          {application.program}
+                        </div>
+                        <div className="fc-muted">Year {application.year}</div>
+                      </td>
+                      <td className="px-6 py-4 fc-body">
+                        <div className="max-w-[220px] truncate">
+                          {application.email}
+                        </div>
+                        {application.phone ? (
+                          <div className="fc-muted">{application.phone}</div>
+                        ) : null}
+                      </td>
+                      <td className="px-6 py-4 fc-body whitespace-nowrap">
+                        {formatDate(application.createdAt)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">
+                            View
+                            <FiChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                          </span>
                           <button
-                            onClick={() => onDeleteClick(application)}
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              onDeleteClick(application);
+                            }}
                             disabled={deletingId === application._id}
-                            className="p-2 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            title="Delete Application"
+                            className="inline-flex items-center gap-1 text-sm font-medium text-red-400 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-50"
                           >
-                            <FiTrash2 className="w-4 h-4" />
+                            <FiTrash2 className="h-4 w-4" />
+                            Delete
                           </button>
                         </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                        <div>
-                          <span className="text-gray-400">Program:</span>
-                          <div className="text-white">
-                            {application.program}
-                          </div>
-                          <div className="text-gray-400">
-                            Year {application.year}
-                          </div>
-                        </div>
-                        <div>
-                          <span className="text-gray-400">Contact:</span>
-                          <div className="text-white break-all">
-                            {application.email}
-                          </div>
-                          {application.phone && (
-                            <div className="text-gray-400">
-                              {application.phone}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="mt-3 pt-3 border-t border-gray-700/30">
-                        <span className="text-gray-400 text-xs">Applied:</span>
-                        <div className="text-white text-sm">
-                          {formatDate(application.createdAt)}
-                        </div>
-                      </div>
-                    </div>
+                      </td>
+                    </tr>
                   ))}
-                </div>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="lg:hidden">
+              <div className="space-y-4 p-4 sm:p-6">
+                {applications.map((application, index) => (
+                  <div
+                    key={application._id || index}
+                    role="link"
+                    tabIndex={0}
+                    aria-label={`View application from ${application.name}`}
+                    onClick={() => goToApplication(application._id)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        goToApplication(application._id);
+                      }
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <GlowCard
+                      customSize
+                      glowColor="purple"
+                      className="w-full !gap-0 !p-4"
+                    >
+                      <div className="relative z-10">
+                        <div className="mb-3 flex items-start justify-between gap-3">
+                          <div className="min-w-0 flex-1">
+                            <h3 className="fc-title mb-1 truncate text-base text-primary">
+                              {application.name}
+                            </h3>
+                            <span title={application.role}>
+                              <StatusBadge
+                                tone="info"
+                                size="sm"
+                                className="max-w-[150px] truncate"
+                              >
+                                {application.role}
+                              </StatusBadge>
+                            </span>
+                          </div>
+                          <IconButton
+                            variant="danger"
+                            label="Delete Application"
+                            disabled={deletingId === application._id}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              onDeleteClick(application);
+                            }}
+                          >
+                            <FiTrash2 className="h-4 w-4" />
+                          </IconButton>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+                          <div className="min-w-0">
+                            <span className="fc-muted">Program:</span>
+                            <div className="truncate text-white">
+                              {application.program}
+                            </div>
+                            <div className="fc-muted">
+                              Year {application.year}
+                            </div>
+                          </div>
+                          <div className="min-w-0">
+                            <span className="fc-muted">Contact:</span>
+                            <div className="break-all text-white">
+                              {application.email}
+                            </div>
+                            {application.phone ? (
+                              <div className="fc-muted">{application.phone}</div>
+                            ) : null}
+                          </div>
+                        </div>
+
+                        <div className="mt-3 flex items-center justify-between gap-3 border-t border-gray-700/30 pt-3">
+                          <div>
+                            <span className="fc-muted text-xs">Applied:</span>
+                            <div className="text-sm text-white">
+                              {formatDate(application.createdAt)}
+                            </div>
+                          </div>
+                          <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">
+                            Click to view
+                            <FiChevronRight className="h-4 w-4" />
+                          </span>
+                        </div>
+                      </div>
+                    </GlowCard>
+                  </div>
+                ))}
               </div>
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
+      </div>
 
-        {/* Summary */}
-        <div className="mt-6 text-sm text-gray-400 text-center sm:text-left">
-          Total Applications: {applications.length}
-        </div>
-
+      <div className="fc-muted mt-6 text-center sm:text-left">
+        Total Applications: {applications.length}
+      </div>
     </>
   );
 }

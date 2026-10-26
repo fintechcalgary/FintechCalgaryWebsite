@@ -9,15 +9,22 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
+import { PageTitle } from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 import ImageCarousel from "@/features/events/ImageCarousel";
 import Image from "next/image";
 import { normalizeDate, startOfToday } from "@/lib/dates";
+import {
+  isRegistrationOpen,
+  REGISTRATION_CLOSED_MESSAGE,
+} from "@/lib/eventRegistration";
+import StatusBadge from "@/components/ui/StatusBadge";
 
 // Generate metadata for the event
 export async function generateMetadata({ params }) {
   try {
     const { eventId } = await params;
-    
+
     // Validate ObjectId format
     if (!ObjectId.isValid(eventId)) {
       return {
@@ -25,7 +32,7 @@ export async function generateMetadata({ params }) {
         description: "The requested event could not be found.",
       };
     }
-    
+
     const db = await connectToDatabase();
     const event = await db
       .collection("events")
@@ -59,26 +66,73 @@ export async function generateMetadata({ params }) {
   }
 }
 
+function DetailRow({ icon: Icon, children }) {
+  return (
+    <div className="fc-body-lg flex items-center">
+      <Icon className="mr-4 h-6 w-6 flex-shrink-0 text-primary" />
+      <span className="text-lg">{children}</span>
+    </div>
+  );
+}
+
+function EventMedia({ event }) {
+  const src = event.imageUrl || "/bg-image.jpg";
+  const hasCarousel = event.images?.length > 0;
+
+  return (
+    <div className="relative bg-gray-950/80 sm:p-5">
+      <div className="relative mx-auto h-[min(70vh,520px)] min-h-[240px] w-full overflow-hidden bg-gray-950 sm:rounded-xl">
+        {hasCarousel ? (
+          <ImageCarousel
+            images={event.images}
+            title={event.title}
+            recordingUrl={event.recordingUrl}
+            fit="contain"
+          />
+        ) : (
+          <>
+            <Image
+              src={src}
+              alt=""
+              fill
+              sizes="100vw"
+              aria-hidden
+              className="object-cover opacity-40 blur-md scale-110"
+              priority
+            />
+            <Image
+              src={src}
+              alt={event.title}
+              fill
+              sizes="(max-width: 1024px) 100vw, 960px"
+              className="object-contain"
+              priority
+            />
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Server Component
 export default async function EventPage({ params }) {
   try {
     const { eventId } = await params;
-    
+
     // Validate ObjectId format
     if (!ObjectId.isValid(eventId)) {
       return (
         <PublicPageShell>
-          <div className="flex-grow flex items-center justify-center">
+          <div className="flex flex-grow items-center justify-center">
             <div className="text-center">
-              <h1 className="text-4xl font-bold text-white mb-4">
+              <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-4">
                 Invalid Event ID
-              </h1>
-              <p className="text-gray-400 mb-8">
-                The event ID format is invalid.
-              </p>
+              </PageTitle>
+              <p className="fc-muted mb-8">The event ID format is invalid.</p>
               <Link
                 href="/events"
-                className="inline-flex items-center px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
+                className="fc-btn-primary !px-6 !py-3 !text-base"
               >
                 <FiArrowLeft className="mr-2" />
                 Back to Events
@@ -88,7 +142,7 @@ export default async function EventPage({ params }) {
         </PublicPageShell>
       );
     }
-    
+
     const db = await connectToDatabase();
     const event = await db
       .collection("events")
@@ -97,17 +151,17 @@ export default async function EventPage({ params }) {
     if (!event) {
       return (
         <PublicPageShell>
-          <div className="flex-grow flex items-center justify-center">
+          <div className="flex flex-grow items-center justify-center">
             <div className="text-center">
-              <h1 className="text-4xl font-bold text-white mb-4">
+              <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-4">
                 Event Not Found
-              </h1>
-              <p className="text-gray-400 mb-8">
+              </PageTitle>
+              <p className="fc-muted mb-8">
                 The requested event could not be found.
               </p>
               <Link
                 href="/events"
-                className="inline-flex items-center px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
+                className="fc-btn-primary !px-6 !py-3 !text-base"
               >
                 <FiArrowLeft className="mr-2" />
                 Back to Events
@@ -123,196 +177,150 @@ export default async function EventPage({ params }) {
 
     return (
       <PublicPageShell>
-
         <div className="relative flex-grow">
-          {/* Background Elements */}
           <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+            <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl" />
           </div>
 
-          <div className="container mx-auto px-4 pt-36 pb-20 relative z-10">
-            {/* Back Button */}
+          <div className="container relative z-10 mx-auto px-4 pb-20 pt-36">
             <div className="mb-8">
               <Link
                 href="/events"
-                className="inline-flex items-center px-4 py-2 text-gray-300 hover:text-white group transition-colors duration-200"
+                className="fc-link group inline-flex items-center px-4 py-2 transition-colors duration-200"
               >
-                <FiArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
+                <FiArrowLeft className="mr-2 transition-transform duration-200 group-hover:-translate-x-1" />
                 Back to Events
               </Link>
             </div>
 
-            {/* Main Event Card */}
-            <div className="bg-gray-900/40 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-800/50 shadow-xl animate-fadeIn">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 h-full">
-                {/* Image Section */}
-                <div className="relative bg-gray-950 overflow-hidden">
-                  {event.images?.length > 0 ? (
-                    <div className="w-full h-full min-h-[400px]">
-                      <ImageCarousel
-                        images={event.images}
-                        title={event.title}
-                        recordingUrl={event.recordingUrl}
-                      />
+            <GlowCard
+              customSize
+              glowColor="purple"
+              className="w-full animate-fadeIn !gap-0 !overflow-hidden !p-0"
+            >
+              {/* Full-width media — contain so photos aren't edge-cropped */}
+              <div className="relative">
+                <EventMedia event={event} />
+                <div className="absolute right-4 top-4 z-20 sm:right-8 sm:top-8">
+                  <StatusBadge
+                    tone={isUpcoming ? "primary" : "muted"}
+                    size="sm"
+                    className="backdrop-blur-md"
+                  >
+                    {isUpcoming ? "Upcoming Event" : "Past Event"}
+                  </StatusBadge>
+                </div>
+              </div>
+
+              <div className="relative z-10 flex flex-col justify-between p-6 md:p-8 lg:p-12">
+                <div>
+                  <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
+                    {event.title}
+                  </PageTitle>
+
+                  <div className="mb-8 grid gap-4 sm:grid-cols-2">
+                    <DetailRow icon={FiCalendar}>
+                      {new Date(event.date + "T00:00:00").toLocaleDateString(
+                        "en-US",
+                        {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
+                    </DetailRow>
+
+                    {event.time ? (
+                      <DetailRow icon={FiClock}>{event.time}</DetailRow>
+                    ) : null}
+
+                    {event.location ? (
+                      <DetailRow icon={FiMapPin}>{event.location}</DetailRow>
+                    ) : null}
+
+                    {event.registrations?.length > 0 ? (
+                      <DetailRow icon={FiUsers}>
+                        {event.registrations.length} registered
+                      </DetailRow>
+                    ) : null}
+                  </div>
+
+                  <div className="prose prose-invert mb-8 max-w-none">
+                    <div className="fc-body-lg whitespace-pre-wrap">
+                      {event.description}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  {isUpcoming && isRegistrationOpen(event) ? (
+                    <Link
+                      href={`/events/register/${event._id}`}
+                      className="fc-btn-gradient-primary !px-6 !py-3"
+                    >
+                      {event.eventType === "webinar"
+                        ? "Register for Webinar"
+                        : "Register Now"}
+                    </Link>
+                  ) : isUpcoming ? (
+                    <div className="w-full rounded-xl border border-amber-500/30 bg-amber-500/10 px-6 py-4 text-center">
+                      <span className="text-lg font-medium text-amber-100">
+                        {REGISTRATION_CLOSED_MESSAGE}
+                      </span>
                     </div>
                   ) : (
-                    <div className="relative w-full h-full min-h-[400px] flex items-center justify-center">
-                      {/* Blurred background version of the image */}
-                      <div className="absolute inset-0 overflow-hidden">
-                        <Image
-                          src={event.imageUrl || "/bg-image.jpg"}
-                          alt=""
-                          fill
-                          sizes="100vw"
-                          className="object-cover blur-md scale-110 opacity-50"
-                          priority
-                        />
-                      </div>
-
-                      {/* Main image with proper dimensions */}
-                      <Image
-                        src={event.imageUrl || "/bg-image.jpg"}
-                        alt={event.title}
-                        width={800}
-                        height={600}
-                        className="relative z-10 max-w-full max-h-[600px] object-contain"
-                        priority
-                      />
+                    <div className="w-full py-4 text-center">
+                      <span className="fc-muted text-lg">
+                        This event has already taken place
+                      </span>
                     </div>
                   )}
-
-                  {/* Status Badge */}
-                  <div className="absolute top-4 right-4 z-20">
-                    <span
-                      className={`px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-md ${
-                        isUpcoming
-                          ? "bg-purple-600/60 text-purple-100 border border-purple-500"
-                          : "bg-gray-800/60 text-gray-300 border border-gray-700"
-                      }`}
-                    >
-                      {isUpcoming ? "Upcoming Event" : "Past Event"}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Content Section */}
-                <div className="p-6 md:p-8 lg:p-12 flex flex-col justify-between">
-                  <div>
-                    {/* Event Title */}
-                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-white">
-                      {event.title}
-                    </h1>
-
-                    {/* Event Details */}
-                    <div className="space-y-4 mb-8">
-                      <div className="flex items-center text-gray-300">
-                        <FiCalendar className="w-6 h-6 mr-4 text-primary flex-shrink-0" />
-                        <span className="text-lg">
-                          {new Date(
-                            event.date + "T00:00:00"
-                          ).toLocaleDateString("en-US", {
-                            weekday: "long",
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </span>
-                      </div>
-
-                      {event.time && (
-                        <div className="flex items-center text-gray-300">
-                          <FiClock className="w-6 h-6 mr-4 text-primary flex-shrink-0" />
-                          <span className="text-lg">{event.time}</span>
-                        </div>
-                      )}
-
-                      {event.location && (
-                        <div className="flex items-center text-gray-300">
-                          <FiMapPin className="w-6 h-6 mr-4 text-primary flex-shrink-0" />
-                          <span className="text-lg">{event.location}</span>
-                        </div>
-                      )}
-
-                      {event.registrations &&
-                        event.registrations.length > 0 && (
-                          <div className="flex items-center text-gray-300">
-                            <FiUsers className="w-6 h-6 mr-4 text-primary flex-shrink-0" />
-                            <span className="text-lg">
-                              {event.registrations.length} registered
-                            </span>
-                          </div>
-                        )}
-                    </div>
-
-                    {/* Description */}
-                    <div className="prose prose-invert max-w-none mb-8">
-                      <div className="text-lg text-gray-300 leading-relaxed whitespace-pre-wrap">
-                        {event.description}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    {isUpcoming ? (
-                      <Link
-                        href={`/events/register/${event._id}`}
-                        className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-500/80 hover:from-primary/85 hover:to-purple-500/75 text-white font-medium transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-primary/15"
-                      >
-                        {event.eventType === "webinar"
-                          ? "Register for Webinar"
-                          : "Register Now"}
-                      </Link>
-                    ) : (
-                      <div className="w-full text-center py-4">
-                        <span className="text-gray-400 text-lg">
-                          This event has already taken place
-                        </span>
-                      </div>
-                    )}
-                  </div>
                 </div>
               </div>
-            </div>
+            </GlowCard>
 
-            {/* Additional Information Section */}
-            {event.additionalInfo && (
-              <div className="mt-8 bg-gray-900/40 backdrop-blur-xl rounded-2xl p-6 border border-gray-800/50">
-                <h3 className="text-2xl font-bold text-white mb-4">
+            {event.additionalInfo ? (
+              <GlowCard
+                customSize
+                glowColor="purple"
+                className="mt-8 w-full !gap-0 !p-6"
+              >
+                <h3 className="fc-title-accent relative z-10 mb-4 text-xl">
                   Additional Information
                 </h3>
-                <div className="text-gray-300 leading-relaxed">
+                <div className="fc-body-lg relative z-10">
                   {event.additionalInfo}
                 </div>
-              </div>
-            )}
+              </GlowCard>
+            ) : null}
           </div>
         </div>
-        </PublicPageShell>
+      </PublicPageShell>
     );
   } catch (error) {
     console.error("Failed to fetch event:", error);
     return (
       <PublicPageShell>
-        <div className="flex-grow flex items-center justify-center">
+        <div className="flex flex-grow items-center justify-center">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-4">
+            <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-4">
               Error Loading Event
-            </h1>
-            <p className="text-gray-400 mb-8">
+            </PageTitle>
+            <p className="fc-muted mb-8">
               There was an error loading the event details.
             </p>
             <Link
               href="/events"
-              className="inline-flex items-center px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300"
+              className="fc-btn-primary !px-6 !py-3 !text-base"
             >
               <FiArrowLeft className="mr-2" />
               Back to Events
             </Link>
           </div>
         </div>
-        </PublicPageShell>
+      </PublicPageShell>
     );
   }
 }

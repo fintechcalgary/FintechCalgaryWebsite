@@ -12,7 +12,7 @@ async function getEvents() {
     const events = await db
       .collection("events")
       .find({})
-      .sort({ date: 1 })
+      .sort({ date: -1 })
       .toArray();
 
     // Convert MongoDB documents to plain objects and handle ObjectId

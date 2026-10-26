@@ -1,9 +1,10 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { getArticles, updateArticleSummary } from "@/lib/models/article";
 import { fetchGoogleNewsArticles, isMongoConnectionError } from "@/lib/googleNewsRss";
-import { callGroq } from "@/lib/groq";
+import { callGroq, isUsableSummary } from "@/lib/groq";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 async function generateSummaryWithGroq({ apiKey, article }) {
   const prompt = [
@@ -18,10 +19,8 @@ async function generateSummaryWithGroq({ apiKey, article }) {
     "Respond with only the summary text. No markdown, no asterisks, no bullet points.",
   ].join("\n");
 
-  const cleaned = (await callGroq(apiKey, prompt, { maxTokens: 200, timeoutMs: 20000 }))
-    .replace(/^Summary:\s*/i, "")
-    .trim();
-  if (cleaned.length < 20) return null;
+  const cleaned = await callGroq(apiKey, prompt, { maxTokens: 800, timeoutMs: 20000 });
+  if (!isUsableSummary(cleaned)) return null;
   return cleaned.length > 500 ? `${cleaned.slice(0, 500)}...` : cleaned;
 }
 
@@ -78,7 +77,7 @@ export async function POST(req) {
     let latestSummary = null;
 
     for (const article of candidates) {
-      if (article.summary && article.summary.trim().length > 20) {
+      if (isUsableSummary(article.summary)) {
         latestSummary = article.summary;
         continue;
       }
@@ -99,7 +98,7 @@ export async function POST(req) {
             JSON.stringify({
               success: false,
               error: "Groq summary generation failed",
-              details: process.env.NODE_ENV === "development" ? error.message : undefined,
+              details: error.message,
               suggestion: "Check that GROQ_API_KEY is valid, then restart the server.",
             }),
             { status: 502, headers: { "Content-Type": "application/json" } }

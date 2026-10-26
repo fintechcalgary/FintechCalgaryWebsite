@@ -17,6 +17,7 @@ export default function PublicNavbar() {
       ["About", "/about"],
       ["Insights", "/insights"],
       ["Events", "/events"],
+      ["Community", "/community"],
       ["Executives", "/executives"],
       ["Partners", "/partners"],
       ["Contact", "/contact"],
@@ -141,12 +142,12 @@ export default function PublicNavbar() {
                 {navigationItems.map(([title, path]) => {
                   const isExternal = path.startsWith("http");
                   const isActive = !isExternal && pathname === path;
-                  const itemClass = `relative px-6 py-2.5 text-sm font-medium tracking-wide rounded-xl text-gray-200 hover:text-white transition-colors
+                  const itemClass = `relative px-6 py-2.5 text-sm font-medium tracking-wide rounded-xl text-white hover:text-primary transition-colors
                         ${
                           isActive
                             ? isScrolled
-                              ? "bg-gray-700/50"
-                              : "bg-gray-700/30"
+                              ? "bg-gray-700/50 text-white"
+                              : "bg-gray-700/30 text-white"
                             : isScrolled
                             ? "hover:bg-gray-700/30"
                             : "hover:bg-gray-700/20"
@@ -192,7 +193,7 @@ export default function PublicNavbar() {
 
           <motion.button
             onClick={toggleMenu}
-            className="p-2.5 rounded-xl text-gray-200 hover:text-white transition-colors"
+            className="p-2.5 rounded-xl tracking-wide text-white hover:text-primary transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -218,10 +219,10 @@ export default function PublicNavbar() {
             {navigationItems.map(([title, path]) => {
               const isExternal = path.startsWith("http");
               const isActive = !isExternal && pathname === path;
-              const mobileClass = `px-4 py-3 text-gray-200 hover:text-white rounded-xl transition-colors
+              const mobileClass = `px-4 py-3 tracking-wide text-white hover:text-primary rounded-xl transition-colors
                     ${
                       isActive
-                        ? "bg-gray-700/50"
+                        ? "bg-gray-700/50 text-white"
                         : "hover:bg-gray-700/30"
                     }`;
               const motionDiv = (

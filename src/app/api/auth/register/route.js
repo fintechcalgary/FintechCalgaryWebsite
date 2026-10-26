@@ -1,5 +1,5 @@
 // app/api/auth/register/route.js
-import { connectToDatabase } from "../../../../lib/mongodb";
+import { connectToDatabase } from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
 
 export async function POST(req) {

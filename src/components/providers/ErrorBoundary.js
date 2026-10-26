@@ -3,6 +3,7 @@
 import React from "react";
 import { FiAlertCircle, FiRefreshCw, FiHome } from "react-icons/fi";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -55,7 +56,7 @@ class ErrorBoundary extends React.Component {
               <h1 className="text-3xl font-bold text-white text-center mb-4">
                 Something went wrong
               </h1>
-              <p className="text-gray-300 text-center mb-8">
+              <p className="fc-body-lg text-center mb-8">
                 We encountered an unexpected error. Please try refreshing the page or returning to the home page.
               </p>
 
@@ -65,8 +66,8 @@ class ErrorBoundary extends React.Component {
                     {this.state.error.toString()}
                   </p>
                   {this.state.errorInfo && (
-                    <details className="text-xs text-gray-500">
-                      <summary className="cursor-pointer hover:text-gray-400">
+                    <details className="fc-muted text-xs">
+                      <summary className="cursor-pointer hover:text-white/55">
                         Stack trace
                       </summary>
                       <pre className="mt-2 overflow-auto max-h-48">
@@ -78,17 +79,11 @@ class ErrorBoundary extends React.Component {
               )}
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  onClick={this.handleReset}
-                  className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-purple-500/80 text-white rounded-xl hover:opacity-90 transition-all font-medium"
-                >
+                <Button type="button" variant="primary" onClick={this.handleReset}>
                   <FiRefreshCw className="w-4 h-4" />
                   Try Again
-                </button>
-                <Link
-                  href="/"
-                  className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-800/50 text-white rounded-xl hover:bg-gray-800 transition-all font-medium border border-gray-700/50"
-                >
+                </Button>
+                <Link href="/" className="fc-btn-dashboard-cancel !flex-none inline-flex items-center justify-center gap-2">
                   <FiHome className="w-4 h-4" />
                   Go Home
                 </Link>

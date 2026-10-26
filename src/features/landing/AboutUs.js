@@ -2,34 +2,39 @@ import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import SectionHeading from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 
-const ServiceCard = ({ title, description }) => {
+const ServiceCard = ({ title, description, glowColor = "purple" }) => {
   return (
-    <div className="fc-card group relative flex-1 overflow-hidden p-6">
-      <div className="relative z-10 flex h-full flex-col">
-        <h3 className="mb-3 text-2xl font-bold text-white transition-transform duration-300 group-hover:-translate-y-0.5">
+    <GlowCard
+      customSize
+      glowColor={glowColor}
+      className="group relative flex min-h-0 flex-1 !gap-0 !p-6"
+    >
+      <div className="relative z-10 flex h-full flex-col justify-center">
+        <h3 className="fc-title mb-2 text-xl transition-transform duration-300 group-hover:-translate-y-0.5">
           {title}
         </h3>
-        <p className="mb-4 flex-grow leading-relaxed text-gray-300">
+        <p className="fc-body mb-4">
           {description}
         </p>
         <Link
           href="/about"
-          className="fc-link group/link mt-auto inline-flex items-center gap-2"
+          className="fc-link group/link mt-auto inline-flex items-center gap-2 text-sm"
         >
-          <span className="font-semibold transition-transform duration-300 group-hover/link:translate-x-1">
+          <span className="transition-transform duration-300 group-hover/link:translate-x-1">
             Learn more
           </span>
           <FiArrowRight className="transform transition-transform duration-300 group-hover:translate-x-1" />
         </Link>
       </div>
-    </div>
+    </GlowCard>
   );
 };
 
 export default function AboutUs() {
   return (
-    <section id="about" className="relative overflow-hidden py-24">
+    <section id="about" className="relative overflow-x-clip py-24">
       <div
         className="absolute right-1/4 top-1/4 h-32 w-32 animate-pulse rounded-full bg-primary/10 blur-2xl"
         style={{ animationDelay: "0.5s" }}
@@ -44,11 +49,15 @@ export default function AboutUs() {
           <SectionHeading href="/about">About Us</SectionHeading>
         </div>
 
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 lg:grid-cols-3">
-          <div className="fc-card group relative flex flex-col justify-between overflow-hidden p-8 lg:col-span-2 lg:p-10">
-            <div className="relative z-10">
-              <h3 className="mb-4 text-3xl font-bold text-white">Our Mission</h3>
-              <p className="mb-4 leading-relaxed text-gray-300">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 items-stretch gap-6 lg:grid-cols-[1.3fr_1fr] lg:gap-8">
+          <GlowCard
+            customSize
+            glowColor="purple"
+            className="group relative flex min-h-[32rem] flex-col !gap-0 !p-7 sm:min-h-[34rem] lg:min-h-[36rem] lg:!p-8"
+          >
+            <div className="relative z-10 shrink-0">
+              <h3 className="fc-title mb-3 text-2xl">Our Mission</h3>
+              <p className="fc-body mb-4 sm:text-base sm:leading-[1.75]">
                 FinTech Calgary is a student association at the University of
                 Calgary. We introduce fintech companies to business buyers, run
                 industry events, and give students project work with partners —
@@ -57,33 +66,35 @@ export default function AboutUs() {
               </p>
               <Link
                 href="/about"
-                className="fc-link group/link inline-flex items-center gap-2"
+                className="fc-link group/link inline-flex items-center gap-2 text-sm"
               >
-                <span className="font-semibold transition-transform duration-300 group-hover/link:translate-x-1">
+                <span className="transition-transform duration-300 group-hover/link:translate-x-1">
                   Learn more
                 </span>
                 <FiArrowRight className="transform transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>
-            <div className="relative z-10 mt-6 block h-full items-center justify-center overflow-hidden">
+            <div className="relative z-10 mx-auto mt-6 flex w-full max-w-[20rem] flex-1 items-center justify-center overflow-hidden sm:max-w-[24rem] lg:max-w-[28rem]">
               <DotLottieReact
                 src="/lottie/crypto.lottie"
                 autoplay
                 loop
-                className="h-full w-full"
+                className="mx-auto h-full max-h-80 w-full object-contain sm:max-h-96 lg:max-h-[26rem]"
                 renderer="svg"
               />
             </div>
-          </div>
+          </GlowCard>
 
-          <div className="flex h-full flex-col gap-6">
+          <div className="flex min-h-[32rem] flex-col gap-6 sm:min-h-[34rem] lg:min-h-[36rem]">
             <ServiceCard
               title="Our Services"
               description="We help tech companies reach businesses that might buy from them — through partner features, digital marketing, and event demos aimed at decision-makers."
+              glowColor="pink"
             />
             <ServiceCard
               title="Our Network"
               description="We work with companies and associations in payments, hospitality, and services so vendors and buyers can meet without relying only on cold outreach."
+              glowColor="purple"
             />
           </div>
         </div>

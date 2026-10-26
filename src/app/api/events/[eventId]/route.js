@@ -1,6 +1,7 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { updateEvent, deleteEvent } from "@/lib/models/event";
-import { apiResponse, requireAuth, withErrorHandler } from "@/lib/api-helpers";
+import { apiResponse, requirePermission, withErrorHandler } from "@/lib/api-helpers";
+import { PERMISSIONS } from "@/lib/permissions";
 import logger from "@/lib/logger";
 import { ObjectId } from "mongodb";
 
@@ -23,7 +24,7 @@ export const GET = withErrorHandler(async (req, context) => {
 });
 
 export const PUT = withErrorHandler(async (req, context) => {
-  const { error } = await requireAuth();
+  const { error } = await requirePermission(PERMISSIONS.EVENTS);
   if (error) return error;
 
   const { eventId } = await context.params;
@@ -37,7 +38,7 @@ export const PUT = withErrorHandler(async (req, context) => {
 });
 
 export const DELETE = withErrorHandler(async (req, context) => {
-  const { error } = await requireAuth();
+  const { error } = await requirePermission(PERMISSIONS.EVENTS);
   if (error) return error;
 
   const { eventId } = await context.params;

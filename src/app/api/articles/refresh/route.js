@@ -10,9 +10,10 @@ import {
 } from "@/lib/models/weeklyDigest";
 import { logError, logInfo, logWarn } from "@/lib/serverLogger";
 import { queueRefreshRequest } from "@/lib/requestQueue";
-import { callGroq } from "@/lib/groq";
+import { callGroq, isUsableSummary } from "@/lib/groq";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 // ─── Groq summary generation ───────────────────────────────────────────────
 
@@ -28,7 +29,7 @@ async function generateSummaryWithGroq({ apiKey, article }) {
     "Respond with only the summary text. No markdown, no asterisks, no bullet points.",
   ].join("\n");
 
-  return callGroq(apiKey, prompt, { maxTokens: 200, timeoutMs: 20000 });
+  return callGroq(apiKey, prompt, { maxTokens: 800, timeoutMs: 20000 });
 }
 
 // ─── Week boundary helpers ────────────────────────────────────────────────────
@@ -68,6 +69,8 @@ function isMongoConnectionError(error) {
     message.includes("MongoServerSelectionError") ||
     message.includes("SSL routines") ||
     message.includes("tlsv1 alert") ||
+    message.includes("ENOTFOUND") ||
+    error?.code === "ENOTFOUND" ||
     error?.code === "ECONNREFUSED"
   );
 }
@@ -240,7 +243,7 @@ export async function POST(req) {
         for (const article of digestResult.topArticles.slice(0, WEEKLY_DIGEST_ARTICLE_LIMIT)) {
           if (!article.url) continue;
 
-          const hasSummary = article.summary && article.summary.trim().length > 20;
+          const hasSummary = isUsableSummary(article.summary);
           if (hasSummary) {
             summariesGenerated += 1;
             continue;
@@ -332,9 +335,21 @@ export async function POST(req) {
 export async function GET(req) {
   const authHeader = req.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
+  const isVercelCron = (req.headers.get("user-agent") || "").includes("vercel-cron");
 
   if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
     return POST(req);
+  }
+
+  if (isVercelCron) {
+    return new Response(
+      JSON.stringify({
+        error: cronSecret
+          ? "Invalid cron authorization header"
+          : "CRON_SECRET is not configured",
+      }),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
   }
 
   try {

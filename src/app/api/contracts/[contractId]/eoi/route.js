@@ -7,8 +7,9 @@ import {
   setEoiPdf,
   buildEoiPdf,
 } from "@/lib/models/contract";
-import { apiResponse, requireAdmin, withErrorHandler } from "@/lib/api-helpers";
+import { apiResponse, requirePermission, withErrorHandler } from "@/lib/api-helpers";
 import { FILE_TYPES } from "@/lib/constants";
+import { PERMISSIONS } from "@/lib/permissions";
 import logger from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -27,10 +28,8 @@ function validatePdfFile(file) {
   return null;
 }
 
-// Streams the stored PDF. This authenticated route is the only way to view
-// the EOI file, so access is limited to logged-in admins.
 export const GET = withErrorHandler(async (req, context) => {
-  const { error } = await requireAdmin();
+  const { error } = await requirePermission(PERMISSIONS.CONTRACTS);
   if (error) return error;
 
   const { contractId } = await context.params;
@@ -61,7 +60,7 @@ export const GET = withErrorHandler(async (req, context) => {
 });
 
 export const PUT = withErrorHandler(async (req, context) => {
-  const { session, error } = await requireAdmin();
+  const { session, error } = await requirePermission(PERMISSIONS.CONTRACTS);
   if (error) return error;
 
   const { contractId } = await context.params;

@@ -1,36 +1,38 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { signIn, getSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
+import { useSession, signIn } from "next-auth/react";
 import Image from "next/image";
 import { FiArrowLeft } from "react-icons/fi";
 import Link from "next/link";
+import { InlineSpinner } from "@/components/ui/Spinner";
+import { getPostLoginDestination } from "@/lib/permissions";
 
 export default function Login() {
-  const { data: session, status } = useSession(); // Check session status
-  const router = useRouter();
+  const { data: session, status } = useSession();
+  const redirectedRef = useRef(false);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(() => {
+    if (typeof window === "undefined") return "";
+    return new URLSearchParams(window.location.search).get("error")
+      ? "Invalid username or password"
+      : "";
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     document.title = "Login | FinTech Calgary";
   }, []);
 
-  // Redirect to /dashboard if already logged in
+  // Already signed in — one replace to the right dashboard (no client polling).
   useEffect(() => {
-    if (status === "authenticated") {
-      const role = session?.user?.role;
-      if (role === "associate") {
-        router.push("/partner-dashboard");
-      } else if (role === "member" || role === "admin") {
-        router.push("/dashboard");
-      }
-    }
-  }, [status, router, session]);
+    if (status !== "authenticated" || redirectedRef.current) return;
+    const destination = getPostLoginDestination(session?.user?.role);
+    if (!destination) return;
+    redirectedRef.current = true;
+    window.location.replace(destination);
+  }, [status, session?.user?.role]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -38,27 +40,15 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const result = await signIn("credentials", {
+      // Default redirect: true — NextAuth sets the cookie and navigates in one
+      // response, which avoids the Safari soft-nav / getSession race.
+      await signIn("credentials", {
         username,
         password,
-        redirect: false,
+        callbackUrl: "/auth/continue",
       });
-
-      if (result?.error) {
-        setError("Invalid username or password");
-      } else if (result?.ok) {
-        const updatedSession = await getSession(); // get the updated session
-        const role = updatedSession?.user?.role;
-
-        if (role === "associate") {
-          router.push("/partner-dashboard");
-        } else if (role === "member" || role === "admin") {
-          router.push("/dashboard");
-        }
-      }
     } catch {
       setError("An error occurred. Please try again.");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -69,7 +59,7 @@ export default function Login() {
         <div className="flex justify-start">
           <Link
             href="/"
-            className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-1"
+            className="fc-muted text-sm hover:text-white transition-colors flex items-center gap-1"
           >
             <FiArrowLeft className="w-4 h-4" />
             Back to Home
@@ -91,7 +81,7 @@ export default function Login() {
           <h2 className="text-2xl sm:text-3xl font-bold text-center text-white mb-2">
             Welcome Back
           </h2>
-          <p className="text-sm sm:text-base text-gray-400 text-center">
+          <p className="fc-body text-center">
             Sign in to access your dashboard
           </p>
         </div>
@@ -130,31 +120,12 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full bg-primary hover:bg-primary/80 text-white font-medium py-2.5 sm:py-3 px-4 text-sm sm:text-base rounded-xl transition-all duration-200 shadow-lg shadow-primary/15 flex items-center justify-center
-              ${isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
+            className={`fc-btn-gradient-primary w-full !px-4 !py-2.5 text-sm sm:!py-3 sm:text-base disabled:cursor-not-allowed disabled:hover:translate-y-0
+              ${isLoading ? "opacity-70" : ""}`}
           >
             {isLoading ? (
               <>
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+                <InlineSpinner className="-ml-1 mr-3 text-white" />
                 Signing in...
               </>
             ) : (

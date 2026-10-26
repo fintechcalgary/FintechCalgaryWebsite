@@ -3,11 +3,18 @@
 import { useState, useCallback, useMemo } from "react";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import { PageTitle } from "@/components/ui/SectionHeading";
+import { GlowCard } from "@/components/ui/spotlight-card";
 import { FiCalendar } from "react-icons/fi";
 import Image from "next/image";
 import ImageCarousel from "@/features/events/ImageCarousel";
 import { useRouter } from "next/navigation";
 import { normalizeDate, startOfToday } from "@/lib/dates";
+import {
+  isRegistrationOpen,
+  REGISTRATION_CLOSED_MESSAGE,
+} from "@/lib/eventRegistration";
+import StatusBadge from "@/components/ui/StatusBadge";
+import EmptyState from "@/components/ui/EmptyState";
 
 export default function EventsPageClient({ initialEvents }) {
   const [filter, setFilter] = useState("all");
@@ -96,26 +103,20 @@ export default function EventsPageClient({ initialEvents }) {
       <div className="container mx-auto px-6 pt-36 pb-24 sm:px-8 lg:px-12 relative z-10 flex-grow">
         {/* Dynamic Page Heading */}
         <div className="text-center mb-16 animate-fadeIn">
-          <PageTitle
-            sizeClass="text-6xl font-extrabold mb-6"
-            className="text-white"
-          >
+          <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
             {pageContent.title}
           </PageTitle>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="fc-lede mx-auto max-w-3xl">
             {pageContent.description}
           </p>
         </div>
 
         {/* Filter Dropdown - Enhanced styling */}
-        <div className="flex mb-8" style={{ animationDelay: "200ms" }}>
+        <div className="mb-8 flex justify-start" style={{ animationDelay: "200ms" }}>
           <select
             value={filter}
             onChange={handleFilterChange}
-            className="px-6 py-3 w-64 bg-gray-800/50 text-white rounded-xl border border-gray-600 
-            focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
-            shadow-lg backdrop-blur-sm
-            pl-6 pr-12 hover:bg-gray-700/50"
+            className="form-input form-input-auto"
           >
             <option value="all">All Events & Webinars</option>
             <option value="upcoming">Upcoming Events & Webinars</option>
@@ -131,83 +132,95 @@ export default function EventsPageClient({ initialEvents }) {
               <div
                 key={event._id}
                 onClick={() => handleEventClick(event)}
-                className="group relative bg-gray-900/40 backdrop-blur-xl rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-800/50 hover:border-primary/50 cursor-pointer"
+                className="h-full cursor-pointer"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                {/* Glass Effect Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                {/* Event Image Container */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden">
-                  {event.images?.length > 0 ? (
-                    <ImageCarousel images={event.images} title={event.title} />
-                  ) : (
-                    <Image
-                      src={event.imageUrl}
-                      alt={event.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      loading="lazy"
-                      className="object-cover"
-                    />
-                  )}
-
-                  {/* Status Badge */}
-                  <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
-                    <span
-                      className={`px-4 py-1.5 text-xs font-semibold rounded-full flex items-center justify-center
-                      ${
-                        isUpcoming
-                          ? "bg-purple-600/60 text-purple-100 border border-purple-500 backdrop-blur-md"
-                          : "bg-gray-800/60 text-gray-300 border border-gray-700 backdrop-blur-md"
-                      }`}
-                    >
-                      {isUpcoming ? "Upcoming" : "Past"}
-                    </span>
-                    {event.eventType === "webinar" && (
-                      <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-blue-600/60 text-blue-100 border border-blue-500 backdrop-blur-md flex items-center justify-center">
-                        Webinar
-                      </span>
+                <GlowCard
+                  customSize
+                  glowColor="purple"
+                  className="group relative flex h-full w-full flex-col !gap-0 !overflow-hidden !p-0"
+                >
+                  {/* Event Image Container */}
+                  <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden">
+                    {event.images?.length > 0 ? (
+                      <ImageCarousel images={event.images} title={event.title} />
+                    ) : (
+                      <Image
+                        src={event.imageUrl}
+                        alt={event.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        loading="lazy"
+                        className="object-cover"
+                      />
                     )}
-                  </div>
-                </div>
 
-                {/* Event Content */}
-                <div className="p-6 relative z-10">
-                  <h4 className="text-2xl font-bold text-white group-hover:text-primary transition-colors duration-300 mb-3">
-                    {event.title}
-                  </h4>
-
-                  <div className="flex items-center space-x-2 text-gray-300 mb-4">
-                    <FiCalendar className="w-4 h-4 text-primary" />
-                    <p className="text-sm font-medium">
-                      {new Date(event.date + "T00:00:00").toLocaleDateString(
-                        "en-US",
-                        {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }
+                    {/* Status Badge */}
+                    <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
+                      <StatusBadge
+                        tone={isUpcoming ? "primary" : "muted"}
+                        size="sm"
+                        className="backdrop-blur-md justify-center"
+                      >
+                        {isUpcoming ? "Upcoming" : "Past"}
+                      </StatusBadge>
+                      {event.eventType === "webinar" && (
+                        <StatusBadge
+                          tone="primary"
+                          size="sm"
+                          className="backdrop-blur-md justify-center"
+                        >
+                          Webinar
+                        </StatusBadge>
                       )}
-                      {event.time && (
-                        <span className="ml-1 text-primary font-semibold">{` at ${event.time}`}</span>
-                      )}
-                    </p>
+                    </div>
                   </div>
-                </div>
+
+                  {/* Event Content */}
+                  <div className="relative z-10 flex flex-1 flex-col p-6">
+                    <h4 className="fc-title mb-3 line-clamp-2 min-h-[2.5em] text-xl transition-colors duration-300 group-hover:text-primary sm:text-2xl">
+                      {event.title}
+                    </h4>
+
+                    {!isRegistrationOpen(event) && isUpcoming && (
+                      <p className="mb-4 text-sm font-medium text-amber-200">
+                        {REGISTRATION_CLOSED_MESSAGE}
+                      </p>
+                    )}
+
+                    <div className="mt-auto flex items-center space-x-2 fc-body">
+                      <FiCalendar className="h-4 w-4 shrink-0 text-primary" />
+                      <p className="text-sm font-medium">
+                        {new Date(event.date + "T00:00:00").toLocaleDateString(
+                          "en-US",
+                          {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )}
+                        {event.time && (
+                          <span className="ml-1 font-semibold text-primary">{` at ${event.time}`}</span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </GlowCard>
               </div>
             );
           })}
         </div>
 
         {filteredEvents.length === 0 && (
-          <div className="text-center py-12 bg-gray-800/50 rounded-xl min-h-[400px] flex flex-col items-center justify-center mt-12 animate-fadeIn">
-            <FiCalendar className="mx-auto text-4xl text-primary mb-4" />
-            <p className="text-gray-400">
-              No events or webinars available for the selected filter.
-            </p>
-          </div>
+          <EmptyState
+            variant="public"
+            icon={FiCalendar}
+            minHeightClass="min-h-[400px]"
+            className="mt-12 animate-fadeIn"
+          >
+            No events or webinars available for the selected filter.
+          </EmptyState>
         )}
       </div>
     </PublicPageShell>

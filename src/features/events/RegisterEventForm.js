@@ -4,6 +4,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiArrowLeft } from "react-icons/fi";
+import { LoadingState } from "@/components/ui/Spinner";
+import {
+  isRegistrationOpen,
+  REGISTRATION_CLOSED_MESSAGE,
+} from "@/lib/eventRegistration";
 
 export default function RegisterEventForm({ eventId }) {
   const router = useRouter();
@@ -11,7 +16,9 @@ export default function RegisterEventForm({ eventId }) {
   const [formData, setFormData] = useState({
     email: "",
     name: "",
+    isUofCStudent: "",
     ucid: "",
+    school: "",
     comments: "",
     companyName: "",
     companyRole: "",
@@ -35,15 +42,31 @@ export default function RegisterEventForm({ eventId }) {
     fetchEvent();
   }, [eventId]);
 
+  const handleStudentStatusChange = (value) => {
+    setFormData({
+      ...formData,
+      isUofCStudent: value,
+      ucid: value === "yes" ? formData.ucid : "",
+      school: value === "no" ? formData.school : "",
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const payload = {
+        ...formData,
+        isUofCStudent: formData.isUofCStudent === "yes",
+        ucid: formData.isUofCStudent === "yes" ? formData.ucid : "",
+        school: formData.isUofCStudent === "no" ? formData.school : "",
+      };
+
       const response = await fetch(`/api/events/${eventId}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -59,9 +82,28 @@ export default function RegisterEventForm({ eventId }) {
   };
 
   if (loading) {
+    return <LoadingState fullScreen />;
+  }
+
+  if (event && !isRegistrationOpen(event)) {
     return (
       <div className="min-h-screen flex items-center justify-center py-8 px-4">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+        <div className="w-full max-w-2xl">
+          <Link
+            href={`/events/${eventId}`}
+            className="fc-muted inline-flex items-center hover:text-white transition-all duration-200 hover:translate-x-[-4px] mb-4 group"
+          >
+            <FiArrowLeft className="w-5 h-5 mr-2 transition-transform duration-200 group-hover:translate-x-[-2px]" />
+            Back to Event
+          </Link>
+
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-2xl border border-amber-500/30">
+            <h1 className="text-2xl md:text-3xl font-bold text-white">
+              {REGISTRATION_CLOSED_MESSAGE}
+            </h1>
+            <p className="fc-muted mt-3">{event.title}</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -77,7 +119,7 @@ export default function RegisterEventForm({ eventId }) {
           >
             <Link
               href="/"
-              className="inline-flex items-center text-gray-400 hover:text-white transition-all duration-200 hover:translate-x-[-4px] mb-4 group"
+              className="fc-muted inline-flex items-center hover:text-white transition-all duration-200 hover:translate-x-[-4px] mb-4 group"
             >
               <FiArrowLeft className="w-5 h-5 mr-2 transition-transform duration-200 group-hover:translate-x-[-2px]" />
               Back to Home
@@ -124,7 +166,7 @@ export default function RegisterEventForm({ eventId }) {
       <div className="w-full max-w-4xl">
         <Link
           href="/"
-          className="inline-flex items-center text-gray-400 hover:text-white mb-6 transition-colors duration-200"
+          className="fc-muted inline-flex items-center hover:text-white mb-6 transition-colors duration-200"
         >
           <svg
             className="w-5 h-5 mr-2"
@@ -152,7 +194,7 @@ export default function RegisterEventForm({ eventId }) {
               <h2 className="text-lg font-semibold text-white mb-1">
                 {event.title}
               </h2>
-              <p className="text-sm text-gray-400">
+              <p className="fc-muted">
                 {new Date(event.date + "T00:00:00").toLocaleDateString(
                   "en-US",
                   {
@@ -225,24 +267,39 @@ export default function RegisterEventForm({ eventId }) {
                       placeholder="Your role or position at the company"
                     />
                   </div>
-
-                  <div className="input-group">
-                    <label>UCID (if applicable)</label>
-                    <input
-                      type="text"
-                      value={formData.ucid}
-                      onChange={(e) =>
-                        setFormData({ ...formData, ucid: e.target.value })
-                      }
-                      placeholder="Your UCID (e.g., 12345678)"
-                    />
-                  </div>
                 </>
               )}
 
-              {event && event.eventType !== "webinar" && (
+              <div className="input-group">
+                <label>
+                  Are you a University of Calgary student?{" "}
+                  <span className="text-red-400">*</span>
+                </label>
+                <select
+                  value={formData.isUofCStudent}
+                  onChange={(e) => handleStudentStatusChange(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Select an option
+                  </option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              {formData.isUofCStudent === "yes" && (
                 <div className="input-group">
-                  <label>UCID (Optional)</label>
+                  <label>
+                    UCID{" "}
+                    {event?.eventType === "webinar" ? (
+                      "(if applicable)"
+                    ) : (
+                      <span className="text-gray-500 font-normal">
+                        (Optional)
+                      </span>
+                    )}
+                  </label>
                   <input
                     type="text"
                     value={formData.ucid}
@@ -250,6 +307,23 @@ export default function RegisterEventForm({ eventId }) {
                       setFormData({ ...formData, ucid: e.target.value })
                     }
                     placeholder="Your UCID (e.g., 12345678)"
+                  />
+                </div>
+              )}
+
+              {formData.isUofCStudent === "no" && (
+                <div className="input-group">
+                  <label>
+                    School <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.school}
+                    onChange={(e) =>
+                      setFormData({ ...formData, school: e.target.value })
+                    }
+                    required
+                    placeholder="Your school or university"
                   />
                 </div>
               )}
@@ -271,13 +345,13 @@ export default function RegisterEventForm({ eventId }) {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Link
                 href="/"
-                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 text-center"
+                className="fc-btn-dashboard-cancel flex-1 !py-3 text-center"
               >
                 Cancel
               </Link>
               <button
                 type="submit"
-                className="flex-1 bg-primary hover:bg-primary/80 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 shadow-lg shadow-primary/15"
+                className="fc-btn-gradient-primary flex-1 !px-4 !py-3"
               >
                 {event && event.eventType === "webinar"
                   ? "Register for Webinar"

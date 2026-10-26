@@ -3,12 +3,8 @@ import {
   getDisplayPartners,
   createDisplayPartner,
 } from "@/lib/models/displayPartner";
-import {
-  apiResponse,
-  requireAdmin,
-  validators,
-  withErrorHandler,
-} from "@/lib/api-helpers";
+import { apiResponse, requirePermission, validators, withErrorHandler } from "@/lib/api-helpers";
+import { PERMISSIONS } from "@/lib/permissions";
 
 export const GET = withErrorHandler(async () => {
   const db = await connectToDatabase();
@@ -17,7 +13,7 @@ export const GET = withErrorHandler(async () => {
 });
 
 export const POST = withErrorHandler(async (req) => {
-  const { error } = await requireAdmin();
+  const { error } = await requirePermission(PERMISSIONS.PARTNERS);
   if (error) return error;
 
   const db = await connectToDatabase();
