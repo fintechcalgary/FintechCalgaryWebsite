@@ -23,7 +23,6 @@ import {
   validateFile,
   createDragHandlers,
 } from "@/lib/frontend-helpers";
-import { openConvergeLightbox } from "@/lib/converge-client";
 
 export default function JoinPage() {
   const [formData, setFormData] = useState({
@@ -39,7 +38,6 @@ export default function JoinPage() {
   const [submitStatus, setSubmitStatus] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [membershipType, setMembershipType] = useState("free");
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const handleFile = (file) => {
     const validation = validateFile(file, {
@@ -89,8 +87,6 @@ export default function JoinPage() {
       return;
     }
 
-    let paymentInfo = null;
-
     try {
       // Upload resume file
       let resumeUrl = "";
@@ -98,52 +94,6 @@ export default function JoinPage() {
         resumeUrl = await uploadFile(resumeFile, UPLOAD_FOLDERS.RESUMES);
       } catch {
         throw new Error(ERROR_MESSAGES.RESUME_UPLOAD_FAILED);
-      }
-
-      // Collect payment for the paid membership via Converge's hosted modal
-      if (membershipType === "premium") {
-        setIsProcessingPayment(true);
-
-        const tokenResponse = await fetch(
-          API_ENDPOINTS.CONVERGE_SESSION_TOKEN,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              firstName: formData.firstName,
-              lastName: formData.lastName,
-              email: formData.email,
-            }),
-          },
-        );
-        const tokenData = await tokenResponse.json();
-        if (!tokenResponse.ok) {
-          throw new Error(
-            tokenData.error ||
-              "Unable to start the payment process. Please try again.",
-          );
-        }
-
-        const payment = await openConvergeLightbox(tokenData);
-
-        if (payment.status === "cancelled") {
-          // User closed the payment modal; keep the form intact for retry
-          return;
-        }
-        if (payment.status === "declined") {
-          throw new Error(
-            "Your payment was declined. Please check your card details and try again.",
-          );
-        }
-
-        paymentInfo = {
-          txnId: payment.response?.ssl_txn_id || null,
-          approvalCode: payment.response?.ssl_approval_code || null,
-          amount: payment.response?.ssl_amount || null,
-          cardNumber: payment.response?.ssl_card_number || null,
-          invoiceNumber: tokenData.invoiceNumber || null,
-        };
-        setIsProcessingPayment(false);
       }
 
       // Submit form data
@@ -155,8 +105,7 @@ export default function JoinPage() {
         body: JSON.stringify({
           ...formData,
           membershipType,
-          hasPaid: Boolean(paymentInfo),
-          payment: paymentInfo,
+          hasPaid: false, // Set to false for now, will be updated when payment is processed
           resume: resumeUrl,
         }),
       });
@@ -164,11 +113,6 @@ export default function JoinPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        if (paymentInfo) {
-          throw new Error(
-            "Your payment was processed, but we couldn't finish your registration. Please contact fintech.calgary@gmail.com so we can complete your membership.",
-          );
-        }
         throw new Error(data.error || ERROR_MESSAGES.SUBSCRIBE_FAILED);
       }
 
@@ -181,7 +125,6 @@ export default function JoinPage() {
       setErrorMessage(error.message);
       // Error logged by API
     } finally {
-      setIsProcessingPayment(false);
       setIsSubmitting(false);
     }
   };
@@ -544,13 +487,11 @@ export default function JoinPage() {
                           disabled={isSubmitting}
                           className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-4 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                         >
-                          {isProcessingPayment
-                            ? "Processing payment..."
-                            : isSubmitting
-                              ? "Submitting..."
-                              : membershipType === "premium"
-                                ? "Pay $5 & Submit Resume"
-                                : "Join Free"}
+                          {isSubmitting
+                            ? "Submitting..."
+                            : membershipType === "premium"
+                              ? "Submit Resume"
+                              : "Join Free"}
                         </button>
                       </form>
                     </div>

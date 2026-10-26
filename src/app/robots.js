@@ -3,7 +3,7 @@ export default function robots() {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/dashboard/", "/login/", "/info/"],
+      disallow: ["/dashboard/", "/login/", "/info/", "/converge-test"],
     },
     sitemap: "https://fintechcalgary.ca/sitemap.xml",
   };
