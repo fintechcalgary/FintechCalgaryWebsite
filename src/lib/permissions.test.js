@@ -49,6 +49,12 @@ describe("permissions", () => {
       );
     });
 
+    it("sends events users to the events page", () => {
+      expect(getPostLoginDestination(USER_ROLES.EVENTS)).toBe(
+        "/dashboard/events",
+      );
+    });
+
     it("sends other staff to the main dashboard", () => {
       expect(getPostLoginDestination(USER_ROLES.ADMIN)).toBe("/dashboard");
       expect(getPostLoginDestination(USER_ROLES.OUTREACH)).toBe("/dashboard");
@@ -172,6 +178,30 @@ describe("permissions", () => {
     it("denies events role from contracts", () => {
       expect(
         canAccessDashboardRoute(USER_ROLES.EVENTS, "/dashboard/contracts"),
+      ).toBe(false);
+    });
+
+    it("allows events and admin onto the events page and denies outreach", () => {
+      expect(
+        canAccessDashboardRoute(USER_ROLES.EVENTS, "/dashboard/events"),
+      ).toBe(true);
+      expect(
+        canAccessDashboardRoute(USER_ROLES.ADMIN, "/dashboard/events"),
+      ).toBe(true);
+      expect(
+        canAccessDashboardRoute(USER_ROLES.OUTREACH, "/dashboard/events"),
+      ).toBe(false);
+    });
+
+    it("allows only admin onto the executives page", () => {
+      expect(
+        canAccessDashboardRoute(USER_ROLES.ADMIN, "/dashboard/executives"),
+      ).toBe(true);
+      expect(
+        canAccessDashboardRoute(USER_ROLES.EVENTS, "/dashboard/executives"),
+      ).toBe(false);
+      expect(
+        canAccessDashboardRoute(USER_ROLES.OUTREACH, "/dashboard/executives"),
       ).toBe(false);
     });
 

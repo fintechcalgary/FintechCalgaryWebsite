@@ -61,6 +61,8 @@ export const DASHBOARD_ROUTE_PERMISSIONS = {
   "/dashboard/marketing-approvals": PERMISSIONS.MARKETING_APPROVE,
   "/dashboard/users": PERMISSIONS.USERS,
   "/dashboard/community": PERMISSIONS.COMMUNITY,
+  "/dashboard/events": PERMISSIONS.EVENTS,
+  "/dashboard/executives": PERMISSIONS.EXECUTIVES,
 };
 
 /** API route prefixes and required permissions (admin bypasses all) */
@@ -131,6 +133,9 @@ export function getPostLoginDestination(role) {
   if (role === USER_ROLES.ASSOCIATE) return "/partner-dashboard";
   if (role === USER_ROLES.PROJECTS) {
     return "/dashboard/executive-applications";
+  }
+  if (role === USER_ROLES.EVENTS) {
+    return "/dashboard/events";
   }
   if (isStaffRole(role)) return "/dashboard";
   return null;
@@ -227,10 +232,10 @@ export function getDashboardNavItems(role) {
   const items = [...baseline];
 
   if (hasPermission(role, PERMISSIONS.EVENTS)) {
-    items.push({ label: "Events", href: "/dashboard#events" });
+    items.push({ label: "Events", href: "/dashboard/events" });
   }
   if (hasPermission(role, PERMISSIONS.EXECUTIVES)) {
-    items.push({ label: "Executives", href: "/dashboard#executives" });
+    items.push({ label: "Executives", href: "/dashboard/executives" });
   }
   if (hasPermission(role, PERMISSIONS.EXECUTIVE_APPLICATIONS)) {
     items.push({
@@ -279,6 +284,22 @@ export function getAdminPanelCards(role) {
 
   const cards = [];
 
+  if (hasPermission(role, PERMISSIONS.EVENTS)) {
+    cards.push({
+      title: "Events",
+      description: "Manage events, webinars, and registration",
+      href: "/dashboard/events",
+      color: "purple",
+    });
+  }
+  if (hasPermission(role, PERMISSIONS.EXECUTIVES)) {
+    cards.push({
+      title: "Executives",
+      description: "Manage the executive team shown on the public site",
+      href: "/dashboard/executives",
+      color: "pink",
+    });
+  }
   if (hasPermission(role, PERMISSIONS.CONTRACTS)) {
     cards.push({
       title: "Contracts",

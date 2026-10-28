@@ -2,20 +2,11 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChartBar,
-  faClock,
-  faUsers,
-} from "@fortawesome/free-solid-svg-icons";
-import Events from "@/features/events/Events";
 import { useEffect } from "react";
-import Executives from "@/features/executives/Executives";
 import AdminCard from "@/features/dashboard/AdminCard";
 import { LoadingState } from "@/components/ui/Spinner";
 import { GlowCard } from "@/components/ui/spotlight-card";
-import { getAdminPanelCards, hasPermission, isStaffRole } from "@/lib/permissions";
-import { PERMISSIONS } from "@/lib/permissions";
+import { getAdminPanelCards, isStaffRole } from "@/lib/permissions";
 
 export default function AdminDashboardClient() {
   const { data: session, status } = useSession();
@@ -45,8 +36,6 @@ export default function AdminDashboardClient() {
   }
 
   const panelCards = getAdminPanelCards(role);
-  const showEvents = hasPermission(role, PERMISSIONS.EVENTS);
-  const showExecutives = hasPermission(role, PERMISSIONS.EXECUTIVES);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -96,7 +85,7 @@ export default function AdminDashboardClient() {
                   </span>
                 </h1>
                 <p className="fc-lede">
-                  Track your events and collaborate with your team members
+                  Open a tool below to manage club operations
                 </p>
               </div>
             </div>
@@ -146,73 +135,6 @@ export default function AdminDashboardClient() {
                     />
                   ))}
                 </div>
-              </GlowCard>
-            </section>
-          )}
-
-          {showEvents && (
-            <section className="group animate-fadeIn" id="events">
-              <GlowCard
-                customSize
-                glowColor="purple"
-                className="relative h-full w-full !gap-0 !p-8"
-              >
-                <div className="relative z-10 flex items-center justify-between mb-8">
-                  <div className="space-y-1">
-                    <h2 className="fc-title-accent text-2xl">
-                      Events and Webinars
-                    </h2>
-                    <p className="fc-body">Manage your schedule</p>
-                  </div>
-                  <span className="fc-icon">
-                    <FontAwesomeIcon icon={faChartBar} className="h-6 w-6" />
-                  </span>
-                </div>
-
-                <div
-                  className="mb-6 p-4 rounded-xl border border-gray-700/30 hover:border-primary/50 bg-gradient-to-br from-gray-800/60 via-purple-900/10 to-gray-800/40
-             shadow-lg hover:shadow-purple-600/20 duration-300 backdrop-blur-xl max-w-md sm:max-w-full transition-all"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="fc-icon hidden md:inline-flex">
-                      <FontAwesomeIcon icon={faClock} className="h-5 w-5" />
-                    </div>
-                    <div className="space-y-0.5">
-                      <h3 className="fc-title text-sm">Reminder</h3>
-                      <p className="fc-body text-xs leading-relaxed">
-                        No need to delete past events—they&apos;ll remain on the
-                        events page. Delete only those you no longer want to
-                        display. If an event fills up, close registration on
-                        its card instead of deleting it.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <Events />
-              </GlowCard>
-            </section>
-          )}
-
-          {showExecutives && (
-            <section className="group animate-fadeIn">
-              <GlowCard
-                customSize
-                glowColor="purple"
-                className="relative h-full w-full !gap-0 !p-8"
-              >
-                <div className="relative z-10 flex items-center justify-between mb-8">
-                  <div className="space-y-1">
-                    <h2 className="fc-title-accent text-2xl" id="executives">
-                      Team
-                    </h2>
-                    <p className="fc-body">Collaborate with others</p>
-                  </div>
-                  <span className="fc-icon">
-                    <FontAwesomeIcon icon={faUsers} className="h-6 w-6" />
-                  </span>
-                </div>
-                <Executives />
               </GlowCard>
             </section>
           )}

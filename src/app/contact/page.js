@@ -1,8 +1,17 @@
 "use client";
 import { useState } from "react";
-import { FiMail, FiMessageSquare, FiSend } from "react-icons/fi";
+import {
+  FiArrowRight,
+  FiMail,
+  FiMapPin,
+  FiMessageSquare,
+  FiSend,
+} from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
-import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
+import {
+  PublicPageFrame,
+  PublicPageHeader,
+} from "@/components/layout/PublicPageFrame";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import SocialLinks from "@/components/ui/SocialLinks";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
@@ -15,7 +24,6 @@ import {
 } from "@/lib/constants";
 
 export default function ContactPage() {
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -56,86 +64,151 @@ export default function ContactPage() {
 
   return (
     <PublicPageShell title="Contact | FinTech Calgary">
-
       <PublicPageFrame>
-          <PublicPageHeader
-            title="Contact Us"
-            lede="Have questions? We'd love to hear from you."
-          />
+        <PublicPageHeader
+          title="Contact Us"
+          lede="Have questions? We'd love to hear from you."
+        />
 
-          <div className="mb-16 grid items-stretch gap-8 md:grid-cols-2">
-            <div className="h-full animate-slideInLeft">
+        <div className="mb-16 grid items-stretch gap-8 lg:grid-cols-2">
+          <div className="flex h-full flex-col gap-8">
+            <div className="animate-slideInLeft">
               <GlowCard
                 customSize
                 glowColor="purple"
                 className="h-full w-full !gap-0 !p-8"
               >
-                <div className="relative z-10">
-                  <div className="fc-icon-tile mb-4">
+                <div className="relative z-10 flex items-start gap-4">
+                  <div className="fc-icon-tile">
                     <FiMail className="h-6 w-6" />
                   </div>
-                  <h3 className="fc-title mb-2 text-xl">Email</h3>
-                  <a href={SITE_CONTACT.mailto} className="fc-link-underline">
-                    {SITE_CONTACT.email}
-                  </a>
+                  <div>
+                    <h3 className="fc-title mb-2 text-xl">Email</h3>
+                    <p className="fc-body mb-4">
+                      Questions, partnerships, or a note for the team. We read
+                      every message sent to the club inbox.
+                    </p>
+                    <a
+                      href={SITE_CONTACT.mailto}
+                      className="fc-link-underline inline-flex items-center gap-2"
+                    >
+                      {SITE_CONTACT.email}
+                      <FiArrowRight className="h-4 w-4" />
+                    </a>
+                  </div>
                 </div>
               </GlowCard>
             </div>
 
-            <div className="h-full animate-slideInRight">
+            <div className="flex-1 animate-slideInLeft">
               <GlowCard
                 customSize
                 glowColor="purple"
                 className="h-full w-full !gap-0 !p-8"
               >
-                <div className="relative z-10">
-                <div className="fc-icon-tile mb-4">
-                  <FiMessageSquare className="h-6 w-6" />
-                </div>
-                <h3 className="fc-title mb-2 text-xl">
-                  Social Media
-                </h3>
-                <p className="fc-body mb-4">
-                  Follow us for the latest updates
-                </p>
-                <SocialLinks />
+                <div className="relative z-10 flex items-start gap-4">
+                  <div className="fc-icon-tile">
+                    <FiMapPin className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="fc-title mb-2 text-xl">Find us</h3>
+                    <p className="fc-body mb-3">
+                      Based at the University of Calgary. We work with partners
+                      across campus and the city.
+                    </p>
+                    <p className="font-medium tracking-wide text-primary">
+                      {SITE_CONTACT.addressName}
+                    </p>
+                    <p className="fc-muted">{SITE_CONTACT.addressLine}</p>
+                  </div>
                 </div>
               </GlowCard>
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            <div className="order-2 lg:order-1 animate-slideInUp">
-              <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="h-full animate-slideInRight">
+            <GlowCard
+              customSize
+              glowColor="purple"
+              className="h-full w-full !gap-0 !p-8"
+            >
+              <div className="relative z-10">
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="fc-icon-tile">
+                    <FiMessageSquare className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="fc-title mb-2 text-xl">Social media</h3>
+                    <p className="fc-body">
+                      Event posts, club updates, and the occasional fintech
+                      note. Pick whichever you already use.
+                    </p>
+                  </div>
+                </div>
+                <SocialLinks />
+              </div>
+            </GlowCard>
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12 mb-16">
+          <div className="order-2 lg:order-1 animate-slideInUp">
+            <GlowCard
+              customSize
+              glowColor="purple"
+              className="h-full w-full !gap-0 !p-8"
+            >
+              <div className="relative z-10 mb-6">
+                <h2 className="fc-title mb-2 text-2xl">Send a message</h2>
+                <p className="fc-body">
+                  Tell us who you are and what you need. We reply from{" "}
+                  {SITE_CONTACT.email}.
+                </p>
+              </div>
+              <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
+                    <label htmlFor="contact-name" className="fc-form-label">
+                      Name
+                    </label>
                     <input
+                      id="contact-name"
                       type="text"
                       name="name"
-                      placeholder="Your Name"
+                      placeholder="Your name"
                       value={formData.name}
                       onChange={handleChange}
                       required
+                      autoComplete="name"
                       className="form-input"
                     />
                   </div>
                   <div>
+                    <label htmlFor="contact-email" className="fc-form-label">
+                      Email
+                    </label>
                     <input
+                      id="contact-email"
                       type="email"
                       name="email"
-                      placeholder="Your Email"
+                      placeholder="you@example.com"
                       value={formData.email}
                       onChange={handleChange}
                       required
+                      autoComplete="email"
                       className="form-input"
                     />
                   </div>
                 </div>
                 <div>
+                  <label htmlFor="contact-subject" className="fc-form-label">
+                    Subject
+                  </label>
                   <input
+                    id="contact-subject"
                     type="text"
                     name="subject"
-                    placeholder="Subject"
+                    placeholder="What is this about?"
                     value={formData.subject}
                     onChange={handleChange}
                     required
@@ -143,9 +216,13 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
+                  <label htmlFor="contact-message" className="fc-form-label">
+                    Message
+                  </label>
                   <textarea
+                    id="contact-message"
                     name="message"
-                    placeholder="Your Message"
+                    placeholder="Your message"
                     value={formData.message}
                     onChange={handleChange}
                     required
@@ -180,18 +257,19 @@ export default function ContactPage() {
                   </p>
                 )}
               </form>
-            </div>
-
-            <div className="order-1 lg:order-2 flex items-center justify-center animate-slideInDown">
-              <DotLottieReact
-                src="/lottie/contact.lottie"
-                autoplay
-                loop
-                className="w-full h-full object-contain"
-                renderer="svg"
-              />
-            </div>
+            </GlowCard>
           </div>
+
+          <div className="order-1 lg:order-2 flex items-center justify-center animate-slideInDown">
+            <DotLottieReact
+              src="/lottie/contact.lottie"
+              autoplay
+              loop
+              className="h-full w-full object-contain"
+              renderer="svg"
+            />
+          </div>
+        </div>
       </PublicPageFrame>
     </PublicPageShell>
   );
