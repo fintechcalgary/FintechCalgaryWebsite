@@ -193,9 +193,9 @@ export default function WeeklyDigestModal({
                 <div className="min-w-0 flex-1 space-y-3 px-6 py-5">
                   {articles.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 text-center">
-                      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl border border-gray-700/40 bg-white/[0.03]">
-                        <FiZap className="h-6 w-6 text-white/35" />
-                      </div>
+                      <span className="fc-icon mb-4">
+                        <FiZap className="h-6 w-6" />
+                      </span>
                       <p className="fc-body">No digest available yet.</p>
                       <p className="fc-muted mt-1">
                         Check back after the next Friday refresh.

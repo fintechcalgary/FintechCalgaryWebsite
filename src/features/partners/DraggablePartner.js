@@ -58,19 +58,9 @@ function DraggablePartner({
                   />
                 </div>
               ) : (
-                <div
-                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{
-                    backgroundColor: `${partner.color || "#8b5cf6"}20`,
-                    borderColor: `${partner.color || "#8b5cf6"}50`,
-                    borderWidth: "1px",
-                  }}
-                >
-                  <FiImage
-                    className="text-lg sm:text-xl"
-                    style={{ color: partner.color || "#8b5cf6" }}
-                  />
-                </div>
+                <span className="fc-icon h-12 w-12 flex-shrink-0 sm:h-14 sm:w-14">
+                  <FiImage className="h-6 w-6 sm:h-7 sm:w-7" />
+                </span>
               )}
               <div className="min-w-0 flex-1">
                 <h3 className="fc-title text-base sm:text-lg truncate">

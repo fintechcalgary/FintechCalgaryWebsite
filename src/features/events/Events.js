@@ -216,7 +216,9 @@ export default function Events({ mode }) {
     <div className="min-h-[500px]">
       <div className="flex justify-between items-center mb-4">
         <h3 className="fc-title text-2xl flex items-center gap-2">
-          <FiCalendar className="text-primary" />
+          <span className="fc-icon">
+            <FiCalendar className="h-5 w-5" />
+          </span>
           Your Events
         </h3>
         <Button
@@ -399,10 +401,10 @@ export default function Events({ mode }) {
             {/* Media / tip — right rail on desktop */}
             <div className="flex flex-col gap-4 lg:col-span-2">
               <div className="flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/10 p-3">
-                <div className="flex-shrink-0 pt-0.5">
+                <span className="fc-icon flex-shrink-0 pt-0.5">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-primary"
+                    className="h-5 w-5"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -412,7 +414,7 @@ export default function Events({ mode }) {
                       clipRule="evenodd"
                     />
                   </svg>
-                </div>
+                </span>
                 <p className="fc-muted text-xs leading-relaxed sm:text-sm">
                   <span className="font-medium text-white">Tip:</span> Use
                   high-resolution images. Include{" "}

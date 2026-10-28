@@ -46,7 +46,9 @@ function PartnersPageContent() {
         <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
           <div className="min-h-[400px] sm:min-h-[500px] flex items-center justify-center">
             <div className="text-center px-4">
-              <FiUsers className="mx-auto text-3xl sm:text-4xl text-primary mb-3 sm:mb-4" />
+              <span className="fc-icon mx-auto mb-3 sm:mb-4">
+                <FiUsers className="h-10 w-10" />
+              </span>
               <p className="fc-body">
                 You don&apos;t have permission to view this page.
               </p>

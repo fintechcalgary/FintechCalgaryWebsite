@@ -5,10 +5,7 @@ import { FiPlus, FiUser } from "react-icons/fi";
 import PortalModal from "@/components/ui/Modal/ContentModal";
 import Button from "@/components/ui/Button";
 import AdminBackLink from "@/components/ui/AdminBackLink";
-import {
-  AdminPageTitle,
-  AdminPageLede,
-} from "@/components/ui/SectionHeading";
+import { AdminPageHeader } from "@/components/layout/AdminPageShell";
 import { LoadingState } from "@/components/ui/Spinner";
 import useRoleAccess from "@/hooks/useRoleAccess";
 import useRoleResource from "@/hooks/useRoleResource";
@@ -101,16 +98,13 @@ export default function UsersPage() {
 
   return (
     <div className="min-h-screen">
-      <main className="container mx-auto px-6 py-8 max-w-7xl">
+      <main className="container relative mx-auto max-w-7xl animate-fadeIn px-6 py-8">
         <AdminBackLink />
 
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-2">
-            <AdminPageTitle>Users</AdminPageTitle>
-            <AdminPageLede>
-              Manage staff accounts and role-based access
-            </AdminPageLede>
-          </div>
+        <AdminPageHeader
+          title="Users"
+          lede="Manage staff accounts and role-based access"
+          actions={
           <Button
             type="button"
             variant="soft"
@@ -119,18 +113,19 @@ export default function UsersPage() {
             <FiPlus className="h-4 w-4" />
             Add User
           </Button>
-        </div>
+        }
+        />
 
         <div className="grid gap-4">
           {users.map((user) => (
             <div
               key={user._id}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-gray-900/60 border border-white/10"
+              className="fc-admin-panel flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30">
-                  <FiUser className="text-primary" />
-                </div>
+                <span className="fc-icon">
+                  <FiUser className="h-5 w-5" />
+                </span>
                 <div>
                   <p className="text-white font-medium">{user.username}</p>
                   <p className="text-sm text-gray-400">
@@ -141,7 +136,7 @@ export default function UsersPage() {
               <select
                 value={user.role}
                 onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-white text-sm"
+                className="form-input form-input-auto"
               >
                 {ROLE_OPTIONS.map((role) => (
                   <option key={role} value={role}>
@@ -208,7 +203,7 @@ export default function UsersPage() {
             </select>
           </div>
           {formError && (
-            <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
+            <p className="fc-alert-error">
               {formError}
             </p>
           )}

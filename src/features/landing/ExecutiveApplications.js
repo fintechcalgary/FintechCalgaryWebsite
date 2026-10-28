@@ -1,20 +1,19 @@
 import Link from "next/link";
 import { FiArrowRight, FiUsers, FiAward, FiTrendingUp } from "react-icons/fi";
-import SectionHeading from "@/components/ui/SectionHeading";
+import {
+  LandingContainer,
+  LandingSection,
+  LandingSectionHeader,
+} from "@/components/layout/LandingSection";
 import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function ExecutiveApplications() {
   return (
-    <section
-      id="executive-applications"
-      className="relative overflow-x-clip py-24"
-    >
-      <div className="container relative mx-auto px-6">
-        <div className="mb-16 text-center md:mb-20">
-          <SectionHeading href="/executive-application">
-            Executive Applications
-          </SectionHeading>
-        </div>
+    <LandingSection id="executive-applications">
+      <LandingContainer>
+        <LandingSectionHeader href="/executive-application">
+          Executive Applications
+        </LandingSectionHeader>
 
         <div className="mx-auto max-w-6xl">
           <GlowCard
@@ -24,8 +23,8 @@ export default function ExecutiveApplications() {
           >
             <div className="relative z-10 text-center">
               <div className="mb-8">
-                <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 transition-all duration-300 hover:scale-110 hover:bg-primary/20">
-                  <FiAward className="h-10 w-10 text-primary" />
+                <div className="fc-icon mx-auto mb-6 transition-transform duration-300 hover:scale-110">
+                  <FiAward className="h-10 w-10" />
                 </div>
                 <h3 className="fc-title-accent mb-4 text-2xl sm:text-3xl">
                   Join Our Executive Team
@@ -60,8 +59,8 @@ export default function ExecutiveApplications() {
                   },
                 ].map((item) => (
                   <div key={item.title} className="group/item text-center">
-                    <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 transition-all duration-300 group-hover/item:scale-110 group-hover/item:bg-primary/20">
-                      <item.icon className="h-8 w-8 text-primary" />
+                    <div className="fc-icon mx-auto mb-4 transition-transform duration-300 group-hover/item:scale-110">
+                      <item.icon className="h-8 w-8" />
                     </div>
                     <h4 className="fc-title mb-2 text-xl">
                       {item.title}
@@ -124,7 +123,7 @@ export default function ExecutiveApplications() {
             ))}
           </div>
         </div>
-      </div>
-    </section>
+      </LandingContainer>
+    </LandingSection>
   );
 }

@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
-import SectionHeading from "@/components/ui/SectionHeading";
+import {
+  LandingContainer,
+  LandingSection,
+  LandingSectionHeader,
+} from "@/components/layout/LandingSection";
 import { GlowCard } from "@/components/ui/spotlight-card";
 
 const FeatureCard = ({ feature, glowColor }) => {
@@ -41,11 +45,11 @@ export default function MissionStatement() {
   ];
 
   return (
-    <section id="join" className="relative overflow-x-clip py-24">
-      <div className="container relative z-10 mx-auto max-w-6xl px-6">
-        <div className="mb-16 text-center md:mb-20">
-          <SectionHeading href="/about">Mission Statement</SectionHeading>
-        </div>
+    <LandingSection id="join">
+      <LandingContainer>
+        <LandingSectionHeader href="/about">
+          Mission Statement
+        </LandingSectionHeader>
 
         <div className="mb-12 grid gap-6 md:grid-cols-3 lg:gap-8">
           {features.map((feature) => (
@@ -63,7 +67,7 @@ export default function MissionStatement() {
             <FiArrowRight className="text-xl transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
-      </div>
-    </section>
+      </LandingContainer>
+    </LandingSection>
   );
 }

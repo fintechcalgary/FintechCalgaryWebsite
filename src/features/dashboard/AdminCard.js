@@ -13,24 +13,12 @@ const glowByColor = {
   pink: "pink",
 };
 
-const iconWrapByGlow = {
-  purple: {
-    wrap: "border-primary/30 bg-gradient-to-br from-primary/20 to-primary/30",
-    icon: "text-primary",
-  },
-  pink: {
-    wrap: "border-fuchsia-400/25 bg-gradient-to-br from-fuchsia-500/15 to-violet-500/20",
-    icon: "text-fuchsia-300",
-  },
-};
-
 /**
  * Dashboard navigation card used on the admin home grid.
  */
-export default function AdminCard({ title, description, icon: Icon, href, color }) {
+export default function AdminCard({ title, description, href, color }) {
   const [isHovered, setIsHovered] = useState(false);
   const glowColor = glowByColor[color] || "purple";
-  const iconStyles = iconWrapByGlow[glowColor] || iconWrapByGlow.purple;
 
   return (
     <Link
@@ -45,7 +33,7 @@ export default function AdminCard({ title, description, icon: Icon, href, color 
         className="h-full w-full !p-6 !gap-0 transition-transform duration-500 group-hover:scale-[1.02]"
       >
         <div className="relative z-10 flex h-full flex-col">
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4">
             <h3
               className="fc-title text-lg transition-all duration-300"
               style={{
@@ -54,13 +42,6 @@ export default function AdminCard({ title, description, icon: Icon, href, color 
             >
               {title}
             </h3>
-            <div
-              className={`flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ${iconStyles.wrap} ${
-                isHovered ? "scale-110 shadow-lg shadow-primary/15" : ""
-              }`}
-            >
-              <Icon className={`h-5 w-5 ${iconStyles.icon}`} />
-            </div>
           </div>
           <p
             className="mb-4 flex-grow fc-body transition-all duration-300"
@@ -71,7 +52,7 @@ export default function AdminCard({ title, description, icon: Icon, href, color 
             {description}
           </p>
           <div className="mt-auto flex justify-end">
-            <div className="text-primary transition-transform duration-300 group-hover:translate-x-1">
+            <div className="fc-icon transition-transform duration-300 group-hover:translate-x-1">
               <svg
                 className="h-4 w-4"
                 fill="none"

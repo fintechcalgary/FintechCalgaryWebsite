@@ -9,6 +9,7 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
+import { PUBLIC_PAGE_GUTTER } from "@/components/layout/PublicPageFrame";
 import { PageTitle } from "@/components/ui/SectionHeading";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import ImageCarousel from "@/features/events/ImageCarousel";
@@ -183,7 +184,7 @@ export default async function EventPage({ params }) {
             <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl" />
           </div>
 
-          <div className="container relative z-10 mx-auto px-4 pb-20 pt-36">
+          <div className={PUBLIC_PAGE_GUTTER}>
             <div className="mb-8">
               <Link
                 href="/events"

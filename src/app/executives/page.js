@@ -1,7 +1,7 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import ExecutiveApplicationBanner from "@/features/executives/ExecutiveApplicationBanner";
-import { PageTitle } from "@/components/ui/SectionHeading";
+import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
 import { SiLinkedin } from "react-icons/si";
 import { FiMail } from "react-icons/fi";
 import Image from "next/image";
@@ -56,14 +56,12 @@ export default async function ExecutivesPage() {
   if (executives.length === 0) {
     return (
       <PublicPageShell>
-        <div className="flex-grow flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-white mb-4">
-              No Executives Found
-            </h1>
-            <p className="fc-muted">Please check back later.</p>
-          </div>
-        </div>
+        <PublicPageFrame>
+          <PublicPageHeader
+            title="No Executives Found"
+            lede="Please check back later."
+          />
+        </PublicPageFrame>
     </PublicPageShell>
     );
   }
@@ -71,21 +69,11 @@ export default async function ExecutivesPage() {
   return (
     <PublicPageShell>
 
-      <div className="relative flex-grow">
-        <section className="relative z-10 flex items-center justify-center min-h-screen">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/80 z-0"></div>
-
-          {/* Content Section */}
-          <div className="relative z-10 container mx-auto px-6 pt-36 pb-24 sm:px-8 lg:px-12">
-            {/* Page Heading */}
-            <div className="mb-16 animate-fadeIn text-center">
-              <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
-                Meet Our Executives
-              </PageTitle>
-              <p className="fc-lede mx-auto max-w-3xl">
-                Leadership across programs, partnerships, and community initiatives.
-              </p>
-            </div>
+      <PublicPageFrame>
+            <PublicPageHeader
+              title="Meet Our Executives"
+              lede="Leadership across programs, partnerships, and community initiatives."
+            />
 
             {/* Executives Grid */}
             <div className="space-y-16">
@@ -105,7 +93,7 @@ export default async function ExecutivesPage() {
                     {groupedExecutives[role].map((executive) => (
                       <div
                         key={executive._id}
-                        className="flex flex-col items-center text-center gap-4 w-full max-w-[300px] hover:scale-102 transition-transform duration-300"
+                        className="flex w-full max-w-[300px] flex-col items-center gap-4 text-center transition-transform duration-300 hover:scale-105"
                       >
                         <div className="w-48 h-48 rounded-full overflow-hidden border-2 border-primary/50 hover:border-primary transition-colors duration-300 shadow-lg relative">
                           <Image
@@ -160,9 +148,7 @@ export default async function ExecutivesPage() {
                 </section>
               ))}
             </div>
-          </div>
-        </section>
-      </div>
+      </PublicPageFrame>
 
       <ExecutiveApplicationBanner />
     </PublicPageShell>

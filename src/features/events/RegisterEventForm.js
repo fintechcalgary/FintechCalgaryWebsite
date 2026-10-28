@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiArrowLeft } from "react-icons/fi";
+import { PageTitle } from "@/components/ui/SectionHeading";
 import { LoadingState } from "@/components/ui/Spinner";
 import {
   isRegistrationOpen,
@@ -91,16 +92,16 @@ export default function RegisterEventForm({ eventId }) {
         <div className="w-full max-w-2xl">
           <Link
             href={`/events/${eventId}`}
-            className="fc-muted inline-flex items-center hover:text-white transition-all duration-200 hover:translate-x-[-4px] mb-4 group"
+            className="fc-link group mb-4 inline-flex items-center"
           >
-            <FiArrowLeft className="w-5 h-5 mr-2 transition-transform duration-200 group-hover:translate-x-[-2px]" />
+            <FiArrowLeft className="mr-2 h-5 w-5 transition-transform duration-200 group-hover:-translate-x-1" />
             Back to Event
           </Link>
 
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-2xl border border-amber-500/30">
-            <h1 className="text-2xl md:text-3xl font-bold text-white">
+          <div className="fc-card border-amber-500/30 p-6 shadow-2xl md:p-8">
+            <PageTitle sizeClass="text-2xl md:text-3xl">
               {REGISTRATION_CLOSED_MESSAGE}
-            </h1>
+            </PageTitle>
             <p className="fc-muted mt-3">{event.title}</p>
           </div>
         </div>
@@ -119,13 +120,13 @@ export default function RegisterEventForm({ eventId }) {
           >
             <Link
               href="/"
-              className="fc-muted inline-flex items-center hover:text-white transition-all duration-200 hover:translate-x-[-4px] mb-4 group"
+              className="fc-link group mb-4 inline-flex items-center"
             >
-              <FiArrowLeft className="w-5 h-5 mr-2 transition-transform duration-200 group-hover:translate-x-[-2px]" />
+              <FiArrowLeft className="mr-2 h-5 w-5 transition-transform duration-200 group-hover:-translate-x-1" />
               Back to Home
             </Link>
 
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-2xl border border-red-500/30 animate-fade-in">
+            <div className="fc-card animate-fade-in border-red-500/30 p-4 shadow-2xl md:p-6">
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <div className="flex-shrink-0">
@@ -150,7 +151,7 @@ export default function RegisterEventForm({ eventId }) {
                   </h2>
                 </div>
 
-                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+                <div className="fc-alert-error">
                   <p className="text-gray-200 text-sm">{error}</p>
                 </div>
               </div>
@@ -164,34 +165,21 @@ export default function RegisterEventForm({ eventId }) {
   return (
     <div className="min-h-screen flex items-center justify-center py-8 px-4">
       <div className="w-full max-w-4xl">
-        <Link
-          href="/"
-          className="fc-muted inline-flex items-center hover:text-white mb-6 transition-colors duration-200"
-        >
-          <svg
-            className="w-5 h-5 mr-2"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path d="M15 19l-7-7 7-7" />
-          </svg>
+        <Link href="/" className="fc-link group mb-6 inline-flex items-center">
+          <FiArrowLeft className="mr-2 h-5 w-5 transition-transform duration-200 group-hover:-translate-x-1" />
           Back to Home
         </Link>
 
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl border border-gray-700/50">
-          <h1 className="text-2xl md:text-3xl font-bold mb-4 text-white">
+        <div className="fc-card p-6 shadow-xl md:p-8">
+          <PageTitle sizeClass="mb-4 text-2xl md:text-3xl">
             {event && event.eventType === "webinar"
               ? "Register for Webinar"
               : "Register for Event"}
-          </h1>
+          </PageTitle>
 
           {event && (
             <div className="mb-6 p-3 bg-gray-900/50 rounded-lg border border-gray-700/50">
-              <h2 className="text-lg font-semibold text-white mb-1">
+              <h2 className="fc-title mb-1 text-lg">
                 {event.title}
               </h2>
               <p className="fc-muted">

@@ -1,6 +1,7 @@
 "use client";
 
 import { FiDownload } from "react-icons/fi";
+import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import PartnerApplicationEditModal from "@/features/partners/admin/PartnerApplicationEditModal";
 import { LoadingState } from "@/components/ui/Spinner";
@@ -40,15 +41,17 @@ export default function PartnerApplicationsPanel({ onApplicationsChange }) {
         title="Partner applications"
         description="Review, approve, edit, and export organization signup applications"
         actions={
-          <button
+          <Button
+            type="button"
+            variant="success-soft"
             onClick={handleExportCsv}
             disabled={partners.length === 0}
-            className="px-4 py-2.5 rounded-xl bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto"
           >
             <FiDownload className="w-4 h-4" />
             <span className="hidden sm:inline">Export CSV</span>
             <span className="sm:hidden">Export</span>
-          </button>
+          </Button>
         }
       />
 

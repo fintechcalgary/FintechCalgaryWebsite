@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import PublicPageShell from "@/components/layout/PublicPageShell";
-import { PageTitle } from "@/components/ui/SectionHeading";
+import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import { FiCheck, FiAlertCircle } from "react-icons/fi";
 import Image from "next/image";
@@ -20,6 +20,7 @@ import {
   UPLOAD_FOLDERS,
   FILE_TYPES,
   ERROR_MESSAGES,
+  SITE_CONTACT,
 } from "@/lib/constants";
 import Spinner from "@/components/ui/Spinner";
 
@@ -315,20 +316,14 @@ export default function ExecutiveApplicationPage() {
 
   return (
     <PublicPageShell>
-      <div className="relative flex-grow">
-        <div className="container mx-auto px-6 pt-36 relative z-10">
-          <div className="text-center animate-fadeIn">
-            <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
-              Executive Application
-            </PageTitle>
-            <p className="fc-lede mx-auto max-w-3xl">
-              Apply to join the FinTech Calgary executive team! Please fill out
-              all required fields. We look forward to learning more about you.
-            </p>
-          </div>
+      <PublicPageFrame>
+          <PublicPageHeader
+            title="Executive Application"
+            lede="Apply to join the FinTech Calgary executive team! Please fill out all required fields. We look forward to learning more about you."
+          />
 
-          <div className="flex justify-center items-center">
-            <div className="container mx-auto px-4 py-16 max-w-4xl">
+          <div className="flex items-center justify-center">
+            <div className="mx-auto w-full max-w-4xl py-16">
               <GlowCard
                 customSize
                 glowColor="purple"
@@ -336,9 +331,7 @@ export default function ExecutiveApplicationPage() {
               >
               {!applicationsOpen ? (
                 <div className="relative z-10 text-center py-8 animate-fadeIn">
-                  <div className="w-16 h-16 bg-gray-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <FiAlertCircle className="w-8 h-8 text-gray-400" />
-                  </div>
+                  <FiAlertCircle className="mx-auto mb-4 h-8 w-8 text-white/40" />
                   <h2 className="fc-title text-2xl mb-2">
                     Applications Currently Closed
                   </h2>
@@ -349,9 +342,9 @@ export default function ExecutiveApplicationPage() {
                 </div>
               ) : status === "success" ? (
                 <div className="relative z-10 text-center py-8 animate-fadeIn">
-                  <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <FiCheck className="w-8 h-8 text-primary" />
-                  </div>
+                  <span className="fc-icon mx-auto mb-4">
+                    <FiCheck className="h-8 w-8" />
+                  </span>
                   <h2 className="fc-title text-2xl mb-2">
                     Thank you for your application!
                   </h2>
@@ -799,7 +792,7 @@ export default function ExecutiveApplicationPage() {
                   </form>
 
                   {status === "error" && (
-                    <div className="relative z-10 bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start max-w-4xl mx-auto mt-6">
+                    <div className="fc-alert-error relative z-10 mx-auto mt-6 flex max-w-4xl items-start">
                       <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
                       <div>
                         <h3 className="text-red-400 font-semibold mb-2">
@@ -829,10 +822,10 @@ export default function ExecutiveApplicationPage() {
                           If you continue to experience issues, please contact
                           us at{" "}
                           <a
-                            href="mailto:fintech.calgary@gmail.com"
+                            href={SITE_CONTACT.mailto}
                             className="underline hover:text-red-200"
                           >
-                            fintech.calgary@gmail.com
+                            {SITE_CONTACT.email}
                           </a>
                         </p>
                       </div>
@@ -843,8 +836,7 @@ export default function ExecutiveApplicationPage() {
               </GlowCard>
             </div>
           </div>
-        </div>
-      </div>
+      </PublicPageFrame>
     </PublicPageShell>
   );
 }

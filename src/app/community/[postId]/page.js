@@ -14,6 +14,7 @@ import {
 } from "@/lib/models/communityPost";
 import { serializeCommunityPost, isAllowedBannerUrl } from "@/lib/communityPosts";
 import PublicPageShell from "@/components/layout/PublicPageShell";
+import { PUBLIC_PAGE_GUTTER } from "@/components/layout/PublicPageFrame";
 import { PageTitle } from "@/components/ui/SectionHeading";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import StatusBadge from "@/components/ui/StatusBadge";
@@ -127,7 +128,7 @@ export default async function CommunityPostPage({ params }) {
           <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl" />
         </div>
 
-        <div className="container relative z-10 mx-auto px-4 pb-20 pt-36">
+        <div className={PUBLIC_PAGE_GUTTER}>
           <Link
             href="/community"
             className="fc-link group mb-8 inline-flex items-center px-4 py-2 transition-colors duration-200"

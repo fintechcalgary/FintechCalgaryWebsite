@@ -119,8 +119,10 @@ export default function InfoPage() {
             className="w-full !gap-0 !p-6 sm:!p-8"
           >
             <div className="relative z-10 space-y-4">
-              <div className="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/20 px-4 py-2 text-sm font-medium text-primary backdrop-blur-sm">
-                <FiBookOpen className="h-4 w-4" />
+              <div className="inline-flex items-center gap-2 text-sm font-medium text-white/80">
+                <span className="fc-icon">
+                  <FiBookOpen className="h-4 w-4" />
+                </span>
                 Repository &amp; Instructions
               </div>
               <div className="space-y-2">
@@ -148,9 +150,9 @@ export default function InfoPage() {
             >
               <div className="relative z-10">
                 <div className="mb-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/30 bg-gradient-to-br from-primary/20 to-primary/30">
-                    <FiGithub className="h-5 w-5 text-primary" />
-                  </div>
+                  <span className="fc-icon">
+                    <FiGithub className="h-5 w-5" />
+                  </span>
                   <h2 className="fc-title-accent text-xl sm:text-2xl">
                     Repository Link
                   </h2>
@@ -178,9 +180,9 @@ export default function InfoPage() {
             >
               <div className="relative z-10">
                 <div className="mb-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-violet-400/30 bg-gradient-to-br from-violet-500/20 to-violet-500/30">
-                    <FiCheckCircle className="h-5 w-5 text-violet-300" />
-                  </div>
+                  <span className="fc-icon">
+                    <FiCheckCircle className="h-5 w-5" />
+                  </span>
                   <h2 className="fc-title-accent text-xl sm:text-2xl">
                     Getting Started
                   </h2>
@@ -211,9 +213,9 @@ export default function InfoPage() {
             >
               <div className="relative z-10">
                 <div className="mb-6 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/30 bg-gradient-to-br from-primary/20 to-primary/30">
-                    <FiTerminal className="h-5 w-5 text-primary" />
-                  </div>
+                  <span className="fc-icon">
+                    <FiTerminal className="h-5 w-5" />
+                  </span>
                   <h2 className="fc-title-accent text-xl sm:text-2xl">
                     Instructions
                   </h2>

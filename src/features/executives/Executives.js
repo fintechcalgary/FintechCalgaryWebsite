@@ -61,7 +61,9 @@ export default function Executives() {
     return (
       <div className="min-h-[500px] flex items-center justify-center">
         <div className="text-center">
-          <FiUser className="mx-auto text-4xl text-primary mb-4" />
+          <span className="fc-icon mx-auto mb-4">
+            <FiUser className="h-10 w-10" />
+          </span>
           <p className="fc-muted">
             You don&apos;t have permission to manage team executives.
           </p>
@@ -242,7 +244,9 @@ export default function Executives() {
     <div className="min-h-[500px]">
         <div className="flex justify-between items-center mb-4">
           <h3 className="fc-title text-2xl flex items-center gap-2">
-            <FiUser className="text-primary" />
+            <span className="fc-icon">
+              <FiUser className="h-5 w-5" />
+            </span>
             Team Executives
           </h3>
           <div className="flex gap-4 items-center">

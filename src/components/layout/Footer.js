@@ -32,8 +32,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-6 flex items-center gap-2 text-lg font-semibold text-white">
-              <FiUsers className="h-5 w-5 text-primary" />
+            <h4 className="fc-title mb-6 flex items-center gap-2 text-lg">
+              <span className="fc-icon">
+                <FiUsers className="h-5 w-5" />
+              </span>
               Quick Links
             </h4>
             <ul className="space-y-3">
@@ -61,13 +63,17 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-6 flex items-center gap-2 text-lg font-semibold text-white">
-              <FiMapPin className="h-5 w-5 text-primary" />
+            <h4 className="fc-title mb-6 flex items-center gap-2 text-lg">
+              <span className="fc-icon">
+                <FiMapPin className="h-5 w-5" />
+              </span>
               Contact
             </h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-2 text-white/65">
-                <FiMapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+                <span className="fc-icon mt-0.5">
+                  <FiMapPin className="h-4 w-4" />
+                </span>
                 <div>
                   <p className="tracking-wide text-white/70">University of Calgary</p>
                   <p className="fc-muted">2500 University Dr NW</p>
@@ -79,7 +85,9 @@ export default function Footer() {
                   href="mailto:fintech.calgary@gmail.com"
                   className="fc-link group inline-flex items-center gap-2 underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
                 >
-                  <FiMail className="h-4 w-4" />
+                  <span className="fc-icon">
+                    <FiMail className="h-4 w-4" />
+                  </span>
                   <span>
                     fintech.calgary@gmail.com
                   </span>

@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import PublicPageShell from "@/components/layout/PublicPageShell";
-import { PageTitle } from "@/components/ui/SectionHeading";
+import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import { FiCalendar } from "react-icons/fi";
 import Image from "next/image";
@@ -100,16 +100,11 @@ export default function EventsPageClient({ initialEvents }) {
   return (
     <PublicPageShell title="Events | FinTech Calgary">
       {/* Page Content */}
-      <div className="container mx-auto px-6 pt-36 pb-24 sm:px-8 lg:px-12 relative z-10 flex-grow">
-        {/* Dynamic Page Heading */}
-        <div className="text-center mb-16 animate-fadeIn">
-          <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
-            {pageContent.title}
-          </PageTitle>
-          <p className="fc-lede mx-auto max-w-3xl">
-            {pageContent.description}
-          </p>
-        </div>
+      <PublicPageFrame>
+        <PublicPageHeader
+          title={pageContent.title}
+          lede={pageContent.description}
+        />
 
         {/* Filter Dropdown - Enhanced styling */}
         <div className="mb-8 flex justify-start" style={{ animationDelay: "200ms" }}>
@@ -222,7 +217,7 @@ export default function EventsPageClient({ initialEvents }) {
             No events or webinars available for the selected filter.
           </EmptyState>
         )}
-      </div>
+      </PublicPageFrame>
     </PublicPageShell>
   );
 }

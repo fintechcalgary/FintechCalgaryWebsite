@@ -1,20 +1,18 @@
 "use client";
 import { useState } from "react";
-import {
-  FiGithub,
-  FiInstagram,
-  FiLinkedin,
-  FiMail,
-  FiMessageSquare,
-  FiSend,
-} from "react-icons/fi";
+import { FiMail, FiMessageSquare, FiSend } from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
-import { PageTitle } from "@/components/ui/SectionHeading";
+import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
 import { GlowCard } from "@/components/ui/spotlight-card";
-import { FaTiktok } from "react-icons/fa";
+import SocialLinks from "@/components/ui/SocialLinks";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { createFormChangeHandler } from "@/lib/frontend-helpers";
-import { API_ENDPOINTS, ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/lib/constants";
+import {
+  API_ENDPOINTS,
+  ERROR_MESSAGES,
+  SITE_CONTACT,
+  SUCCESS_MESSAGES,
+} from "@/lib/constants";
 
 export default function ContactPage() {
 
@@ -59,93 +57,48 @@ export default function ContactPage() {
   return (
     <PublicPageShell title="Contact | FinTech Calgary">
 
-      <div className="relative flex-grow">
-        <div className="container relative z-10 mx-auto px-6 pb-24 pt-36 sm:px-8 lg:px-12">
-          <div className="mb-16 animate-fadeIn text-center">
-            <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
-              Contact Us
-            </PageTitle>
-            <p className="fc-lede mx-auto max-w-3xl">
-              Have questions? We&apos;d love to hear from you.
-            </p>
-          </div>
+      <PublicPageFrame>
+          <PublicPageHeader
+            title="Contact Us"
+            lede="Have questions? We'd love to hear from you."
+          />
 
-          <div className="mb-16 grid gap-8 md:grid-cols-2">
-            <div className="animate-slideInLeft">
+          <div className="mb-16 grid items-stretch gap-8 md:grid-cols-2">
+            <div className="h-full animate-slideInLeft">
               <GlowCard
                 customSize
                 glowColor="purple"
                 className="h-full w-full !gap-0 !p-8"
               >
                 <div className="relative z-10">
-                  <FiMail className="mb-4 h-8 w-8 text-primary" />
+                  <div className="fc-icon-tile mb-4">
+                    <FiMail className="h-6 w-6" />
+                  </div>
                   <h3 className="fc-title mb-2 text-xl">Email</h3>
-                  <a
-                    href="mailto:fintech.calgary@gmail.com"
-                    className="fc-link underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
-                  >
-                    fintech.calgary@gmail.com
+                  <a href={SITE_CONTACT.mailto} className="fc-link-underline">
+                    {SITE_CONTACT.email}
                   </a>
                 </div>
               </GlowCard>
             </div>
 
-            <div className="animate-slideInRight">
+            <div className="h-full animate-slideInRight">
               <GlowCard
                 customSize
                 glowColor="purple"
                 className="h-full w-full !gap-0 !p-8"
               >
                 <div className="relative z-10">
-                <FiMessageSquare className="mb-4 h-8 w-8 text-primary" />
+                <div className="fc-icon-tile mb-4">
+                  <FiMessageSquare className="h-6 w-6" />
+                </div>
                 <h3 className="fc-title mb-2 text-xl">
                   Social Media
                 </h3>
                 <p className="fc-body mb-4">
                   Follow us for the latest updates
                 </p>
-                <div>
-                  <div className="flex space-x-4">
-                    <a
-                      href="https://www.linkedin.com/company/fintechcalgary/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white/45 transition-colors hover:text-primary"
-                    >
-                      <FiLinkedin className="w-6 h-6" />
-                    </a>
-                    <a
-                      href="https://www.instagram.com/fintech.calgary/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white/45 transition-colors hover:text-primary"
-                    >
-                      <FiInstagram className="w-6 h-6" />
-                    </a>
-                    <a
-                      href="mailto:fintech.calgary@gmail.com"
-                      className="text-white/45 transition-colors hover:text-primary"
-                    >
-                      <FiMail className="w-6 h-6" />
-                    </a>
-                    <a
-                      href="https://github.com/fintech-calgary"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white/45 transition-colors hover:text-primary"
-                    >
-                      <FiGithub className="w-6 h-6" />
-                    </a>
-                    <a
-                      href="https://www.tiktok.com/@fintech.calgary"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white/45 transition-colors hover:text-primary"
-                    >
-                      <FaTiktok className="w-5 h-5" />
-                    </a>
-                  </div>
-                </div>
+                <SocialLinks />
                 </div>
               </GlowCard>
             </div>
@@ -163,7 +116,7 @@ export default function ContactPage() {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                      className="form-input"
                     />
                   </div>
                   <div>
@@ -174,7 +127,7 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                      className="form-input"
                     />
                   </div>
                 </div>
@@ -186,7 +139,7 @@ export default function ContactPage() {
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                    className="form-input"
                   />
                 </div>
                 <div>
@@ -197,7 +150,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:border-primary/50"
+                    className="form-input"
                   />
                 </div>
                 <div>
@@ -217,12 +170,12 @@ export default function ContactPage() {
                   </button>
                 </div>
                 {submitStatus === "success" && (
-                  <p className="text-green-400 text-center">
+                  <p className="fc-alert-success text-center">
                     {SUCCESS_MESSAGES.CONTACT_SENT}
                   </p>
                 )}
                 {submitStatus === "error" && (
-                  <p className="text-red-400 text-center">
+                  <p className="fc-alert-error text-center">
                     {ERROR_MESSAGES.CONTACT_FAILED}
                   </p>
                 )}
@@ -239,8 +192,7 @@ export default function ContactPage() {
               />
             </div>
           </div>
-        </div>
-      </div>
+      </PublicPageFrame>
     </PublicPageShell>
   );
 }

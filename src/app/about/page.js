@@ -4,25 +4,17 @@ import PublicPageShell from "@/components/layout/PublicPageShell";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { PageTitle } from "@/components/ui/SectionHeading";
+import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
 import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function AboutPage() {
   return (
     <PublicPageShell title="About | FinTech Calgary">
-      <div className="relative flex-grow">
-        <div className="container relative z-10 mx-auto px-6 pb-24 pt-36 sm:px-8 lg:px-12">
-          <div className="relative mb-16 animate-fadeIn text-center">
-            <PageTitle
-              sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6"
-              className="relative z-10"
-            >
-              About Us
-            </PageTitle>
-            <p className="fc-lede relative z-10 mx-auto mb-6 max-w-3xl sm:mb-10">
-              Welcome to FinTech Calgary!
-            </p>
-          </div>
+      <PublicPageFrame>
+          <PublicPageHeader
+            title="About Us"
+            lede="Welcome to FinTech Calgary!"
+          />
 
           <div className="grid max-w-6xl mx-auto grid-cols-1 gap-6 sm:gap-10 md:grid-cols-2">
             <div className="animate-slideInLeft">
@@ -111,9 +103,8 @@ export default function AboutPage() {
               </GlowCard>
             </div>
           </div>
-        </div>
 
-        <div className="mb-16 animate-slideInUp px-6 text-center sm:mb-32 sm:px-8">
+        <div className="mt-16 animate-slideInUp text-center">
           <GlowCard
             customSize
             glowColor="purple"
@@ -134,7 +125,7 @@ export default function AboutPage() {
             </div>
           </GlowCard>
         </div>
-      </div>
+      </PublicPageFrame>
     </PublicPageShell>
   );
 }

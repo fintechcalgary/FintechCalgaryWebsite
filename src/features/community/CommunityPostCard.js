@@ -84,7 +84,9 @@ export default function CommunityPostCard({
 
           {dateLabel ? (
             <div className="mt-auto flex items-center space-x-2 fc-body">
-              <FiCalendar className="h-4 w-4 shrink-0 text-primary" />
+              <span className="fc-icon">
+                <FiCalendar className="h-4 w-4" />
+              </span>
               <p className="text-sm font-medium">
                 {dateLabel}
                 {post.eventTime ? (

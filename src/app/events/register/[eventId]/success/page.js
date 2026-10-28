@@ -27,9 +27,9 @@ export default function RegistrationSuccess() {
 
             <div className="fc-card p-8 shadow-2xl animate-fade-in">
               <div className="flex items-center justify-center mb-6">
-                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center">
-                  <FiCheck className="w-8 h-8 text-primary" />
-                </div>
+                <span className="fc-icon">
+                  <FiCheck className="h-8 w-8" />
+                </span>
               </div>
 
               <PageTitle sizeClass="text-3xl mb-4" className="text-center">

@@ -245,7 +245,7 @@ export default function PartnerDashboardClient() {
             <div className="fc-admin-panel p-8 hover:border-primary/30 transition-all duration-500 mb-8 animate-slideInUp">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
+                  <div className="fc-icon">
                     <StatusIcon
                       className={`w-5 h-5 ${
                         approvalKey === "accepted"
@@ -292,7 +292,7 @@ export default function PartnerDashboardClient() {
                         Manage your schedule
                       </p>
                     </div>
-                    <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary backdrop-blur-sm border border-primary/30">
+                    <span className="fc-icon">
                       <FontAwesomeIcon icon={faChartBar} className="h-6 w-6" />
                     </span>
                   </div>
@@ -303,7 +303,7 @@ export default function PartnerDashboardClient() {
                          shadow-lg hover:shadow-purple-600/20 duration-300 backdrop-blur-xl max-w-md sm:max-w-full transition-all"
                   >
                     <div className="flex items-center space-x-3">
-                      <div className="hidden md:flex h-9 w-9 items-center justify-center rounded-xl bg-purple-700/20 text-purple-300 backdrop-blur-sm border border-purple-500/30">
+                      <div className="fc-icon hidden md:inline-flex">
                         <FontAwesomeIcon icon={faClock} className="h-5 w-5" />
                       </div>
                       <div className="space-y-0.5">
@@ -350,7 +350,7 @@ export default function PartnerDashboardClient() {
                 {/* Organization Info */}
                 <div className="space-y-8">
                   <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
+                    <div className="fc-icon">
                       <FiHome className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">
@@ -402,7 +402,9 @@ export default function PartnerDashboardClient() {
                         rel="noopener noreferrer"
                         className="fc-link flex items-center space-x-2 group"
                       >
-                        <FiGlobe className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                        <span className="fc-icon transition-transform duration-300 group-hover:rotate-12">
+                          <FiGlobe className="h-5 w-5" />
+                        </span>
                         <span className="text-lg font-medium">
                           Visit Website
                         </span>
@@ -414,7 +416,7 @@ export default function PartnerDashboardClient() {
                 {/* Contact Info */}
                 <div className="space-y-8">
                   <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
+                    <div className="fc-icon">
                       <FiUser className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">
@@ -441,7 +443,9 @@ export default function PartnerDashboardClient() {
                         href={`mailto:${memberData.contactEmail}`}
                         className="fc-link flex items-center space-x-2 group"
                       >
-                        <FiMail className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+                        <span className="fc-icon transition-transform duration-300 group-hover:scale-110">
+                          <FiMail className="h-5 w-5" />
+                        </span>
                         <span className="text-lg font-medium">
                           {memberData.contactEmail}
                         </span>
@@ -456,7 +460,9 @@ export default function PartnerDashboardClient() {
                         href={`tel:${memberData.contactPhoneNumber}`}
                         className="fc-link flex items-center space-x-2 group"
                       >
-                        <FiPhone className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+                        <span className="fc-icon transition-transform duration-300 group-hover:scale-110">
+                          <FiPhone className="h-5 w-5" />
+                        </span>
                         <span className="text-lg font-medium">
                           {memberData.contactPhoneNumber}
                         </span>
@@ -471,7 +477,9 @@ export default function PartnerDashboardClient() {
                         href={`mailto:${memberData.organizationEmail}`}
                         className="fc-link flex items-center space-x-2 group"
                       >
-                        <FiMail className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+                        <span className="fc-icon transition-transform duration-300 group-hover:scale-110">
+                          <FiMail className="h-5 w-5" />
+                        </span>
                         <span className="text-lg font-medium">
                           {memberData.organizationEmail}
                         </span>
@@ -484,7 +492,7 @@ export default function PartnerDashboardClient() {
               {/* Address */}
               <div className="mt-12 pt-8 border-t border-white/10">
                 <div className="flex items-center space-x-4 mb-6">
-                  <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
+                  <div className="fc-icon">
                     <FiMapPin className="w-6 h-6 text-primary" />
                   </div>
                   <h3 className="text-2xl font-bold text-white">Address</h3>
@@ -507,7 +515,7 @@ export default function PartnerDashboardClient() {
                 memberData.linkedin) && (
                 <div className="mt-12 pt-8 border-t border-white/10">
                   <div className="flex items-center space-x-4 mb-6">
-                    <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
+                    <div className="fc-icon">
                       <FiUsers className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">
@@ -520,7 +528,7 @@ export default function PartnerDashboardClient() {
                         href={memberData.facebook}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group w-14 h-14 bg-gray-800/30 rounded-xl flex items-center justify-center border border-white/5 hover:border-primary/30 hover:bg-primary/10 transition-all duration-300 hover:scale-110"
+                        className="fc-icon transition-transform duration-300 hover:scale-110"
                       >
                         <SiFacebook className="w-7 h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
                       </a>
@@ -530,7 +538,7 @@ export default function PartnerDashboardClient() {
                         href={memberData.twitter}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group w-14 h-14 bg-gray-800/30 rounded-xl flex items-center justify-center border border-white/5 hover:border-primary/30 hover:bg-primary/10 transition-all duration-300 hover:scale-110"
+                        className="fc-icon transition-transform duration-300 hover:scale-110"
                       >
                         <SiX className="w-7 h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
                       </a>
@@ -540,7 +548,7 @@ export default function PartnerDashboardClient() {
                         href={memberData.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group w-14 h-14 bg-gray-800/30 rounded-xl flex items-center justify-center border border-white/5 hover:border-primary/30 hover:bg-primary/10 transition-all duration-300 hover:scale-110"
+                        className="fc-icon transition-transform duration-300 hover:scale-110"
                       >
                         <SiLinkedin className="w-7 h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
                       </a>
@@ -553,7 +561,7 @@ export default function PartnerDashboardClient() {
               {memberData.aboutUs && (
                 <div className="mt-12 pt-8 border-t border-white/10">
                   <div className="flex items-center space-x-4 mb-6">
-                    <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
+                    <div className="fc-icon">
                       <FiUser className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">About Us</h3>

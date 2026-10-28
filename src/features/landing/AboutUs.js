@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import SectionHeading from "@/components/ui/SectionHeading";
+import {
+  LandingContainer,
+  LandingSection,
+  LandingSectionHeader,
+} from "@/components/layout/LandingSection";
 import { GlowCard } from "@/components/ui/spotlight-card";
 
 const ServiceCard = ({ title, description, glowColor = "purple" }) => {
@@ -34,7 +38,7 @@ const ServiceCard = ({ title, description, glowColor = "purple" }) => {
 
 export default function AboutUs() {
   return (
-    <section id="about" className="relative overflow-x-clip py-24">
+    <LandingSection id="about">
       <div
         className="absolute right-1/4 top-1/4 h-32 w-32 animate-pulse rounded-full bg-primary/10 blur-2xl"
         style={{ animationDelay: "0.5s" }}
@@ -44,10 +48,8 @@ export default function AboutUs() {
         style={{ animationDelay: "1.5s" }}
       />
 
-      <div className="container relative mx-auto px-6">
-        <div className="mb-16 text-center md:mb-20">
-          <SectionHeading href="/about">About Us</SectionHeading>
-        </div>
+      <LandingContainer>
+        <LandingSectionHeader href="/about">About Us</LandingSectionHeader>
 
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-stretch gap-6 lg:grid-cols-[1.3fr_1fr] lg:gap-8">
           <GlowCard
@@ -98,7 +100,7 @@ export default function AboutUs() {
             />
           </div>
         </div>
-      </div>
-    </section>
+      </LandingContainer>
+    </LandingSection>
   );
 }

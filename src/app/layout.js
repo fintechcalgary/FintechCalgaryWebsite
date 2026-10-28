@@ -8,6 +8,7 @@ import {
 import ClientSessionProvider from "@/components/providers/ClientSessionProvider";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { Analytics } from "@vercel/analytics/next";
+import ChromaticIcons from "@/components/ui/ChromaticIcons";
 import SilkBackground from "@/components/ui/SilkBackground";
 
 /* Slim geometric UI — body, nav, buttons */
@@ -100,6 +101,7 @@ export default function RootLayout({ children }) {
         <noscript>
           <style>{`body.silk-boot .site-content{opacity:1!important}`}</style>
         </noscript>
+        <ChromaticIcons />
         <SilkBackground />
         {/* Main content wrapper — revealed after first silk frame */}
         <div className="site-content relative z-10 min-h-screen">

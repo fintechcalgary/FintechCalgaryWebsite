@@ -4,7 +4,11 @@ import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import SectionHeading from "@/components/ui/SectionHeading";
+import {
+  LandingContainer,
+  LandingSection,
+  LandingSectionHeader,
+} from "@/components/layout/LandingSection";
 
 function PartnerCard({ partner }) {
   const color = partner.color || "#8B5CF6";
@@ -80,14 +84,12 @@ export default function Partners() {
     ));
 
   return (
-    <section id="partners" className="relative overflow-x-clip py-24">
+    <LandingSection id="partners">
       <div className="absolute right-0 top-0 h-[500px] w-[500px] translate-x-1/2 rounded-full bg-purple-500/30 opacity-20 blur-[128px]" />
       <div className="absolute bottom-0 left-0 h-[400px] w-[400px] -translate-x-1/2 rounded-full bg-primary/30 opacity-20 blur-[96px]" />
 
-      <div className="container relative mx-auto px-6">
-        <div className="mb-16 text-center md:mb-20">
-          <SectionHeading href="/partners">Our Partners</SectionHeading>
-        </div>
+      <LandingContainer wide>
+        <LandingSectionHeader href="/partners">Our Partners</LandingSectionHeader>
 
         <div className="mx-auto max-w-7xl">
           <div className="relative mb-12 h-48 overflow-hidden">
@@ -111,7 +113,7 @@ export default function Partners() {
             </Link>
           </div>
         </div>
-      </div>
-    </section>
+      </LandingContainer>
+    </LandingSection>
   );
 }

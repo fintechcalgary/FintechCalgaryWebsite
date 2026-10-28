@@ -19,7 +19,9 @@ export default function EmptyState({
       className={`${shell} flex flex-col items-center justify-center px-6 py-12 text-center ${minHeightClass} ${className}`.trim()}
     >
       {Icon ? (
-        <Icon className="mx-auto mb-4 h-10 w-10 text-primary" aria-hidden />
+        <span className="fc-icon mx-auto mb-4" aria-hidden>
+          <Icon className="h-10 w-10" />
+        </span>
       ) : null}
       {title ? <p className="fc-title mb-2 text-lg">{title}</p> : null}
       {children ? <div className="fc-muted max-w-md">{children}</div> : null}

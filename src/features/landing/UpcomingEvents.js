@@ -1,18 +1,20 @@
 import EventCard from "@/features/events/EventCard";
 import { FiCalendar, FiArrowRight } from "react-icons/fi";
 import Link from "next/link";
-import SectionHeading from "@/components/ui/SectionHeading";
+import {
+  LandingContainer,
+  LandingSection,
+  LandingSectionHeader,
+} from "@/components/layout/LandingSection";
 import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function UpcomingEvents({ events }) {
   return (
-    <section id="events" className="relative overflow-x-clip py-24">
-      <div className="container relative z-10 mx-auto max-w-6xl px-6">
-        <div className="mb-16 text-center md:mb-20">
-          <SectionHeading href="/events">
-            Upcoming Events & Webinars
-          </SectionHeading>
-        </div>
+    <LandingSection id="events">
+      <LandingContainer>
+        <LandingSectionHeader href="/events">
+          Upcoming Events & Webinars
+        </LandingSectionHeader>
 
         {events.length > 0 ? (
           <>
@@ -40,8 +42,8 @@ export default function UpcomingEvents({ events }) {
             className="mx-auto max-w-3xl !gap-0 !p-12 text-center"
           >
             <div className="relative z-10">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-primary/20 bg-primary/10">
-                <FiCalendar className="h-8 w-8 text-primary" />
+              <div className="fc-icon mx-auto mb-6">
+                <FiCalendar className="h-8 w-8" />
               </div>
               <h3 className="fc-title mb-3 text-2xl">
                 No events scheduled yet
@@ -52,7 +54,7 @@ export default function UpcomingEvents({ events }) {
             </div>
           </GlowCard>
         )}
-      </div>
-    </section>
+      </LandingContainer>
+    </LandingSection>
   );
 }

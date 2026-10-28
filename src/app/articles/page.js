@@ -13,6 +13,7 @@ import {
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { LoadingState } from "@/components/ui/Spinner";
+import { PUBLIC_TITLE_SIZE } from "@/components/layout/PublicPageFrame";
 import { PageTitle } from "@/components/ui/SectionHeading";
 
 export default function ArticlesPage() {
@@ -98,7 +99,7 @@ export default function ArticlesPage() {
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
         </div>
 
-        <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        <div className="container relative z-10 mx-auto px-6 sm:px-8 lg:px-12">
           {/* Back to Insights - prominent */}
           <motion.div
             initial={{ opacity: 0, x: -10 }}
@@ -120,10 +121,10 @@ export default function ArticlesPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-8"
           >
-            <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4">
+            <PageTitle sizeClass={PUBLIC_TITLE_SIZE}>
               Finance News Articles
             </PageTitle>
-            <p className="fc-lede mx-auto max-w-2xl">
+            <p className="fc-lede mx-auto max-w-3xl">
               Browse weekly highlights or the full FinTech archive
             </p>
           </motion.div>
@@ -207,7 +208,7 @@ export default function ArticlesPage() {
         </div>
       </section>
 
-      <div className="container mx-auto px-6 pt-1 pb-6 max-w-7xl flex-1">
+      <div className="container relative z-10 mx-auto flex-1 px-6 pb-24 pt-1 sm:px-8 lg:px-12">
         {loading && <LoadingState size="lg" />}
 
         {!loading && (
@@ -245,7 +246,7 @@ export default function ArticlesPage() {
               <div className="space-y-8">
                 {Object.entries(articlesByDate).map(([date, dateArticles]) => (
                   <div key={date}>
-                    <h2 className="text-xl font-bold text-white mb-4 pb-2 border-b border-gray-700/50">
+                    <h2 className="fc-title mb-4 border-b border-gray-700/50 pb-2 text-xl">
                       {formatDate(date)}
                     </h2>
                     <div className="space-y-4">

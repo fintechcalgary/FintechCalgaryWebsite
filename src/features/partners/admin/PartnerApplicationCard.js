@@ -61,9 +61,9 @@ export default function PartnerApplicationCard({
                 />
               </div>
             ) : (
-              <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-                <FiHome className="text-primary text-xl" />
-              </div>
+              <span className="fc-icon flex-shrink-0">
+                <FiHome className="text-xl" />
+              </span>
             )}
             <div className="min-w-0 flex-1">
               <h3 className="fc-title text-lg truncate">

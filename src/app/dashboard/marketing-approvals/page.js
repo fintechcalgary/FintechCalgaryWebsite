@@ -13,10 +13,7 @@ import PortalModal from "@/components/ui/Modal/ContentModal";
 import Button from "@/components/ui/Button";
 import StatusBadge from "@/components/ui/StatusBadge";
 import AdminBackLink from "@/components/ui/AdminBackLink";
-import {
-  AdminPageTitle,
-  AdminPageLede,
-} from "@/components/ui/SectionHeading";
+import { AdminPageHeader } from "@/components/layout/AdminPageShell";
 import EmptyState from "@/components/ui/EmptyState";
 import { LoadingState } from "@/components/ui/Spinner";
 import useRoleAccess from "@/hooks/useRoleAccess";
@@ -99,21 +96,19 @@ export default function MarketingApprovalsPage() {
 
   return (
     <div className="min-h-screen">
-      <main className="container mx-auto px-6 py-8 max-w-7xl">
+      <main className="container relative mx-auto max-w-7xl animate-fadeIn px-6 py-8">
         <AdminBackLink />
 
-        <div className="mb-8 space-y-2">
-          <AdminPageTitle>Marketing Approvals</AdminPageTitle>
-          <AdminPageLede>
-            Review marketing submissions and partner approval proof
-          </AdminPageLede>
-          {pendingCount > 0 ? (
-            <p className="text-sm text-yellow-400">
-              {pendingCount} submission{pendingCount !== 1 ? "s" : ""} awaiting
-              review
-            </p>
-          ) : null}
-        </div>
+        <AdminPageHeader
+          title="Marketing Approvals"
+          lede="Review marketing submissions and partner approval proof"
+        />
+        {pendingCount > 0 ? (
+          <p className="fc-alert-warning -mt-4 mb-8">
+            {pendingCount} submission{pendingCount !== 1 ? "s" : ""} awaiting
+            review
+          </p>
+        ) : null}
 
         {submissions.length === 0 ? (
           <EmptyState variant="admin">
@@ -167,14 +162,14 @@ export default function MarketingApprovalsPage() {
                   <div className="flex flex-wrap items-center gap-3 mt-4">
                     <a
                       href={`${API_ENDPOINTS.MARKETING_APPROVALS}/${item._id}?file=content`}
-                      className="px-4 py-2 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-400 text-sm flex items-center gap-2"
+                      className="fc-btn-chip"
                     >
                       <FiDownload className="w-4 h-4" />
                       Content
                     </a>
                     <a
                       href={`${API_ENDPOINTS.MARKETING_APPROVALS}/${item._id}?file=proof`}
-                      className="px-4 py-2 rounded-lg bg-purple-600/20 border border-purple-500/30 text-purple-400 text-sm flex items-center gap-2"
+                      className="fc-btn-chip"
                     >
                       <FiDownload className="w-4 h-4" />
                       Partner Proof
@@ -225,7 +220,7 @@ export default function MarketingApprovalsPage() {
               />
             </div>
             {reviewError && (
-              <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
+              <p className="fc-alert-error">
                 {reviewError}
               </p>
             )}

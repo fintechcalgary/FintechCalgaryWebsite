@@ -9,7 +9,7 @@ import {
 } from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import Spinner from "@/components/ui/Spinner";
-import { PageTitle } from "@/components/ui/SectionHeading";
+import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,19 +39,11 @@ export default function PartnersPage() {
 
   return (
     <PublicPageShell title="Partners | FinTech Calgary">
-      <div className="relative flex-grow">
-        <div className="container relative z-10 mx-auto px-6 pb-24 pt-36 sm:px-8 lg:px-12">
-          <div className="mb-20 animate-fadeIn text-center">
-            <PageTitle
-              sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6 leading-tight"
-            >
-              Our Partners & Sponsors
-            </PageTitle>
-            <p className="fc-lede mx-auto max-w-3xl">
-              Companies and campus groups we work with on events, sponsorships,
-              and student projects.
-            </p>
-          </div>
+      <PublicPageFrame>
+          <PublicPageHeader
+            title="Our Partners & Sponsors"
+            lede="Companies and campus groups we work with on events, sponsorships, and student projects."
+          />
 
           {loading ? (
             <div className="flex justify-center py-20">
@@ -208,8 +200,7 @@ export default function PartnersPage() {
               Contact us to learn more <FiArrowRight className="ml-2" />
             </Link>
           </div>
-        </div>
-      </div>
+      </PublicPageFrame>
     </PublicPageShell>
   );
 }

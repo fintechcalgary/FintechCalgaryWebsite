@@ -9,21 +9,9 @@ export default function PartnersStatCard({
   accent = "primary",
 }) {
   const accents = {
-    primary: {
-      glow: "purple",
-      iconWrap: "bg-primary/20 border-primary/30",
-      icon: "text-primary",
-    },
-    yellow: {
-      glow: "purple",
-      iconWrap: "bg-yellow-500/20 border-yellow-500/30",
-      icon: "text-yellow-500",
-    },
-    green: {
-      glow: "purple",
-      iconWrap: "bg-green-500/20 border-green-500/30",
-      icon: "text-green-500",
-    },
+    primary: { glow: "purple" },
+    yellow: { glow: "purple" },
+    green: { glow: "purple" },
   };
   const styles = accents[accent] || accents.primary;
 
@@ -38,11 +26,9 @@ export default function PartnersStatCard({
           <p className="fc-muted">{label}</p>
           <p className="text-2xl font-bold text-white sm:text-3xl">{value}</p>
         </div>
-        <div
-          className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border sm:h-12 sm:w-12 sm:rounded-xl ${styles.iconWrap}`}
-        >
-          <Icon className={`text-lg sm:text-xl ${styles.icon}`} />
-        </div>
+        <span className="fc-icon">
+          <Icon className="text-xl sm:text-2xl" />
+        </span>
       </div>
     </GlowCard>
   );

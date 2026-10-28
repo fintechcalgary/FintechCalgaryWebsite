@@ -1,6 +1,7 @@
 "use client";
 import PublicPageShell from "@/components/layout/PublicPageShell";
-import { PageTitle } from "@/components/ui/SectionHeading";
+import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
+import { SITE_CONTACT } from "@/lib/constants";
 import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function TermsPage() {
@@ -8,17 +9,12 @@ export default function TermsPage() {
   return (
     <PublicPageShell title="Terms of Service | FinTech Calgary">
 
-      <div className="relative flex-grow">
-        <div className="container relative z-10 mx-auto px-6 pb-16 pt-36 sm:px-8 lg:px-12">
+      <PublicPageFrame>
           <div className="mx-auto max-w-4xl">
-            <div className="mb-12 text-center">
-              <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
-                Terms of Service
-              </PageTitle>
-              <p className="fc-lede">
-                Last updated: {new Date().toLocaleDateString()}
-              </p>
-            </div>
+            <PublicPageHeader
+              title="Terms of Service"
+              lede={`Last updated: ${new Date().toLocaleDateString()}`}
+            />
 
             <GlowCard
               customSize
@@ -197,19 +193,15 @@ export default function TermsPage() {
                 <p className="fc-body-lg">
                   If you have any questions about these Terms of Service, please
                   contact us at{" "}
-                  <a
-                    href="mailto:fintech.calgary@gmail.com"
-                    className="fc-link underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
-                  >
-                    fintech.calgary@gmail.com
+                  <a href={SITE_CONTACT.mailto} className="fc-link-underline">
+                    {SITE_CONTACT.email}
                   </a>
                 </p>
               </section>
               </div>
             </GlowCard>
           </div>
-        </div>
-      </div>
+      </PublicPageFrame>
     </PublicPageShell>
   );
 }

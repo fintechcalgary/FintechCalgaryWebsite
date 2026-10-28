@@ -12,7 +12,7 @@ export default function NotFound() {
     <PublicPageShell title="404 - Page Not Found | FinTech Calgary">
 
       <div className="relative flex-grow flex items-center justify-center">
-        <div className="relative z-10 container mx-auto px-6 pt-36 pb-24">
+        <div className="container relative z-10 mx-auto px-6 pb-24 pt-36 sm:px-8 lg:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

@@ -11,14 +11,13 @@ import {
   validatePassword,
   validateUsername,
 } from "@/lib/frontend-helpers";
-import { API_ENDPOINTS, UPLOAD_FOLDERS, FILE_TYPES, ERROR_MESSAGES } from "@/lib/constants";
+import { API_ENDPOINTS, UPLOAD_FOLDERS, FILE_TYPES, ERROR_MESSAGES, SITE_CONTACT } from "@/lib/constants";
+import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
 import PartnerForm from "@/features/partners/PartnerForm";
 import {
   INITIAL_PARTNER_FORM,
   createPartnerFieldChangeHandler,
 } from "@/features/partners/partnerFormFields";
-import { PageTitle } from "@/components/ui/SectionHeading";
-
 export default function PartnerSignupPage() {
 
   const [formData, setFormData] = useState({ ...INITIAL_PARTNER_FORM, password: "" });
@@ -200,32 +199,31 @@ export default function PartnerSignupPage() {
   return (
     <PublicPageShell title="Partner | FinTech Calgary">
 
-      <div className="relative flex-grow">
-        <div className="container mx-auto px-6 pt-36 relative z-10">
-          <div className="text-center animate-fadeIn">
-            <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6">
-              Partner Sign Up
-            </PageTitle>
-            <p className="fc-lede mx-auto max-w-3xl">
-              Interested in learning more about Partnership before
-              applying? Contact us at{" "}
-              <a
-                href="mailto:fintech.calgary@gmail.com"
-                className="fc-link-underline inline-flex items-center gap-1 ml-1"
-              >
-                <FaEnvelope className="w-4 h-4" />
-                fintech.calgary@gmail.com
-              </a>
-            </p>
-          </div>
+      <PublicPageFrame>
+          <PublicPageHeader
+            title="Partner Sign Up"
+            lede={
+              <>
+                Interested in learning more about Partnership before applying?
+                Contact us at{" "}
+                <a
+                  href={SITE_CONTACT.mailto}
+                  className="fc-link-underline inline-flex items-center gap-1"
+                >
+                  <FaEnvelope className="h-4 w-4" />
+                  {SITE_CONTACT.email}
+                </a>
+              </>
+            }
+          />
 
-          <div className="flex justify-center items-center">
-            <div className="container mx-auto px-4 py-16 max-w-4xl">
+          <div className="flex items-center justify-center">
+            <div className="mx-auto w-full max-w-4xl py-16">
               {submitStatus === "success" ? (
                 <div className="text-center py-8 animate-fadeIn">
-                  <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <FiCheck className="w-8 h-8 text-primary" />
-                  </div>
+                  <span className="fc-icon mx-auto mb-4">
+                    <FiCheck className="h-8 w-8" />
+                  </span>
                   <h2 className="fc-title text-2xl mb-2">
                     Thank you for your interest in becoming a Partner!
                   </h2>
@@ -254,7 +252,7 @@ export default function PartnerSignupPage() {
                   />
 
                   {submitStatus === "error" && (
-                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start max-w-4xl mx-auto mt-6">
+                    <div className="fc-alert-error mx-auto mt-6 flex max-w-4xl items-start">
                       <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
                       <div>
                         <h3 className="text-red-400 font-semibold mb-2">
@@ -290,10 +288,10 @@ export default function PartnerSignupPage() {
                           If you continue to experience issues, please contact
                           us at{" "}
                           <a
-                            href="mailto:fintech.calgary@gmail.com"
+                            href={SITE_CONTACT.mailto}
                             className="underline hover:text-red-200"
                           >
-                            fintech.calgary@gmail.com
+                            {SITE_CONTACT.email}
                           </a>
                         </p>
                       </div>
@@ -303,8 +301,7 @@ export default function PartnerSignupPage() {
               )}
             </div>
           </div>
-        </div>
-      </div>
+      </PublicPageFrame>
     </PublicPageShell>
   );
 }

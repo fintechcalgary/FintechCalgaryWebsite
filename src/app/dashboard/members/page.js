@@ -8,14 +8,12 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 import Modal from "@/components/ui/Modal/ConfirmModal";
+import Button from "@/components/ui/Button";
 import { LoadingState } from "@/components/ui/Spinner";
 import EmptyState from "@/components/ui/EmptyState";
 import AdminBackLink from "@/components/ui/AdminBackLink";
 import IconButton from "@/components/ui/IconButton";
-import {
-  AdminPageTitle,
-  AdminPageLede,
-} from "@/components/ui/SectionHeading";
+import { AdminPageHeader } from "@/components/layout/AdminPageShell";
 import useAdminResource from "@/hooks/useAdminResource";
 import useConfirmDelete from "@/hooks/useConfirmDelete";
 import { downloadCsv } from "@/lib/csv";
@@ -113,28 +111,26 @@ export default function MembersPage() {
 
   return (
     <div className="min-h-screen">
-      <main className="container mx-auto px-6 py-8 max-w-7xl">
+      <main className="container relative mx-auto max-w-7xl animate-fadeIn px-6 py-8">
         <AdminBackLink />
 
         {/* Header */}
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-2">
-            <AdminPageTitle>Members</AdminPageTitle>
-            <AdminPageLede>
-              Manage general members and mailing lists
-            </AdminPageLede>
-          </div>
-
-          <button
+        <AdminPageHeader
+          title="Members"
+          lede="Manage general members and mailing lists"
+          actions={
+          <Button
+            type="button"
+            variant="success-soft"
             onClick={handleExportCsv}
             disabled={members.length === 0}
-            className="flex items-center justify-center gap-2 rounded-lg border border-green-500/30 bg-green-600/20 px-4 py-2 text-sm text-green-400 transition-all duration-300 hover:bg-green-600/30 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <FiDownload className="h-4 w-4" />
             <span className="hidden sm:inline">Export CSV</span>
             <span className="sm:hidden">Export</span>
-          </button>
-        </div>
+          </Button>
+          }
+        />
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

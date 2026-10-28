@@ -19,10 +19,7 @@ import AdminBackLink from "@/components/ui/AdminBackLink";
 import IconButton from "@/components/ui/IconButton";
 import EmptyState from "@/components/ui/EmptyState";
 import { LoadingState } from "@/components/ui/Spinner";
-import {
-  AdminPageTitle,
-  AdminPageLede,
-} from "@/components/ui/SectionHeading";
+import { AdminPageHeader } from "@/components/layout/AdminPageShell";
 import useRoleAccess from "@/hooks/useRoleAccess";
 import useRoleResource from "@/hooks/useRoleResource";
 import { API_ENDPOINTS, FILE_TYPES } from "@/lib/constants";
@@ -249,27 +246,25 @@ export default function DocumentationPage() {
 
   return (
     <div className="min-h-screen">
-      <main className="container mx-auto px-6 py-8 max-w-7xl">
+      <main className="container relative mx-auto max-w-7xl animate-fadeIn px-6 py-8">
         <AdminBackLink />
 
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-2">
-            <AdminPageTitle>Documentation</AdminPageTitle>
-            <AdminPageLede>
-              Club documentation folders and uploaded records
-            </AdminPageLede>
-          </div>
-          {canManageDocumentation ? (
-            <Button
-              type="button"
-              variant="soft"
-              onClick={() => setShowFolderModal(true)}
-            >
-              <FiFolderPlus className="h-4 w-4" />
-              New Folder
-            </Button>
-          ) : null}
-        </div>
+        <AdminPageHeader
+          title="Documentation"
+          lede="Club documentation folders and uploaded records"
+          actions={
+            canManageDocumentation ? (
+              <Button
+                type="button"
+                variant="soft"
+                onClick={() => setShowFolderModal(true)}
+              >
+                <FiFolderPlus className="h-4 w-4" />
+                New Folder
+              </Button>
+            ) : null
+          }
+        />
 
         {!selectedFolder ? (
           <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -291,9 +286,9 @@ export default function DocumentationPage() {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="p-3 rounded-xl bg-primary/15 text-primary">
+                      <span className="fc-icon">
                         <FiFolder className="w-5 h-5" />
-                      </div>
+                      </span>
                       <div>
                         <h2 className="text-xl font-semibold text-white">
                           {folder.name}
@@ -329,7 +324,7 @@ export default function DocumentationPage() {
                   <FiArrowLeft className="w-3.5 h-3.5" />
                   All folders
                 </button>
-                <h2 className="text-2xl font-semibold text-white">
+                <h2 className="fc-title text-2xl">
                   {selectedFolder.name}
                 </h2>
                 {selectedFolder.description && (
@@ -352,7 +347,7 @@ export default function DocumentationPage() {
                 {canManageDocumentation && !selectedFolder.protected && (
                   <button
                     onClick={() => setFolderToDelete(selectedFolder)}
-                    className="px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 transition-all flex items-center gap-2 text-sm"
+                    className="fc-btn-danger-soft"
                   >
                     <FiTrash2 className="w-4 h-4" />
                     Delete Folder
@@ -365,7 +360,9 @@ export default function DocumentationPage() {
               <LoadingState size="md" className="py-12" />
             ) : documents.length === 0 ? (
               <div className="text-center py-12 text-gray-400">
-                <FiFile className="mx-auto text-4xl mb-4 text-primary" />
+                <span className="fc-icon mx-auto mb-4">
+                  <FiFile className="h-10 w-10" />
+                </span>
                 <p>No documents in this folder yet.</p>
               </div>
             ) : (
@@ -390,7 +387,7 @@ export default function DocumentationPage() {
                     <div className="flex items-center gap-2">
                       <a
                         href={`${API_ENDPOINTS.DOCUMENTATION_DOCUMENTS}/${doc._id}`}
-                        className="px-4 py-2 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-400 hover:bg-blue-600/30 transition-all flex items-center gap-2 text-sm"
+                        className="fc-btn-chip"
                       >
                         <FiDownload className="w-4 h-4" />
                         Download
@@ -450,7 +447,7 @@ export default function DocumentationPage() {
             />
           </div>
           {folderError && (
-            <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
+            <p className="fc-alert-error">
               {folderError}
             </p>
           )}
@@ -519,7 +516,7 @@ export default function DocumentationPage() {
                 ",",
               )}
               onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary/20 file:text-primary"
+              className="fc-file-input"
               required
             />
             <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
@@ -528,7 +525,7 @@ export default function DocumentationPage() {
             </p>
           </div>
           {uploadError && (
-            <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
+            <p className="fc-alert-error">
               {uploadError}
             </p>
           )}

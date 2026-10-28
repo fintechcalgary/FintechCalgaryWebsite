@@ -1,6 +1,7 @@
 "use client";
 import PublicPageShell from "@/components/layout/PublicPageShell";
-import { PageTitle } from "@/components/ui/SectionHeading";
+import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
+import { SITE_CONTACT } from "@/lib/constants";
 import { GlowCard } from "@/components/ui/spotlight-card";
 
 export default function PrivacyPage() {
@@ -8,17 +9,12 @@ export default function PrivacyPage() {
   return (
     <PublicPageShell title="Privacy Policy | FinTech Calgary">
 
-      <div className="relative flex-grow">
-        <div className="container relative z-10 mx-auto px-6 pb-16 pt-36 sm:px-8 lg:px-12">
+      <PublicPageFrame>
           <div className="mx-auto max-w-4xl">
-            <div className="mb-12 text-center">
-              <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
-                Privacy Policy
-              </PageTitle>
-              <p className="fc-lede">
-                Last updated: {new Date().toLocaleDateString()}
-              </p>
-            </div>
+            <PublicPageHeader
+              title="Privacy Policy"
+              lede={`Last updated: ${new Date().toLocaleDateString()}`}
+            />
 
             <GlowCard
               customSize
@@ -210,24 +206,20 @@ export default function PrivacyPage() {
                 <div className="mt-4 p-4 bg-gray-700/30 rounded-lg">
                   <p className="fc-body-lg">
                     <strong>Email:</strong>{" "}
-                    <a
-                      href="mailto:fintech.calgary@gmail.com"
-                      className="fc-link underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
-                    >
-                      fintech.calgary@gmail.com
+                    <a href={SITE_CONTACT.mailto} className="fc-link-underline">
+                      {SITE_CONTACT.email}
                     </a>
                   </p>
                   <p className="fc-body-lg mt-2">
-                    <strong>Address:</strong> University of Calgary, 2500
-                    University Dr NW, Calgary, AB T2N 1N4
+                    <strong>Address:</strong> {SITE_CONTACT.addressName},{" "}
+                    {SITE_CONTACT.addressLine}
                   </p>
                 </div>
               </section>
               </div>
             </GlowCard>
           </div>
-        </div>
-      </div>
+      </PublicPageFrame>
     </PublicPageShell>
   );
 }

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import Button from "@/components/ui/Button";
 import AdminBackLink from "@/components/ui/AdminBackLink";
+import { AdminPageTitle } from "@/components/ui/SectionHeading";
 import IconButton from "@/components/ui/IconButton";
 import {
   FiMail,
@@ -132,29 +133,24 @@ export default function EventRegistrations({ eventId }) {
   }
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-      </div>
-
-      <div className="max-w-6xl mx-auto relative z-10">
+    <div className="relative min-h-screen">
+      <div className="container relative mx-auto max-w-7xl animate-fadeIn px-6 py-8">
         <div className="mb-8 flex items-center justify-between gap-4">
           <AdminBackLink className="!mb-0" />
-          <Button onClick={exportToCSV} variant="primary" className="!px-4 !py-2">
+          <Button onClick={exportToCSV} variant="success-soft">
             <FiDownload className="h-4 w-4" />
             Export CSV
           </Button>
         </div>
 
-        {/* Event Info Card */}
         <div className="fc-admin-panel mb-8 p-8 shadow-xl">
-          <h1 className="text-4xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-white">
+          <AdminPageTitle className="mb-4" sizeClass="text-3xl sm:text-4xl">
             {event?.title}
-          </h1>
+          </AdminPageTitle>
           <div className="flex items-center fc-body text-lg">
-            <FiCalendar className="w-5 h-5 mr-3 text-primary" />
+            <span className="fc-icon mr-3">
+              <FiCalendar className="h-5 w-5" />
+            </span>
             <span className="text-lg">
               {formatEventDate(event?.date)}
             </span>
@@ -162,12 +158,12 @@ export default function EventRegistrations({ eventId }) {
         </div>
 
         {/* Registrations Section */}
-        <div className="bg-gray-900/40 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-800/50 overflow-hidden">
-          <div className="p-8 border-b border-gray-800/50">
-            <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-                <FiUser className="w-5 h-5 text-primary" />
-              </div>
+        <div className="fc-admin-panel overflow-hidden shadow-xl">
+          <div className="border-b border-gray-800/50 p-8">
+            <h2 className="fc-title flex items-center gap-3 text-2xl">
+              <span className="fc-icon-tile">
+                <FiUser className="h-5 w-5" />
+              </span>
               Registrations ({event?.registrations?.length || 0})
             </h2>
           </div>
@@ -202,26 +198,26 @@ export default function EventRegistrations({ eventId }) {
                     {/* Contact Info */}
                     <div className="space-y-3">
                       <div className="flex items-center fc-body text-lg">
-                        <div className="w-8 h-8 bg-gray-800/50 rounded-full flex items-center justify-center mr-3">
-                          <FiMail className="w-4 h-4 text-primary" />
-                        </div>
+                        <span className="fc-icon mr-3">
+                          <FiMail className="h-4 w-4" />
+                        </span>
                         <span>{reg.userEmail}</span>
                       </div>
 
                       {reg.ucid && (
                         <div className="flex items-center fc-body text-lg">
-                          <div className="w-8 h-8 bg-gray-800/50 rounded-full flex items-center justify-center mr-3">
-                            <FiHash className="w-4 h-4 text-primary" />
-                          </div>
+                          <span className="fc-icon mr-3">
+                            <FiHash className="h-4 w-4" />
+                          </span>
                           <span>UCID: {reg.ucid}</span>
                         </div>
                       )}
 
                       {reg.school && (
                         <div className="flex items-center fc-body text-lg">
-                          <div className="w-8 h-8 bg-gray-800/50 rounded-full flex items-center justify-center mr-3">
-                            <FiUser className="w-4 h-4 text-primary" />
-                          </div>
+                          <span className="fc-icon mr-3">
+                            <FiUser className="h-4 w-4" />
+                          </span>
                           <span>School: {reg.school}</span>
                         </div>
                       )}
@@ -231,7 +227,9 @@ export default function EventRegistrations({ eventId }) {
                     {reg.comments && (
                       <div className="mt-6 p-4 bg-gray-800/30 rounded-xl border border-gray-700/50">
                         <div className="flex items-center gap-2 fc-muted mb-2">
-                          <FiMessageSquare className="w-4 h-4 text-primary" />
+                          <span className="fc-icon">
+                            <FiMessageSquare className="h-4 w-4" />
+                          </span>
                           Comments
                         </div>
                         <p className="fc-body">
@@ -260,9 +258,9 @@ export default function EventRegistrations({ eventId }) {
 
             {event?.registrations?.length === 0 && (
               <div className="p-16 text-center">
-                <div className="w-16 h-16 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FiUser className="w-8 h-8 text-gray-500" />
-                </div>
+                <span className="fc-icon mx-auto mb-4">
+                  <FiUser className="h-8 w-8" />
+                </span>
                 <h3 className="text-xl font-semibold fc-muted mb-2">
                   No registrations yet
                 </h3>

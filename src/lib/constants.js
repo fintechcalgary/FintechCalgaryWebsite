@@ -160,6 +160,32 @@ export const SUCCESS_MESSAGES = {
   DELETED: "Deleted successfully!",
 };
 
+export const SITE_CONTACT = {
+  email: "fintech.calgary@gmail.com",
+  mailto: "mailto:fintech.calgary@gmail.com",
+  addressName: "University of Calgary",
+  addressLine: "2500 University Dr NW, Calgary, AB T2N 1N4",
+};
+
+export const SOCIAL_LINKS = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/fintechcalgary/",
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/fintech.calgary/",
+  },
+  {
+    label: "GitHub",
+    href: "https://github.com/fintechcalgary",
+  },
+  {
+    label: "TikTok",
+    href: "https://www.tiktok.com/@fintech.calgary",
+  },
+];
+
 // Email Constants
 export const EMAIL = {
   CONTACT_FROM: (domain) => `FinTech Calgary <contact@${domain}>`,

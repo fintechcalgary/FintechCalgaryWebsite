@@ -52,9 +52,9 @@ export default function ExecutiveApplicationBanner() {
 
         <div className="flex items-start gap-2 sm:gap-3 pr-6 sm:pr-8">
           <div className="flex-shrink-0">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary/20 rounded-full flex items-center justify-center">
-              <FiUsers className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-            </div>
+            <span className="fc-icon">
+              <FiUsers className="h-5 w-5" />
+            </span>
           </div>
 
           <div className="flex-1 min-w-0">

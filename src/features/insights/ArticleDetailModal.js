@@ -76,9 +76,9 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
             {article.summary ? (
               <div className="space-y-6">
                 <div className="mb-6 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 to-purple-500/10">
-                    <FiZap className="h-6 w-6 text-primary" />
-                  </div>
+                  <span className="fc-icon">
+                    <FiZap className="h-6 w-6" />
+                  </span>
                   <div>
                     <h3 className="text-xl font-bold text-white">AI Summary</h3>
                     <p className="fc-muted">Comprehensive insights and analysis</p>
@@ -113,33 +113,25 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                       icon: FiTrendingUp,
                       label: "Market Impact",
                       sub: "Industry implications",
-                      color:
-                        "from-primary/10 to-purple-500/10 border-primary/20",
-                      iconColor: "text-primary",
                     },
                     {
                       icon: FiTarget,
                       label: "Strategic View",
                       sub: "Key takeaways",
-                      color: "from-blue-500/10 to-cyan-500/10 border-blue-500/20",
-                      iconColor: "text-blue-400",
                     },
                     {
                       icon: FiBarChart2,
                       label: "Trends",
                       sub: "Related movements",
-                      color:
-                        "from-green-500/10 to-emerald-500/10 border-green-500/20",
-                      iconColor: "text-green-400",
                     },
-                  ].map(({ icon: Icon, label, sub, color, iconColor }) => (
+                  ].map(({ icon: Icon, label, sub }) => (
                     <div
                       key={label}
-                      className={`flex items-center gap-3 rounded-xl border bg-gradient-to-br p-4 ${color}`}
+                      className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4"
                     >
-                      <Icon
-                        className={`h-5 w-5 flex-shrink-0 ${iconColor}`}
-                      />
+                      <span className="fc-icon">
+                        <Icon className="h-5 w-5" />
+                      </span>
                       <div>
                         <p className="text-sm font-medium text-white">{label}</p>
                         <p className="fc-muted text-xs">{sub}</p>
@@ -150,9 +142,9 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-500/20">
-                  <FiZap className="h-8 w-8 text-gray-400" />
-                </div>
+                <span className="fc-icon mb-4">
+                  <FiZap className="h-8 w-8" />
+                </span>
                 <p className="fc-body mb-2">No AI summary available yet</p>
                 <p className="fc-muted">
                   Summaries are generated during the weekly Friday refresh.

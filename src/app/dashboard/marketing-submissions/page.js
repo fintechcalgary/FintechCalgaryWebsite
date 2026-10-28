@@ -12,10 +12,7 @@ import PortalModal from "@/components/ui/Modal/ContentModal";
 import Button from "@/components/ui/Button";
 import StatusBadge from "@/components/ui/StatusBadge";
 import AdminBackLink from "@/components/ui/AdminBackLink";
-import {
-  AdminPageTitle,
-  AdminPageLede,
-} from "@/components/ui/SectionHeading";
+import { AdminPageHeader } from "@/components/layout/AdminPageShell";
 import EmptyState from "@/components/ui/EmptyState";
 import { LoadingState } from "@/components/ui/Spinner";
 import useRoleAccess from "@/hooks/useRoleAccess";
@@ -115,25 +112,23 @@ export default function MarketingSubmissionsPage() {
 
   return (
     <div className="min-h-screen">
-      <main className="container mx-auto px-6 py-8 max-w-7xl">
+      <main className="container relative mx-auto max-w-7xl animate-fadeIn px-6 py-8">
         <AdminBackLink />
 
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-2">
-            <AdminPageTitle>Marketing Submissions</AdminPageTitle>
-            <AdminPageLede>
-              Upload marketing content and partner approval proof for admin review
-            </AdminPageLede>
-          </div>
-          <Button
-            type="button"
-            variant="soft"
-            onClick={() => setShowFormModal(true)}
-          >
-            <FiPlus className="h-4 w-4" />
-            New Submission
-          </Button>
-        </div>
+        <AdminPageHeader
+          title="Marketing Submissions"
+          lede="Upload marketing content and partner approval proof for admin review"
+          actions={
+            <Button
+              type="button"
+              variant="soft"
+              onClick={() => setShowFormModal(true)}
+            >
+              <FiPlus className="h-4 w-4" />
+              New Submission
+            </Button>
+          }
+        />
 
         {submissions.length === 0 ? (
           <EmptyState
@@ -190,14 +185,14 @@ export default function MarketingSubmissionsPage() {
                   <div className="flex flex-wrap gap-3 mt-4">
                     <a
                       href={`${API_ENDPOINTS.MARKETING_APPROVALS}/${item._id}?file=content`}
-                      className="px-4 py-2 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-400 text-sm flex items-center gap-2"
+                      className="fc-btn-chip"
                     >
                       <FiDownload className="w-4 h-4" />
                       Content
                     </a>
                     <a
                       href={`${API_ENDPOINTS.MARKETING_APPROVALS}/${item._id}?file=proof`}
-                      className="px-4 py-2 rounded-lg bg-purple-600/20 border border-purple-500/30 text-purple-400 text-sm flex items-center gap-2"
+                      className="fc-btn-chip"
                     >
                       <FiDownload className="w-4 h-4" />
                       Partner Proof
@@ -266,7 +261,7 @@ export default function MarketingSubmissionsPage() {
               type="file"
               accept={FILE_TYPES.MARKETING.EXTENSIONS.map((e) => `.${e}`).join(",")}
               onChange={(e) => setContentFile(e.target.files?.[0] || null)}
-              className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary/20 file:text-primary"
+              className="fc-file-input"
               required
             />
           </div>
@@ -278,12 +273,12 @@ export default function MarketingSubmissionsPage() {
               type="file"
               accept={FILE_TYPES.MARKETING.EXTENSIONS.map((e) => `.${e}`).join(",")}
               onChange={(e) => setProofFile(e.target.files?.[0] || null)}
-              className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary/20 file:text-primary"
+              className="fc-file-input"
               required
             />
           </div>
           {formError && (
-            <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
+            <p className="fc-alert-error">
               {formError}
             </p>
           )}

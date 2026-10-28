@@ -133,8 +133,8 @@ export default function JoinPage() {
 
   return (
     <PublicPageShell>
-      <div className="relative flex-grow flex items-center justify-center pt-28 pb-12">
-        <div className="relative container mx-auto px-6 my-20">
+      <div className="relative flex flex-grow items-center justify-center px-6 pb-24 pt-36 sm:px-8 lg:px-12">
+        <div className="relative container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -180,9 +180,9 @@ export default function JoinPage() {
 
                 {submitStatus === "success" ? (
                   <div className="relative z-10 text-center py-8">
-                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <FiCheck className="w-8 h-8 text-primary" />
-                    </div>
+                    <span className="fc-icon mx-auto mb-4">
+                      <FiCheck className="h-8 w-8" />
+                    </span>
                     <h2 className="fc-title text-2xl mb-2">
                       Thank you for joining!
                     </h2>
@@ -364,7 +364,7 @@ export default function JoinPage() {
                           </div>
                         )}
                         {errorMessage && (
-                          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start">
+                          <div className="fc-alert-error flex items-start">
                             <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
                             <div>
                               <p className="text-red-400">{errorMessage}</p>

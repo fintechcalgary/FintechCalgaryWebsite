@@ -85,6 +85,52 @@
     @apply inline-flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/20 px-4 py-2 text-sm font-medium text-primary transition-all duration-200 hover:bg-primary/30 hover:border-primary/50 active:scale-[0.98];
   }
 
+  /* Anchor or button chip for downloads / secondary file actions */
+  .fc-btn-chip {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/15 px-4 py-2 text-sm font-medium text-primary transition-all duration-200 hover:border-primary/50 hover:bg-primary/25 active:scale-[0.98];
+  }
+
+  .fc-btn-success-soft {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/15 px-4 py-2 text-sm font-medium text-emerald-300 transition-all duration-200 hover:bg-emerald-500/25 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .fc-btn-danger-soft {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-300 transition-all duration-200 hover:bg-red-500/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .fc-alert-error {
+    @apply rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300;
+  }
+
+  .fc-alert-success {
+    @apply rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300;
+  }
+
+  .fc-alert-warning {
+    @apply rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200;
+  }
+
+  .fc-file-input {
+    @apply w-full cursor-pointer text-sm text-gray-400 file:mr-4 file:cursor-pointer file:rounded-xl file:border-0 file:bg-primary/20 file:px-4 file:py-2 file:text-sm file:font-medium file:text-primary file:transition-colors hover:file:bg-primary/30;
+  }
+
+  /* Wrapper for a decorative icon. The glyph color comes from #fc-icon-gradient
+     in the root layout, so this stays a plain inline box with no tile behind it. */
+  .fc-icon,
+  .fc-icon-tile {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    color: #c084fc;
+  }
+
+  .fc-icon :is(svg),
+  .fc-icon-tile :is(svg) {
+    display: block;
+  }
+
   /* Page / section intro under titles — light, open, secondary to display headers */
   .fc-lede {
     @apply text-base font-light leading-relaxed tracking-wide text-white/55 sm:text-lg md:text-xl md:leading-[1.7];
@@ -287,6 +333,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 select.form-input-auto {
   width: auto;
   max-width: 100%;
+}
+
+/* .form-input's px-4 beats the element-level select padding, so the chevron
+   sits on the label. Auto-width selects also ignore that padding when sizing. */
+select.form-input {
+  padding-right: 2.75rem;
+}
+
+select.form-input-auto {
+  min-width: 15rem;
 }
 
 /* Safari-specific input resets */

@@ -70,7 +70,9 @@ export default function DisplayPartnersPanel() {
 
       {partners.length === 0 ? (
         <div className="fc-admin-panel text-center py-12 sm:py-16 px-4">
-          <FiImage className="mx-auto text-3xl sm:text-4xl text-primary mb-3 sm:mb-4" />
+          <span className="fc-icon mx-auto mb-3 sm:mb-4">
+            <FiImage className="h-10 w-10" />
+          </span>
           <p className="fc-body mb-4">
             No partners yet
           </p>

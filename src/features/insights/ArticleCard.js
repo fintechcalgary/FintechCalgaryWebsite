@@ -280,7 +280,7 @@ export default function ArticleCard({ article, viewMode = 'grid' }) {
 
           <div className={isListView ? 'mb-2 min-h-[44px]' : 'mb-2 min-h-[48px]'}>
             {summaryError ? (
-              <div className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg p-2">
+              <div className="fc-alert-error">
                 {summaryError}
               </div>
             ) : isGeneratingSummary ? (

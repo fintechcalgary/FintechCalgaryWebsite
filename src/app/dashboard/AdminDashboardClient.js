@@ -63,18 +63,20 @@ export default function AdminDashboardClient() {
       </div>
 
 
-      <main className="container mx-auto px-6 py-8 max-w-7xl relative animate-fadeIn">
+      <main className="container relative mx-auto max-w-7xl animate-fadeIn px-6 py-8">
         <div
           className="mb-6 p-4 rounded-xl border border-gray-700/30 bg-gray-900/60 backdrop-blur-xl
             flex items-center gap-3 text-sm fc-body max-w-fit animate-fadeIn hover:bg-gray-800/60 transition-all duration-300"
         >
+          <span className="fc-icon">
           <svg
             viewBox="0 0 24 24"
-            className="w-5 h-5 text-primary"
+            className="h-5 w-5"
             fill="currentColor"
           >
             <path d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728Z" />
           </svg>
+          </span>
           Best experience with Google Chrome
         </div>
 
@@ -116,7 +118,7 @@ export default function AdminDashboardClient() {
                       Manage system resources and user data
                     </p>
                   </div>
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary backdrop-blur-sm border border-primary/30">
+                  <span className="fc-icon">
                     <svg
                       className="h-6 w-6"
                       fill="none"
@@ -141,21 +143,6 @@ export default function AdminDashboardClient() {
                       description={card.description}
                       href={card.href}
                       color={card.color}
-                      icon={(props) => (
-                        <svg
-                          {...props}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                          />
-                        </svg>
-                      )}
                     />
                   ))}
                 </div>
@@ -177,7 +164,7 @@ export default function AdminDashboardClient() {
                     </h2>
                     <p className="fc-body">Manage your schedule</p>
                   </div>
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary backdrop-blur-sm border border-primary/30">
+                  <span className="fc-icon">
                     <FontAwesomeIcon icon={faChartBar} className="h-6 w-6" />
                   </span>
                 </div>
@@ -187,7 +174,7 @@ export default function AdminDashboardClient() {
              shadow-lg hover:shadow-purple-600/20 duration-300 backdrop-blur-xl max-w-md sm:max-w-full transition-all"
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="hidden md:flex h-9 w-9 items-center justify-center rounded-xl bg-purple-700/20 text-purple-300 backdrop-blur-sm border border-purple-500/30">
+                    <div className="fc-icon hidden md:inline-flex">
                       <FontAwesomeIcon icon={faClock} className="h-5 w-5" />
                     </div>
                     <div className="space-y-0.5">
@@ -221,7 +208,7 @@ export default function AdminDashboardClient() {
                     </h2>
                     <p className="fc-body">Collaborate with others</p>
                   </div>
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary backdrop-blur-sm border border-primary/30">
+                  <span className="fc-icon">
                     <FontAwesomeIcon icon={faUsers} className="h-6 w-6" />
                   </span>
                 </div>

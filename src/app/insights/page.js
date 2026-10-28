@@ -10,6 +10,7 @@ import ArticleDetailModal from "@/features/insights/ArticleDetailModal";
 import { OverviewSentimentBar } from "@/features/insights/SentimentBars";
 import { ChatBotProvider, useChatBot } from "@/contexts/ChatBotContext";
 import ErrorBoundary from "@/components/providers/ErrorBoundary";
+import { PUBLIC_PAGE_GUTTER } from "@/components/layout/PublicPageFrame";
 import { PageTitle } from "@/components/ui/SectionHeading";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import Link from "next/link";
@@ -374,12 +375,12 @@ function InsightsPageContent() {
   return (
     <PublicPageShell title="Insights | FinTech Calgary">
       <div className="relative flex-grow">
-        <div className="container relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-36 sm:px-8 lg:px-12">
+        <div className={PUBLIC_PAGE_GUTTER}>
           {hasConnectionError && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 rounded-xl border border-yellow-500/30 bg-yellow-900/30 p-4 text-sm text-yellow-200"
+              className="fc-alert-warning mb-6"
             >
               <div className="flex items-center gap-2">
                 <FiAlertCircle className="h-5 w-5 shrink-0" />

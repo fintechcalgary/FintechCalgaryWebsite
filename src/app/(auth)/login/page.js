@@ -5,6 +5,7 @@ import Image from "next/image";
 import { FiArrowLeft } from "react-icons/fi";
 import Link from "next/link";
 import { InlineSpinner } from "@/components/ui/Spinner";
+import { PageTitle } from "@/components/ui/SectionHeading";
 import { getPostLoginDestination } from "@/lib/permissions";
 
 export default function Login() {
@@ -54,12 +55,12 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8">
-      <div className="w-full max-w-md space-y-6 sm:space-y-8 bg-gray-800/50 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-2xl border border-gray-700/50 shadow-xl">
+    <div className="flex min-h-screen items-center justify-center p-4 sm:p-6 md:p-8">
+      <div className="fc-card w-full max-w-md space-y-6 p-6 shadow-xl sm:space-y-8 sm:p-8">
         <div className="flex justify-start">
           <Link
             href="/"
-            className="fc-muted text-sm hover:text-white transition-colors flex items-center gap-1"
+            className="fc-link inline-flex items-center gap-1 text-sm"
           >
             <FiArrowLeft className="w-4 h-4" />
             Back to Home
@@ -78,9 +79,9 @@ export default function Login() {
         </div>
 
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-center text-white mb-2">
+          <PageTitle sizeClass="mb-2 text-center text-2xl sm:text-3xl">
             Welcome Back
-          </h2>
+          </PageTitle>
           <p className="fc-body text-center">
             Sign in to access your dashboard
           </p>
@@ -88,32 +89,36 @@ export default function Login() {
 
         <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
           {error && (
-            <div className="bg-red-500/10 border border-red-500/50 text-red-500 text-sm rounded-lg p-3">
-              {error}
-            </div>
+            <div className="fc-alert-error">{error}</div>
           )}
 
           <div className="input-group">
-            <label className="text-sm sm:text-base">Username</label>
+            <label className="fc-form-label" htmlFor="username">
+              Username
+            </label>
             <input
+              id="username"
               type="text"
               placeholder="Enter your username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full px-3 py-2 sm:py-2.5 text-sm sm:text-base rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+              className="form-input"
             />
           </div>
 
           <div className="input-group">
-            <label className="text-sm sm:text-base">Password</label>
+            <label className="fc-form-label" htmlFor="password">
+              Password
+            </label>
             <input
+              id="password"
               type="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 sm:py-2.5 text-sm sm:text-base rounded-lg bg-gray-900/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+              className="form-input"
             />
           </div>
 

@@ -23,10 +23,7 @@ import PortalModal from "@/components/ui/Modal/ContentModal";
 import Button from "@/components/ui/Button";
 import AdminBackLink from "@/components/ui/AdminBackLink";
 import IconButton from "@/components/ui/IconButton";
-import {
-  AdminPageTitle,
-  AdminPageLede,
-} from "@/components/ui/SectionHeading";
+import { AdminPageHeader } from "@/components/layout/AdminPageShell";
 import ContractPipeline from "@/components/ContractPipeline";
 import {
   API_ENDPOINTS,
@@ -360,7 +357,9 @@ export default function ContractsPage() {
         <div className="container mx-auto px-6 py-8">
           <div className="min-h-[500px] flex items-center justify-center">
             <div className="text-center">
-              <FiFileText className="mx-auto text-4xl text-primary mb-4" />
+              <span className="fc-icon mx-auto mb-4">
+                <FiFileText className="h-10 w-10" />
+              </span>
               <p className="text-gray-400">
                 You don&apos;t have permission to view contracts.
               </p>
@@ -383,24 +382,20 @@ export default function ContractsPage() {
 
   return (
     <div className="min-h-screen">
-      <main className="container mx-auto px-6 py-8 max-w-7xl">
+      <main className="container relative mx-auto max-w-7xl animate-fadeIn px-6 py-8">
         <AdminBackLink />
 
         {/* Header */}
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-2">
-            <AdminPageTitle>Contracts</AdminPageTitle>
-            <AdminPageLede>
-              Track contracts through the approvals pipeline, from outreach to
-              execution
-            </AdminPageLede>
-          </div>
-
-          <Button type="button" variant="soft" onClick={openCreateModal}>
-            <FiPlus className="h-4 w-4" />
-            New Contract
-          </Button>
-        </div>
+        <AdminPageHeader
+          title="Contracts"
+          lede="Track contracts through the approvals pipeline, from outreach to execution"
+          actions={
+            <Button type="button" variant="soft" onClick={openCreateModal}>
+              <FiPlus className="h-4 w-4" />
+              New Contract
+            </Button>
+          }
+        />
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -414,9 +409,9 @@ export default function ContractsPage() {
                   {contracts.length}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
-                <FiFileText className="text-primary text-xl" />
-              </div>
+              <span className="fc-icon">
+                <FiFileText className="text-xl" />
+              </span>
             </div>
           </div>
           <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-purple-500/30 transition-all duration-300">
@@ -425,9 +420,9 @@ export default function ContractsPage() {
                 <p className="text-gray-400 text-sm font-medium">In Progress</p>
                 <p className="text-3xl font-bold text-white">{activeCount}</p>
               </div>
-              <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center border border-purple-500/30">
-                <FiClock className="text-purple-400 text-xl" />
-              </div>
+              <span className="fc-icon">
+                <FiClock className="text-xl" />
+              </span>
             </div>
           </div>
           <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-green-500/30 transition-all duration-300">
@@ -438,9 +433,9 @@ export default function ContractsPage() {
                   {completedCount}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center border border-green-500/30">
-                <FiCheckCircle className="text-green-500 text-xl" />
-              </div>
+              <span className="fc-icon">
+                <FiCheckCircle className="text-xl" />
+              </span>
             </div>
           </div>
           <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-red-500/30 transition-all duration-300">
@@ -451,9 +446,9 @@ export default function ContractsPage() {
                 </p>
                 <p className="text-3xl font-bold text-white">{haltedCount}</p>
               </div>
-              <div className="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center border border-red-500/30">
-                <FiXCircle className="text-red-500 text-xl" />
-              </div>
+              <span className="fc-icon">
+                <FiXCircle className="text-xl" />
+              </span>
             </div>
           </div>
         </div>
@@ -502,9 +497,9 @@ export default function ContractsPage() {
                   {/* Card header */}
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
                     <div className="flex items-start gap-3 min-w-0">
-                      <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0 border border-primary/30">
-                        <FiFileText className="text-primary text-xl" />
-                      </div>
+                      <span className="fc-icon flex-shrink-0">
+                        <FiFileText className="text-xl" />
+                      </span>
                       <div className="min-w-0">
                         <h3 className="text-lg font-semibold text-white">
                           {contract.title}
@@ -579,7 +574,7 @@ export default function ContractsPage() {
                             href={`${API_ENDPOINTS.CONTRACTS}/${contract._id}/eoi`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-4 py-2 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-400 hover:bg-blue-600/30 transition-all duration-300 flex items-center gap-2 text-sm"
+                            className="fc-btn-chip"
                           >
                             <FiExternalLink className="w-4 h-4" />
                             View EOI PDF
@@ -637,7 +632,7 @@ export default function ContractsPage() {
                               ? "Attach the EOI PDF before advancing past EOI Submission"
                               : undefined
                           }
-                          className="px-4 py-2 rounded-lg bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 transition-all duration-300 flex items-center gap-2 text-sm disabled:opacity-40 disabled:cursor-not-allowed"
+                          className="fc-btn-success-soft"
                         >
                           <FiCheck className="w-4 h-4" />
                           {isFinalStage ? "Approve & Complete" : "Approve & Advance"}
@@ -649,7 +644,7 @@ export default function ContractsPage() {
                               CONTRACT_STAGE_ACTIONS.DO_NOT_PROCEED
                             )
                           }
-                          className="px-4 py-2 rounded-lg bg-red-600/20 border border-red-500/30 text-red-400 hover:bg-red-600/30 transition-all duration-300 flex items-center gap-2 text-sm"
+                          className="fc-btn-danger-soft"
                         >
                           <FiX className="w-4 h-4" />
                           Do Not Proceed
@@ -791,7 +786,7 @@ export default function ContractsPage() {
                 type="file"
                 accept="application/pdf"
                 onChange={handleFormFileChange}
-                className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary/20 file:text-primary hover:file:bg-primary/30 file:transition-all file:cursor-pointer cursor-pointer"
+                className="fc-file-input"
               />
               <p className="text-xs text-gray-500 mt-2">
                 You can also attach or replace the EOI PDF later. The contract
@@ -801,7 +796,7 @@ export default function ContractsPage() {
           )}
 
           {formError && (
-            <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
+            <p className="fc-alert-error">
               {formError}
             </p>
           )}
@@ -903,7 +898,7 @@ export default function ContractsPage() {
             </div>
 
             {stageError && (
-              <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
+              <p className="fc-alert-error">
                 {stageError}
               </p>
             )}

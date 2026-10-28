@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { FiCalendar } from "react-icons/fi";
 import PublicPageShell from "@/components/layout/PublicPageShell";
-import { PageTitle } from "@/components/ui/SectionHeading";
+import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
 import EmptyState from "@/components/ui/EmptyState";
 import CommunityPostCard from "@/features/community/CommunityPostCard";
 import { filterCommunityPosts } from "@/lib/communityPosts";
@@ -66,16 +66,11 @@ export default function CommunityPageClient({
 
   return (
     <PublicPageShell title="Community | FinTech Calgary">
-      <div className="container relative z-10 mx-auto flex-grow px-6 pb-24 pt-36 sm:px-8 lg:px-12">
-        <div className="mb-16 animate-fadeIn text-center">
-          <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-6">
-            Community Board
-          </PageTitle>
-          <p className="fc-lede mx-auto max-w-3xl">
-            Discover upcoming and past events from FinTech Calgary and our
-            partner organizations.
-          </p>
-        </div>
+      <PublicPageFrame>
+        <PublicPageHeader
+          title="Community Board"
+          lede="Discover upcoming and past events from FinTech Calgary and our partner organizations."
+        />
 
         <div className="mb-8 flex justify-start" style={{ animationDelay: "200ms" }}>
           <select
@@ -128,7 +123,7 @@ export default function CommunityPageClient({
             ) : null}
           </>
         )}
-      </div>
+      </PublicPageFrame>
     </PublicPageShell>
   );
 }

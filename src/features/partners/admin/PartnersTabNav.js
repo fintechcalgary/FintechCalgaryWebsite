@@ -36,19 +36,9 @@ export default function PartnersTabNav({
               }`}
             >
               <div className="flex items-center gap-3">
-                <div
-                  className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border transition-all duration-300 ${
-                    isActive
-                      ? "border-primary/30 bg-gradient-to-br from-primary/20 to-primary/30 shadow-md shadow-primary/15"
-                      : "border-white/10 bg-white/[0.04]"
-                  }`}
-                >
-                  <Icon
-                    className={`h-5 w-5 transition-colors duration-300 ${
-                      isActive ? "text-primary" : "text-gray-400"
-                    }`}
-                  />
-                </div>
+                <span className={isActive ? "fc-icon" : "text-gray-400"}>
+                  <Icon className="h-5 w-5" />
+                </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="truncate text-sm font-semibold tracking-wide sm:text-base">

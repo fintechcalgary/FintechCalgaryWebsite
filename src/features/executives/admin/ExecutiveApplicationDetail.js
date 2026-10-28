@@ -13,24 +13,13 @@ import {
 import StatusBadge from "@/components/ui/StatusBadge";
 import { formatDateTimeShort } from "@/lib/dates";
 
-function InfoCard({ icon: Icon, iconTone, title, children }) {
-  const toneClass =
-    {
-      blue: "bg-blue-500/20 text-blue-400",
-      green: "bg-green-500/20 text-green-400",
-      purple: "bg-purple-500/20 text-purple-400",
-      orange: "bg-orange-500/20 text-orange-400",
-      primary: "bg-primary/20 text-primary",
-    }[iconTone] || "bg-primary/20 text-primary";
-
+function InfoCard({ icon: Icon, title, children }) {
   return (
     <section className="fc-admin-panel p-5 sm:p-6">
       <div className="mb-4 flex items-center gap-3">
-        <div
-          className={`flex h-9 w-9 items-center justify-center rounded-lg ${toneClass}`}
-        >
+        <span className="fc-icon">
           <Icon className="h-4 w-4" />
-        </div>
+        </span>
         <h2 className="text-lg font-semibold text-white">{title}</h2>
       </div>
       {children}
@@ -42,7 +31,9 @@ function FieldRow({ icon: Icon, label, children }) {
   return (
     <div className="flex items-start gap-3 rounded-lg bg-gray-900/50 p-3">
       {Icon ? (
-        <Icon className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
+        <span className="fc-icon mt-0.5">
+          <Icon className="h-4 w-4" />
+        </span>
       ) : null}
       <div className="min-w-0 flex-1">
         <div className="fc-muted text-xs">{label}</div>
@@ -115,7 +106,7 @@ export default function ExecutiveApplicationDetail({
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <InfoCard icon={FiMail} iconTone="blue" title="Contact Information">
+        <InfoCard icon={FiMail} title="Contact Information">
           <div className="space-y-3">
             <FieldRow icon={FiMail} label="Email">
               <a
@@ -135,7 +126,6 @@ export default function ExecutiveApplicationDetail({
 
         <InfoCard
           icon={FiBookOpen}
-          iconTone="green"
           title="Academic Information"
         >
           <div className="space-y-3">
@@ -149,7 +139,7 @@ export default function ExecutiveApplicationDetail({
         </InfoCard>
       </div>
 
-      <InfoCard icon={FiLink} iconTone="purple" title="Links & Documents">
+      <InfoCard icon={FiLink} title="Links & Documents">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <FieldRow icon={FiLink} label="LinkedIn">
             {application.linkedin ? (
@@ -185,7 +175,7 @@ export default function ExecutiveApplicationDetail({
 
       <div className="space-y-4">
         <h2 className="flex items-center gap-3 text-lg font-semibold text-white">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500/20 text-orange-400">
+          <span className="fc-icon">
             <FiHelpCircle className="h-4 w-4" />
           </span>
           Application Questions
