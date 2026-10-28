@@ -2,19 +2,106 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  FiBriefcase,
+  FiCalendar,
+  FiCheckCircle,
+  FiClipboard,
+  FiFileText,
+  FiFolder,
+  FiGrid,
+  FiSend,
+  FiShield,
+  FiUserCheck,
+  FiUsers,
+} from "react-icons/fi";
 import AdminCard from "@/features/dashboard/AdminCard";
 import { LoadingState } from "@/components/ui/Spinner";
-import { GlowCard } from "@/components/ui/spotlight-card";
+import { STAFF_ROLE_LABELS } from "@/lib/constants";
 import { getAdminPanelCards, isStaffRole } from "@/lib/permissions";
+
+const ICONS = {
+  "/dashboard/events": FiCalendar,
+  "/dashboard/executives": FiUsers,
+  "/dashboard/contracts": FiFileText,
+  "/dashboard/community": FiGrid,
+  "/dashboard/partners": FiBriefcase,
+  "/dashboard/executive-applications": FiClipboard,
+  "/dashboard/members": FiUserCheck,
+  "/dashboard/documentation": FiFolder,
+  "/dashboard/marketing-submissions": FiSend,
+  "/dashboard/marketing-approvals": FiCheckCircle,
+  "/dashboard/users": FiShield,
+};
+
+const SECTIONS = [
+  {
+    label: "Programs",
+    hrefs: ["/dashboard/events", "/dashboard/community"],
+  },
+  {
+    label: "People",
+    hrefs: [
+      "/dashboard/executives",
+      "/dashboard/executive-applications",
+      "/dashboard/members",
+      "/dashboard/users",
+    ],
+  },
+  {
+    label: "Partnerships",
+    hrefs: ["/dashboard/contracts", "/dashboard/partners"],
+  },
+  {
+    label: "Marketing",
+    hrefs: [
+      "/dashboard/marketing-submissions",
+      "/dashboard/marketing-approvals",
+    ],
+  },
+  {
+    label: "Records",
+    hrefs: ["/dashboard/documentation"],
+  },
+];
+
+function greetingForHour(hour) {
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+}
+
+function groupCards(cards) {
+  const used = new Set();
+  const sections = SECTIONS.map((section) => {
+    const items = section.hrefs
+      .map((href) => cards.find((card) => card.href === href))
+      .filter(Boolean);
+    items.forEach((item) => used.add(item.href));
+    return { label: section.label, items };
+  }).filter((section) => section.items.length > 0);
+
+  const leftover = cards.filter((card) => !used.has(card.href));
+  if (leftover.length > 0) {
+    sections.push({ label: "More", items: leftover });
+  }
+
+  return sections;
+}
 
 export default function AdminDashboardClient() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const role = session?.user?.role;
+  const [widgets, setWidgets] = useState(null);
+  const [widgetState, setWidgetState] = useState("loading");
 
   useEffect(() => {
-    if (status === "unauthenticated" || (status === "authenticated" && !isStaffRole(role))) {
+    if (
+      status === "unauthenticated" ||
+      (status === "authenticated" && !isStaffRole(role))
+    ) {
       router.push("/login");
     }
   }, [status, router, role]);
@@ -23,9 +110,34 @@ export default function AdminDashboardClient() {
     document.title = "Dashboard | FinTech Calgary";
   }, []);
 
+  useEffect(() => {
+    if (status !== "authenticated" || !isStaffRole(role)) return undefined;
+
+    let cancelled = false;
+
+    async function loadWidgets() {
+      try {
+        const response = await fetch("/api/dashboard/summary");
+        if (!response.ok) throw new Error("Failed to load dashboard summary");
+        const data = await response.json();
+        if (!cancelled) {
+          setWidgets(data);
+          setWidgetState("ready");
+        }
+      } catch {
+        if (!cancelled) setWidgetState("error");
+      }
+    }
+
+    loadWidgets();
+    return () => {
+      cancelled = true;
+    };
+  }, [status, role]);
+
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <LoadingState size="lg" />
       </div>
     );
@@ -36,109 +148,60 @@ export default function AdminDashboardClient() {
   }
 
   const panelCards = getAdminPanelCards(role);
+  const sections = groupCards(panelCards);
+  const name = session?.user?.username?.trim();
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
-        <div
-          className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "1s" }}
-        ></div>
-        <div
-          className="absolute top-1/2 left-1/2 w-64 h-64 bg-violet-500/5 rounded-full blur-2xl animate-pulse"
-          style={{ animationDelay: "0.5s" }}
-        ></div>
-      </div>
+    <div className="min-h-screen">
+      <main className="container mx-auto max-w-7xl animate-fadeIn px-6 py-10 sm:py-14">
+        <header className="mb-12 max-w-3xl">
+          <p className="font-mono text-[11px] font-medium uppercase tracking-[0.28em] text-primary">
+            Staff workspace
+          </p>
+          <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            {greetingForHour(new Date().getHours())}
+            {name ? <span className="text-white/75">, {name}</span> : ""}
+          </h1>
+          <p className="mt-3 max-w-xl text-base font-light leading-relaxed text-white/55 sm:text-lg">
+            Club operations, grouped by what you are working on.
+          </p>
+        </header>
 
-
-      <main className="container relative mx-auto max-w-7xl animate-fadeIn px-6 py-8">
-        <div
-          className="mb-6 p-4 rounded-xl border border-gray-700/30 bg-gray-900/60 backdrop-blur-xl
-            flex items-center gap-3 text-sm fc-body max-w-fit animate-fadeIn hover:bg-gray-800/60 transition-all duration-300"
-        >
-          <span className="fc-icon">
-          <svg
-            viewBox="0 0 24 24"
-            className="h-5 w-5"
-            fill="currentColor"
-          >
-            <path d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728Z" />
-          </svg>
-          </span>
-          Best experience with Google Chrome
-        </div>
-
-        <div className="relative mb-8 animate-fadeIn">
-          <GlowCard customSize glowColor="purple" className="w-full !gap-0 !p-8">
-            <div className="relative z-10 space-y-4">
-              <div className="inline-block px-4 py-2 rounded-xl bg-primary/20 text-primary text-sm font-medium backdrop-blur-sm hover:scale-105 transition-transform border border-primary/30">
-                Your Workspace
-              </div>
-              <div className="space-y-2">
-                <h1 className="fc-title text-4xl sm:text-5xl font-bold tracking-tight">
-                  Welcome back
-                  <span className="bg-gradient-to-r from-primary to-violet-400/75 bg-clip-text text-transparent">
-                    {session?.user?.username
-                      ? ` ${session.user.username}`
-                      : ""}
-                  </span>
-                </h1>
-                <p className="fc-lede">
-                  Open a tool below to manage club operations
-                </p>
-              </div>
-            </div>
-          </GlowCard>
-        </div>
-
-        <div className="grid grid-cols-1 gap-8">
-          {panelCards.length > 0 && (
-            <section className="group animate-fadeIn">
-              <GlowCard
-                customSize
-                glowColor="purple"
-                className="relative h-full w-full !gap-0 !p-8"
-              >
-                <div className="relative z-10 flex items-center justify-between mb-8">
-                  <div className="space-y-2">
-                    <h2 className="fc-title-accent text-2xl">Admin Panel</h2>
-                    <p className="fc-body">
-                      Manage system resources and user data
-                    </p>
-                  </div>
-                  <span className="fc-icon">
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                      />
-                    </svg>
-                  </span>
+        {sections.length === 0 ? (
+          <div className="fc-admin-panel px-6 py-14 text-center">
+            <h2 className="fc-title text-lg">No tools assigned</h2>
+            <p className="mx-auto mt-2 max-w-md fc-body">
+              Your role does not include dashboard tools yet. Ask an admin if
+              that looks wrong.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-12">
+            {sections.map((section) => (
+              <section key={section.label}>
+                <div className="mb-4 flex items-center gap-4">
+                  <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-white/40">
+                    {section.label}
+                  </h2>
+                  <div className="h-px flex-1 bg-white/10" />
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {panelCards.map((card) => (
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                  {section.items.map((card) => (
                     <AdminCard
                       key={card.href}
                       title={card.title}
                       description={card.description}
                       href={card.href}
-                      color={card.color}
+                      icon={ICONS[card.href]}
+                      widget={widgets?.[card.href]}
+                      widgetState={widgetState}
                     />
                   ))}
                 </div>
-              </GlowCard>
-            </section>
-          )}
-        </div>
+              </section>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );
