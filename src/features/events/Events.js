@@ -30,7 +30,9 @@ import StatusBadge from "@/components/ui/StatusBadge";
 export default function Events({ mode }) {
   const pathname = usePathname();
   const isDashboard =
-    pathname === "/dashboard" || pathname === "/partner-dashboard";
+    pathname === "/dashboard" ||
+    pathname === "/dashboard/events" ||
+    pathname === "/partner-dashboard";
   const today = startOfToday();
   const [events, setEvents] = useState([]);
   const [showForm, setShowForm] = useState(false);
