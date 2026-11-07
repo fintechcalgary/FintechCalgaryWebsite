@@ -13,7 +13,24 @@
   }
 
   .fc-modal-panel {
-    @apply w-full overflow-hidden rounded-2xl border bg-gray-900/95 shadow-2xl backdrop-blur-xl pointer-events-auto;
+    @apply w-full overflow-hidden rounded-2xl border border-gray-800/50 bg-gray-900/95 shadow-2xl backdrop-blur-xl pointer-events-auto;
+  }
+
+  /* Full-viewport inset panel (insights bleed modals) */
+  .fc-modal-panel-bleed {
+    @apply fixed z-[999999] flex min-h-0 flex-col inset-3 max-h-[calc(100dvh-1.5rem)] w-[calc(100vw-1.5rem)] max-w-[calc(100vw-1.5rem)] sm:inset-4 sm:max-h-[calc(100dvh-2rem)] sm:w-auto sm:max-w-none md:inset-6 lg:inset-x-12 lg:inset-y-8 xl:inset-x-20;
+  }
+
+  .fc-modal-section-label {
+    @apply mb-3 text-xs font-medium uppercase tracking-wider text-white/45;
+  }
+
+  .fc-modal-aside {
+    @apply min-w-0 flex-shrink-0 space-y-6 border-t border-gray-800/50 px-4 py-4 sm:px-5 sm:py-5 lg:w-64 lg:max-w-[18rem] lg:border-l lg:border-t-0 xl:w-72;
+  }
+
+  .fc-modal-callout {
+    @apply rounded-xl border border-white/10 bg-white/[0.03] p-4;
   }
 
   .fc-modal-header {
@@ -185,6 +202,31 @@
   /* Insights “Read more” on card hover overlay */
   .fc-btn-read-more-subtle {
     @apply flex cursor-pointer items-center gap-2 self-start rounded-xl border border-primary/35 bg-gradient-to-r from-primary/15 to-purple-500/15 px-3 py-1.5 text-sm font-medium text-primary backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-primary/55 hover:from-primary/25 hover:to-purple-500/25 hover:shadow-lg hover:shadow-primary/15;
+  }
+
+  /* Nested row inside a GlowCard (insights key insights, etc.) */
+  .fc-inset-card {
+    @apply rounded-xl border border-white/[0.06] bg-white/[0.02] px-3.5 py-3 transition-colors hover:border-primary/30 hover:bg-white/[0.04];
+  }
+
+  /* Topic / filter chips on public insights surfaces */
+  .fc-topic-chip {
+    @apply cursor-pointer whitespace-nowrap rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-sm font-medium text-gray-200 transition-colors hover:border-primary/40 hover:text-white;
+  }
+
+  /* Insights digest snapshot — horizontal rule band */
+  .fc-stat-band {
+    @apply relative overflow-hidden rounded-none md:rounded-sm;
+  }
+
+  .fc-stat-band::before {
+    content: "";
+    @apply pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent;
+  }
+
+  .fc-stat-band::after {
+    content: "";
+    @apply pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent;
   }
 }
 

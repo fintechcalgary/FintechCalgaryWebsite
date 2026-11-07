@@ -9,7 +9,10 @@ import {
   FiZap,
 } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { PUBLIC_GLOW_CARD } from "@/components/layout/PublicPageFrame";
 import { GlowCard } from "@/components/ui/spotlight-card";
+import { formatDateShort } from "@/lib/dates";
+import { extractReadableSource } from "@/lib/article-display";
 
 /**
  * ArticleCard Component
@@ -41,15 +44,6 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
       default:
         return "bg-gray-500/20 text-gray-400 border-gray-500/30";
     }
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
   };
 
   const handleGenerateSummary = async (e) => {
@@ -201,7 +195,7 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
       <GlowCard
         customSize
         glowColor="purple"
-        className={`group w-full !gap-0 !p-0 ${
+        className={`group ${PUBLIC_GLOW_CARD} !p-0 ${
           isListView ? "flex flex-row" : ""
         }`}
       >
@@ -225,13 +219,13 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <span className="fc-muted text-xs font-medium">
-                    {article.source}
+                  <span className="fc-muted text-xs font-medium uppercase tracking-wide">
+                    {extractReadableSource(article)}
                   </span>
                   <span className="fc-muted text-xs">•</span>
                   {displayDate && (
                     <span className="fc-muted text-xs">
-                      {formatDate(displayDate)}
+                      {formatDateShort(displayDate)}
                     </span>
                   )}
                   {displayTime && (
@@ -353,10 +347,7 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
                 {article.categories
                   ?.slice(0, isListView ? 5 : 3)
                   .map((category, index) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 rounded-md text-xs bg-gray-700/50 text-gray-300 border border-gray-600/30 hover:border-primary/50 transition-colors"
-                    >
+                    <span key={index} className="fc-topic-chip !cursor-default">
                       {category}
                     </span>
                   ))}

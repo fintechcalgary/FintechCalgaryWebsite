@@ -10,6 +10,7 @@ import {
   formatDateTimeShort,
   formatEventDate,
   formatDateLocale,
+  formatRelativeTime,
 } from "@/lib/dates";
 
 describe("normalizeDate", () => {
@@ -135,5 +136,16 @@ describe("formatDateLocale", () => {
     const result = formatDateLocale("2026-01-05");
     expect(result).toBeTruthy();
     expect(typeof result).toBe("string");
+  });
+});
+
+describe("formatRelativeTime", () => {
+  it('returns "Never" for falsy or invalid input', () => {
+    expect(formatRelativeTime(null)).toBe("Never");
+    expect(formatRelativeTime("not-a-date")).toBe("Never");
+  });
+
+  it("returns Just now for very recent dates", () => {
+    expect(formatRelativeTime(new Date())).toBe("Just now");
   });
 });

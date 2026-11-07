@@ -10,9 +10,12 @@ import {
   FiMessageCircle,
 } from "react-icons/fi";
 import { useChatBot } from "@/contexts/ChatBotContext";
-import ModalRoot from "@/components/ui/Modal/ModalRoot";
-import ModalCloseButton from "@/components/ui/Modal/ModalCloseButton";
+import BleedModal, {
+  BleedModalHeader,
+} from "@/components/ui/Modal/BleedModal";
 import { CompactSentimentBar } from "@/features/insights/SentimentBars";
+import { formatDateMonthDay } from "@/lib/dates";
+import { extractReadableSource } from "@/lib/article-display";
 
 function getIssueNumber(weekStart) {
   if (!weekStart) return null;
@@ -89,76 +92,42 @@ export default function WeeklyDigestModal({
       ? new Set(articles.map((a) => a.source).filter(Boolean)).size
       : 0;
 
-  const formatDate = (d) => {
-    if (!d) return "";
-    return new Date(d).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   const handleOpenChat = () => {
     onClose();
     setTimeout(() => setChatOpen(true), 200);
   };
 
   return (
-    <ModalRoot isOpen={isOpen} onClose={onClose} layout="none">
-      <motion.div
-        key="modal"
-        initial={{ opacity: 0, y: 40, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 30, scale: 0.97 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Weekly FinTech Digest"
-        className="fc-modal-panel fixed inset-4 z-[999999] flex max-h-none flex-col border-gray-700/50 bg-gradient-to-br from-gray-900/95 via-gray-900 to-gray-950 shadow-black/50 md:inset-8 lg:inset-x-16 lg:inset-y-8 xl:inset-x-28"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Soft ambient glows */}
-        <div
-          className="pointer-events-none absolute -left-16 top-0 h-40 w-40 rounded-full bg-primary/15 blur-3xl"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute -right-10 top-24 h-32 w-32 rounded-full bg-purple-500/10 blur-3xl"
-          aria-hidden
-        />
-
-        <ModalCloseButton
-          onClick={onClose}
-          label="Close weekly digest"
-          size="sm"
-          className="absolute right-4 top-4 z-20"
-        />
-
-        {/* Header */}
-        <div className="relative flex-shrink-0 border-b border-gray-800/50 px-6 pb-5 pt-6">
-          <div className="relative z-[1] pr-10">
-            <div className="mb-3 flex flex-wrap items-center gap-2.5">
-              <span className="inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/15 px-2.5 py-1 text-xs font-medium tracking-wide text-primary">
-                <FiZap className="h-3 w-3" />
-                FinTech Calgary
+    <BleedModal
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel="Weekly FinTech Digest"
+      bodyRef={scrollRef}
+      header={
+        <BleedModalHeader
+          onClose={onClose}
+          closeLabel="Close weekly digest"
+          title={
+            <h2 className="fc-modal-title flex flex-wrap items-baseline gap-x-2 !text-2xl leading-tight sm:!text-3xl">
+              <span>
+                Weekly <span className="fc-title-accent">FinTech Digest</span>
               </span>
-              {issueNumber && (
-                <span className="fc-muted text-xs tabular-nums">
+              {issueNumber ? (
+                <span className="tabular-nums text-white/90">
                   Issue #{issueNumber}
                 </span>
-              )}
-            </div>
-
-            <h2 className="fc-title-lg mb-1.5">
-              Weekly <span className="fc-title-accent">FinTech Digest</span>
+              ) : null}
             </h2>
-
-            {weekRange && (
-              <p className="fc-muted flex items-center gap-2">
-                <FiCalendar className="h-3.5 w-3.5 shrink-0" />
-                {weekRange}
+          }
+          subtitle={
+            weekRange ? (
+              <p className="fc-muted mt-2 flex items-start gap-2 text-sm leading-snug sm:items-center">
+                <FiCalendar className="mt-0.5 h-3.5 w-3.5 shrink-0 sm:mt-0" />
+                <span className="min-w-0 break-words">{weekRange}</span>
               </p>
-            )}
-
+            ) : null
+          }
+          meta={
             <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
               <span className="fc-muted flex items-center gap-1.5 text-xs">
                 <span
@@ -183,138 +152,122 @@ export default function WeeklyDigestModal({
                 Refreshed every Friday
               </span>
             </div>
-          </div>
-        </div>
-
-        {/* Body */}
-        <div ref={scrollRef} className="relative flex-1 overflow-y-auto">
-          <div className="flex h-full flex-col gap-0 lg:flex-row">
-            {/* Article list */}
-            <div className="min-w-0 flex-1 space-y-3 px-6 py-5">
-              {articles.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-20 text-center">
-                  <span className="fc-icon mb-4">
-                    <FiZap className="h-6 w-6" />
-                  </span>
-                  <p className="fc-body">No digest available yet.</p>
-                  <p className="fc-muted mt-1">
-                    Check back after the next Friday refresh.
-                  </p>
-                </div>
-              ) : (
-                articles.map((article, index) => (
-                  <DigestArticleRow
-                    key={article._id || article.url || index}
-                    article={article}
-                    rank={index + 1}
-                    formatDate={formatDate}
-                  />
-                ))
-              )}
+          }
+        />
+      }
+    >
+      <div className="flex min-h-0 flex-col gap-0 lg:flex-row">
+        <div className="fc-modal-body min-w-0 flex-1 space-y-3 !py-4 sm:!py-5">
+          {articles.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <span className="fc-icon mb-4">
+                <FiZap className="h-6 w-6" />
+              </span>
+              <p className="fc-body">No digest available yet.</p>
+              <p className="fc-muted mt-1">
+                Check back after the next Friday refresh.
+              </p>
             </div>
-
-            {/* Sidebar */}
-            <aside className="flex-shrink-0 space-y-6 border-t border-gray-800/50 px-5 py-5 lg:w-64 lg:border-l lg:border-t-0 xl:w-72">
-              {sentiment && sentiment.total > 0 && (
-                <div>
-                  <h4 className="fc-muted mb-3 text-xs font-medium tracking-wider">
-                    Market Sentiment
-                  </h4>
-                  <div className="space-y-3">
-                    <CompactSentimentBar
-                      label="Positive"
-                      value={sentiment.positive}
-                      total={sentiment.total}
-                      colorClass="text-green-400"
-                      bgClass="bg-gradient-to-r from-green-500 to-emerald-400"
-                    />
-                    <CompactSentimentBar
-                      label="Neutral"
-                      value={sentiment.neutral}
-                      total={sentiment.total}
-                      colorClass="text-gray-400"
-                      bgClass="bg-gray-500"
-                    />
-                    <CompactSentimentBar
-                      label="Negative"
-                      value={sentiment.negative}
-                      total={sentiment.total}
-                      colorClass="text-red-400"
-                      bgClass="bg-gradient-to-r from-red-500 to-rose-400"
-                    />
-                  </div>
-                  <div className="mt-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-3 py-2.5 text-center backdrop-blur-sm">
-                    <span className="fc-muted text-xs">Overall mood: </span>
-                    <span
-                      className={`text-xs font-semibold ${
-                        sentiment.positive > sentiment.negative
-                          ? "text-green-400"
-                          : sentiment.negative > sentiment.positive
-                            ? "text-red-400"
-                            : "text-white/55"
-                      }`}
-                    >
-                      {sentiment.positive > sentiment.negative
-                        ? "Bullish"
-                        : sentiment.negative > sentiment.positive
-                          ? "Cautious"
-                          : "Mixed"}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {topics.length > 0 && (
-                <div>
-                  <h4 className="fc-muted mb-3 text-xs font-medium tracking-wider">
-                    This Week&apos;s Topics
-                  </h4>
-                  <div className="flex flex-wrap gap-1.5">
-                    {topics.map(({ topic, count }, i) => (
-                      <span
-                        key={topic}
-                        className={`rounded-md border px-2.5 py-1 text-xs font-medium capitalize transition-colors ${
-                          i < 3
-                            ? "border-primary/30 bg-primary/15 text-primary"
-                            : "border-white/[0.08] bg-white/[0.03] text-white/55"
-                        }`}
-                      >
-                        {topic}
-                        <span className="ml-1 text-[10px] opacity-60">
-                          {count}
-                        </span>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="rounded-xl border border-primary/25 bg-gradient-to-br from-primary/15 via-purple-600/10 to-violet-400/10 p-4 backdrop-blur-sm">
-                <div className="mb-2 flex items-center gap-2">
-                  <FiMessageCircle className="h-4 w-4 text-primary" />
-                  <span className="fc-title text-sm">Ask the Digest</span>
-                </div>
-                <p className="fc-muted mb-3 text-xs leading-relaxed">
-                  Chat with AI about this week&apos;s stories — ask questions,
-                  get deeper analysis.
-                </p>
-                <button
-                  type="button"
-                  onClick={handleOpenChat}
-                  className="fc-btn-gradient-primary w-full px-3 py-2 text-xs font-semibold"
-                >
-                  Open AI Chat →
-                </button>
-              </div>
-            </aside>
-          </div>
+          ) : (
+            articles.map((article, index) => (
+              <DigestArticleRow
+                key={article._id || article.url || index}
+                article={article}
+                rank={index + 1}
+              />
+            ))
+          )}
         </div>
-      </motion.div>
-    </ModalRoot>
+
+        <aside className="fc-modal-aside">
+          {sentiment && sentiment.total > 0 && (
+            <div>
+              <h4 className="fc-modal-section-label">Market Sentiment</h4>
+              <div className="space-y-3">
+                <CompactSentimentBar
+                  label="Positive"
+                  value={sentiment.positive}
+                  total={sentiment.total}
+                  colorClass="text-green-400"
+                  bgClass="bg-gradient-to-r from-green-500 to-emerald-400"
+                />
+                <CompactSentimentBar
+                  label="Neutral"
+                  value={sentiment.neutral}
+                  total={sentiment.total}
+                  colorClass="text-gray-400"
+                  bgClass="bg-gray-500"
+                />
+                <CompactSentimentBar
+                  label="Negative"
+                  value={sentiment.negative}
+                  total={sentiment.total}
+                  colorClass="text-red-400"
+                  bgClass="bg-gradient-to-r from-red-500 to-rose-400"
+                />
+              </div>
+              <div className="fc-modal-callout mt-3 px-3 py-2.5 text-center">
+                <span className="fc-muted text-xs">Overall mood: </span>
+                <span
+                  className={`text-xs font-semibold ${
+                    sentiment.positive > sentiment.negative
+                      ? "text-green-400"
+                      : sentiment.negative > sentiment.positive
+                        ? "text-red-400"
+                        : "text-white/55"
+                  }`}
+                >
+                  {sentiment.positive > sentiment.negative
+                    ? "Bullish"
+                    : sentiment.negative > sentiment.positive
+                      ? "Cautious"
+                      : "Mixed"}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {topics.length > 0 && (
+            <div>
+              <h4 className="fc-modal-section-label">This Week&apos;s Topics</h4>
+              <div className="flex flex-wrap gap-1.5">
+                {topics.map(({ topic, count }) => (
+                  <span
+                    key={topic}
+                    className="fc-topic-chip !cursor-default capitalize"
+                  >
+                    {topic}
+                    <span className="ml-1 text-[10px] opacity-60">{count}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="fc-modal-callout">
+            <div className="mb-2 flex items-center gap-2">
+              <FiMessageCircle className="h-4 w-4 text-primary" />
+              <span className="fc-title text-sm">Ask the Digest</span>
+            </div>
+            <p className="fc-muted mb-3 text-xs leading-relaxed">
+              Chat with AI about this week&apos;s stories — ask questions, get
+              deeper analysis.
+            </p>
+            <button
+              type="button"
+              onClick={handleOpenChat}
+              className="fc-btn-gradient-primary w-full px-3 py-2 text-xs font-semibold"
+            >
+              Open AI Chat →
+            </button>
+          </div>
+        </aside>
+      </div>
+    </BleedModal>
   );
 }
 
-function DigestArticleRow({ article, rank, formatDate }) {
+function DigestArticleRow({ article, rank }) {
   const rankColor =
     rank === 1
       ? "border-amber-400/35 bg-amber-400/10 text-amber-300"
@@ -336,7 +289,7 @@ function DigestArticleRow({ article, rank, formatDate }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay: Math.min(rank * 0.04, 0.4) }}
-      className="fc-card group flex items-start gap-3 !rounded-xl p-3.5 hover:border-primary/40"
+      className="fc-card group flex min-w-0 items-start gap-2.5 !rounded-xl p-3 sm:gap-3 sm:p-3.5 hover:border-primary/40"
     >
       <div
         className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg border text-[11px] font-bold tabular-nums ${rankColor}`}
@@ -346,8 +299,8 @@ function DigestArticleRow({ article, rank, formatDate }) {
 
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex flex-wrap items-center gap-2">
-          <span className="fc-muted text-[10px] font-medium tracking-wide">
-            {article.source || "Unknown"}
+          <span className="fc-muted text-[10px] font-medium uppercase tracking-wide">
+            {extractReadableSource(article)}
           </span>
           {article.date || article.publishedAt ? (
             <>
@@ -355,7 +308,7 @@ function DigestArticleRow({ article, rank, formatDate }) {
                 ·
               </span>
               <span className="fc-muted text-[10px]">
-                {formatDate(article.date || article.publishedAt)}
+                {formatDateMonthDay(article.date || article.publishedAt)}
               </span>
             </>
           ) : null}
@@ -383,7 +336,7 @@ function DigestArticleRow({ article, rank, formatDate }) {
         href={article.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex-shrink-0 rounded-xl p-1.5 text-white/35 opacity-0 transition-all hover:bg-white/[0.06] hover:text-primary group-hover:opacity-100"
+        className="fc-modal-icon-close !opacity-0 group-hover:!opacity-100"
         aria-label="Open article"
       >
         <FiExternalLink className="h-3.5 w-3.5" />
