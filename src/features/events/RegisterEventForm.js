@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FiArrowLeft } from "react-icons/fi";
+import BackLink from "@/components/ui/BackLink";
 import { PageTitle } from "@/components/ui/SectionHeading";
 import { LoadingState } from "@/components/ui/Spinner";
 import {
@@ -91,13 +91,11 @@ export default function RegisterEventForm({ eventId }) {
     return (
       <div className="min-h-screen flex items-center justify-center py-8 px-4">
         <div className="w-full max-w-2xl">
-          <Link
+          <BackLink
             href={`/events/${eventId}`}
-            className="fc-link group mb-4 inline-flex items-center"
-          >
-            <FiArrowLeft className="mr-2 h-5 w-5 transition-transform duration-200 group-hover:-translate-x-1" />
-            Back to Event
-          </Link>
+            label="Back to Event"
+            spacing="tight"
+          />
 
           <div className="fc-card border-amber-500/30 p-6 shadow-2xl md:p-8">
             <PageTitle sizeClass="text-2xl md:text-3xl">
@@ -119,13 +117,7 @@ export default function RegisterEventForm({ eventId }) {
             animate={{ opacity: 1, y: 0 }}
             className="w-full"
           >
-            <Link
-              href="/"
-              className="fc-link group mb-4 inline-flex items-center"
-            >
-              <FiArrowLeft className="mr-2 h-5 w-5 transition-transform duration-200 group-hover:-translate-x-1" />
-              Back to Home
-            </Link>
+            <BackLink href="/" label="Back to Home" spacing="tight" />
 
             <div className="fc-card animate-fade-in border-red-500/30 p-4 shadow-2xl md:p-6">
               <div className="space-y-4">
@@ -166,10 +158,7 @@ export default function RegisterEventForm({ eventId }) {
   return (
     <div className="min-h-screen flex items-center justify-center py-8 px-4">
       <div className="w-full max-w-4xl">
-        <Link href="/" className="fc-link group mb-6 inline-flex items-center">
-          <FiArrowLeft className="mr-2 h-5 w-5 transition-transform duration-200 group-hover:-translate-x-1" />
-          Back to Home
-        </Link>
+        <BackLink href="/" label="Back to Home" />
 
         <div className="fc-card p-6 shadow-xl md:p-8">
           <PageTitle sizeClass="mb-4 text-2xl md:text-3xl">

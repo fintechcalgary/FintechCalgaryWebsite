@@ -92,9 +92,25 @@
     @apply rounded-2xl border border-white/10 bg-gray-900/60 backdrop-blur-xl;
   }
 
-  /* Admin page back link — left-aligned text control */
-  .fc-admin-back {
-    @apply mb-6 inline-flex items-center gap-2 text-sm text-gray-300 transition-colors hover:text-primary;
+  /* Back navigation — use BackLink / BackButton (public + admin) */
+  .fc-back-link {
+    @apply mb-6 inline-flex items-center gap-2 text-sm font-medium text-gray-300 transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950;
+  }
+
+  .fc-back-link--flush {
+    @apply mb-0;
+  }
+
+  .fc-back-link--tight {
+    @apply mb-4;
+  }
+
+  .fc-back-link--center {
+    @apply w-full justify-center;
+  }
+
+  .fc-back-link__icon {
+    @apply h-4 w-4 shrink-0 transition-transform duration-200 group-hover:-translate-x-0.5;
   }
 
   /* Soft / chip-style admin action (toolbar buttons) */

@@ -1,8 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { FiArrowLeft } from "react-icons/fi";
+import BackLink from "@/components/ui/BackLink";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import { PageTitle } from "@/components/ui/SectionHeading";
 
@@ -24,13 +23,12 @@ export default function NotFound() {
               The page you&apos;re looking for doesn&apos;t exist or has been
               moved.
             </p>
-            <Link
+            <BackLink
               href="/"
-              className="fc-btn-primary group !px-6 !py-3"
-            >
-              <FiArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" />
-              Back to Home
-            </Link>
+              label="Back to Home"
+              spacing="none"
+              align="center"
+            />
           </motion.div>
         </div>
       </div>

@@ -1,12 +1,11 @@
-import Link from "next/link";
 import Image from "next/image";
 import {
-  FiArrowLeft,
   FiCalendar,
   FiClock,
   FiExternalLink,
   FiMapPin,
 } from "react-icons/fi";
+import BackLink from "@/components/ui/BackLink";
 import { connectToDatabase } from "@/lib/mongodb";
 import {
   getCommunityPostById,
@@ -69,13 +68,12 @@ function NotFoundState({ title, message }) {
             {title}
           </PageTitle>
           <p className="fc-muted mb-8">{message}</p>
-          <Link
+          <BackLink
             href="/community"
-            className="fc-btn-primary inline-flex items-center !px-6 !py-3 !text-base"
-          >
-            <FiArrowLeft className="mr-2" />
-            Back to Community
-          </Link>
+            label="Back to Community"
+            spacing="none"
+            align="center"
+          />
         </div>
       </div>
     </PublicPageShell>
@@ -129,13 +127,7 @@ export default async function CommunityPostPage({ params }) {
         </div>
 
         <div className={PUBLIC_PAGE_GUTTER}>
-          <Link
-            href="/community"
-            className="fc-link group mb-8 inline-flex items-center px-4 py-2 transition-colors duration-200"
-          >
-            <FiArrowLeft className="mr-2 transition-transform duration-200 group-hover:-translate-x-1" />
-            Back to Community
-          </Link>
+          <BackLink href="/community" label="Back to Community" />
 
           <GlowCard
             customSize

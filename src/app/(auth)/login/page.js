@@ -2,8 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSession, signIn } from "next-auth/react";
 import Image from "next/image";
-import { FiArrowLeft } from "react-icons/fi";
-import Link from "next/link";
+import BackLink from "@/components/ui/BackLink";
 import { InlineSpinner } from "@/components/ui/Spinner";
 import { PageTitle } from "@/components/ui/SectionHeading";
 import { getPostLoginDestination } from "@/lib/permissions";
@@ -58,13 +57,7 @@ export default function Login() {
     <div className="flex min-h-screen items-center justify-center p-4 sm:p-6 md:p-8">
       <div className="fc-card w-full max-w-md space-y-6 p-6 shadow-xl sm:space-y-8 sm:p-8">
         <div className="flex justify-start">
-          <Link
-            href="/"
-            className="fc-link inline-flex items-center gap-1 text-sm"
-          >
-            <FiArrowLeft className="w-4 h-4" />
-            Back to Home
-          </Link>
+          <BackLink href="/" label="Back to Home" spacing="tight" />
         </div>
 
         <div className="flex justify-center items-center">

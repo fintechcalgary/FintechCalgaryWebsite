@@ -1,7 +1,7 @@
 "use client";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import { FiCheck, FiArrowLeft } from "react-icons/fi";
+import { FiCheck } from "react-icons/fi";
+import BackLink from "@/components/ui/BackLink";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import { PageTitle } from "@/components/ui/SectionHeading";
 
@@ -17,13 +17,7 @@ export default function RegistrationSuccess() {
             animate={{ opacity: 1, y: 0 }}
             className="w-full"
           >
-            <Link
-              href="/"
-              className="fc-link mb-8 inline-flex items-center transition-transform duration-200 hover:translate-x-[-4px] group"
-            >
-              <FiArrowLeft className="w-5 h-5 mr-2 transition-transform duration-200 group-hover:translate-x-[-2px]" />
-              Back to Home
-            </Link>
+            <BackLink href="/" label="Back to Home" />
 
             <div className="fc-card p-8 shadow-2xl animate-fade-in">
               <div className="flex items-center justify-center mb-6">

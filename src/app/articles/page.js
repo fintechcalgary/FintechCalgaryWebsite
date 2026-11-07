@@ -1,17 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import ArticleCard from "@/features/insights/ArticleCard";
 import Pagination from "@/components/ui/Pagination";
-import {
-  FiCalendar,
-  FiRefreshCw,
-  FiGrid,
-  FiList,
-  FiArrowLeft,
-} from "react-icons/fi";
+import { FiCalendar, FiRefreshCw, FiGrid, FiList } from "react-icons/fi";
+import BackLink from "@/components/ui/BackLink";
 import { motion } from "framer-motion";
 import { LoadingState } from "@/components/ui/Spinner";
 import { PUBLIC_TITLE_SIZE } from "@/components/layout/PublicPageFrame";
@@ -193,13 +187,7 @@ export default function ArticlesPage() {
             animate={{ opacity: 1, x: 0 }}
             className="mb-6"
           >
-            <Link
-              href="/insights"
-              className="fc-link inline-flex items-center gap-2"
-            >
-              <FiArrowLeft className="w-5 h-5" />
-              Back to Insights
-            </Link>
+            <BackLink href="/insights" label="Back to Insights" />
           </motion.div>
 
           <motion.div
@@ -335,13 +323,11 @@ export default function ArticlesPage() {
                     ? "No weekly digest available yet. Trigger Monday refresh to generate the weekly top 15."
                     : "No articles yet. Refresh from Insights or run article refresh."}
                 </p>
-                <Link
+                <BackLink
                   href="/insights"
-                  className="inline-flex items-center gap-2 fc-link"
-                >
-                  <FiArrowLeft className="w-4 h-4" />
-                  Back to Insights
-                </Link>
+                  label="Back to Insights"
+                  spacing="none"
+                />
               </div>
             ) : viewMode === "grid" ? (
               <>

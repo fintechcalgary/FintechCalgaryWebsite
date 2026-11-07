@@ -8,17 +8,11 @@ import {
   FILE_TYPES,
 } from "@/lib/constants";
 import { motion } from "framer-motion";
-import {
-  FiCheck,
-  FiArrowLeft,
-  FiAlertCircle,
-  FiUpload,
-  FiX,
-} from "react-icons/fi";
+import { FiCheck, FiAlertCircle, FiUpload, FiX } from "react-icons/fi";
+import BackLink from "@/components/ui/BackLink";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import { PageTitle } from "@/components/ui/SectionHeading";
 import { GlowCard } from "@/components/ui/spotlight-card";
-import Link from "next/link";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import {
   uploadFile,
@@ -141,13 +135,7 @@ export default function JoinPage() {
             className="max-w-5xl mx-auto"
           >
             <div className="relative z-50">
-              <Link
-                href="/"
-                className="inline-flex items-center fc-muted hover:text-white hover:scale-105 active:scale-95 transition-all duration-200 mb-6 group"
-              >
-                <FiArrowLeft className="mr-2 group-hover:translate-x-[-4px] transition-transform duration-200" />
-                Back to Home
-              </Link>
+              <BackLink href="/" label="Back to Home" />
             </div>
 
             <div className="relative z-40">

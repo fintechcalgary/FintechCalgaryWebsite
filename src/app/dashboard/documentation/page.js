@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import {
-  FiArrowLeft,
   FiChevronRight,
   FiDownload,
   FiFile,
@@ -16,6 +15,7 @@ import PortalModal from "@/components/ui/Modal/ContentModal";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import Button from "@/components/ui/Button";
 import AdminBackLink from "@/components/ui/AdminBackLink";
+import { BackButton } from "@/components/ui/BackLink";
 import IconButton from "@/components/ui/IconButton";
 import EmptyState from "@/components/ui/EmptyState";
 import { LoadingState } from "@/components/ui/Spinner";
@@ -316,14 +316,12 @@ export default function DocumentationPage() {
           <section className="fc-admin-panel p-6">
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
               <div>
-                <button
+                <BackButton
                   type="button"
+                  label="All folders"
                   onClick={() => setSelectedFolder(null)}
-                  className="text-sm text-gray-400 hover:text-white mb-3 flex items-center gap-1"
-                >
-                  <FiArrowLeft className="w-3.5 h-3.5" />
-                  All folders
-                </button>
+                  spacing="tight"
+                />
                 <h2 className="fc-title text-2xl">
                   {selectedFolder.name}
                 </h2>

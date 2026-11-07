@@ -139,7 +139,7 @@ export default function EventRegistrations({ eventId }) {
     <div className="relative min-h-screen">
       <div className="container relative mx-auto max-w-7xl animate-fadeIn px-6 py-8">
         <div className="mb-8 flex items-center justify-between gap-4">
-          <AdminBackLink className="!mb-0" />
+          <AdminBackLink spacing="none" />
           <Button onClick={exportToCSV} variant="success-soft">
             <FiDownload className="h-4 w-4" />
             Export CSV

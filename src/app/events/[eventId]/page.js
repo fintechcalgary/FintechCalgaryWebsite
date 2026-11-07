@@ -1,13 +1,8 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import Link from "next/link";
-import {
-  FiCalendar,
-  FiClock,
-  FiMapPin,
-  FiArrowLeft,
-  FiUsers,
-} from "react-icons/fi";
+import { FiCalendar, FiClock, FiMapPin, FiUsers } from "react-icons/fi";
+import BackLink from "@/components/ui/BackLink";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import { PUBLIC_PAGE_GUTTER } from "@/components/layout/PublicPageFrame";
 import { PageTitle } from "@/components/ui/SectionHeading";
@@ -131,13 +126,12 @@ export default async function EventPage({ params }) {
                 Invalid Event ID
               </PageTitle>
               <p className="fc-muted mb-8">The event ID format is invalid.</p>
-              <Link
+              <BackLink
                 href="/events"
-                className="fc-btn-primary !px-6 !py-3 !text-base"
-              >
-                <FiArrowLeft className="mr-2" />
-                Back to Events
-              </Link>
+                label="Back to Events"
+                spacing="none"
+                align="center"
+              />
             </div>
           </div>
         </PublicPageShell>
@@ -160,13 +154,12 @@ export default async function EventPage({ params }) {
               <p className="fc-muted mb-8">
                 The requested event could not be found.
               </p>
-              <Link
+              <BackLink
                 href="/events"
-                className="fc-btn-primary !px-6 !py-3 !text-base"
-              >
-                <FiArrowLeft className="mr-2" />
-                Back to Events
-              </Link>
+                label="Back to Events"
+                spacing="none"
+                align="center"
+              />
             </div>
           </div>
         </PublicPageShell>
@@ -185,15 +178,7 @@ export default async function EventPage({ params }) {
           </div>
 
           <div className={PUBLIC_PAGE_GUTTER}>
-            <div className="mb-8">
-              <Link
-                href="/events"
-                className="fc-link group inline-flex items-center px-4 py-2 transition-colors duration-200"
-              >
-                <FiArrowLeft className="mr-2 transition-transform duration-200 group-hover:-translate-x-1" />
-                Back to Events
-              </Link>
-            </div>
+            <BackLink href="/events" label="Back to Events" />
 
             <GlowCard
               customSize
@@ -312,13 +297,12 @@ export default async function EventPage({ params }) {
             <p className="fc-muted mb-8">
               There was an error loading the event details.
             </p>
-            <Link
+            <BackLink
               href="/events"
-              className="fc-btn-primary !px-6 !py-3 !text-base"
-            >
-              <FiArrowLeft className="mr-2" />
-              Back to Events
-            </Link>
+              label="Back to Events"
+              spacing="none"
+              align="center"
+            />
           </div>
         </div>
       </PublicPageShell>
