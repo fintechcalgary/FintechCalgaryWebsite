@@ -30,7 +30,7 @@ const FRAG = `
 //   vec3(0.016, 0.020, 0.180)
 //   vec3(0.239, 0.173, 0.553)
 //   vec3(0.569, 0.420, 0.749)
-//   u_scene = vec4(canvas width, canvas height, seconds * 0.76, 4.0)
+//   u_scene = vec4(canvas width, canvas height, seconds * 0.38, 4.0)
 //   u_shape = vec4(1.26, 0.28, 0.50, 0.00)
 //   u_surface = vec4(2.40, 1.11, 0.00, 1.00)
 //   u_finish = vec4(0.00, 0.00, 0.000, 0.05)
@@ -465,7 +465,7 @@ export default function SilkBackground() {
     const paint = (now) => {
       if (needsResize) resize();
       const seconds = (now - start) / 1000;
-      gl.uniform4f(uScene, canvas.width, canvas.height, seconds * 0.76, 4.0);
+      gl.uniform4f(uScene, canvas.width, canvas.height, seconds * 0.38, 4.0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
