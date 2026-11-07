@@ -85,8 +85,7 @@ export default function ContactPage() {
                   <div>
                     <h3 className="fc-title mb-2 text-xl">Email</h3>
                     <p className="fc-body mb-4">
-                      Questions, partnerships, or a note for the team. We read
-                      every message sent to the club inbox.
+                      Questions, partnerships, or a note for the team.
                     </p>
                     <a
                       href={SITE_CONTACT.mailto}

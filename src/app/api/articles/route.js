@@ -1,5 +1,11 @@
 import { connectToDatabase } from "@/lib/mongodb";
-import { getArticles, createArticles, getArticleByUrl, updateArticleSummary } from "@/lib/models/article";
+import {
+  getArticles,
+  countArticles,
+  createArticles,
+  getArticleByUrl,
+  updateArticleSummary,
+} from "@/lib/models/article";
 import { fetchGoogleNewsArticles, isMongoConnectionError } from "@/lib/googleNewsRss";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
@@ -15,7 +21,7 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const db = await connectToDatabase();
 
-    const articles = await getArticles(db, {
+    const filterInput = {
       date: searchParams.get("date") || undefined,
       source: searchParams.get("source") || undefined,
       url: searchParams.get("url") || undefined,
@@ -24,10 +30,49 @@ export async function GET(req) {
         searchParams.get("hasSummary") === "true"
           ? true
           : searchParams.get("hasSummary") === "false"
-          ? false
-          : undefined,
-      limit: parseInt(searchParams.get("limit") || "100", 10),
+            ? false
+            : undefined,
       sortBy: searchParams.get("sortBy") || "date_desc",
+    };
+
+    const pageParam = searchParams.get("page");
+
+    if (pageParam !== null && pageParam !== "") {
+      const page = Math.max(1, parseInt(pageParam, 10) || 1);
+      const pageSize = Math.min(
+        100,
+        Math.max(1, parseInt(searchParams.get("pageSize") || "24", 10)),
+      );
+      const skip = (page - 1) * pageSize;
+
+      const [items, total] = await Promise.all([
+        getArticles(db, { ...filterInput, limit: pageSize, skip }),
+        countArticles(db, filterInput),
+      ]);
+
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+      return new Response(
+        JSON.stringify({
+          items,
+          total,
+          page,
+          pageSize,
+          totalPages,
+        }),
+        {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store",
+          },
+        },
+      );
+    }
+
+    const articles = await getArticles(db, {
+      ...filterInput,
+      limit: parseInt(searchParams.get("limit") || "100", 10),
     });
 
     return new Response(JSON.stringify(articles), {

@@ -214,6 +214,66 @@
     @apply cursor-pointer whitespace-nowrap rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-sm font-medium text-gray-200 transition-colors hover:border-primary/40 hover:text-white;
   }
 
+  /* Table-style pager bar (articles archive, etc.) */
+  .fc-pagination {
+    @apply grid w-full grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-gray-900/60 px-3 py-3 shadow-lg shadow-black/25 backdrop-blur-xl sm:grid-cols-3 sm:items-center sm:gap-2 sm:px-4 sm:py-2.5;
+  }
+
+  .fc-pagination-zone {
+    @apply flex items-center gap-2;
+  }
+
+  .fc-pagination-zone--start {
+    @apply min-w-0 justify-center sm:justify-self-start sm:justify-start;
+  }
+
+  .fc-pagination-jump-group,
+  .fc-pagination-size-group {
+    @apply inline-flex max-w-full shrink-0 flex-nowrap items-center gap-1.5;
+  }
+
+  .fc-pagination-zone--center {
+    @apply flex-nowrap justify-center justify-self-center gap-0.5;
+  }
+
+  .fc-pagination-zone--end {
+    @apply min-w-0 justify-center sm:justify-end sm:justify-self-end;
+  }
+
+  .fc-pagination-label {
+    @apply whitespace-nowrap text-sm text-white/45;
+  }
+
+  .fc-pagination-page-input {
+    @apply !m-0 !h-9 !w-11 !min-w-0 !max-w-[2.75rem] shrink-0 !rounded-lg !border !border-white/10 !bg-white/[0.04] !px-1 !py-0 text-center text-sm font-semibold tabular-nums text-white !shadow-none transition-all duration-200 focus:!border-primary/45 focus:outline-none focus:ring-2 focus:ring-primary/20;
+  }
+
+  .fc-pagination-size-select {
+    @apply !m-0 !h-9 !w-[3.25rem] !max-w-[3.25rem] shrink-0 cursor-pointer !rounded-lg !border !border-white/10 !bg-white/[0.04] !px-1.5 !py-0 !pr-6 text-center text-sm font-semibold tabular-nums text-white !shadow-none transition-all duration-200 focus:!border-primary/45 focus:outline-none focus:ring-2 focus:ring-primary/20;
+    background-position: right 0.35rem center;
+    background-size: 1em 1em;
+  }
+
+  .fc-pagination-btn {
+    @apply inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/45 transition-all duration-200 hover:bg-white/[0.07] hover:text-white active:scale-95 disabled:pointer-events-none disabled:opacity-25;
+  }
+
+  .fc-pagination-nums {
+    @apply flex items-center gap-0.5 px-1;
+  }
+
+  .fc-pagination-num {
+    @apply inline-flex h-9 min-w-9 items-center justify-center rounded-lg px-2 text-sm font-medium tabular-nums text-white/55 transition-all duration-200 hover:bg-white/[0.06] hover:text-white active:scale-95;
+  }
+
+  .fc-pagination-num--active {
+    @apply bg-white/[0.1] text-white ring-1 ring-white/15;
+  }
+
+  .fc-pagination-ellipsis {
+    @apply select-none px-1 text-sm text-white/30;
+  }
+
   /* Insights digest snapshot — horizontal rule band */
   .fc-stat-band {
     @apply relative overflow-hidden rounded-none md:rounded-sm;

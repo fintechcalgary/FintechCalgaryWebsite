@@ -24,54 +24,68 @@ export async function createArticles(db, articles) {
   });
 }
 
+function buildArticleQuery(filters = {}) {
+  const query = {};
+
+  if (filters.date) {
+    query.date = filters.date;
+  }
+
+  if (filters.source) {
+    query.source = { $regex: filters.source, $options: "i" };
+  }
+
+  if (filters.url) {
+    query.url = filters.url;
+  }
+
+  if (filters.hasSummary !== undefined) {
+    if (filters.hasSummary) {
+      query.summary = { $ne: null, $exists: true };
+    } else {
+      query.$or = [{ summary: null }, { summary: { $exists: false } }];
+    }
+  }
+
+  if (filters.weeklyRole) {
+    query.weeklyRole = filters.weeklyRole;
+  }
+
+  return query;
+}
+
+function buildArticleSort(filters = {}) {
+  const sortOptions = {};
+  if (filters.sortBy === "date_asc") {
+    sortOptions.date = 1;
+    sortOptions.time = 1;
+    sortOptions.createdAt = 1;
+  } else {
+    sortOptions.date = -1;
+    sortOptions.time = -1;
+    sortOptions.createdAt = -1;
+  }
+  return sortOptions;
+}
+
+export async function countArticles(db, filters = {}) {
+  const query = buildArticleQuery(filters);
+  return db.collection(ARTICLE_COLLECTION).countDocuments(query);
+}
+
 export async function getArticles(db, filters = {}) {
   try {
-    const query = {};
+    const query = buildArticleQuery(filters);
+    const sortOptions = buildArticleSort(filters);
 
-    if (filters.date) {
-      query.date = filters.date;
+    let cursor = db.collection(ARTICLE_COLLECTION).find(query).sort(sortOptions);
+
+    const skip = Number(filters.skip);
+    if (Number.isFinite(skip) && skip > 0) {
+      cursor = cursor.skip(skip);
     }
 
-    if (filters.source) {
-      query.source = { $regex: filters.source, $options: "i" };
-    }
-
-    if (filters.url) {
-      query.url = filters.url;
-    }
-
-    if (filters.hasSummary !== undefined) {
-      if (filters.hasSummary) {
-        query.summary = { $ne: null, $exists: true };
-      } else {
-        query.$or = [
-          { summary: null },
-          { summary: { $exists: false } }
-        ];
-      }
-    }
-
-    if (filters.weeklyRole) {
-      query.weeklyRole = filters.weeklyRole;
-    }
-
-    const sortOptions = {};
-    if (filters.sortBy === "date_asc") {
-      sortOptions.date = 1;
-      sortOptions.time = 1;
-      sortOptions.createdAt = 1;
-    } else {
-      sortOptions.date = -1;
-      sortOptions.time = -1;
-      sortOptions.createdAt = -1;
-    }
-
-    const articles = await db
-      .collection(ARTICLE_COLLECTION)
-      .find(query)
-      .sort(sortOptions)
-      .limit(filters.limit || 100)
-      .toArray();
+    const articles = await cursor.limit(filters.limit || 100).toArray();
 
     return articles;
   } catch (error) {

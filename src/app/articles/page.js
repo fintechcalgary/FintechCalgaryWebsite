@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import ArticleCard from "@/features/insights/ArticleCard";
+import Pagination from "@/components/ui/Pagination";
 import {
   FiCalendar,
   FiRefreshCw,
@@ -16,52 +17,98 @@ import { LoadingState } from "@/components/ui/Spinner";
 import { PUBLIC_TITLE_SIZE } from "@/components/layout/PublicPageFrame";
 import { PageTitle } from "@/components/ui/SectionHeading";
 
+const ARCHIVE_PAGE_SIZES = [12, 24, 48];
+
 export default function ArticlesPage() {
   const [articles, setArticles] = useState([]);
   const [weeklyDigestArticles, setWeeklyDigestArticles] = useState([]);
+  const [archiveTotal, setArchiveTotal] = useState(0);
+  const [archivePage, setArchivePage] = useState(1);
+  const [archivePageSize, setArchivePageSize] = useState(24);
+  const [archiveTotalPages, setArchiveTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState("grid");
   const [sortBy, setSortBy] = useState("date_desc");
   const [scope, setScope] = useState("week");
 
-  const fetchArticles = useCallback(async () => {
+  const fetchWeekly = useCallback(async () => {
     try {
-      setLoading(true);
-      const [archiveResponse, weeklyResponse] = await Promise.all([
-        fetch(`/api/articles?weeklyRole=digest&limit=500&sortBy=${sortBy}`),
-        fetch("/api/insights/current"),
-      ]);
-
-      let archiveArticles = [];
-      let weeklyArticles = [];
-
-      if (archiveResponse.ok) {
-        const data = await archiveResponse.json();
-        archiveArticles = Array.isArray(data) ? data : [];
-      }
-
+      const weeklyResponse = await fetch("/api/insights/current");
       if (weeklyResponse.ok) {
         const weeklyData = await weeklyResponse.json();
-        weeklyArticles = Array.isArray(weeklyData?.articles)
-          ? weeklyData.articles
-          : [];
+        setWeeklyDigestArticles(
+          Array.isArray(weeklyData?.articles) ? weeklyData.articles : [],
+        );
       }
-
-      setArticles(archiveArticles);
-      setWeeklyDigestArticles(weeklyArticles);
     } catch (error) {
-      console.error("Failed to fetch articles:", error);
-    } finally {
-      setLoading(false);
+      console.error("Failed to fetch weekly digest:", error);
     }
-  }, [sortBy]);
+  }, []);
+
+  const fetchArchivePage = useCallback(
+    async (page) => {
+      try {
+        const archiveResponse = await fetch(
+          `/api/articles?weeklyRole=digest&sortBy=${sortBy}&page=${page}&pageSize=${archivePageSize}`,
+        );
+        if (archiveResponse.ok) {
+          const data = await archiveResponse.json();
+          if (data && Array.isArray(data.items)) {
+            setArticles(data.items);
+            setArchiveTotal(data.total ?? 0);
+            setArchiveTotalPages(data.totalPages ?? 1);
+          } else {
+            setArticles([]);
+            setArchiveTotal(0);
+            setArchiveTotalPages(1);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch archive articles:", error);
+      }
+    },
+    [sortBy, archivePageSize],
+  );
+
+  const loadArticles = useCallback(async () => {
+    setLoading(true);
+    await fetchWeekly();
+    if (scope === "all") {
+      await fetchArchivePage(archivePage);
+    }
+    setLoading(false);
+  }, [fetchWeekly, fetchArchivePage, scope, archivePage]);
 
   useEffect(() => {
     document.title = "Finance News Articles | FinTech Calgary";
-    fetchArticles();
-  }, [fetchArticles]);
+  }, []);
 
-  const filteredArticles = scope === "week" ? weeklyDigestArticles : articles;
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      setLoading(true);
+      await fetchWeekly();
+      if (scope === "all") {
+        await fetchArchivePage(archivePage);
+      }
+      if (!cancelled) setLoading(false);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchWeekly, fetchArchivePage, scope, archivePage]);
+
+  const handleScopeChange = (nextScope) => {
+    setScope(nextScope);
+    if (nextScope === "all") {
+      setArchivePage(1);
+    }
+  };
+
+  const filteredArticles =
+    scope === "week" ? weeklyDigestArticles : articles;
 
   const sortedArticles = [...filteredArticles].sort((a, b) => {
     const aDate = new Date(a.date || a.publishedAt || 0);
@@ -96,6 +143,39 @@ export default function ArticlesPage() {
     });
   };
 
+  const showingFrom =
+    scope === "all" && archiveTotal > 0
+      ? (archivePage - 1) * archivePageSize + 1
+      : 0;
+  const showingTo =
+    scope === "all"
+      ? Math.min(archivePage * archivePageSize, archiveTotal)
+      : filteredArticles.length;
+
+  const handleArchivePageChange = (next) => {
+    setArchivePage(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleArchivePageSizeChange = (size) => {
+    setArchivePageSize(size);
+    setArchivePage(1);
+  };
+
+  const archivePager =
+    scope === "all" && archiveTotal > 0 ? (
+      <Pagination
+        className="mt-10"
+        page={archivePage}
+        totalPages={archiveTotalPages}
+        pageSize={archivePageSize}
+        pageSizeOptions={ARCHIVE_PAGE_SIZES}
+        onPageSizeChange={handleArchivePageSizeChange}
+        disabled={loading}
+        onPageChange={handleArchivePageChange}
+      />
+    ) : null;
+
   return (
     <PublicPageShell title="Finance News Articles | FinTech Calgary">
       <section className="relative overflow-hidden pt-36 pb-3">
@@ -108,7 +188,6 @@ export default function ArticlesPage() {
         </div>
 
         <div className="container relative z-10 mx-auto px-6 sm:px-8 lg:px-12">
-          {/* Back to Insights - prominent */}
           <motion.div
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
@@ -137,7 +216,6 @@ export default function ArticlesPage() {
             </p>
           </motion.div>
 
-          {/* Controls */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -151,13 +229,15 @@ export default function ArticlesPage() {
                 </p>
                 <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
                   <button
-                    onClick={() => setScope("week")}
+                    type="button"
+                    onClick={() => handleScopeChange("week")}
                     className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${scope === "week" ? "bg-gradient-to-r from-primary to-purple-500/80 text-white shadow-lg shadow-primary/10" : "text-gray-300 hover:text-white"}`}
                   >
                     This Week
                   </button>
                   <button
-                    onClick={() => setScope("all")}
+                    type="button"
+                    onClick={() => handleScopeChange("all")}
                     className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${scope === "all" ? "bg-gradient-to-r from-primary to-purple-500/80 text-white shadow-lg shadow-primary/10" : "text-gray-300 hover:text-white"}`}
                   >
                     Full Archive
@@ -171,6 +251,7 @@ export default function ArticlesPage() {
                 </p>
                 <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
                   <button
+                    type="button"
                     onClick={() => setViewMode("grid")}
                     className={`p-2.5 rounded-xl transition-all ${viewMode === "grid" ? "bg-primary text-white" : "text-gray-400 hover:text-white"}`}
                     aria-label="Grid view"
@@ -178,6 +259,7 @@ export default function ArticlesPage() {
                     <FiGrid className="w-5 h-5" />
                   </button>
                   <button
+                    type="button"
                     onClick={() => setViewMode("list")}
                     className={`p-2.5 rounded-xl transition-all ${viewMode === "list" ? "bg-primary text-white" : "text-gray-400 hover:text-white"}`}
                     aria-label="List view"
@@ -193,7 +275,10 @@ export default function ArticlesPage() {
                 </p>
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
+                  onChange={(e) => {
+                    setSortBy(e.target.value);
+                    if (scope === "all") setArchivePage(1);
+                  }}
                   className="w-full px-4 py-3 rounded-xl bg-gray-800/60 border border-gray-700/60 text-white focus:outline-none focus:ring-2 focus:ring-primary/25 min-w-[280px]"
                 >
                   <option value="date_desc">Newest to Oldest</option>
@@ -203,7 +288,8 @@ export default function ArticlesPage() {
 
               <div className="flex items-end justify-end">
                 <button
-                  onClick={fetchArticles}
+                  type="button"
+                  onClick={() => void loadArticles()}
                   disabled={loading}
                   className="fc-btn-gradient-primary !px-4 !py-3 disabled:opacity-50"
                   aria-label="Refresh articles"
@@ -218,8 +304,19 @@ export default function ArticlesPage() {
 
           {!loading && (
             <p className="fc-muted mb-1">
-              Showing {filteredArticles.length} of{" "}
-              {scope === "week" ? 15 : articles.length} articles
+              {scope === "week" ? (
+                <>
+                  Showing {filteredArticles.length} of{" "}
+                  {weeklyDigestArticles.length || 15} articles this week
+                </>
+              ) : archiveTotal > 0 ? (
+                <>
+                  Showing {showingFrom}–{showingTo} of {archiveTotal} articles in
+                  the archive
+                </>
+              ) : (
+                "No articles in the archive"
+              )}
             </p>
           )}
         </div>
@@ -247,40 +344,52 @@ export default function ArticlesPage() {
                 </Link>
               </div>
             ) : viewMode === "grid" ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {sortedArticles.map((article, index) => (
-                  <motion.div
-                    key={article._id || article.url || index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.03 }}
-                  >
-                    <ArticleCard article={article} viewMode={viewMode} />
-                  </motion.div>
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {sortedArticles.map((article, index) => (
+                    <motion.div
+                      key={article._id || article.url || index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: Math.min(index * 0.03, 0.45) }}
+                    >
+                      <ArticleCard article={article} viewMode={viewMode} />
+                    </motion.div>
+                  ))}
+                </div>
+                {archivePager}
+              </>
             ) : (
-              <div className="space-y-8">
-                {Object.entries(articlesByDate).map(([date, dateArticles]) => (
-                  <div key={date}>
-                    <h2 className="fc-title mb-4 border-b border-gray-700/50 pb-2 text-xl">
-                      {formatDate(date)}
-                    </h2>
-                    <div className="space-y-4">
-                      {dateArticles.map((article, index) => (
-                        <motion.div
-                          key={article._id || article.url || index}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.02 }}
-                        >
-                          <ArticleCard article={article} viewMode={viewMode} />
-                        </motion.div>
-                      ))}
+              <>
+                <div className="space-y-8">
+                  {Object.entries(articlesByDate).map(([date, dateArticles]) => (
+                    <div key={date}>
+                      <h2 className="fc-title mb-4 border-b border-gray-700/50 pb-2 text-xl">
+                        {formatDate(date)}
+                      </h2>
+                      <div className="space-y-4">
+                        {dateArticles.map((article, index) => (
+                          <motion.div
+                            key={article._id || article.url || index}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{
+                              duration: 0.3,
+                              delay: Math.min(index * 0.02, 0.3),
+                            }}
+                          >
+                            <ArticleCard
+                              article={article}
+                              viewMode={viewMode}
+                            />
+                          </motion.div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+                {archivePager}
+              </>
             )}
           </>
         )}
