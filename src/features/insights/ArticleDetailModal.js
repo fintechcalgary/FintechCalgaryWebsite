@@ -45,11 +45,13 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
           <div className="fc-modal-header flex-shrink-0 items-start">
             <div className="mr-4 min-w-0 flex-1">
               <div className="fc-muted mb-3 flex items-center gap-2 text-sm">
-                <span className="font-medium uppercase">{article.source}</span>
+                <span className="font-medium">{article.source}</span>
                 {(article.date || article.publishedAt) && (
                   <>
                     <span>•</span>
-                    <span>{formatDate(article.date || article.publishedAt)}</span>
+                    <span>
+                      {formatDate(article.date || article.publishedAt)}
+                    </span>
                   </>
                 )}
               </div>
@@ -81,7 +83,9 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                   </span>
                   <div>
                     <h3 className="text-xl font-bold text-white">AI Summary</h3>
-                    <p className="fc-muted">Comprehensive insights and analysis</p>
+                    <p className="fc-muted">
+                      Comprehensive insights and analysis
+                    </p>
                   </div>
                 </div>
 
@@ -133,7 +137,9 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                         <Icon className="h-5 w-5" />
                       </span>
                       <div>
-                        <p className="text-sm font-medium text-white">{label}</p>
+                        <p className="text-sm font-medium text-white">
+                          {label}
+                        </p>
                         <p className="fc-muted text-xs">{sub}</p>
                       </div>
                     </div>

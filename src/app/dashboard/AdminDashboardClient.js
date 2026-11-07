@@ -155,7 +155,7 @@ export default function AdminDashboardClient() {
     <div className="min-h-screen">
       <main className="container mx-auto max-w-7xl animate-fadeIn px-6 py-10 sm:py-14">
         <header className="mb-12 max-w-3xl">
-          <p className="font-mono text-[11px] font-medium uppercase tracking-[0.28em] text-primary">
+          <p className="font-mono text-[11px] font-medium tracking-[0.28em] text-primary">
             Staff workspace
           </p>
           <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl">
@@ -180,7 +180,7 @@ export default function AdminDashboardClient() {
             {sections.map((section) => (
               <section key={section.label}>
                 <div className="mb-4 flex items-center gap-4">
-                  <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-white/40">
+                  <h2 className="font-mono text-[11px] font-medium tracking-[0.22em] text-white/40">
                     {section.label}
                   </h2>
                   <div className="h-px flex-1 bg-white/10" />

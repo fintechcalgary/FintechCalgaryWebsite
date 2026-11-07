@@ -36,7 +36,7 @@ export default function ContractPipeline({ stage, status }) {
 
   const doneCount = isCompleted ? CONTRACT_STAGES.length : stage;
   const progressPercent = Math.round(
-    (doneCount / CONTRACT_STAGES.length) * 100
+    (doneCount / CONTRACT_STAGES.length) * 100,
   );
 
   const getStepState = (index) => {
@@ -55,8 +55,8 @@ export default function ContractPipeline({ stage, status }) {
               isHalted
                 ? "bg-red-500"
                 : isCompleted
-                ? "bg-green-500"
-                : "bg-gradient-to-r from-primary to-purple-400"
+                  ? "bg-green-500"
+                  : "bg-gradient-to-r from-primary to-purple-400"
             }`}
             style={{ width: `${progressPercent}%` }}
           />
@@ -89,12 +89,12 @@ export default function ContractPipeline({ stage, status }) {
                   index + 1
                 )}
               </span>
-              <p className={`text-xs font-semibold leading-tight ${styles.label}`}>
+              <p
+                className={`text-xs font-semibold leading-tight ${styles.label}`}
+              >
                 {stageInfo.label}
               </p>
-              <p
-                className={`text-[10px] uppercase tracking-wide mt-1 ${styles.role}`}
-              >
+              <p className={`text-[10px] tracking-wide mt-1 ${styles.role}`}>
                 {stageInfo.role}
               </p>
             </div>

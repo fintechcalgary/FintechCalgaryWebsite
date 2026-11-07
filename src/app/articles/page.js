@@ -42,7 +42,9 @@ export default function ArticlesPage() {
 
       if (weeklyResponse.ok) {
         const weeklyData = await weeklyResponse.json();
-        weeklyArticles = Array.isArray(weeklyData?.articles) ? weeklyData.articles : [];
+        weeklyArticles = Array.isArray(weeklyData?.articles)
+          ? weeklyData.articles
+          : [];
       }
 
       setArticles(archiveArticles);
@@ -68,7 +70,10 @@ export default function ArticlesPage() {
   });
 
   const articlesByDate = sortedArticles.reduce((acc, article) => {
-    const date = article.date || (article.publishedAt && article.publishedAt.split("T")[0]) || "";
+    const date =
+      article.date ||
+      (article.publishedAt && article.publishedAt.split("T")[0]) ||
+      "";
     if (!acc[date]) acc[date] = [];
     acc[date].push(article);
     return acc;
@@ -81,7 +86,8 @@ export default function ArticlesPage() {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
     if (dateString === today.toISOString().split("T")[0]) return "Today";
-    if (dateString === yesterday.toISOString().split("T")[0]) return "Yesterday";
+    if (dateString === yesterday.toISOString().split("T")[0])
+      return "Yesterday";
     return date.toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
@@ -92,11 +98,13 @@ export default function ArticlesPage() {
 
   return (
     <PublicPageShell title="Finance News Articles | FinTech Calgary">
-
       <section className="relative overflow-hidden pt-36 pb-3">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+          <div
+            className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"
+            style={{ animationDelay: "1s" }}
+          />
         </div>
 
         <div className="container relative z-10 mx-auto px-6 sm:px-8 lg:px-12">
@@ -138,7 +146,9 @@ export default function ArticlesPage() {
           >
             <div className="grid grid-cols-1 xl:grid-cols-[auto_auto_1fr_auto] gap-4 items-stretch xl:items-end">
               <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.14em] fc-muted font-semibold">Scope</p>
+                <p className="text-[11px] tracking-[0.14em] fc-muted font-semibold">
+                  Scope
+                </p>
                 <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
                   <button
                     onClick={() => setScope("week")}
@@ -156,7 +166,9 @@ export default function ArticlesPage() {
               </div>
 
               <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.14em] fc-muted font-semibold">Layout</p>
+                <p className="text-[11px] tracking-[0.14em] fc-muted font-semibold">
+                  Layout
+                </p>
                 <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
                   <button
                     onClick={() => setViewMode("grid")}
@@ -176,7 +188,9 @@ export default function ArticlesPage() {
               </div>
 
               <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.14em] fc-muted font-semibold">Sort Order</p>
+                <p className="text-[11px] tracking-[0.14em] fc-muted font-semibold">
+                  Sort Order
+                </p>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
@@ -194,7 +208,9 @@ export default function ArticlesPage() {
                   className="fc-btn-gradient-primary !px-4 !py-3 disabled:opacity-50"
                   aria-label="Refresh articles"
                 >
-                  <FiRefreshCw className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />
+                  <FiRefreshCw
+                    className={`w-5 h-5 ${loading ? "animate-spin" : ""}`}
+                  />
                 </button>
               </div>
             </div>
@@ -202,7 +218,8 @@ export default function ArticlesPage() {
 
           {!loading && (
             <p className="fc-muted mb-1">
-              Showing {filteredArticles.length} of {scope === "week" ? 15 : articles.length} articles
+              Showing {filteredArticles.length} of{" "}
+              {scope === "week" ? 15 : articles.length} articles
             </p>
           )}
         </div>

@@ -1,12 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  FiMail,
-  FiCalendar,
-  FiDownload,
-  FiTrash2,
-} from "react-icons/fi";
+import { FiMail, FiCalendar, FiDownload, FiTrash2 } from "react-icons/fi";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import Button from "@/components/ui/Button";
 import { LoadingState } from "@/components/ui/Spinner";
@@ -119,16 +114,16 @@ export default function MembersPage() {
           title="Members"
           lede="Manage general members and mailing lists"
           actions={
-          <Button
-            type="button"
-            variant="success-soft"
-            onClick={handleExportCsv}
-            disabled={members.length === 0}
-          >
-            <FiDownload className="h-4 w-4" />
-            <span className="hidden sm:inline">Export CSV</span>
-            <span className="sm:hidden">Export</span>
-          </Button>
+            <Button
+              type="button"
+              variant="success-soft"
+              onClick={handleExportCsv}
+              disabled={members.length === 0}
+            >
+              <FiDownload className="h-4 w-4" />
+              <span className="hidden sm:inline">Export CSV</span>
+              <span className="sm:hidden">Export</span>
+            </Button>
           }
         />
 
@@ -148,7 +143,7 @@ export default function MembersPage() {
                   new Date(member.createdAt).getMonth() ===
                     new Date().getMonth() &&
                   new Date(member.createdAt).getFullYear() ===
-                    new Date().getFullYear()
+                    new Date().getFullYear(),
               ).length
             }
             icon={FiCalendar}
@@ -165,28 +160,28 @@ export default function MembersPage() {
               <table className="w-full">
                 <thead className="bg-gray-800/50 border-b border-gray-700/50">
                   <tr>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
                       Name
                     </th>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
                       UCID
                     </th>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
                       Email
                     </th>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
                       Membership
                     </th>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
                       Has Paid
                     </th>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
                       Resume
                     </th>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
                       Joined Date
                     </th>
-                    <th className="fc-muted px-6 py-4 text-right text-xs font-medium uppercase tracking-wider">
+                    <th className="fc-muted px-6 py-4 text-right text-xs font-medium tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -211,9 +206,7 @@ export default function MembersPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="fc-body text-sm">
-                          {member.email}
-                        </div>
+                        <div className="fc-body text-sm">{member.email}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm">
@@ -235,7 +228,9 @@ export default function MembersPage() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm">
                           <StatusBadge
-                            tone={member.has_paid === true ? "success" : "muted"}
+                            tone={
+                              member.has_paid === true ? "success" : "muted"
+                            }
                             size="sm"
                           >
                             {member.has_paid === true ? "Yes" : "No"}

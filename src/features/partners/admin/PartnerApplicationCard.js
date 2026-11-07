@@ -69,9 +69,7 @@ export default function PartnerApplicationCard({
               <h3 className="fc-title text-lg truncate">
                 {member.organizationName}
               </h3>
-              <p className="fc-muted">
-                {formatDateLocale(member.createdAt)}
-              </p>
+              <p className="fc-muted">{formatDateLocale(member.createdAt)}</p>
             </div>
           </div>
 
@@ -177,9 +175,7 @@ export default function PartnerApplicationCard({
         </div>
 
         <div className="space-y-3 mb-6 pt-4 border-t border-gray-800">
-          <h4 className="fc-muted font-semibold uppercase tracking-wide">
-            Organization
-          </h4>
+          <h4 className="fc-muted font-semibold tracking-wide">Organization</h4>
 
           {member.organizationEmail && (
             <div className="flex items-center gap-2 fc-body">
@@ -283,9 +279,7 @@ export default function PartnerApplicationCard({
         {member.aboutUs && (
           <div className="mt-4 pt-4 border-t border-gray-800">
             <p className="fc-muted mb-2 font-medium">About</p>
-            <p className="fc-body line-clamp-3">
-              {member.aboutUs}
-            </p>
+            <p className="fc-body line-clamp-3">{member.aboutUs}</p>
           </div>
         )}
       </GlowCard>

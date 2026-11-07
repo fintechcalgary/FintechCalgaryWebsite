@@ -62,9 +62,12 @@ function validatePdfFile(file) {
 }
 
 export default function ContractsPage() {
-  const { session, status, canAccess, isLoading: authLoading } = useRoleAccess(
-    PERMISSIONS.CONTRACTS,
-  );
+  const {
+    session,
+    status,
+    canAccess,
+    isLoading: authLoading,
+  } = useRoleAccess(PERMISSIONS.CONTRACTS);
   const router = useRouter();
 
   const [contracts, setContracts] = useState([]);
@@ -131,7 +134,7 @@ export default function ContractsPage() {
 
   const replaceContractInList = (updated) => {
     setContracts((prev) =>
-      prev.map((c) => (c._id === updated._id ? updated : c))
+      prev.map((c) => (c._id === updated._id ? updated : c)),
     );
   };
 
@@ -176,7 +179,7 @@ export default function ContractsPage() {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
-          }
+          },
         );
       } else {
         const body = new FormData();
@@ -213,7 +216,9 @@ export default function ContractsPage() {
       setFormFile(null);
     } catch (error) {
       console.error("Error saving contract:", error);
-      setFormError(error.message || "Failed to save contract. Please try again.");
+      setFormError(
+        error.message || "Failed to save contract. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -254,7 +259,7 @@ export default function ContractsPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: stageAction.action, note: stageNote }),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -279,13 +284,13 @@ export default function ContractsPage() {
     try {
       const response = await fetch(
         `${API_ENDPOINTS.CONTRACTS}/${contractToDelete._id}`,
-        { method: "DELETE" }
+        { method: "DELETE" },
       );
       if (!response.ok) {
         throw new Error("Failed to delete contract");
       }
       setContracts((prev) =>
-        prev.filter((c) => c._id !== contractToDelete._id)
+        prev.filter((c) => c._id !== contractToDelete._id),
       );
       setContractToDelete(null);
     } catch (error) {
@@ -317,7 +322,7 @@ export default function ContractsPage() {
       body.append("eoiPdf", file);
       const response = await fetch(
         `${API_ENDPOINTS.CONTRACTS}/${contractId}/eoi`,
-        { method: "PUT", body }
+        { method: "PUT", body },
       );
 
       if (!response.ok) {
@@ -371,13 +376,13 @@ export default function ContractsPage() {
   }
 
   const activeCount = contracts.filter(
-    (c) => c.status === CONTRACT_STATUS.ACTIVE
+    (c) => c.status === CONTRACT_STATUS.ACTIVE,
   ).length;
   const completedCount = contracts.filter(
-    (c) => c.status === CONTRACT_STATUS.COMPLETED
+    (c) => c.status === CONTRACT_STATUS.COMPLETED,
   ).length;
   const haltedCount = contracts.filter(
-    (c) => c.status === CONTRACT_STATUS.DO_NOT_PROCEED
+    (c) => c.status === CONTRACT_STATUS.DO_NOT_PROCEED,
   ).length;
 
   return (
@@ -479,8 +484,7 @@ export default function ContractsPage() {
                 CONTRACT_STATUS_ICONS[contract.status] || FiClock;
               const isActive = contract.status === CONTRACT_STATUS.ACTIVE;
               const currentStage = CONTRACT_STAGES[contract.stage];
-              const isFinalStage =
-                contract.stage >= CONTRACT_STAGES.length - 1;
+              const isFinalStage = contract.stage >= CONTRACT_STAGES.length - 1;
               const needsPdf =
                 contract.stage >= CONTRACT_EOI_STAGE_INDEX && !contract.eoiPdf;
               const historyOpen = !!expandedHistories[contract._id];
@@ -507,7 +511,9 @@ export default function ContractsPage() {
                         <p className="text-sm text-gray-400">
                           {contract.partnerName} · Created{" "}
                           {new Date(contract.createdAt).toLocaleDateString()}
-                          {contract.createdBy ? ` by ${contract.createdBy}` : ""}
+                          {contract.createdBy
+                            ? ` by ${contract.createdBy}`
+                            : ""}
                         </p>
                         {contract.description && (
                           <p className="text-sm text-gray-300 mt-2">
@@ -553,7 +559,7 @@ export default function ContractsPage() {
                   {/* Current stage details */}
                   {isActive && currentStage && (
                     <div className="mb-6 p-4 rounded-xl bg-gray-800/40 border border-gray-700/40">
-                      <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
+                      <p className="text-xs tracking-wide text-gray-500 mb-1">
                         Current stage · Responsible: {currentStage.role}
                       </p>
                       <p className="text-sm text-white font-medium">
@@ -583,7 +589,7 @@ export default function ContractsPage() {
                             {contract.eoiPdf.filename}
                             {contract.eoiPdf.uploadedAt &&
                               ` · uploaded ${new Date(
-                                contract.eoiPdf.uploadedAt
+                                contract.eoiPdf.uploadedAt,
                               ).toLocaleDateString()}`}
                           </span>
                           <button
@@ -623,7 +629,7 @@ export default function ContractsPage() {
                           onClick={() =>
                             openStageModal(
                               contract,
-                              CONTRACT_STAGE_ACTIONS.APPROVE
+                              CONTRACT_STAGE_ACTIONS.APPROVE,
                             )
                           }
                           disabled={needsPdf}
@@ -635,13 +641,15 @@ export default function ContractsPage() {
                           className="fc-btn-success-soft"
                         >
                           <FiCheck className="w-4 h-4" />
-                          {isFinalStage ? "Approve & Complete" : "Approve & Advance"}
+                          {isFinalStage
+                            ? "Approve & Complete"
+                            : "Approve & Advance"}
                         </button>
                         <button
                           onClick={() =>
                             openStageModal(
                               contract,
-                              CONTRACT_STAGE_ACTIONS.DO_NOT_PROCEED
+                              CONTRACT_STAGE_ACTIONS.DO_NOT_PROCEED,
                             )
                           }
                           className="fc-btn-danger-soft"
@@ -763,9 +771,7 @@ export default function ContractsPage() {
           </div>
 
           <div>
-            <label className="fc-form-label">
-              Description
-            </label>
+            <label className="fc-form-label">Description</label>
             <textarea
               value={formData.description}
               onChange={(e) =>
@@ -795,11 +801,7 @@ export default function ContractsPage() {
             </div>
           )}
 
-          {formError && (
-            <p className="fc-alert-error">
-              {formError}
-            </p>
-          )}
+          {formError && <p className="fc-alert-error">{formError}</p>}
 
           <div className="flex justify-end gap-3 pt-2">
             <Button
@@ -819,8 +821,8 @@ export default function ContractsPage() {
               {submitting
                 ? "Saving..."
                 : editingContract
-                ? "Save Changes"
-                : "Create Contract"}
+                  ? "Save Changes"
+                  : "Create Contract"}
             </Button>
           </div>
         </form>
@@ -885,9 +887,7 @@ export default function ContractsPage() {
             )}
 
             <div>
-              <label className="fc-form-label">
-                Note (optional)
-              </label>
+              <label className="fc-form-label">Note (optional)</label>
               <textarea
                 value={stageNote}
                 onChange={(e) => setStageNote(e.target.value)}
@@ -897,11 +897,7 @@ export default function ContractsPage() {
               />
             </div>
 
-            {stageError && (
-              <p className="fc-alert-error">
-                {stageError}
-              </p>
-            )}
+            {stageError && <p className="fc-alert-error">{stageError}</p>}
 
             <div className="flex justify-end gap-3">
               <Button
@@ -926,8 +922,8 @@ export default function ContractsPage() {
                 {stageSubmitting
                   ? "Saving..."
                   : stageAction.action === CONTRACT_STAGE_ACTIONS.APPROVE
-                  ? "Confirm Approval"
-                  : "Confirm Do Not Proceed"}
+                    ? "Confirm Approval"
+                    : "Confirm Do Not Proceed"}
               </Button>
             </div>
           </div>

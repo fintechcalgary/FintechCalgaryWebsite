@@ -8,7 +8,7 @@ export default function PartnersTabNav({
 }) {
   return (
     <div className="mb-6 sm:mb-8">
-      <p className="mb-2 text-xs font-medium uppercase tracking-wider text-white/45">
+      <p className="mb-2 text-xs font-medium tracking-wider text-white/45">
         Choose a section
       </p>
       <div
