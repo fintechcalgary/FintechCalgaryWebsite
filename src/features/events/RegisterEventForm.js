@@ -20,6 +20,7 @@ export default function RegisterEventForm({ eventId }) {
     isUofCStudent: "",
     ucid: "",
     school: "",
+    major: "",
     comments: "",
     companyName: "",
     companyRole: "",
@@ -274,6 +275,21 @@ export default function RegisterEventForm({ eventId }) {
                   <option value="yes">Yes</option>
                   <option value="no">No</option>
                 </select>
+              </div>
+
+              <div className="input-group">
+                <label>
+                  Major <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.major}
+                  onChange={(e) =>
+                    setFormData({ ...formData, major: e.target.value })
+                  }
+                  required
+                  placeholder="Your major"
+                />
               </div>
 
               {formData.isUofCStudent === "yes" && (

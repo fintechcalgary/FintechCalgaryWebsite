@@ -13,6 +13,7 @@ import {
   FiDownload,
   FiTrash2,
   FiHash,
+  FiBook,
 } from "react-icons/fi";
 import useConfirmDelete from "@/hooks/useConfirmDelete";
 import useDocumentTitle from "@/hooks/useDocumentTitle";
@@ -100,6 +101,7 @@ export default function EventRegistrations({ eventId }) {
         "UofC Student",
         "UCID",
         "School",
+        "Major",
         "Registration Date",
         "Comments",
       ],
@@ -113,6 +115,7 @@ export default function EventRegistrations({ eventId }) {
             : "",
         reg.ucid || "",
         reg.school || "",
+        reg.major || "",
         formatDateTime(reg.registeredAt),
         reg.comments || "",
       ]),
@@ -221,6 +224,15 @@ export default function EventRegistrations({ eventId }) {
                           <span>School: {reg.school}</span>
                         </div>
                       )}
+
+                      {reg.major && (
+                        <div className="flex items-center fc-body text-lg">
+                          <span className="fc-icon mr-3">
+                            <FiBook className="h-4 w-4" />
+                          </span>
+                          <span>Major: {reg.major}</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Comments */}
@@ -302,6 +314,12 @@ export default function EventRegistrations({ eventId }) {
                 <div>
                   <strong>School:</strong>{" "}
                   {event?.registrations?.[registrationToDelete]?.school}
+                </div>
+              )}
+              {event?.registrations?.[registrationToDelete]?.major && (
+                <div>
+                  <strong>Major:</strong>{" "}
+                  {event?.registrations?.[registrationToDelete]?.major}
                 </div>
               )}
             </div>
