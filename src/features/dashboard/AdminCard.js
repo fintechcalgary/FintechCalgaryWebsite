@@ -1,4 +1,5 @@
 "use client";
+import { GLASS_CARD_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import Link from "next/link";
 import { FiArrowUpRight } from "react-icons/fi";
@@ -21,10 +22,10 @@ export default function AdminCard({
   return (
     <Link
       href={href}
-      className="fc-card group flex h-full flex-col p-5 outline-none transition-transform duration-300 hover:-translate-y-0.5 hover:bg-gray-900/60 focus-visible:ring-2 focus-visible:ring-primary/50"
+      className={`${GLASS_CARD_CLASS} group flex h-full flex-col p-5 outline-none transition-transform duration-300 hover:-translate-y-0.5 hover:bg-gray-900/60 focus-visible:ring-2 focus-visible:ring-primary/50`.trim()}
     >
       <div className="mb-6 flex items-center justify-between">
-        <span className="fc-icon">
+        <span className={ICON_GLYPH_CLASS}>
           {Icon ? <Icon className="h-5 w-5" aria-hidden /> : null}
         </span>
         <FiArrowUpRight
@@ -32,7 +33,7 @@ export default function AdminCard({
           aria-hidden
         />
       </div>
-      <h3 className="fc-title text-lg">{title}</h3>
+      <h3 className="text-lg">{title}</h3>
 
       {widgetState === "loading" ? (
         <div className="mt-4 space-y-2" aria-hidden>
@@ -53,7 +54,7 @@ export default function AdminCard({
           <WidgetVisual chart={widget.chart} />
         </div>
       ) : (
-        <p className="mt-3 fc-body">{description}</p>
+        <p className="mt-3">{description}</p>
       )}
     </Link>
   );

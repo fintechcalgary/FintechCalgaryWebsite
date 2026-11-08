@@ -7,6 +7,23 @@ import {
   FiChevronsLeft,
   FiChevronsRight,
 } from "react-icons/fi";
+import {
+  pagination,
+  paginationBtn,
+  paginationEllipsis,
+  paginationJumpGroup,
+  paginationLabel,
+  paginationNum,
+  paginationNumActive,
+  paginationNums,
+  paginationPageInput,
+  paginationSizeGroup,
+  paginationSizeSelect,
+  paginationZone,
+  paginationZoneCenter,
+  paginationZoneEnd,
+  paginationZoneStart,
+} from "@/lib/uiClassNames";
 
 function buildPageItems(page, totalPages) {
   if (totalPages <= 9) {
@@ -39,9 +56,6 @@ function buildPageItems(page, totalPages) {
 
 const DEFAULT_PAGE_SIZES = [12, 24, 48];
 
-/**
- * Three-zone pager: page jump · numbered nav · optional page size.
- */
 export default function Pagination({
   page,
   totalPages,
@@ -80,10 +94,10 @@ export default function Pagination({
 
   return (
     <div className={className}>
-      <nav className="fc-pagination" aria-label="Pagination">
-        <div className="fc-pagination-zone fc-pagination-zone--start">
-          <div className="fc-pagination-jump-group">
-            <span className="fc-pagination-label">Showing page</span>
+      <nav className={pagination} aria-label="Pagination">
+        <div className={`${paginationZone} ${paginationZoneStart}`.trim()}>
+          <div className={paginationJumpGroup}>
+            <span className={paginationLabel}>Showing page</span>
             <label htmlFor={jumpId} className="sr-only">
               Current page
             </label>
@@ -112,19 +126,19 @@ export default function Pagination({
                 setJumpFocused(false);
                 commitJump();
               }}
-              className="fc-pagination-page-input"
+              className={paginationPageInput}
               aria-label={`Page number, 1 to ${safeTotalPages}`}
             />
-            <span className="fc-pagination-label">of {safeTotalPages}</span>
+            <span className={paginationLabel}>of {safeTotalPages}</span>
           </div>
         </div>
 
-        <div className="fc-pagination-zone fc-pagination-zone--center">
+        <div className={`${paginationZone} ${paginationZoneCenter}`.trim()}>
           <button
             type="button"
             disabled={disabled || safePage <= 1}
             onClick={() => goTo(1)}
-            className="fc-pagination-btn"
+            className={paginationBtn}
             aria-label="First page"
           >
             <FiChevronsLeft className="h-4 w-4" />
@@ -133,16 +147,16 @@ export default function Pagination({
             type="button"
             disabled={disabled || safePage <= 1}
             onClick={() => goTo(safePage - 1)}
-            className="fc-pagination-btn"
+            className={paginationBtn}
             aria-label="Previous page"
           >
             <FiChevronLeft className="h-4 w-4" />
           </button>
 
-          <div className="fc-pagination-nums">
+          <div className={paginationNums}>
             {pageItems.map((item, index) =>
               item === "…" ? (
-                <span key={`ellipsis-${index}`} className="fc-pagination-ellipsis">
+                <span key={`ellipsis-${index}`} className={paginationEllipsis}>
                   …
                 </span>
               ) : (
@@ -151,9 +165,7 @@ export default function Pagination({
                   type="button"
                   disabled={disabled}
                   onClick={() => goTo(item)}
-                  className={`fc-pagination-num ${
-                    item === safePage ? "fc-pagination-num--active" : ""
-                  }`}
+                  className={`${paginationNum} ${item === safePage && paginationNumActive}`.trim()}
                   aria-label={`Page ${item}`}
                   aria-current={item === safePage ? "page" : undefined}
                 >
@@ -167,7 +179,7 @@ export default function Pagination({
             type="button"
             disabled={disabled || safePage >= safeTotalPages}
             onClick={() => goTo(safePage + 1)}
-            className="fc-pagination-btn"
+            className={paginationBtn}
             aria-label="Next page"
           >
             <FiChevronRight className="h-4 w-4" />
@@ -176,7 +188,7 @@ export default function Pagination({
             type="button"
             disabled={disabled || safePage >= safeTotalPages}
             onClick={() => goTo(safeTotalPages)}
-            className="fc-pagination-btn"
+            className={paginationBtn}
             aria-label="Last page"
           >
             <FiChevronsRight className="h-4 w-4" />
@@ -184,9 +196,9 @@ export default function Pagination({
         </div>
 
         {hasPageSize ? (
-          <div className="fc-pagination-zone fc-pagination-zone--end">
-            <div className="fc-pagination-size-group">
-              <label htmlFor={sizeId} className="fc-pagination-label">
+          <div className={`${paginationZone} ${paginationZoneEnd}`.trim()}>
+            <div className={paginationSizeGroup}>
+              <label htmlFor={sizeId} className={paginationLabel}>
                 {pageSizeLabel}
               </label>
               <select
@@ -194,7 +206,7 @@ export default function Pagination({
                 value={pageSize}
                 disabled={disabled}
                 onChange={(e) => onPageSizeChange(Number(e.target.value))}
-                className="fc-pagination-size-select"
+                className={paginationSizeSelect}
               >
                 {pageSizeOptions.map((size) => (
                   <option key={size} value={size}>

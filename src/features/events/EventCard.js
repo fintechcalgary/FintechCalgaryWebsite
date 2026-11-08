@@ -1,4 +1,5 @@
 "use client";
+import { BTN_GRADIENT_PRIMARY_CLASS } from "@/lib/uiTokens";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -104,11 +105,11 @@ export default function EventCard({ event }) {
               )}
             </div>
 
-            <h3 className="fc-title text-2xl font-bold transition-colors duration-300 group-hover:text-primary">
+            <h3 className="text-2xl font-bold transition-colors duration-300 group-hover:text-primary">
               {event.title}
             </h3>
 
-            <p className="fc-body line-clamp-2">
+            <p className="line-clamp-2">
               {event.description}
             </p>
 
@@ -118,7 +119,7 @@ export default function EventCard({ event }) {
               </p>
             )}
 
-            <div className="fc-btn-gradient-primary px-4 py-2 pointer-events-none">
+            <div className={`${BTN_GRADIENT_PRIMARY_CLASS} px-4 py-2 pointer-events-none`.trim()}>
               {event.eventType === "webinar" ? "View Webinar" : "View Event"}
             </div>
           </div>

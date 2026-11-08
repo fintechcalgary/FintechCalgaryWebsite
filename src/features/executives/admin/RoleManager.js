@@ -1,4 +1,6 @@
 "use client";
+import { linkAccent, linkUnderline } from "@/lib/uiClassNames";
+import { ADMIN_PANEL_CLASS } from "@/lib/uiTokens";
 
 import Image from "next/image";
 import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
@@ -24,10 +26,10 @@ export default function RoleManager({
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div className="space-y-2">
-              <h2 className="fc-title-accent text-2xl">
+              <h2 className="text-2xl"><span className="heading-accent inline">
                 Executive Roles
-              </h2>
-              <p className="fc-body-lg">
+              </span></h2>
+              <p className="text-body-lg">
                 Manage available executive positions and their responsibilities
               </p>
             </div>
@@ -50,8 +52,8 @@ export default function RoleManager({
               <Spinner size="md" />
             </div>
           ) : roles.length === 0 ? (
-            <div className="fc-admin-panel p-12 text-center">
-              <p className="fc-body-lg mb-6">
+            <div className={`${ADMIN_PANEL_CLASS} p-12 text-center`.trim()}>
+              <p className="text-body-lg mb-6">
                 No executive roles have been created yet.
               </p>
               {executiveApplicationsOpen && (
@@ -77,7 +79,7 @@ export default function RoleManager({
                 >
                   <div className="relative z-10">
                     <div className="flex items-start justify-between mb-6">
-                      <h3 className="fc-title text-xl">
+                      <h3 className="text-xl">
                         {role.title}
                       </h3>
                       <div className="flex gap-2">
@@ -155,10 +157,10 @@ export default function RoleManager({
                                       </span>
                                     )}
                                   </div>
-                                  <p className="fc-body text-xs font-medium mb-1">
+                                  <p className="text-xs font-medium mb-1">
                                     {question.label}
                                   </p>
-                                  <p className="fc-muted text-xs">
+                                  <p className="text-muted text-xs">
                                     ID: {question.id}
                                   </p>
                                 </div>
@@ -183,12 +185,12 @@ export default function RoleManager({
                           </div>
                         ) : (
                           <div className="bg-gray-800/30 rounded-lg p-3 text-center">
-                            <p className="fc-muted text-xs mb-2">
+                            <p className="text-muted text-xs mb-2">
                               No custom questions for this role
                             </p>
                             <button
                               onClick={() => onAddQuestion(role)}
-                              className="fc-link text-xs"
+                              className={`${linkAccent} text-xs`.trim()}
                             >
                               Add first question
                             </button>
@@ -196,9 +198,9 @@ export default function RoleManager({
                         )}
                       </div>
 
-                      <div className="fc-muted text-xs pt-2 border-t border-gray-800">
+                      <p className="text-muted text-xs pt-2 border-t border-gray-800">
                         Created: {formatDate(role.createdAt)}
-                      </div>
+                      </p>
                     </div>
                   </div>
                 </GlowCard>

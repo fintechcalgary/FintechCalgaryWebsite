@@ -1,4 +1,6 @@
 "use client";
+import { BTN_MARKETING_PRIMARY_CLASS, BTN_MARKETING_SECONDARY_CLASS } from "@/lib/uiTokens";
+import { PageHeading } from "@/components/ui/SectionHeading";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -107,14 +109,17 @@ export default function Home() {
           </div>
 
           <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
-            <h1 className="animate-fade-in-down font-sans bg-gradient-to-br from-white via-white to-white/75 bg-clip-text pb-2 text-[clamp(3.125rem,calc(2.25rem+5vw),3.75rem)] font-extrabold leading-[0.98] tracking-[-0.03em] text-transparent drop-shadow-[0_3px_28px_rgba(0,0,0,0.55)] max-[380px]:text-[clamp(3rem,calc(1.85rem+7.5vw),3.5rem)] sm:pb-3 sm:text-6xl sm:tracking-tight sm:leading-[1.05] md:text-7xl xl:text-8xl xl:leading-[1.02]">
+            <PageHeading
+              sizeClass=""
+              className="animate-fade-in-down font-sans pb-2 text-[clamp(3.125rem,calc(2.25rem+5vw),3.75rem)] font-extrabold leading-[0.98] tracking-[-0.03em] drop-shadow-[0_3px_28px_rgba(0,0,0,0.55)] max-[380px]:text-[clamp(3rem,calc(1.85rem+7.5vw),3.5rem)] sm:pb-3 sm:text-6xl sm:tracking-tight sm:leading-[1.05] md:text-7xl xl:text-8xl xl:leading-[1.02]"
+            >
               FinTech{" "}
               <span className="bg-gradient-to-r from-violet-300 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)]">
                 Calgary
               </span>
-            </h1>
+            </PageHeading>
 
-            <p className="animation-delay-300 animate-fade-in-down fc-lede mx-auto mt-4 max-w-2xl max-[380px]:mt-3 sm:mt-5">
+            <p className="text-lede animation-delay-300 animate-fade-in-down mx-auto mt-4 max-w-2xl max-[380px]:mt-3 sm:mt-5">
               Innovating the future of finance through events, partnerships, and
               hands-on collaboration between builders and decision-makers.
             </p>
@@ -122,13 +127,13 @@ export default function Home() {
             <div className="animation-delay-600 animate-fade-in-up mx-auto mt-10 flex max-w-[320px] flex-col items-stretch gap-3 sm:mx-0 sm:mt-12 sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-4">
               <Link
                 href="/join"
-                className="fc-btn-primary w-full !px-8 !py-3.5 !text-base sm:w-auto sm:!py-4 sm:!text-lg"
+                className={`${BTN_MARKETING_PRIMARY_CLASS} w-full !px-8 !py-3.5 !text-base sm:w-auto sm:!py-4 sm:!text-lg`.trim()}
               >
                 Join Us
               </Link>
               <Link
                 href="/partner-signup"
-                className="fc-btn-secondary group w-full !px-8 !py-3.5 !text-base sm:w-auto sm:!py-4 sm:!text-lg"
+                className={`${BTN_MARKETING_SECONDARY_CLASS} group w-full !px-8 !py-3.5 !text-base sm:w-auto sm:!py-4 sm:!text-lg`.trim()}
               >
                 Become an Associate
                 <FiArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />

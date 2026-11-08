@@ -1,4 +1,6 @@
 "use client";
+import { linkAccent, titleAccent } from "@/lib/uiClassNames";
+import { ALERT_WARNING_CLASS, BTN_GRADIENT_PRIMARY_CLASS, BTN_MARKETING_SOFT_CLASS, TOPIC_CHIP_CLASS } from "@/lib/uiTokens";
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -10,9 +12,6 @@ import {
   PublicPageMetaDot,
   PublicPageMetaLine,
   PublicGlowCard,
-  PUBLIC_SECTION_TITLE,
-  PUBLIC_SECTION_TITLE_INLINE,
-  PUBLIC_SECTION_TITLE_SM,
 } from "@/components/layout/PublicPageFrame";
 import FinTechChatBot from "@/features/insights/FinTechChatBot";
 import WeeklyDigestModal from "@/features/insights/WeeklyDigestModal";
@@ -136,7 +135,7 @@ function InsightsPageContent() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="fc-alert-warning mb-6"
+            className={`${ALERT_WARNING_CLASS} mb-6`.trim()}
           >
             <div className="flex items-center gap-2">
               <FiAlertCircle className="h-5 w-5 shrink-0" />
@@ -169,7 +168,7 @@ function InsightsPageContent() {
               <button
                 type="button"
                 onClick={() => setDigestOpen(true)}
-                className="fc-btn-soft group mx-auto flex w-full max-w-md flex-wrap items-center justify-center gap-x-2 gap-y-1 !px-4 !py-3 !text-sm !tracking-normal sm:w-auto sm:max-w-none sm:flex-nowrap sm:!px-5 sm:!py-2.5"
+                className={`${BTN_MARKETING_SOFT_CLASS} group mx-auto flex w-full max-w-md flex-wrap items-center justify-center gap-x-2 gap-y-1 !px-4 !py-3 !text-sm !tracking-normal sm:w-auto sm:max-w-none sm:flex-nowrap sm:!px-5 sm:!py-2.5`.trim()}
               >
                 <span className="text-center leading-snug">
                   This Week&apos;s Full Digest
@@ -204,12 +203,14 @@ function InsightsPageContent() {
             >
               <PublicGlowCard>
                 <div className="relative z-10 mb-4 flex items-center justify-between gap-4 sm:mb-5">
-                  <h2 className={PUBLIC_SECTION_TITLE_INLINE}>
+                  <h2
+                    className={`${titleAccent} relative z-10 mb-0 text-xl sm:text-2xl`.trim()}
+                  >
                     This Week&apos;s Top Stories
                   </h2>
                   <Link
                     href="/articles"
-                    className="fc-link inline-flex shrink-0 items-center gap-1 text-sm font-medium"
+                    className={`${linkAccent} inline-flex shrink-0 items-center gap-1 text-sm font-medium`.trim()}
                   >
                     View All
                     <FiArrowRight className="h-4 w-4" />
@@ -241,8 +242,8 @@ function InsightsPageContent() {
                     </div>
                   ) : (
                     <div className="py-8 text-center">
-                      <p className="fc-muted">No top stories available yet</p>
-                      <p className="mt-2 fc-muted">
+                      <p className="text-muted">No top stories available yet</p>
+                      <p className="text-muted mt-2">
                         Check back soon for the latest FinTech news
                       </p>
                     </div>
@@ -257,7 +258,11 @@ function InsightsPageContent() {
               transition={{ duration: 0.5, delay: 0.25 }}
             >
               <PublicGlowCard>
-                <h2 className={PUBLIC_SECTION_TITLE}>Key Insights</h2>
+                <h2
+                  className={`${titleAccent} relative z-10 mb-4 text-xl sm:mb-5 sm:text-2xl`.trim()}
+                >
+                  Key Insights
+                </h2>
 
                 <div className="relative z-10">
                   {keyInsights ? (
@@ -290,7 +295,11 @@ function InsightsPageContent() {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <PublicGlowCard>
-                <h3 className={PUBLIC_SECTION_TITLE_SM}>Trending Topics</h3>
+                <h3
+                  className={`${titleAccent} relative z-10 mb-3 text-lg sm:mb-4`.trim()}
+                >
+                  Trending Topics
+                </h3>
 
                 <div className="relative z-10">
                   {trendingTopics.length > 0 ? (
@@ -304,14 +313,14 @@ function InsightsPageContent() {
                             duration: 0.3,
                             delay: 0.3 + index * 0.04,
                           }}
-                          className="fc-topic-chip"
+                          className={TOPIC_CHIP_CLASS}
                         >
                           {topic}
                         </motion.span>
                       ))}
                     </div>
                   ) : (
-                    <p className="fc-muted">No trending topics yet</p>
+                    <p className="text-muted">No trending topics yet</p>
                   )}
                 </div>
               </PublicGlowCard>
@@ -323,7 +332,11 @@ function InsightsPageContent() {
               transition={{ duration: 0.5, delay: 0.3 }}
             >
               <PublicGlowCard>
-                <h3 className={PUBLIC_SECTION_TITLE_SM}>Sentiment Overview</h3>
+                <h3
+                  className={`${titleAccent} relative z-10 mb-3 text-lg sm:mb-4`.trim()}
+                >
+                  Sentiment Overview
+                </h3>
 
                 <div className="relative z-10 space-y-3">
                   <OverviewSentimentBar
@@ -359,15 +372,17 @@ function InsightsPageContent() {
             >
               <PublicGlowCard>
                 <div className="relative z-10 text-center">
-                  <h3 className={`${PUBLIC_SECTION_TITLE_SM} !mb-2`}>
+                  <h3
+                    className={`${titleAccent} relative z-10 !mb-2 text-lg sm:mb-4`.trim()}
+                  >
                     Full archive
                   </h3>
-                  <p className="fc-body mb-4">
+                  <p className="mb-4">
                     Browse every saved article with filters and search
                   </p>
                   <Link
                     href="/articles"
-                    className="fc-btn-gradient-primary px-5 py-2.5"
+                    className={`${BTN_GRADIENT_PRIMARY_CLASS} px-5 py-2.5`.trim()}
                   >
                     Browse All Articles
                     <FiArrowRight className="h-4 w-4" />

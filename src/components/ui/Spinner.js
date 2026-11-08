@@ -1,4 +1,5 @@
 import { AiLoader } from "@/components/ui/ai-loader";
+import { spinnerInline } from "@/lib/uiClassNames";
 
 /**
  * Animated AI loader used for inline and section loading states.
@@ -13,7 +14,7 @@ export default function Spinner({ size = "md", className = "", text = "Loading" 
 export function InlineSpinner({ className = "", label = "Loading" }) {
   return (
     <span
-      className={`fc-spinner-inline ${className}`.trim()}
+      className={`${spinnerInline} ${className}`.trim()}
       role="status"
       aria-label={label}
     />
@@ -37,7 +38,7 @@ export function LoadingState({
       } ${className}`.trim()}
     >
       <AiLoader size={size} text={text} />
-      {message ? <p className="fc-muted">{message}</p> : null}
+      {message ? <p className="text-muted">{message}</p> : null}
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import { linkAccent, linkUnderline } from "@/lib/uiClassNames";
+import { ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 import { useDrag, useDrop } from "react-dnd";
 import { motion } from "framer-motion";
 import { FiEdit2, FiTrash2, FiDownload, FiGlobe, FiImage } from "react-icons/fi";
@@ -58,12 +60,12 @@ function DraggablePartner({
                   />
                 </div>
               ) : (
-                <span className="fc-icon h-12 w-12 flex-shrink-0 sm:h-14 sm:w-14">
+                <span className={`${ICON_GLYPH_CLASS} h-12 w-12 flex-shrink-0 sm:h-14 sm:w-14`.trim()}>
                   <FiImage className="h-6 w-6 sm:h-7 sm:w-7" />
                 </span>
               )}
               <div className="min-w-0 flex-1">
-                <h3 className="fc-title text-base sm:text-lg truncate">
+                <h3 className="text-base sm:text-lg truncate">
                   {partner.name}
                 </h3>
                 {partner.website && (
@@ -71,7 +73,7 @@ function DraggablePartner({
                     href={partner.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="fc-link text-xs truncate block"
+                    className="link-accent text-xs truncate block"
                   >
                     <FiGlobe className="inline w-3 h-3 mr-1" />
                     Website
@@ -118,7 +120,7 @@ function DraggablePartner({
             </div>
           </div>
           {partner.description && (
-            <p className="fc-body line-clamp-3 mb-3 sm:mb-4 flex-grow">
+            <p className="line-clamp-3 mb-3 sm:mb-4 flex-grow">
               {partner.description}
             </p>
           )}

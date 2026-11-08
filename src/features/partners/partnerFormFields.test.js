@@ -7,8 +7,8 @@ import {
 } from "@/features/partners/partnerFormFields";
 
 describe("PARTNER_FORM_INPUT_CLASS", () => {
-  it("equals form-input", () => {
-    expect(PARTNER_FORM_INPUT_CLASS).toBe("form-input");
+  it("equals fc-form-input", () => {
+    expect(PARTNER_FORM_INPUT_CLASS).toBe("fc-form-input");
   });
 });
 

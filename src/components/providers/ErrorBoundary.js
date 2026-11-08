@@ -1,4 +1,6 @@
 "use client";
+import { BTN_DASHBOARD_CANCEL_CLASS } from "@/lib/uiTokens";
+import { muted } from "@/lib/uiClassNames";
 
 import React from "react";
 import { FiAlertCircle, FiRefreshCw, FiHome } from "react-icons/fi";
@@ -53,10 +55,10 @@ class ErrorBoundary extends React.Component {
                 </div>
               </div>
 
-              <h1 className="text-3xl font-bold text-white text-center mb-4">
+              <h1 className="heading-accent text-center mb-4">
                 Something went wrong
               </h1>
-              <p className="fc-body-lg text-center mb-8">
+              <p className="text-body-lg text-center mb-8">
                 We encountered an unexpected error. Please try refreshing the page or returning to the home page.
               </p>
 
@@ -66,11 +68,11 @@ class ErrorBoundary extends React.Component {
                     {this.state.error.toString()}
                   </p>
                   {this.state.errorInfo && (
-                    <details className="fc-muted text-xs">
+                    <details className={`${muted} text-xs`.trim()}>
                       <summary className="cursor-pointer hover:text-white/55">
                         Stack trace
                       </summary>
-                      <pre className="mt-2 overflow-auto max-h-48">
+                      <pre className={`${muted} mt-2 overflow-auto max-h-48`.trim()}>
                         {this.state.errorInfo.componentStack}
                       </pre>
                     </details>
@@ -83,7 +85,7 @@ class ErrorBoundary extends React.Component {
                   <FiRefreshCw className="w-4 h-4" />
                   Try Again
                 </Button>
-                <Link href="/" className="fc-btn-dashboard-cancel !flex-none inline-flex items-center justify-center gap-2">
+                <Link href="/" className={`${BTN_DASHBOARD_CANCEL_CLASS} !flex-none inline-flex items-center justify-center gap-2`.trim()}>
                   <FiHome className="w-4 h-4" />
                   Go Home
                 </Link>

@@ -1,6 +1,7 @@
 "use client";
 
 import ModalRoot from "./ModalRoot";
+import { modalPanel } from "@/lib/uiClassNames";
 
 const SIZE_PANEL = {
   sm: "max-w-md p-4 sm:p-6",
@@ -24,7 +25,7 @@ export default function DashboardModal({
   return (
     <ModalRoot isOpen={isOpen} onClose={onClose}>
       <div
-        className={`fc-modal-panel mx-auto border-gray-800/50 ${panelSize} ${panelClassName}`.trim()}
+        className={`${modalPanel} mx-auto border-gray-800/50 ${panelSize} ${panelClassName}`.trim()}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"

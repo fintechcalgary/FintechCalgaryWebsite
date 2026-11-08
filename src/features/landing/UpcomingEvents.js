@@ -1,3 +1,4 @@
+import { BTN_MARKETING_SECONDARY_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 import EventCard from "@/features/events/EventCard";
 import { FiCalendar, FiArrowRight } from "react-icons/fi";
 import Link from "next/link";
@@ -29,7 +30,7 @@ export default function UpcomingEvents({ events }) {
             </div>
 
             <div className="flex justify-center">
-              <Link href="/events" className="fc-btn-secondary group">
+              <Link href="/events" className={`${BTN_MARKETING_SECONDARY_CLASS} group`.trim()}>
                 View All Events
                 <FiArrowRight className="text-xl transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
@@ -42,13 +43,13 @@ export default function UpcomingEvents({ events }) {
             className="mx-auto max-w-3xl !gap-0 !p-12 text-center"
           >
             <div className="relative z-10">
-              <div className="fc-icon mx-auto mb-6">
+              <div className={`${ICON_GLYPH_CLASS} mx-auto mb-6`.trim()}>
                 <FiCalendar className="h-8 w-8" />
               </div>
-              <h3 className="fc-title mb-3 text-2xl">
+              <h3 className="mb-3 text-2xl">
                 No events scheduled yet
               </h3>
-              <p className="fc-body">
+              <p>
                 New events will show up here when they&apos;re scheduled.
               </p>
             </div>

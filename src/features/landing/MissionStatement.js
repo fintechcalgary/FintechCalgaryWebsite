@@ -1,3 +1,4 @@
+import { BTN_MARKETING_PRIMARY_CLASS } from "@/lib/uiTokens";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import {
@@ -14,12 +15,10 @@ const FeatureCard = ({ feature, glowColor }) => {
       glowColor={glowColor}
       className="group relative flex h-full min-h-0 w-full flex-col !gap-0 !p-6"
     >
-      <h3 className="fc-title mb-2 text-xl transition-transform duration-300 group-hover:-translate-y-0.5">
+      <h3 className="mb-2 text-xl transition-transform duration-300 group-hover:-translate-y-0.5">
         {feature.title}
       </h3>
-      <p className="fc-body mb-4 flex-1">
-        {feature.description}
-      </p>
+      <p className="mb-4 flex-1">{feature.description}</p>
     </GlowCard>
   );
 };
@@ -62,7 +61,7 @@ export default function MissionStatement() {
         </div>
 
         <div className="flex justify-center">
-          <Link href="/join" className="fc-btn-primary group">
+          <Link href="/join" className={`${BTN_MARKETING_PRIMARY_CLASS} group`.trim()}>
             Join Now
             <FiArrowRight className="text-xl transition-transform duration-300 group-hover:translate-x-1" />
           </Link>

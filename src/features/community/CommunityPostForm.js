@@ -1,4 +1,5 @@
 "use client";
+import { MODAL_BODY_CLASS } from "@/lib/uiTokens";
 
 import { useState } from "react";
 import Image from "next/image";
@@ -111,9 +112,9 @@ export default function CommunityPostForm({
       <form
         id="communityPostForm"
         onSubmit={handleSubmit}
-        className="fc-modal-body space-y-4"
+        className={`${MODAL_BODY_CLASS} space-y-4`.trim()}
       >
-        <p className="fc-body text-sm">
+        <p className="text-sm">
           Promote partner and community events with event details, an optional
           banner, and a registration link.
         </p>
@@ -125,7 +126,7 @@ export default function CommunityPostForm({
         ) : null}
 
         <div>
-          <label className="fc-form-label">
+          <label className="text-label">
             Event Title
           </label>
           <input
@@ -139,7 +140,7 @@ export default function CommunityPostForm({
         </div>
 
         <div>
-          <label className="fc-form-label">
+          <label className="text-label">
             Event Info
           </label>
           <textarea
@@ -153,7 +154,7 @@ export default function CommunityPostForm({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Event Date
             </label>
             <input
@@ -165,7 +166,7 @@ export default function CommunityPostForm({
             />
           </div>
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Event Time (optional)
             </label>
             <input
@@ -180,7 +181,7 @@ export default function CommunityPostForm({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Organization (optional)
             </label>
             <input
@@ -192,7 +193,7 @@ export default function CommunityPostForm({
             />
           </div>
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Location (optional)
             </label>
             <input
@@ -206,7 +207,7 @@ export default function CommunityPostForm({
         </div>
 
         <div>
-          <label className="fc-form-label">
+          <label className="text-label">
             Registration Link
           </label>
           <input
@@ -220,7 +221,7 @@ export default function CommunityPostForm({
         </div>
 
         <div>
-          <label className="fc-form-label">
+          <label className="text-label">
             Event Banner (optional)
           </label>
           {formData.bannerUrl ? (
@@ -243,7 +244,7 @@ export default function CommunityPostForm({
               </button>
             </div>
           ) : null}
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-gray-600/50 bg-gray-800/50 px-4 py-2.5 text-sm text-gray-200 transition-colors hover:border-primary/40 hover:text-primary">
+          <label className="text-label inline-flex cursor-pointer items-center gap-2 rounded-xl border border-gray-600/50 bg-gray-800/50 px-4 py-2.5 text-sm text-gray-200 transition-colors hover:border-primary/40 hover:text-primary">
             <FiImage className="h-4 w-4" />
             {uploading ? "Uploading..." : "Upload Banner"}
             <input

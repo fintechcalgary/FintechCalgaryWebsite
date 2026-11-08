@@ -1,4 +1,5 @@
 "use client";
+import { ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import { GlowCard } from "@/components/ui/spotlight-card";
 
@@ -23,10 +24,10 @@ export default function PartnersStatCard({
     >
       <div className="relative z-10 flex items-center justify-between">
         <div className="min-w-0 space-y-1">
-          <p className="fc-muted">{label}</p>
+          <p className="text-muted">{label}</p>
           <p className="text-2xl font-bold text-white sm:text-3xl">{value}</p>
         </div>
-        <span className="fc-icon">
+        <span className={ICON_GLYPH_CLASS}>
           <Icon className="text-xl sm:text-2xl" />
         </span>
       </div>

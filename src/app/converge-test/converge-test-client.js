@@ -1,4 +1,5 @@
 "use client";
+import { GLASS_CARD_CLASS } from "@/lib/uiTokens";
 
 import { useState } from "react";
 import PublicPageShell from "@/components/layout/PublicPageShell";
@@ -134,14 +135,14 @@ export default function ConvergeTestClient() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="fc-card space-y-4 p-8">
+          <form onSubmit={handleSubmit} className={`${GLASS_CARD_CLASS} space-y-4 p-8`.trim()}>
             {[
               ["firstName", "First name", "text"],
               ["lastName", "Last name", "text"],
               ["email", "Email", "email"],
             ].map(([name, label, type]) => (
               <div key={name}>
-                <label className="mb-1 block text-sm font-medium text-gray-300">
+                <label className="text-label">
                   {label} <span className="text-red-400">*</span>
                 </label>
                 <input

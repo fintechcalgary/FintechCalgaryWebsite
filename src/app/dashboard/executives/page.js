@@ -1,4 +1,6 @@
 "use client";
+import { titleAccent } from "@/lib/uiClassNames";
+import { ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,10 +37,10 @@ export default function ExecutivesDashboardPage() {
         <AdminBackLink />
 
         <div className="mb-8 space-y-2">
-          <h1 className="fc-title text-4xl font-bold tracking-tight">
+          <h1 className="heading-accent text-4xl font-bold tracking-tight">
             Executives
           </h1>
-          <p className="fc-lede">
+          <p className="text-lede">
             Manage the executive team shown on the public site.
           </p>
         </div>
@@ -50,10 +52,10 @@ export default function ExecutivesDashboardPage() {
         >
           <div className="relative z-10 mb-8 flex items-center justify-between">
             <div className="space-y-1">
-              <h2 className="fc-title-accent text-2xl">Team</h2>
-              <p className="fc-body">Collaborate with others</p>
+              <h2 className={`${titleAccent} text-2xl`.trim()}>Team</h2>
+              <p>Collaborate with others</p>
             </div>
-            <span className="fc-icon">
+            <span className={ICON_GLYPH_CLASS}>
               <FontAwesomeIcon icon={faUsers} className="h-6 w-6" />
             </span>
           </div>

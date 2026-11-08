@@ -1,4 +1,5 @@
 "use client";
+import { ADMIN_PANEL_CLASS, ALERT_ERROR_CLASS, BTN_CHIP_CLASS, FILE_INPUT_CLASS } from "@/lib/uiTokens";
 
 import { useState } from "react";
 import {
@@ -153,7 +154,7 @@ export default function MarketingSubmissionsPage() {
               return (
                 <div
                   key={item._id}
-                  className="fc-admin-panel p-6"
+                  className={`${ADMIN_PANEL_CLASS} p-6`.trim()}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                     <div>
@@ -164,12 +165,12 @@ export default function MarketingSubmissionsPage() {
                         Partner: {item.partnerName} · Submitted by {item.submittedBy}
                       </p>
                       {item.description && (
-                        <p className="text-sm text-gray-300 mt-2">
+                        <p className="mt-2 text-sm text-gray-300">
                           {item.description}
                         </p>
                       )}
                       {item.reviewNote && (
-                        <p className="text-sm text-gray-400 mt-2 italic">
+                        <p className="mt-2 text-sm italic text-gray-400">
                           Admin note: {item.reviewNote}
                         </p>
                       )}
@@ -185,14 +186,14 @@ export default function MarketingSubmissionsPage() {
                   <div className="flex flex-wrap gap-3 mt-4">
                     <a
                       href={`${API_ENDPOINTS.MARKETING_APPROVALS}/${item._id}?file=content`}
-                      className="fc-btn-chip"
+                      className={BTN_CHIP_CLASS}
                     >
                       <FiDownload className="w-4 h-4" />
                       Content
                     </a>
                     <a
                       href={`${API_ENDPOINTS.MARKETING_APPROVALS}/${item._id}?file=proof`}
-                      className="fc-btn-chip"
+                      className={BTN_CHIP_CLASS}
                     >
                       <FiDownload className="w-4 h-4" />
                       Partner Proof
@@ -213,7 +214,7 @@ export default function MarketingSubmissionsPage() {
       >
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Title <span className="text-red-400">*</span>
             </label>
             <input
@@ -227,7 +228,7 @@ export default function MarketingSubmissionsPage() {
             />
           </div>
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Partner name <span className="text-red-400">*</span>
             </label>
             <input
@@ -241,7 +242,7 @@ export default function MarketingSubmissionsPage() {
             />
           </div>
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Description
             </label>
             <textarea
@@ -254,31 +255,31 @@ export default function MarketingSubmissionsPage() {
             />
           </div>
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Marketing content <span className="text-red-400">*</span>
             </label>
             <input
               type="file"
               accept={FILE_TYPES.MARKETING.EXTENSIONS.map((e) => `.${e}`).join(",")}
               onChange={(e) => setContentFile(e.target.files?.[0] || null)}
-              className="fc-file-input"
+              className={FILE_INPUT_CLASS}
               required
             />
           </div>
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Partner approval proof (e.g. email) <span className="text-red-400">*</span>
             </label>
             <input
               type="file"
               accept={FILE_TYPES.MARKETING.EXTENSIONS.map((e) => `.${e}`).join(",")}
               onChange={(e) => setProofFile(e.target.files?.[0] || null)}
-              className="fc-file-input"
+              className={FILE_INPUT_CLASS}
               required
             />
           </div>
           {formError && (
-            <p className="fc-alert-error">
+            <p className={ALERT_ERROR_CLASS}>
               {formError}
             </p>
           )}

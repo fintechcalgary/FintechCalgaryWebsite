@@ -1,4 +1,6 @@
 "use client";
+import { linkAccent, linkUnderline } from "@/lib/uiClassNames";
+import { ADMIN_PANEL_CLASS, BTN_GRADIENT_PRIMARY_CLASS, ICON_GLYPH_CLASS, MODAL_BODY_CLASS, MODAL_FILE_BTN_CLASS } from "@/lib/uiTokens";
 import { useState, useEffect, useCallback } from "react";
 import { getSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
@@ -217,8 +219,8 @@ export default function Events({ mode }) {
   return (
     <div className="min-h-[500px]">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="fc-title text-2xl flex items-center gap-2">
-          <span className="fc-icon">
+        <h3 className="text-2xl flex items-center gap-2">
+          <span className={ICON_GLYPH_CLASS}>
             <FiCalendar className="h-5 w-5" />
           </span>
           Your Events
@@ -270,7 +272,7 @@ export default function Events({ mode }) {
           </>
         }
       >
-        <form id="eventForm" onSubmit={handleSubmit} className="fc-modal-body">
+        <form id="eventForm" onSubmit={handleSubmit} className={MODAL_BODY_CLASS}>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-5 lg:gap-8">
             {/* Primary fields — left on desktop */}
             <div className="space-y-4 lg:col-span-3">
@@ -288,7 +290,7 @@ export default function Events({ mode }) {
                 >
                   <label
                     htmlFor="eventType"
-                    className="fc-form-label"
+                    
                   >
                     Event Type
                   </label>
@@ -312,7 +314,7 @@ export default function Events({ mode }) {
                   <div className="sm:col-span-3">
                     <label
                       htmlFor="recordingUrl"
-                      className="fc-form-label"
+                      
                     >
                       Webinar Link (Optional)
                     </label>
@@ -334,7 +336,7 @@ export default function Events({ mode }) {
               </div>
 
               <div>
-                <label className="fc-form-label">
+                <label className="text-label">
                   Title
                 </label>
                 <input
@@ -350,7 +352,7 @@ export default function Events({ mode }) {
               </div>
 
               <div>
-                <label className="fc-form-label">
+                <label className="text-label">
                   Description
                 </label>
                 <textarea
@@ -369,7 +371,7 @@ export default function Events({ mode }) {
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="fc-form-label">
+                  <label className="text-label">
                     Date
                   </label>
                   <input
@@ -383,7 +385,7 @@ export default function Events({ mode }) {
                   />
                 </div>
                 <div>
-                  <label className="fc-form-label">
+                  <label className="text-label">
                     Time
                   </label>
                   <input
@@ -403,7 +405,7 @@ export default function Events({ mode }) {
             {/* Media / tip — right rail on desktop */}
             <div className="flex flex-col gap-4 lg:col-span-2">
               <div className="flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/10 p-3">
-                <span className="fc-icon flex-shrink-0 pt-0.5">
+                <span className={`${ICON_GLYPH_CLASS} flex-shrink-0 pt-0.5`.trim()}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5"
@@ -417,7 +419,7 @@ export default function Events({ mode }) {
                     />
                   </svg>
                 </span>
-                <p className="fc-muted text-xs leading-relaxed sm:text-sm">
+                <p className="text-muted text-xs leading-relaxed sm:text-sm">
                   <span className="font-medium text-white">Tip:</span> Use
                   high-resolution images. Include{" "}
                   <span className="font-medium text-white">AM / PM</span> in the
@@ -426,7 +428,7 @@ export default function Events({ mode }) {
               </div>
 
               <div className="flex min-h-0 flex-1 flex-col rounded-xl border border-gray-700/50 bg-gray-900/40 p-4">
-                <label className="fc-form-label">
+                <label className="text-label">
                   Images
                 </label>
                 <input
@@ -440,9 +442,7 @@ export default function Events({ mode }) {
                 />
                 <label
                   htmlFor="eventImageUpload"
-                  className={`fc-modal-file-btn w-full justify-center ${
-                    uploading ? "pointer-events-none opacity-60" : ""
-                  }`}
+                  className={`${MODAL_FILE_BTN_CLASS} w-full justify-center ${uploading ? "pointer-events-none opacity-60" : ""}`.trim()}
                 >
                   <FiImage className="h-5 w-5" />
                   {uploading ? "Uploading..." : "Choose Images"}
@@ -482,7 +482,7 @@ export default function Events({ mode }) {
                     ))}
                   </div>
                 ) : (
-                  <p className="fc-muted mt-4 text-center text-xs">
+                  <p className="text-muted mt-4 text-center text-xs">
                     Add at least one image for the event banner.
                   </p>
                 )}
@@ -499,7 +499,7 @@ export default function Events({ mode }) {
           return (
           <div
             key={event._id}
-            className="fc-admin-panel overflow-hidden"
+            className={`${ADMIN_PANEL_CLASS} overflow-hidden`.trim()}
           >
             <div className="aspect-video w-full relative group">
               {event.images?.length > 0 ? (
@@ -557,18 +557,18 @@ export default function Events({ mode }) {
                   </IconButton>
                 </div>
               </div>
-              <p className="fc-body mb-4 line-clamp-3">
+              <p className="mb-4 line-clamp-3">
                 {event.description}
               </p>
-              <div className="fc-muted">
+              <p className="text-muted">
                 {formatEventDate(event.date)}
                 {event.time && ` at ${event.time}`}{" "}
                 {/* Display time if available */}
-              </div>
+              </p>
               <div className="mt-4 pt-4 border-t border-gray-700">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="space-y-2">
-                    <p className="fc-muted">
+                    <p className="text-muted">
                       {event.registrations?.length || 0} registered
                     </p>
                     {isUpcoming && !isRegistrationOpen(event) && (
@@ -602,7 +602,7 @@ export default function Events({ mode }) {
                     <Link
                       href={`/events/register/${event._id}`}
                       onClick={(e) => e.stopPropagation()}
-                      className="fc-btn-gradient-primary !px-4 !py-2 text-sm"
+                      className={`${BTN_GRADIENT_PRIMARY_CLASS} !px-4 !py-2 text-sm`.trim()}
                     >
                       Register for Event
                     </Link>
@@ -617,7 +617,7 @@ export default function Events({ mode }) {
                     <Link
                       href={`/events/${event._id}/registrations`}
                       onClick={(e) => e.stopPropagation()}
-                      className="fc-link text-sm transition-all duration-200 inline-flex items-center gap-2 hover:scale-105 relative z-20"
+                      className={`${linkAccent} text-sm transition-all duration-200 inline-flex items-center gap-2 hover:scale-105 relative z-20`.trim()}
                     >
                       <FiUser className="w-4 h-4" />
                       View {event.registrations.length} Registration

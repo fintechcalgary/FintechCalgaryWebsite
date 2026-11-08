@@ -49,9 +49,8 @@ export default function PartnerApplicationEditModal({
                 <option value="rejected">Rejected</option>
               </select>
               {values.approvalStatus === "accepted" && values.approvedAt && (
-                <p className="mt-2 fc-muted">
-                  Approved on{" "}
-                  {formatDateLocale(values.approvedAt)}
+                <p className="text-muted mt-2">
+                  Approved on {formatDateLocale(values.approvedAt)}
                 </p>
               )}
             </div>

@@ -1,4 +1,6 @@
 "use client";
+import { body, titleAccent } from "@/lib/uiClassNames";
+import { BTN_SOFT_CHIP_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -120,19 +122,19 @@ export default function InfoPage() {
           >
             <div className="relative z-10 space-y-4">
               <div className="inline-flex items-center gap-2 text-sm font-medium text-white/80">
-                <span className="fc-icon">
+                <span className={ICON_GLYPH_CLASS}>
                   <FiBookOpen className="h-4 w-4" />
                 </span>
                 Repository &amp; Instructions
               </div>
               <div className="space-y-2">
-                <h2 className="fc-title text-3xl tracking-tight sm:text-4xl md:text-5xl">
+                <h2 className="text-3xl tracking-tight sm:text-4xl md:text-5xl">
                   How to Access and{" "}
                   <span className="bg-gradient-to-r from-primary to-violet-400/75 bg-clip-text text-transparent">
                     Contribute
                   </span>
                 </h2>
-                <p className="fc-lede max-w-3xl">
+                <p className="text-lede max-w-3xl">
                   Follow the steps below to request access to the repository and
                   make changes for future development.
                 </p>
@@ -150,14 +152,14 @@ export default function InfoPage() {
             >
               <div className="relative z-10">
                 <div className="mb-5 flex items-center gap-3">
-                  <span className="fc-icon">
+                  <span className={ICON_GLYPH_CLASS}>
                     <FiGithub className="h-5 w-5" />
                   </span>
-                  <h2 className="fc-title-accent text-xl sm:text-2xl">
+                  <h2 className={`${titleAccent} text-xl sm:text-2xl`.trim()}>
                     Repository Link
                   </h2>
                 </div>
-                <p className="fc-body mb-5">
+                <p className="mb-5">
                   Access the official repository for the FinTech Calgary website
                   project:
                 </p>
@@ -165,7 +167,7 @@ export default function InfoPage() {
                   href={REPO_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="fc-btn-soft-chip group max-w-full"
+                  className={`${BTN_SOFT_CHIP_CLASS} group max-w-full`.trim()}
                 >
                   <span className="truncate">{REPO_URL}</span>
                   <FiArrowUpRight className="h-4 w-4 flex-shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -180,25 +182,25 @@ export default function InfoPage() {
             >
               <div className="relative z-10">
                 <div className="mb-5 flex items-center gap-3">
-                  <span className="fc-icon">
+                  <span className={ICON_GLYPH_CLASS}>
                     <FiCheckCircle className="h-5 w-5" />
                   </span>
-                  <h2 className="fc-title-accent text-xl sm:text-2xl">
+                  <h2 className={`${titleAccent} text-xl sm:text-2xl`.trim()}>
                     Getting Started
                   </h2>
                 </div>
-                <p className="fc-body-lg mb-4">
+                <p className="text-body-lg mb-4">
                   Before contributing to the project, ensure you have:
                 </p>
                 <ul className="space-y-3">
                   {prerequisites.map((item) => (
                     <li key={item} className="flex items-start gap-3">
                       <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary shadow-sm shadow-primary/40" />
-                      <span className="fc-body">{item}</span>
+                      <span className={body}>{item}</span>
                     </li>
                   ))}
                 </ul>
-                <p className="fc-muted mt-5 border-t border-white/10 pt-4">
+                <p className="text-muted mt-5 border-t border-white/10 pt-4">
                   For detailed setup instructions, please contact the team lead.
                 </p>
               </div>
@@ -213,10 +215,10 @@ export default function InfoPage() {
             >
               <div className="relative z-10">
                 <div className="mb-6 flex items-center gap-3">
-                  <span className="fc-icon">
+                  <span className={ICON_GLYPH_CLASS}>
                     <FiTerminal className="h-5 w-5" />
                   </span>
-                  <h2 className="fc-title-accent text-xl sm:text-2xl">
+                  <h2 className={`${titleAccent} text-xl sm:text-2xl`.trim()}>
                     Instructions
                   </h2>
                 </div>
@@ -227,7 +229,7 @@ export default function InfoPage() {
                         {index + 1}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="fc-body-lg">{step.text}</p>
+                        <p className="text-body-lg">{step.text}</p>
                         {step.code ? <CodeBlock>{step.code}</CodeBlock> : null}
                       </div>
                     </li>

@@ -1,4 +1,5 @@
 "use client";
+import { ADMIN_PANEL_CLASS, ALERT_ERROR_CLASS, BTN_CHIP_CLASS, BTN_DANGER_SOFT_CLASS, FILE_INPUT_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -282,11 +283,11 @@ export default function DocumentationPage() {
                   key={folder._id}
                   type="button"
                   onClick={() => setSelectedFolder(folder)}
-                  className="fc-admin-panel text-left p-6 hover:border-primary/40 hover:bg-gray-900/80 transition-all group"
+                  className={`${ADMIN_PANEL_CLASS} text-left p-6 hover:border-primary/40 hover:bg-gray-900/80 transition-all group`.trim()}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <span className="fc-icon">
+                      <span className={ICON_GLYPH_CLASS}>
                         <FiFolder className="w-5 h-5" />
                       </span>
                       <div>
@@ -313,7 +314,7 @@ export default function DocumentationPage() {
             )}
           </section>
         ) : (
-          <section className="fc-admin-panel p-6">
+          <section className={`${ADMIN_PANEL_CLASS} p-6`.trim()}>
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
               <div>
                 <BackButton
@@ -322,7 +323,7 @@ export default function DocumentationPage() {
                   onClick={() => setSelectedFolder(null)}
                   spacing="tight"
                 />
-                <h2 className="fc-title text-2xl">
+                <h2 className="text-2xl">
                   {selectedFolder.name}
                 </h2>
                 {selectedFolder.description && (
@@ -345,7 +346,7 @@ export default function DocumentationPage() {
                 {canManageDocumentation && !selectedFolder.protected && (
                   <button
                     onClick={() => setFolderToDelete(selectedFolder)}
-                    className="fc-btn-danger-soft"
+                    className={BTN_DANGER_SOFT_CLASS}
                   >
                     <FiTrash2 className="w-4 h-4" />
                     Delete Folder
@@ -358,7 +359,7 @@ export default function DocumentationPage() {
               <LoadingState size="md" className="py-12" />
             ) : documents.length === 0 ? (
               <div className="text-center py-12 text-gray-400">
-                <span className="fc-icon mx-auto mb-4">
+                <span className={`${ICON_GLYPH_CLASS} mx-auto mb-4`.trim()}>
                   <FiFile className="h-10 w-10" />
                 </span>
                 <p>No documents in this folder yet.</p>
@@ -371,7 +372,7 @@ export default function DocumentationPage() {
                     className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-gray-800/40 border border-gray-700/40"
                   >
                     <div>
-                      <h3 className="text-white font-medium">{doc.title}</h3>
+                      <h3 className="font-medium text-white">{doc.title}</h3>
                       {doc.description && (
                         <p className="text-sm text-gray-400 mt-1">
                           {doc.description}
@@ -385,7 +386,7 @@ export default function DocumentationPage() {
                     <div className="flex items-center gap-2">
                       <a
                         href={`${API_ENDPOINTS.DOCUMENTATION_DOCUMENTS}/${doc._id}`}
-                        className="fc-btn-chip"
+                        className={BTN_CHIP_CLASS}
                       >
                         <FiDownload className="w-4 h-4" />
                         Download
@@ -416,7 +417,7 @@ export default function DocumentationPage() {
       >
         <form onSubmit={handleCreateFolder} className="p-6 space-y-5">
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Folder name <span className="text-red-400">*</span>
             </label>
             <input
@@ -431,7 +432,7 @@ export default function DocumentationPage() {
             />
           </div>
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Description
             </label>
             <textarea
@@ -445,7 +446,7 @@ export default function DocumentationPage() {
             />
           </div>
           {folderError && (
-            <p className="fc-alert-error">
+            <p className={ALERT_ERROR_CLASS}>
               {folderError}
             </p>
           )}
@@ -478,7 +479,7 @@ export default function DocumentationPage() {
       >
         <form onSubmit={handleUpload} className="p-6 space-y-5">
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Title <span className="text-red-400">*</span>
             </label>
             <input
@@ -492,7 +493,7 @@ export default function DocumentationPage() {
             />
           </div>
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Description
             </label>
             <textarea
@@ -505,7 +506,7 @@ export default function DocumentationPage() {
             />
           </div>
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               File <span className="text-red-400">*</span>
             </label>
             <input
@@ -514,7 +515,7 @@ export default function DocumentationPage() {
                 ",",
               )}
               onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="fc-file-input"
+              className={FILE_INPUT_CLASS}
               required
             />
             <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
@@ -523,7 +524,7 @@ export default function DocumentationPage() {
             </p>
           </div>
           {uploadError && (
-            <p className="fc-alert-error">
+            <p className={ALERT_ERROR_CLASS}>
               {uploadError}
             </p>
           )}

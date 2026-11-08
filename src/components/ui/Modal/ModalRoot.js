@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useModalBodyEffects } from "@/hooks/useModalBodyEffects";
+import { modalBackdrop, modalContainer } from "@/lib/uiClassNames";
 
 const spring = { type: "spring", damping: 25, stiffness: 300 };
 
@@ -37,7 +38,7 @@ export default function ModalRoot({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`fc-modal-backdrop ${backdropClassName}`.trim()}
+            className={`${modalBackdrop} ${backdropClassName}`.trim()}
             onClick={onClose}
           />
           {layout === "center" ? (
@@ -46,7 +47,7 @@ export default function ModalRoot({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={spring}
-              className={`fc-modal-container ${containerClassName}`.trim()}
+              className={`${modalContainer} ${containerClassName}`.trim()}
             >
               {children}
             </motion.div>

@@ -2,6 +2,8 @@
  * Shared partner organization form field config and helpers.
  */
 
+import { FORM_INPUT_CLASS } from "@/lib/uiTokens";
+
 export const INITIAL_PARTNER_FORM = {
   organizationName: "",
   username: "",
@@ -26,8 +28,8 @@ export const INITIAL_PARTNER_FORM = {
   logo: null,
 };
 
-/** Canonical form control — matches .form-input in globals.css */
-export const PARTNER_FORM_INPUT_CLASS = "form-input";
+/** Canonical form control — matches .fc-form-input in src/styles/forms.css */
+export const PARTNER_FORM_INPUT_CLASS = FORM_INPUT_CLASS;
 
 /**
  * Map an API member/application record into partner form values.

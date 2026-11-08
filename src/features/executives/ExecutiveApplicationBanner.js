@@ -1,4 +1,5 @@
 "use client";
+import { BTN_GRADIENT_PRIMARY_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -52,7 +53,7 @@ export default function ExecutiveApplicationBanner() {
 
         <div className="flex items-start gap-2 sm:gap-3 pr-6 sm:pr-8">
           <div className="flex-shrink-0">
-            <span className="fc-icon">
+            <span className={ICON_GLYPH_CLASS}>
               <FiUsers className="h-5 w-5" />
             </span>
           </div>
@@ -63,7 +64,7 @@ export default function ExecutiveApplicationBanner() {
                 <h3 className="text-white font-semibold text-xs sm:text-sm mb-1">
                   Join Our Executive Team!
                 </h3>
-                <p className="fc-body text-xs">
+                <p className="text-xs">
                   Executive applications are now open. Apply to be part of our
                   leadership team.
                 </p>
@@ -72,7 +73,7 @@ export default function ExecutiveApplicationBanner() {
               <div className="flex-shrink-0">
                 <Link
                   href="/executive-application"
-                  className="fc-btn-gradient-primary inline-flex items-center gap-1 !px-2.5 !py-1 sm:!px-3 sm:!py-1.5 !text-xs"
+                  className={`${BTN_GRADIENT_PRIMARY_CLASS} inline-flex items-center gap-1 !px-2.5 !py-1 sm:!px-3 sm:!py-1.5 !text-xs`.trim()}
                 >
                   Apply Now
                   <FiArrowRight className="w-3 h-3" />

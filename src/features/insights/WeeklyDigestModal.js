@@ -1,4 +1,14 @@
 "use client";
+import {
+  BTN_GRADIENT_PRIMARY_CLASS,
+  GLASS_CARD_CLASS,
+  ICON_GLYPH_CLASS,
+  MODAL_ASIDE_CLASS,
+  MODAL_BODY_CLASS,
+  MODAL_CALLOUT_CLASS,
+  MODAL_ICON_CLOSE_CLASS,
+  TOPIC_CHIP_CLASS,
+} from "@/lib/uiTokens";
 
 import { useRef, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -108,9 +118,9 @@ export default function WeeklyDigestModal({
           onClose={onClose}
           closeLabel="Close weekly digest"
           title={
-            <h2 className="fc-modal-title flex flex-wrap items-baseline gap-x-2 !text-2xl leading-tight sm:!text-3xl">
+            <h2 className="modal-title flex flex-wrap items-baseline gap-x-2 !text-2xl leading-tight sm:!text-3xl">
               <span>
-                Weekly <span className="fc-title-accent">FinTech Digest</span>
+                Weekly <span className="heading-accent inline">FinTech Digest</span>
               </span>
               {issueNumber ? (
                 <span className="tabular-nums text-white/90">
@@ -121,7 +131,7 @@ export default function WeeklyDigestModal({
           }
           subtitle={
             weekRange ? (
-              <p className="fc-muted mt-2 flex items-start gap-2 text-sm leading-snug sm:items-center">
+              <p className="text-muted mt-2 flex items-start gap-2 text-sm leading-snug sm:items-center">
                 <FiCalendar className="mt-0.5 h-3.5 w-3.5 shrink-0 sm:mt-0" />
                 <span className="min-w-0 break-words">{weekRange}</span>
               </p>
@@ -129,42 +139,42 @@ export default function WeeklyDigestModal({
           }
           meta={
             <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-              <span className="fc-muted flex items-center gap-1.5 text-xs">
+              <p className="text-muted inline flex items-center gap-1.5 text-xs">
                 <span
                   className="h-1.5 w-1.5 rounded-full bg-primary"
                   aria-hidden
                 />
                 {articles.length} curated stories
-              </span>
-              <span className="fc-muted flex items-center gap-1.5 text-xs">
+              </p>
+              <p className="text-muted inline flex items-center gap-1.5 text-xs">
                 <FiGlobe className="h-3 w-3" />
                 {sources} sources
-              </span>
-              <span className="fc-muted flex items-center gap-1.5 text-xs">
+              </p>
+              <p className="text-muted inline flex items-center gap-1.5 text-xs">
                 <FiZap className="h-3 w-3" />
                 AI-summarized
-              </span>
-              <span className="fc-muted flex items-center gap-1.5 text-xs">
+              </p>
+              <p className="text-muted inline flex items-center gap-1.5 text-xs">
                 <span
                   className="h-1.5 w-1.5 rounded-full bg-emerald-400/80"
                   aria-hidden
                 />
                 Refreshed every Friday
-              </span>
+              </p>
             </div>
           }
         />
       }
     >
       <div className="flex min-h-0 flex-col gap-0 lg:flex-row">
-        <div className="fc-modal-body min-w-0 flex-1 space-y-3 !py-4 sm:!py-5">
+        <div className={`${MODAL_BODY_CLASS} min-w-0 flex-1 space-y-3 !py-4 sm:!py-5`.trim()}>
           {articles.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <span className="fc-icon mb-4">
+              <span className={`${ICON_GLYPH_CLASS} mb-4`.trim()}>
                 <FiZap className="h-6 w-6" />
               </span>
-              <p className="fc-body">No digest available yet.</p>
-              <p className="fc-muted mt-1">
+              <p>No digest available yet.</p>
+              <p className="text-muted mt-1">
                 Check back after the next Friday refresh.
               </p>
             </div>
@@ -179,10 +189,10 @@ export default function WeeklyDigestModal({
           )}
         </div>
 
-        <aside className="fc-modal-aside">
+        <aside className={MODAL_ASIDE_CLASS}>
           {sentiment && sentiment.total > 0 && (
             <div>
-              <h4 className="fc-modal-section-label">Market Sentiment</h4>
+              <p className="eyebrow">Market Sentiment</p>
               <div className="space-y-3">
                 <CompactSentimentBar
                   label="Positive"
@@ -206,8 +216,8 @@ export default function WeeklyDigestModal({
                   bgClass="bg-gradient-to-r from-red-500 to-rose-400"
                 />
               </div>
-              <div className="fc-modal-callout mt-3 px-3 py-2.5 text-center">
-                <span className="fc-muted text-xs">Overall mood: </span>
+              <div className={`${MODAL_CALLOUT_CLASS} mt-3 px-3 py-2.5 text-center`.trim()}>
+                <p className="text-muted inline text-xs">Overall mood: </p>
                 <span
                   className={`text-xs font-semibold ${
                     sentiment.positive > sentiment.negative
@@ -229,12 +239,12 @@ export default function WeeklyDigestModal({
 
           {topics.length > 0 && (
             <div>
-              <h4 className="fc-modal-section-label">This Week&apos;s Topics</h4>
+              <p className="eyebrow">This Week&apos;s Topics</p>
               <div className="flex flex-wrap gap-1.5">
                 {topics.map(({ topic, count }) => (
                   <span
                     key={topic}
-                    className="fc-topic-chip !cursor-default capitalize"
+                    className={`${TOPIC_CHIP_CLASS} !cursor-default capitalize`.trim()}
                   >
                     {topic}
                     <span className="ml-1 text-[10px] opacity-60">{count}</span>
@@ -244,19 +254,19 @@ export default function WeeklyDigestModal({
             </div>
           )}
 
-          <div className="fc-modal-callout">
+          <div className={MODAL_CALLOUT_CLASS}>
             <div className="mb-2 flex items-center gap-2">
               <FiMessageCircle className="h-4 w-4 text-primary" />
-              <span className="fc-title text-sm">Ask the Digest</span>
+              <h4 className="text-sm">Ask the Digest</h4>
             </div>
-            <p className="fc-muted mb-3 text-xs leading-relaxed">
+            <p className="text-muted mb-3 text-xs leading-relaxed">
               Chat with AI about this week&apos;s stories — ask questions, get
               deeper analysis.
             </p>
             <button
               type="button"
               onClick={handleOpenChat}
-              className="fc-btn-gradient-primary w-full px-3 py-2 text-xs font-semibold"
+              className={`${BTN_GRADIENT_PRIMARY_CLASS} w-full px-3 py-2 text-xs font-semibold`.trim()}
             >
               Open AI Chat →
             </button>
@@ -289,7 +299,7 @@ function DigestArticleRow({ article, rank }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay: Math.min(rank * 0.04, 0.4) }}
-      className="fc-card group flex min-w-0 items-start gap-2.5 !rounded-xl p-3 sm:gap-3 sm:p-3.5 hover:border-primary/40"
+      className={`${GLASS_CARD_CLASS} group flex min-w-0 items-start gap-2.5 !rounded-xl p-3 sm:gap-3 sm:p-3.5 hover:border-primary/40`.trim()}
     >
       <div
         className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg border text-[11px] font-bold tabular-nums ${rankColor}`}
@@ -299,17 +309,17 @@ function DigestArticleRow({ article, rank }) {
 
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex flex-wrap items-center gap-2">
-          <span className="fc-muted text-[10px] font-medium uppercase tracking-wide">
+          <p className="text-muted inline text-[10px] font-medium uppercase tracking-wide">
             {extractReadableSource(article)}
-          </span>
+          </p>
           {article.date || article.publishedAt ? (
             <>
               <span className="text-white/20" aria-hidden>
                 ·
               </span>
-              <span className="fc-muted text-[10px]">
+              <p className="text-muted inline text-[10px]">
                 {formatDateMonthDay(article.date || article.publishedAt)}
-              </span>
+              </p>
             </>
           ) : null}
         </div>
@@ -318,17 +328,17 @@ function DigestArticleRow({ article, rank }) {
           href={article.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="fc-title mb-1 block text-sm leading-snug transition-colors line-clamp-2 group-hover:text-primary"
+          className="link-accent mb-1 block text-sm font-display font-semibold leading-snug tracking-tight text-white transition-colors line-clamp-2 group-hover:text-primary"
         >
           {article.title}
         </a>
 
         {hasSummary ? (
-          <p className="fc-body line-clamp-2 !text-xs">
+          <p className="line-clamp-2 !text-xs">
             {truncate(article.summary, 160)}
           </p>
         ) : (
-          <p className="fc-muted text-xs italic">No summary available yet.</p>
+          <p className="text-muted text-xs italic">No summary available yet.</p>
         )}
       </div>
 
@@ -336,7 +346,7 @@ function DigestArticleRow({ article, rank }) {
         href={article.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="fc-modal-icon-close !opacity-0 group-hover:!opacity-100"
+        className={`${MODAL_ICON_CLOSE_CLASS} !opacity-0 group-hover:!opacity-100`.trim()}
         aria-label="Open article"
       >
         <FiExternalLink className="h-3.5 w-3.5" />

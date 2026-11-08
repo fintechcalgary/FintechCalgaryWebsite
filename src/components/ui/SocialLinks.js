@@ -1,3 +1,4 @@
+import { ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 import { FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
 import { FaTiktok } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
@@ -27,13 +28,13 @@ export default function SocialLinks({ className = "" }) {
             className="group relative flex items-center gap-3 rounded-xl border border-white/5 bg-gray-900/40 px-4 py-3 backdrop-blur-sm transition-all duration-300 hover:translate-x-1 hover:border-primary/40 hover:bg-gray-800/60"
           >
             {Icon ? (
-              <span className="fc-icon">
+              <span className={ICON_GLYPH_CLASS}>
                 <Icon className="h-5 w-5" />
               </span>
             ) : null}
-            <span className="fc-muted text-sm font-medium tracking-wide transition-colors duration-300 group-hover:text-white">
+            <p className="text-muted text-sm font-medium tracking-wide transition-colors duration-300 group-hover:text-white">
               {label}
-            </span>
+            </p>
             <FiArrowRight className="ml-auto h-4 w-4 -translate-x-1 text-transparent opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:text-primary group-hover:opacity-100" />
           </a>
         );

@@ -1,4 +1,5 @@
 "use client";
+import { BTN_READ_MORE_SUBTLE_CLASS, GLASS_CARD_CLASS } from "@/lib/uiTokens";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -46,9 +47,7 @@ export default function FeaturedStoryCard({
       )}
 
       <div
-        className={`fc-card relative overflow-hidden !rounded-xl p-0 ${
-          isHovered ? "!border-primary/50" : ""
-        }`}
+        className={`${GLASS_CARD_CLASS} relative overflow-hidden !rounded-xl p-0 ${isHovered ? "!border-primary/50" : ""}`.trim()}
       >
         <div
           className={`flex gap-4 p-3.5 sm:p-4 ${
@@ -56,7 +55,7 @@ export default function FeaturedStoryCard({
           }`}
         >
           <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-            <div className="mb-1 flex flex-wrap items-center gap-2 fc-muted text-xs">
+            <p className="text-muted mb-1 flex flex-wrap items-center gap-2 text-xs">
               <span className="font-medium uppercase tracking-wide">
                 {extractReadableSource(article)}
               </span>
@@ -72,14 +71,14 @@ export default function FeaturedStoryCard({
                   </span>
                 </>
               )}
-            </div>
-            <h3 className="fc-title mb-2 line-clamp-2 text-lg transition-colors group-hover:text-primary">
+            </p>
+            <h3 className="mb-2 line-clamp-2 text-lg transition-colors group-hover:text-primary">
               {article.title}
             </h3>
             <button
               type="button"
               onClick={(e) => onReadMore(e, article, summary)}
-              className="fc-btn-read-more-subtle w-fit !text-xs"
+              className={`${BTN_READ_MORE_SUBTLE_CLASS} w-fit !text-xs`.trim()}
             >
               Read more
               <FiArrowRight className="h-3 w-3" />
@@ -97,11 +96,11 @@ export default function FeaturedStoryCard({
           <div className="flex h-full flex-col">
             <div className="min-h-0 flex-1 overflow-hidden">
               {summary ? (
-                <p className="fc-body line-clamp-3">
+                <p className="line-clamp-3">
                   {truncateWords(summary, 60)}
                 </p>
               ) : (
-                <p className="fc-muted text-xs italic">
+                <p className="text-muted text-xs italic">
                   Summary will be available after the weekly digest refresh.
                 </p>
               )}
@@ -110,7 +109,7 @@ export default function FeaturedStoryCard({
               <button
                 type="button"
                 onClick={(e) => onReadMore(e, article, summary)}
-                className="fc-btn-read-more-subtle"
+                className={BTN_READ_MORE_SUBTLE_CLASS}
               >
                 <span>Read more</span>
                 <FiArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />

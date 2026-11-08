@@ -1,4 +1,5 @@
 "use client";
+import { ADMIN_PANEL_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import {
   FiEye,
@@ -15,9 +16,9 @@ import { formatDateTimeShort } from "@/lib/dates";
 
 function InfoCard({ icon: Icon, title, children }) {
   return (
-    <section className="fc-admin-panel p-5 sm:p-6">
+    <section className={`${ADMIN_PANEL_CLASS} p-5 sm:p-6`.trim()}>
       <div className="mb-4 flex items-center gap-3">
-        <span className="fc-icon">
+        <span className={ICON_GLYPH_CLASS}>
           <Icon className="h-4 w-4" />
         </span>
         <h2 className="text-lg font-semibold text-white">{title}</h2>
@@ -31,12 +32,12 @@ function FieldRow({ icon: Icon, label, children }) {
   return (
     <div className="flex items-start gap-3 rounded-lg bg-gray-900/50 p-3">
       {Icon ? (
-        <span className="fc-icon mt-0.5">
+        <span className={`${ICON_GLYPH_CLASS} mt-0.5`.trim()}>
           <Icon className="h-4 w-4" />
         </span>
       ) : null}
       <div className="min-w-0 flex-1">
-        <div className="fc-muted text-xs">{label}</div>
+        <p className="text-muted text-xs">{label}</p>
         <div className="break-words text-white">{children}</div>
       </div>
     </div>
@@ -45,14 +46,14 @@ function FieldRow({ icon: Icon, label, children }) {
 
 function AnswerBlock({ label, answer }) {
   return (
-    <div className="fc-admin-panel p-5 sm:p-6">
+    <div className={`${ADMIN_PANEL_CLASS} p-5 sm:p-6`.trim()}>
       <h3 className="mb-3 flex items-start gap-2 font-semibold text-primary">
         <FiHelpCircle className="mt-0.5 h-4 w-4 shrink-0" />
         <span className="min-w-0 break-words">{label}</span>
       </h3>
-      <div className="fc-body whitespace-pre-wrap break-words rounded-lg bg-gray-900/50 p-4">
+      <p className="whitespace-pre-wrap break-words rounded-lg bg-gray-900/50 p-4">
         {answer?.trim() ? answer : "No response provided"}
-      </div>
+      </p>
     </div>
   );
 }
@@ -90,14 +91,14 @@ export default function ExecutiveApplicationDetail({
                 <StatusBadge tone="info" size="sm">
                   {application.role}
                 </StatusBadge>
-                <span className="fc-body text-sm">
+                <p className="inline text-sm">
                   {application.program} · Year {application.year}
-                </span>
+                </p>
               </div>
             </div>
           </div>
           <div className="sm:text-right">
-            <div className="fc-muted text-sm">Applied</div>
+            <p className="text-muted text-sm">Applied</p>
             <div className="font-medium text-white">
               {formatDateTimeShort(application.createdAt)}
             </div>
@@ -111,7 +112,7 @@ export default function ExecutiveApplicationDetail({
             <FieldRow icon={FiMail} label="Email">
               <a
                 href={`mailto:${application.email}`}
-                className="fc-link break-all"
+                className="link-accent break-all"
               >
                 {application.email}
               </a>
@@ -147,12 +148,12 @@ export default function ExecutiveApplicationDetail({
                 href={application.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="fc-link break-all text-sm"
+                className="link-accent break-all text-sm"
               >
                 View Profile
               </a>
             ) : (
-              <span className="fc-muted">Not provided</span>
+              <p className="text-muted inline">Not provided</p>
             )}
           </FieldRow>
           <FieldRow icon={FiFileText} label="Resume">
@@ -161,13 +162,13 @@ export default function ExecutiveApplicationDetail({
                 href={application.resume}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="fc-link inline-flex items-center gap-1 text-sm"
+                className="link-accent inline-flex items-center gap-1 text-sm"
               >
                 <FiEye className="h-3 w-3" />
                 View Resume
               </a>
             ) : (
-              <span className="fc-muted">Not provided</span>
+              <p className="text-muted inline">Not provided</p>
             )}
           </FieldRow>
         </div>
@@ -175,7 +176,7 @@ export default function ExecutiveApplicationDetail({
 
       <div className="space-y-4">
         <h2 className="flex items-center gap-3 text-lg font-semibold text-white">
-          <span className="fc-icon">
+          <span className={ICON_GLYPH_CLASS}>
             <FiHelpCircle className="h-4 w-4" />
           </span>
           Application Questions

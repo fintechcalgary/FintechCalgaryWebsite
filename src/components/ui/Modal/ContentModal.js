@@ -2,6 +2,8 @@
 
 import ModalRoot from "./ModalRoot";
 import ModalCloseButton from "./ModalCloseButton";
+import { ModalTitle } from "./ModalParts";
+import { modalFooter, modalHeader, modalPanel } from "@/lib/uiClassNames";
 
 const SIZE_MAX_WIDTH = {
   sm: "max-w-md",
@@ -10,11 +12,6 @@ const SIZE_MAX_WIDTH = {
   xl: "max-w-6xl",
 };
 
-/**
- * General content / form modal with optional title header and sticky footer.
- * Prefer `size` ("sm" | "md" | "lg" | "xl"); `maxWidth` remains for callers
- * that already pass Tailwind classes.
- */
 export default function ContentModal({
   isOpen,
   onClose,
@@ -33,15 +30,15 @@ export default function ContentModal({
   return (
     <ModalRoot isOpen={isOpen} onClose={onClose}>
       <div
-        className={`fc-modal-panel mx-auto flex max-h-[90vh] flex-col border-gray-800/50 ${widthClass} ${panelClassName}`.trim()}
+        className={`${modalPanel} mx-auto flex max-h-[90vh] flex-col border-gray-800/50 ${widthClass} ${panelClassName}`.trim()}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-label={typeof title === "string" ? title : undefined}
       >
         {title ? (
-          <div className="fc-modal-header">
-            <h2 className="fc-modal-title">{title}</h2>
+          <div className={modalHeader}>
+            <ModalTitle>{title}</ModalTitle>
             {showCloseButton ? <ModalCloseButton onClick={onClose} /> : null}
           </div>
         ) : null}
@@ -50,7 +47,7 @@ export default function ContentModal({
         >
           {children}
         </div>
-        {footer ? <div className="fc-modal-footer">{footer}</div> : null}
+        {footer ? <div className={modalFooter}>{footer}</div> : null}
       </div>
     </ModalRoot>
   );

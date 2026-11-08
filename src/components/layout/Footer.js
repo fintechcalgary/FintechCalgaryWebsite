@@ -1,3 +1,4 @@
+import { ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 import Link from "next/link";
 import Image from "next/image";
 import { FiMail, FiMapPin, FiUsers } from "react-icons/fi";
@@ -25,15 +26,15 @@ export default function Footer() {
                 FinTech Calgary
               </h3>
             </div>
-            <p className="fc-body max-w-md">
+            <p className="max-w-md">
               Innovating the future of finance in Calgary. Join us in shaping
               tomorrow&apos;s financial landscape.
             </p>
           </div>
 
           <div>
-            <h4 className="fc-title mb-6 flex items-center gap-2 text-lg">
-              <span className="fc-icon">
+            <h4 className="mb-6 flex items-center gap-2">
+              <span className={ICON_GLYPH_CLASS}>
                 <FiUsers className="h-5 w-5" />
               </span>
               Quick Links
@@ -63,34 +64,32 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="fc-title mb-6 flex items-center gap-2 text-lg">
-              <span className="fc-icon">
+            <h4 className="mb-6 flex items-center gap-2">
+              <span className={ICON_GLYPH_CLASS}>
                 <FiMapPin className="h-5 w-5" />
               </span>
               Contact
             </h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-2 text-white/65">
-                <span className="fc-icon mt-0.5">
+                <span className={`${ICON_GLYPH_CLASS} mt-0.5`.trim()}>
                   <FiMapPin className="h-4 w-4" />
                 </span>
                 <div>
                   <p className="tracking-wide text-white/70">University of Calgary</p>
-                  <p className="fc-muted">2500 University Dr NW</p>
-                  <p className="fc-muted">Calgary, AB T2N 1N4</p>
+                  <p className="text-muted">2500 University Dr NW</p>
+                  <p className="text-muted">Calgary, AB T2N 1N4</p>
                 </div>
               </li>
               <li className="pt-2">
                 <a
                   href="mailto:fintech.calgary@gmail.com"
-                  className="fc-link group inline-flex items-center gap-2 underline decoration-primary/30 underline-offset-[3px] hover:decoration-violet-300/50"
+                  className="link-underline group inline-flex items-center gap-2"
                 >
-                  <span className="fc-icon">
+                  <span className={ICON_GLYPH_CLASS}>
                     <FiMail className="h-4 w-4" />
                   </span>
-                  <span>
-                    fintech.calgary@gmail.com
-                  </span>
+                  fintech.calgary@gmail.com
                 </a>
               </li>
             </ul>
@@ -99,7 +98,7 @@ export default function Footer() {
 
         <div className="mt-12 border-t border-gray-800/50 pt-8 md:mt-8">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <p className="fc-muted">
+            <p className="text-muted">
               &copy; {new Date().getFullYear()} FinTech Calgary. All rights
               reserved.
             </p>

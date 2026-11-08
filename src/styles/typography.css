@@ -1,0 +1,66 @@
+/**
+ * Default element typography — use plain h1–h4, p, label, a with optional modifier classes.
+ */
+@layer base {
+  h1 {
+    @apply font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl;
+  }
+
+  h2 {
+    @apply font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl;
+  }
+
+  h3 {
+    @apply font-display text-xl font-semibold tracking-tight text-white sm:text-2xl;
+  }
+
+  h4 {
+    @apply font-display text-lg font-semibold tracking-tight text-white;
+  }
+
+  p {
+    @apply text-sm font-normal leading-[1.7] tracking-[0.015em] text-white/65;
+  }
+}
+
+@layer components {
+  .heading-accent {
+    @apply bg-gradient-to-br from-white via-violet-200 to-primary bg-clip-text font-display font-semibold tracking-tight text-transparent;
+  }
+
+  .heading-hero {
+    @apply font-display text-3xl font-bold leading-snug tracking-tight bg-gradient-to-br from-white via-violet-200 to-primary bg-clip-text text-transparent sm:text-4xl md:text-5xl;
+  }
+
+  .text-lede {
+    @apply text-base font-light leading-relaxed tracking-wide text-white/55 sm:text-lg md:text-xl md:leading-[1.7];
+  }
+
+  .text-muted {
+    @apply text-sm font-normal leading-relaxed tracking-wide text-white/45;
+  }
+
+  .text-body-lg {
+    @apply text-base font-normal leading-[1.75] tracking-[0.015em] text-white/70 sm:text-lg;
+  }
+
+  .text-label {
+    @apply mb-1 block text-sm font-medium text-gray-300;
+  }
+
+  .eyebrow {
+    @apply mb-3 text-xs font-medium uppercase tracking-wider text-white/45;
+  }
+
+  .modal-title {
+    @apply text-lg font-bold tracking-tight text-white sm:text-xl;
+  }
+
+  .link-accent {
+    @apply font-medium tracking-wide text-primary transition-colors duration-300 hover:text-violet-300;
+  }
+
+  .link-underline {
+    @apply font-medium tracking-wide text-primary underline decoration-primary/30 underline-offset-[3px] transition-colors duration-300 hover:text-violet-300 hover:decoration-violet-300/50;
+  }
+}

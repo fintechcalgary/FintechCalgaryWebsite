@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import StatBand from "@/components/ui/StatBand";
 
 export default function DigestSnapshotStrip({ keyInsights, totalArchiveArticles }) {
   const digestCount = keyInsights.totalArticles ?? 0;
@@ -24,13 +25,13 @@ export default function DigestSnapshotStrip({ keyInsights, totalArchiveArticles 
       className="mb-4 md:mb-6"
       aria-label="Digest snapshot statistics"
     >
-      <div className="fc-stat-band">
+      <StatBand>
         <div className="relative flex flex-col items-center gap-4 px-2 py-6 md:gap-5 md:px-6 md:py-8">
-          <p className="fc-muted text-center text-xs md:text-sm">
+          <p className="text-muted text-center text-xs md:text-sm">
             This week at a glance
           </p>
 
-          <p className="fc-body mx-auto max-w-3xl text-center md:text-lg md:leading-[1.75]">
+          <p className="mx-auto max-w-3xl text-center md:text-lg md:leading-[1.75]">
             {segments.map((seg, i) => (
               <span key={seg.phrase} className="inline">
                 {i > 0 && (
@@ -44,12 +45,15 @@ export default function DigestSnapshotStrip({ keyInsights, totalArchiveArticles 
                 <span className="font-semibold tabular-nums tracking-tight text-white">
                   {seg.value}
                 </span>
-                <span className="fc-muted"> {seg.phrase}</span>
+                <p className="text-muted inline">
+                  {" "}
+                  {seg.phrase}
+                </p>
               </span>
             ))}
           </p>
         </div>
-      </div>
+      </StatBand>
     </motion.div>
   );
 }

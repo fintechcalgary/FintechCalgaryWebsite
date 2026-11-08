@@ -1,3 +1,4 @@
+import { titleAccent } from "@/lib/uiClassNames";
 import { connectToDatabase } from "@/lib/mongodb";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import ExecutiveApplicationBanner from "@/features/executives/ExecutiveApplicationBanner";
@@ -82,7 +83,7 @@ export default async function ExecutivesPage() {
                   {/* Role Header */}
                   <div className="flex items-center gap-4 mb-8">
                     <div className="h-px flex-grow bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-                    <h2 className="fc-title-accent text-2xl px-4">
+                    <h2 className={`${titleAccent} px-4 text-2xl`.trim()}>
                       {role}
                     </h2>
                     <div className="h-px flex-grow bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
@@ -109,10 +110,10 @@ export default async function ExecutivesPage() {
                           <p className="text-lg font-bold text-primary">
                             {executive.position}
                           </p>
-                          <h3 className="fc-title text-xl transition-colors">
+                          <h3 className="text-xl transition-colors">
                             {executive.name}
                           </h3>
-                          <p className="fc-body">
+                          <p>
                             {executive.major}
                           </p>
                           <div className="flex items-center justify-center gap-3">
@@ -137,7 +138,7 @@ export default async function ExecutivesPage() {
                             )}
                           </div>
                           {executive.description && (
-                            <p className="fc-body mt-2">
+                            <p className="mt-2">
                               {executive.description}
                             </p>
                           )}

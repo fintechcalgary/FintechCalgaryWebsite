@@ -1,4 +1,5 @@
 "use client";
+import { linkUnderline } from "@/lib/uiClassNames";
 
 import { useEffect, useState } from "react";
 import { FiExternalLink, FiMessageCircle, FiPlus } from "react-icons/fi";
@@ -91,11 +92,11 @@ export default function CommunityPostsAdmin() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="fc-body text-sm">
+        <p className="text-sm">
           Posts appear on the public{" "}
           <Link
             href="/community"
-            className="fc-link-underline inline-flex items-center gap-1"
+            className={`${linkUnderline} inline-flex items-center gap-1`.trim()}
           >
             Community Board
             <FiExternalLink className="h-3.5 w-3.5" />

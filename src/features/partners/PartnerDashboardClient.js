@@ -1,4 +1,6 @@
 "use client";
+import { linkAccent, linkUnderline } from "@/lib/uiClassNames";
+import { ADMIN_PANEL_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -181,7 +183,7 @@ export default function PartnerDashboardClient() {
             <h2 className="text-2xl font-bold text-white mb-2">
               Error Loading Dashboard
             </h2>
-            <p className="fc-body">
+            <p>
               Unable to load your member information. Please try again later.
             </p>
           </div>
@@ -214,7 +216,7 @@ export default function PartnerDashboardClient() {
                 Partner Dashboard
               </PageTitle>
               <div className="flex items-center justify-center gap-6">
-                <p className="fc-lede">
+                <p className="text-lede">
                   Welcome back, {memberData.firstName} {memberData.lastName}
                 </p>
                 <button
@@ -242,10 +244,10 @@ export default function PartnerDashboardClient() {
             </div>
 
             {/* Status Card */}
-            <div className="fc-admin-panel p-8 hover:border-primary/30 transition-all duration-500 mb-8 animate-slideInUp">
+            <div className={`${ADMIN_PANEL_CLASS} p-8 hover:border-primary/30 transition-all duration-500 mb-8 animate-slideInUp`.trim()}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="fc-icon">
+                  <div className={ICON_GLYPH_CLASS}>
                     <StatusIcon
                       className={`w-5 h-5 ${
                         approvalKey === "accepted"
@@ -267,7 +269,7 @@ export default function PartnerDashboardClient() {
                 </div>
                 {memberData.approvedAt && (
                   <div className="text-right">
-                    <p className="fc-muted mb-1">Approved on</p>
+                    <p className="text-muted mb-1">Approved on</p>
                     <p className="text-white font-medium">
                       {formatDateLocale(memberData.approvedAt)}
                     </p>
@@ -280,7 +282,7 @@ export default function PartnerDashboardClient() {
             {memberData.approvalStatus === "accepted" && (
               <section className="group animate-fadeIn">
                 <div
-                  className="fc-admin-panel relative h-full overflow-hidden p-8 transition-all duration-500 hover:border-primary/30"
+                  className={`${ADMIN_PANEL_CLASS} relative h-full overflow-hidden p-8 transition-all duration-500 hover:border-primary/30`.trim()}
                   id="events"
                 >
                   <div className="relative z-10 flex items-center justify-between mb-8">
@@ -288,11 +290,11 @@ export default function PartnerDashboardClient() {
                       <h2 className="text-2xl font-semibold text-white">
                         Events and Webinars
                       </h2>
-                      <p className="fc-muted">
+                      <p className="text-muted">
                         Manage your schedule
                       </p>
                     </div>
-                    <span className="fc-icon">
+                    <span className={ICON_GLYPH_CLASS}>
                       <FontAwesomeIcon icon={faChartBar} className="h-6 w-6" />
                     </span>
                   </div>
@@ -303,7 +305,7 @@ export default function PartnerDashboardClient() {
                          shadow-lg hover:shadow-purple-600/20 duration-300 backdrop-blur-xl max-w-md sm:max-w-full transition-all"
                   >
                     <div className="flex items-center space-x-3">
-                      <div className="fc-icon hidden md:inline-flex">
+                      <div className={`${ICON_GLYPH_CLASS} hidden md:inline-flex`.trim()}>
                         <FontAwesomeIcon icon={faClock} className="h-5 w-5" />
                       </div>
                       <div className="space-y-0.5">
@@ -325,13 +327,13 @@ export default function PartnerDashboardClient() {
             )}
 
             {/* Member Information Card */}
-            <div className="fc-admin-panel p-8 hover:border-primary/30 transition-all duration-500 mb-8 animate-slideInUp animation-delay-300">
+            <div className={`${ADMIN_PANEL_CLASS} p-8 hover:border-primary/30 transition-all duration-500 mb-8 animate-slideInUp animation-delay-300`.trim()}>
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <h2 className="text-3xl font-bold text-white mb-2">
                     Your Information
                   </h2>
-                  <p className="fc-body">
+                  <p>
                     View and manage your organization details
                   </p>
                 </div>
@@ -350,7 +352,7 @@ export default function PartnerDashboardClient() {
                 {/* Organization Info */}
                 <div className="space-y-8">
                   <div className="flex items-center space-x-4">
-                    <div className="fc-icon">
+                    <div className={ICON_GLYPH_CLASS}>
                       <FiHome className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">
@@ -375,7 +377,7 @@ export default function PartnerDashboardClient() {
 
                   <div className="space-y-6">
                     <div className="bg-gray-800/30 rounded-xl p-4 border border-white/5">
-                      <label className="block text-sm font-medium text-gray-400 mb-2">
+                      <label className="text-label block text-sm font-medium text-gray-400 mb-2">
                         Organization Name
                       </label>
                       <p className="text-white text-lg font-medium">
@@ -384,7 +386,7 @@ export default function PartnerDashboardClient() {
                     </div>
 
                     <div className="bg-gray-800/30 rounded-xl p-4 border border-white/5">
-                      <label className="block text-sm font-medium text-gray-400 mb-2">
+                      <label className="text-label block text-sm font-medium text-gray-400 mb-2">
                         Username
                       </label>
                       <p className="text-white text-lg font-medium">
@@ -393,16 +395,16 @@ export default function PartnerDashboardClient() {
                     </div>
 
                     <div className="bg-gray-800/30 rounded-xl p-4 border border-white/5">
-                      <label className="block text-sm font-medium text-gray-400 mb-2">
+                      <label className="text-label block text-sm font-medium text-gray-400 mb-2">
                         Website
                       </label>
                       <a
                         href={memberData.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="fc-link flex items-center space-x-2 group"
+                        className="link-accent flex items-center space-x-2 group"
                       >
-                        <span className="fc-icon transition-transform duration-300 group-hover:rotate-12">
+                        <span className={`${ICON_GLYPH_CLASS} transition-transform duration-300 group-hover:rotate-12`.trim()}>
                           <FiGlobe className="h-5 w-5" />
                         </span>
                         <span className="text-lg font-medium">
@@ -416,7 +418,7 @@ export default function PartnerDashboardClient() {
                 {/* Contact Info */}
                 <div className="space-y-8">
                   <div className="flex items-center space-x-4">
-                    <div className="fc-icon">
+                    <div className={ICON_GLYPH_CLASS}>
                       <FiUser className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">
@@ -426,7 +428,7 @@ export default function PartnerDashboardClient() {
 
                   <div className="space-y-6">
                     <div className="bg-gray-800/30 rounded-xl p-4 border border-white/5">
-                      <label className="block text-sm font-medium text-gray-400 mb-2">
+                      <label className="text-label block text-sm font-medium text-gray-400 mb-2">
                         Main Contact
                       </label>
                       <p className="text-white text-lg font-medium">
@@ -436,14 +438,14 @@ export default function PartnerDashboardClient() {
                     </div>
 
                     <div className="bg-gray-800/30 rounded-xl p-4 border border-white/5">
-                      <label className="block text-sm font-medium text-gray-400 mb-2">
+                      <label className="text-label block text-sm font-medium text-gray-400 mb-2">
                         Contact Email
                       </label>
                       <a
                         href={`mailto:${memberData.contactEmail}`}
-                        className="fc-link flex items-center space-x-2 group"
+                        className="link-accent flex items-center space-x-2 group"
                       >
-                        <span className="fc-icon transition-transform duration-300 group-hover:scale-110">
+                        <span className={`${ICON_GLYPH_CLASS} transition-transform duration-300 group-hover:scale-110`.trim()}>
                           <FiMail className="h-5 w-5" />
                         </span>
                         <span className="text-lg font-medium">
@@ -453,14 +455,14 @@ export default function PartnerDashboardClient() {
                     </div>
 
                     <div className="bg-gray-800/30 rounded-xl p-4 border border-white/5">
-                      <label className="block text-sm font-medium text-gray-400 mb-2">
+                      <label className="text-label block text-sm font-medium text-gray-400 mb-2">
                         Contact Phone
                       </label>
                       <a
                         href={`tel:${memberData.contactPhoneNumber}`}
-                        className="fc-link flex items-center space-x-2 group"
+                        className="link-accent flex items-center space-x-2 group"
                       >
-                        <span className="fc-icon transition-transform duration-300 group-hover:scale-110">
+                        <span className={`${ICON_GLYPH_CLASS} transition-transform duration-300 group-hover:scale-110`.trim()}>
                           <FiPhone className="h-5 w-5" />
                         </span>
                         <span className="text-lg font-medium">
@@ -470,14 +472,14 @@ export default function PartnerDashboardClient() {
                     </div>
 
                     <div className="bg-gray-800/30 rounded-xl p-4 border border-white/5">
-                      <label className="block text-sm font-medium text-gray-400 mb-2">
+                      <label className="text-label block text-sm font-medium text-gray-400 mb-2">
                         Organization Email
                       </label>
                       <a
                         href={`mailto:${memberData.organizationEmail}`}
-                        className="fc-link flex items-center space-x-2 group"
+                        className="link-accent flex items-center space-x-2 group"
                       >
-                        <span className="fc-icon transition-transform duration-300 group-hover:scale-110">
+                        <span className={`${ICON_GLYPH_CLASS} transition-transform duration-300 group-hover:scale-110`.trim()}>
                           <FiMail className="h-5 w-5" />
                         </span>
                         <span className="text-lg font-medium">
@@ -492,7 +494,7 @@ export default function PartnerDashboardClient() {
               {/* Address */}
               <div className="mt-12 pt-8 border-t border-white/10">
                 <div className="flex items-center space-x-4 mb-6">
-                  <div className="fc-icon">
+                  <div className={ICON_GLYPH_CLASS}>
                     <FiMapPin className="w-6 h-6 text-primary" />
                   </div>
                   <h3 className="text-2xl font-bold text-white">Address</h3>
@@ -515,7 +517,7 @@ export default function PartnerDashboardClient() {
                 memberData.linkedin) && (
                 <div className="mt-12 pt-8 border-t border-white/10">
                   <div className="flex items-center space-x-4 mb-6">
-                    <div className="fc-icon">
+                    <div className={ICON_GLYPH_CLASS}>
                       <FiUsers className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">
@@ -528,7 +530,7 @@ export default function PartnerDashboardClient() {
                         href={memberData.facebook}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="fc-icon transition-transform duration-300 hover:scale-110"
+                        className={`${ICON_GLYPH_CLASS} transition-transform duration-300 hover:scale-110`.trim()}
                       >
                         <SiFacebook className="w-7 h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
                       </a>
@@ -538,7 +540,7 @@ export default function PartnerDashboardClient() {
                         href={memberData.twitter}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="fc-icon transition-transform duration-300 hover:scale-110"
+                        className={`${ICON_GLYPH_CLASS} transition-transform duration-300 hover:scale-110`.trim()}
                       >
                         <SiX className="w-7 h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
                       </a>
@@ -548,7 +550,7 @@ export default function PartnerDashboardClient() {
                         href={memberData.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="fc-icon transition-transform duration-300 hover:scale-110"
+                        className={`${ICON_GLYPH_CLASS} transition-transform duration-300 hover:scale-110`.trim()}
                       >
                         <SiLinkedin className="w-7 h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
                       </a>
@@ -561,15 +563,13 @@ export default function PartnerDashboardClient() {
               {memberData.aboutUs && (
                 <div className="mt-12 pt-8 border-t border-white/10">
                   <div className="flex items-center space-x-4 mb-6">
-                    <div className="fc-icon">
+                    <div className={ICON_GLYPH_CLASS}>
                       <FiUser className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">About Us</h3>
                   </div>
                   <div className="bg-gray-800/30 rounded-xl p-6 border border-white/5">
-                    <p className="fc-body-lg">
-                      {memberData.aboutUs}
-                    </p>
+                    <p className="text-body-lg">{memberData.aboutUs}</p>
                   </div>
                 </div>
               )}

@@ -1,4 +1,6 @@
 "use client";
+import { linkAccent, titleAccent } from "@/lib/uiClassNames";
+import { BTN_MARKETING_PRIMARY_CLASS, BTN_MARKETING_SECONDARY_CLASS, BTN_MARKETING_SOFT_CLASS } from "@/lib/uiTokens";
 
 import { useState, useEffect } from "react";
 import {
@@ -96,10 +98,10 @@ export default function PartnersPage() {
                         </div>
                       </div>
 
-                      <h3 className="fc-title relative z-10 mb-4 text-2xl">
+                      <h3 className="relative z-10 mb-4 text-2xl">
                         {partner.name}
                       </h3>
-                      <p className="fc-body relative z-10 mb-6 flex-grow">
+                      <p className="relative z-10 mb-6 flex-grow">
                         {partner.description}
                       </p>
 
@@ -108,7 +110,7 @@ export default function PartnersPage() {
                           href={partner.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="fc-link relative z-10 inline-flex items-center"
+                          className="link-accent relative z-10 inline-flex items-center"
                         >
                           Visit Website <FiArrowRight className="ml-2" />
                         </a>
@@ -127,7 +129,7 @@ export default function PartnersPage() {
                 >
                   <button
                     onClick={() => setShowAll(!showAll)}
-                    className="fc-btn-soft group"
+                    className={`${BTN_MARKETING_SOFT_CLASS} group`.trim()}
                   >
                     {showAll ? (
                       <>
@@ -156,10 +158,10 @@ export default function PartnersPage() {
               <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-purple-600/10 blur-[60px]" />
 
               <div className="relative z-10 text-center">
-                <h2 className="fc-title-accent mb-6 text-2xl">
+                <h2 className={`${titleAccent} mb-6 text-2xl`.trim()}>
                   Become a Sponsor
                 </h2>
-                <p className="fc-lede mx-auto mb-8 max-w-2xl">
+                <p className="text-lede mx-auto mb-8 max-w-2xl">
                   Sponsorship supports our events and student programs. Download
                   the package for tiers and benefits.
                 </p>
@@ -167,7 +169,7 @@ export default function PartnersPage() {
                   <a
                     href="/FinTech Calgary Sponsorship Package 2025_2026.pdf"
                     download
-                    className="fc-btn-primary"
+                    className={BTN_MARKETING_PRIMARY_CLASS}
                   >
                     Download Package
                     <FiDownload />
@@ -176,7 +178,7 @@ export default function PartnersPage() {
                     href="/FinTech Calgary Sponsorship Package 2025_2026.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="fc-btn-secondary"
+                    className={BTN_MARKETING_SECONDARY_CLASS}
                   >
                     View in New Tab
                     <FiExternalLink />
@@ -190,12 +192,12 @@ export default function PartnersPage() {
             className="mt-20 animate-fadeIn text-center"
             style={{ animationDelay: "300ms" }}
           >
-            <p className="fc-lede mb-4">
+            <p className="text-lede mb-4">
               Interested in becoming a partner or sponsor?
             </p>
             <Link
               href="/contact"
-              className="fc-link inline-flex items-center"
+              className={`${linkAccent} inline-flex items-center`.trim()}
             >
               Contact us to learn more <FiArrowRight className="ml-2" />
             </Link>

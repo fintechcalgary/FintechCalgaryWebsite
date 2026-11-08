@@ -32,7 +32,7 @@ export function AdminAccessMessage({ children }) {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-6 py-8 text-center">
-        <p className="fc-muted">{children}</p>
+        <p className="text-muted">{children}</p>
       </div>
     </div>
   );

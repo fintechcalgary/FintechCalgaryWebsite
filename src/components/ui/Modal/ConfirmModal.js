@@ -4,6 +4,8 @@ import { FiAlertCircle, FiCheckCircle, FiInfo } from "react-icons/fi";
 import ModalRoot from "./ModalRoot";
 import ModalCloseButton from "./ModalCloseButton";
 import Button from "@/components/ui/Button";
+import { iconGlyph, modalHeader, modalPanel } from "@/lib/uiClassNames";
+import { ModalTitle } from "./ModalParts";
 
 const TYPE_STYLES = {
   danger: {
@@ -20,15 +22,12 @@ const TYPE_STYLES = {
   },
   info: {
     buttonVariant: "primary",
-    icon: "fc-icon",
+    iconWrap: iconGlyph,
     border: "border-primary/30",
     Icon: FiInfo,
   },
 };
 
-/**
- * Confirm / alert dialog — portaled overlay used across admin delete flows.
- */
 export default function ConfirmModal({
   isOpen,
   onClose,
@@ -47,26 +46,28 @@ export default function ConfirmModal({
   return (
     <ModalRoot isOpen={isOpen} onClose={onClose}>
       <div
-        className={`fc-modal-panel max-w-md border ${typeStyles.border}`}
+        className={`${modalPanel} max-w-md border ${typeStyles.border}`.trim()}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-label={typeof title === "string" ? title : "Confirm"}
       >
-        <div className="fc-modal-header !p-6">
+        <div className={`${modalHeader} !p-6`.trim()}>
           <div className="flex min-w-0 flex-1 items-center gap-4">
-            <span className={`shrink-0 ${typeStyles.icon}`}>
+            <span
+              className={`shrink-0 ${typeStyles.iconWrap ?? typeStyles.icon}`.trim()}
+            >
               <Icon className="h-6 w-6" />
             </span>
-            <h3 className="fc-modal-title !text-xl">{title}</h3>
+            <ModalTitle className="!text-xl">{title}</ModalTitle>
           </div>
           <ModalCloseButton onClick={onClose} />
         </div>
 
         <div className="p-6">
-          <div className="fc-body-lg mb-6">
-            {typeof message === "string" ? <p>{message}</p> : message}
-          </div>
+          <p className="text-body-lg mb-6">
+            {typeof message === "string" ? message : message}
+          </p>
 
           <div className="flex flex-col justify-end gap-3 sm:flex-row">
             {showCancel ? (

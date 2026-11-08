@@ -1,4 +1,5 @@
 "use client";
+import { body, muted } from "@/lib/uiClassNames";
 
 import { useState, useRef, useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
@@ -382,7 +383,7 @@ export default function FinTechChatBot({ articles = [] }) {
                 <h3 className="font-bold text-white text-[15px] tracking-tight">
                   FinTech AI Assistant
                 </h3>
-                <p className="fc-muted text-xs font-medium">
+                <p className="text-muted text-xs font-medium">
                   Powered by Groq
                 </p>
               </div>
@@ -420,13 +421,11 @@ export default function FinTechChatBot({ articles = [] }) {
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <span
-                        className={`font-medium ${
-                          costStatus.isAtLimit
+                        className={`font-medium ${costStatus.isAtLimit
                             ? "text-red-400"
                             : costStatus.isNearLimit
                               ? "text-yellow-400"
-                              : "fc-muted"
-                        }`}
+                              : muted}`.trim()}
                       >
                         {costStatus.chatRequests || 0} /{" "}
                         {(costStatus.remainingChatRequests || 0) +
@@ -434,13 +433,11 @@ export default function FinTechChatBot({ articles = [] }) {
                         requests
                       </span>
                       <span
-                        className={`${
-                          costStatus.isAtLimit
+                        className={costStatus.isAtLimit
                             ? "text-red-400"
                             : costStatus.isNearLimit
                               ? "text-yellow-400"
-                              : "fc-muted"
-                        }`}
+                              : muted}
                       >
                         ${(costStatus.costSoFar || 0).toFixed(3)} / $
                         {(costStatus.budget || 0).toFixed(2)}
@@ -576,7 +573,7 @@ export default function FinTechChatBot({ articles = [] }) {
                                       {restLines.map((line, lIdx) => (
                                         <p
                                           key={lIdx}
-                                          className="fc-body mb-1"
+                                          className={`${body} mb-1`.trim()}
                                         >
                                           {line.trim()}
                                         </p>
@@ -589,11 +586,9 @@ export default function FinTechChatBot({ articles = [] }) {
                                       return (
                                         <p
                                           key={lIdx}
-                                          className={`mb-1.5 leading-relaxed ${
-                                            msg.role === "user"
+                                          className={`mb-1.5 leading-relaxed ${msg.role === "user"
                                               ? "text-white"
-                                              : "fc-body"
-                                          }`}
+                                              : body}`.trim()}
                                         >
                                           {trimmed}
                                         </p>
@@ -615,9 +610,9 @@ export default function FinTechChatBot({ articles = [] }) {
                     >
                       <div className="bg-gradient-to-br from-gray-800/80 to-gray-800/60 text-gray-100 border border-gray-700/40 rounded-2xl px-4 py-3.5 shadow-lg backdrop-blur-sm">
                         <div className="flex items-center gap-2">
-                          <span className="fc-muted mr-2 text-xs">
+                          <p className="text-muted inline mr-2 text-xs">
                             AI is typing
-                          </span>
+                          </p>
                           <div
                             className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce"
                             style={{ animationDelay: "0ms" }}
@@ -660,9 +655,9 @@ export default function FinTechChatBot({ articles = [] }) {
                         disabled={isLoading || !canSend}
                         maxLength={MAX_MESSAGE_LENGTH}
                       />
-                      <div className="fc-muted absolute bottom-2 right-2 text-xs">
+                      <p className="text-muted absolute bottom-2 right-2 text-xs">
                         {input.length}/{MAX_MESSAGE_LENGTH}
-                      </div>
+                      </p>
                     </div>
                     <motion.button
                       onClick={() => handleSend()}
@@ -683,7 +678,7 @@ export default function FinTechChatBot({ articles = [] }) {
                       <FiSend className="w-4.5 h-4.5 drop-shadow-sm" />
                     </motion.button>
                   </div>
-                  <p className="fc-muted mt-3 text-center text-xs font-medium">
+                  <p className="text-muted mt-3 text-center text-xs font-medium">
                     Press{" "}
                     <kbd className="px-1.5 py-0.5 bg-gray-800/50 rounded text-[10px] border border-gray-700/50">
                       Enter

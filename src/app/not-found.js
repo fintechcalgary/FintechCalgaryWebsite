@@ -18,8 +18,8 @@ export default function NotFound() {
             className="max-w-2xl mx-auto text-center"
           >
             <PageTitle sizeClass="text-8xl mb-8">404</PageTitle>
-            <h2 className="fc-title text-3xl mb-6">Page Not Found</h2>
-            <p className="fc-lede mb-12">
+            <h2 className="mb-6 text-3xl">Page Not Found</h2>
+            <p className="text-lede mb-12">
               The page you&apos;re looking for doesn&apos;t exist or has been
               moved.
             </p>

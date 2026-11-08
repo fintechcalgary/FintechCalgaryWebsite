@@ -1,4 +1,6 @@
 "use client";
+import { titleAccent } from "@/lib/uiClassNames";
+import { BTN_MARKETING_PRIMARY_CLASS } from "@/lib/uiTokens";
 
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import Link from "next/link";
@@ -23,10 +25,10 @@ export default function AboutPage() {
                 glowColor="purple"
                 className="group relative h-full w-full !gap-0 !p-6 sm:!p-8"
               >
-                <h2 className="fc-title-accent relative z-10 mb-4 text-xl sm:mb-6 sm:text-2xl">
+                <h2 className={`${titleAccent} relative z-10 mb-4 text-xl sm:mb-6 sm:text-2xl`.trim()}>
                   Who We Are
                 </h2>
-                <p className="fc-body-lg relative z-10">
+                <p className="text-body-lg relative z-10">
                   FinTech Calgary is a fintech association dedicated to bridging
                   the gap between fintech companies and key business decision
                   makers. Through hands-on projects, industry events, and
@@ -57,10 +59,10 @@ export default function AboutPage() {
                 glowColor="purple"
                 className="group relative w-full !gap-0 !p-6 sm:!p-8"
               >
-                <h2 className="fc-title-accent relative z-10 mb-4 text-xl sm:mb-6 sm:text-2xl">
+                <h2 className={`${titleAccent} relative z-10 mb-4 text-xl sm:mb-6 sm:text-2xl`.trim()}>
                   Our Services
                 </h2>
-                <p className="fc-body-lg relative z-10">
+                <p className="text-body-lg relative z-10">
                   We provide tech companies with a platform to showcase their
                   solutions to targeted businesses. Through digital marketing and
                   partner features, we connect innovative technologies with
@@ -87,10 +89,10 @@ export default function AboutPage() {
                 glowColor="purple"
                 className="group relative h-full w-full !gap-0 !p-6 sm:!p-8"
               >
-                <h2 className="fc-title-accent relative z-10 mb-4 text-xl sm:mb-6 sm:text-2xl">
+                <h2 className={`${titleAccent} relative z-10 mb-4 text-xl sm:mb-6 sm:text-2xl`.trim()}>
                   Our Network
                 </h2>
-                <p className="fc-body-lg relative z-10">
+                <p className="text-body-lg relative z-10">
                   FinTech Calgary brings together a powerful network of fintech
                   innovators, enterprise buyers, and sector-specific associations
                   across payments, hospitality, and services. We create the
@@ -111,14 +113,14 @@ export default function AboutPage() {
             className="mx-auto max-w-4xl !gap-0 !p-8 sm:!p-12"
           >
             <div className="relative z-10 text-center">
-              <h2 className="fc-title-accent mb-4 text-2xl sm:mb-6">
+              <h2 className={`${titleAccent} mb-4 text-2xl sm:mb-6`.trim()}>
                 Membership
               </h2>
-              <p className="fc-lede mx-auto mb-6 max-w-2xl sm:mb-8">
+              <p className="text-lede mx-auto mb-6 max-w-2xl sm:mb-8">
                 Want event invites, workshops, and partner opportunities? Sign up
                 for membership.
               </p>
-              <Link href="/join" className="fc-btn-primary group">
+              <Link href="/join" className={`${BTN_MARKETING_PRIMARY_CLASS} group`.trim()}>
                 Become a Member
                 <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
               </Link>

@@ -5,6 +5,8 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/features/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/lib/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/styles/**/*.css",
   ],
   theme: {
     extend: {
@@ -54,6 +56,8 @@ module.exports = {
         slideInUp: "slideInUp 0.6s ease-out",
         slideInDown: "slideInDown 0.6s ease-out",
         twinkle: "twinkle 4s ease-in-out infinite",
+        "loader-rotate": "loaderRotate 2s linear infinite",
+        "loader-letter": "loaderLetter 2s infinite",
       },
       keyframes: {
         "gradient-x": {
@@ -114,13 +118,27 @@ module.exports = {
           "0%, 100%": { opacity: 0.2 },
           "50%": { opacity: 0.4 },
         },
-      },
-      utilities: {
-        ".animation-delay-300": {
-          "animation-delay": "300ms",
+        loaderRotate: {
+          "0%": {
+            transform: "rotate(90deg)",
+            boxShadow:
+              "0 10px 20px 0 #fff inset, 0 20px 30px 0 #ad5fff inset, 0 60px 60px 0 #471eec inset",
+          },
+          "50%": {
+            transform: "rotate(270deg)",
+            boxShadow:
+              "0 10px 20px 0 #fff inset, 0 20px 10px 0 #d60a47 inset, 0 40px 60px 0 #311e80 inset",
+          },
+          "100%": {
+            transform: "rotate(450deg)",
+            boxShadow:
+              "0 10px 20px 0 #fff inset, 0 20px 30px 0 #ad5fff inset, 0 60px 60px 0 #471eec inset",
+          },
         },
-        ".animation-delay-600": {
-          "animation-delay": "600ms",
+        loaderLetter: {
+          "0%, 100%": { opacity: "0.4", transform: "translateY(0)" },
+          "20%": { opacity: "1", transform: "scale(1.15)" },
+          "40%": { opacity: "0.7", transform: "translateY(0)" },
         },
       },
     },

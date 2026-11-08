@@ -1,4 +1,5 @@
 "use client";
+import { body } from "@/lib/uiClassNames";
 
 import { useState, useCallback, useMemo } from "react";
 import PublicPageShell from "@/components/layout/PublicPageShell";
@@ -173,7 +174,7 @@ export default function EventsPageClient({ initialEvents }) {
 
                   {/* Event Content */}
                   <div className="relative z-10 flex flex-1 flex-col p-6">
-                    <h4 className="fc-title mb-3 line-clamp-2 min-h-[2.5em] text-xl transition-colors duration-300 group-hover:text-primary sm:text-2xl">
+                    <h4 className="mb-3 line-clamp-2 min-h-[2.5em] text-xl transition-colors duration-300 group-hover:text-primary sm:text-2xl">
                       {event.title}
                     </h4>
 
@@ -183,7 +184,7 @@ export default function EventsPageClient({ initialEvents }) {
                       </p>
                     )}
 
-                    <div className="mt-auto flex items-center space-x-2 fc-body">
+                    <div className={`mt-auto flex items-center space-x-2 ${body}`.trim()}>
                       <FiCalendar className="h-4 w-4 shrink-0 text-primary" />
                       <p className="text-sm font-medium">
                         {new Date(event.date + "T00:00:00").toLocaleDateString(

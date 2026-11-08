@@ -29,16 +29,12 @@ function Field({
 }) {
   return (
     <div className={className}>
-      {showLabel && label ? (
-        <label className="fc-form-label">
-          {label}
-        </label>
-      ) : null}
+      {showLabel && label ? <label className="text-label">{label}</label> : null}
       {children}
       {error ? (
         <p className="mt-1 text-sm text-red-400">{error}</p>
       ) : hint ? (
-        <p className="mt-1 fc-muted">{hint}</p>
+        <p className="text-muted mt-1">{hint}</p>
       ) : null}
     </div>
   );
@@ -102,7 +98,7 @@ export default function PartnerForm({
       {showLogoUpload ? (
         <div>
           {mode === "signup" ? (
-            <label className="fc-form-label">
+            <label className="text-label">
               Upload your Logo
             </label>
           ) : null}
@@ -208,12 +204,10 @@ export default function PartnerForm({
           {mode === "signup" ? "Contacts" : "Contact Information"}
         </SectionTitle>
         {mode === "signup" ? (
-          <div className="mb-2 fc-body">
-            <p>
-              Please enter the information for the Main Contact of your
-              organization.
-            </p>
-          </div>
+          <p className="mb-2">
+            Please enter the information for the Main Contact of your
+            organization.
+          </p>
         ) : null}
         <div className="space-y-4">
           <Field label="Title" showLabel={showLabels}>

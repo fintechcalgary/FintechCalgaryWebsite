@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import ModalRoot from "./ModalRoot";
 import ModalCloseButton from "./ModalCloseButton";
+import { modalHeader, modalPanel, modalPanelBleed } from "@/lib/uiClassNames";
 
 const ease = [0.16, 1, 0.3, 1];
 
@@ -32,7 +33,7 @@ export default function BleedModal({
         role="dialog"
         aria-modal="true"
         aria-label={ariaLabel}
-        className={`fc-modal-panel fc-modal-panel-bleed ${panelClassName}`.trim()}
+        className={`${modalPanel} ${modalPanelBleed} ${panelClassName}`.trim()}
         onClick={(e) => e.stopPropagation()}
       >
         {header}
@@ -60,7 +61,7 @@ export function BleedModalHeader({
   closeLabel = "Close dialog",
 }) {
   return (
-    <div className="fc-modal-header flex-shrink-0 !items-start">
+    <div className={`${modalHeader} flex-shrink-0 !items-start`.trim()}>
       <div className="min-w-0 flex-1 pr-2">
         {title}
         {subtitle}

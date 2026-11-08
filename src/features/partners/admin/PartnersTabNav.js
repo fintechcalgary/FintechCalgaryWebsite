@@ -1,4 +1,5 @@
 "use client";
+import { GLASS_CARD_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 export default function PartnersTabNav({
   tabs,
@@ -14,7 +15,7 @@ export default function PartnersTabNav({
       <div
         role="tablist"
         aria-label="Partners sections"
-        className="fc-card flex flex-col gap-1 p-1.5 sm:flex-row"
+        className={`${GLASS_CARD_CLASS} flex flex-col gap-1 p-1.5 sm:flex-row`.trim()}
       >
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -36,7 +37,7 @@ export default function PartnersTabNav({
               }`}
             >
               <div className="flex items-center gap-3">
-                <span className={isActive ? "fc-icon" : "text-gray-400"}>
+                <span className={isActive ? ICON_GLYPH_CLASS : "text-gray-400"}>
                   <Icon className="h-5 w-5" />
                 </span>
                 <div className="min-w-0 flex-1">

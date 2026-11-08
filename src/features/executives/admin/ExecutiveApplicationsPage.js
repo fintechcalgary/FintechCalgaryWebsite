@@ -652,9 +652,9 @@ export default function ExecutiveApplicationsPage() {
             >
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="fc-title text-lg">
+                  <h4 className="text-lg">
                     Executive Applications
-                  </span>
+                  </h4>
                   <button
                     type="button"
                     onClick={handleToggleExecutiveApplications}
@@ -673,11 +673,11 @@ export default function ExecutiveApplicationsPage() {
                     ></span>
                   </button>
                 </div>
-                <div className="fc-muted">
+                <p className="text-muted">
                   {executiveApplicationsOpen
                     ? "Executive applications are currently open and accepting submissions."
                     : "Executive applications are currently closed."}
-                </div>
+                </p>
                 {settingsError && (
                   <div className="text-red-400 text-sm mt-2">{settingsError}</div>
                 )}
@@ -730,7 +730,7 @@ export default function ExecutiveApplicationsPage() {
               </span>
               ?
             </p>
-            <div className="mb-3 rounded-lg bg-gray-800/50 p-3 fc-muted">
+            <p className="text-muted mb-3 rounded-lg bg-gray-800/50 p-3">
               <div>
                 <strong>Role:</strong> {applicationToDelete?.role}
               </div>
@@ -740,7 +740,7 @@ export default function ExecutiveApplicationsPage() {
               <div>
                 <strong>Email:</strong> {applicationToDelete?.email}
               </div>
-            </div>
+            </p>
             <p className="text-sm text-red-400">This action cannot be undone.</p>
           </>
         }
@@ -761,7 +761,7 @@ export default function ExecutiveApplicationsPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="fc-form-label">
+                <label className="text-label">
                   Role Title
                 </label>
                 <input
@@ -780,7 +780,7 @@ export default function ExecutiveApplicationsPage() {
               </div>
 
               <div>
-                <label className="fc-form-label">
+                <label className="text-label">
                   Responsibilities Image
                 </label>
                 {imagePreview ? (
@@ -821,10 +821,10 @@ export default function ExecutiveApplicationsPage() {
                     >
                       <FiUpload className="w-8 h-8 text-gray-400" />
                       <div>
-                        <p className="fc-body">
+                        <p>
                           Click to upload or drag and drop
                         </p>
-                        <p className="fc-muted text-xs mt-1">
+                        <p className="text-muted text-xs mt-1">
                           PNG, JPG, GIF up to 5MB
                         </p>
                         <p className="text-xs text-yellow-400 mt-1">
@@ -885,7 +885,7 @@ export default function ExecutiveApplicationsPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="fc-form-label">
+                <label className="text-label">
                   Role Title
                 </label>
                 <input
@@ -904,7 +904,7 @@ export default function ExecutiveApplicationsPage() {
               </div>
 
               <div>
-                <label className="fc-form-label">
+                <label className="text-label">
                   Responsibilities Image
                 </label>
                 {imagePreview ? (
@@ -945,10 +945,10 @@ export default function ExecutiveApplicationsPage() {
                     >
                       <FiUpload className="w-8 h-8 text-gray-400" />
                       <div>
-                        <p className="fc-body">
+                        <p>
                           Click to upload new image or drag and drop
                         </p>
-                        <p className="fc-muted text-xs mt-1">
+                        <p className="text-muted text-xs mt-1">
                           PNG, JPG, GIF up to 5MB
                         </p>
                         <p className="text-xs text-yellow-400 mt-1">
@@ -1010,7 +1010,7 @@ export default function ExecutiveApplicationsPage() {
               </span>
               ?
             </p>
-            <div className="mb-3 rounded-lg bg-gray-800/50 p-3 fc-muted">
+            <p className="text-muted mb-3 rounded-lg bg-gray-800/50 p-3">
               <div>
                 <strong>Role:</strong> {roleToDelete?.title}
               </div>
@@ -1020,7 +1020,7 @@ export default function ExecutiveApplicationsPage() {
                   ? formatDateTimeShort(roleToDelete.createdAt)
                   : "Unknown"}
               </div>
-            </div>
+            </p>
             <p className="text-sm text-red-400">This action cannot be undone.</p>
           </>
         }
@@ -1050,7 +1050,7 @@ export default function ExecutiveApplicationsPage() {
               )}
 
               <div>
-                <label className="fc-form-label">
+                <label className="text-label">
                   Question Label *
                 </label>
                 <textarea
@@ -1069,7 +1069,7 @@ export default function ExecutiveApplicationsPage() {
               </div>
 
               <div>
-                <label className="fc-form-label">
+                <label className="text-label">
                   Placeholder Text *
                 </label>
                 <textarea

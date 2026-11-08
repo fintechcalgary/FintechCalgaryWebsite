@@ -1,4 +1,6 @@
 "use client";
+import { titleAccent } from "@/lib/uiClassNames";
+import { ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,8 +37,8 @@ export default function EventsDashboardPage() {
         <AdminBackLink />
 
         <div className="mb-8 space-y-2">
-          <h1 className="fc-title text-4xl font-bold tracking-tight">Events</h1>
-          <p className="fc-lede">Manage events, webinars, and registration.</p>
+          <h1 className="heading-accent text-4xl font-bold tracking-tight">Events</h1>
+          <p className="text-lede">Manage events, webinars, and registration.</p>
         </div>
 
         <GlowCard
@@ -46,22 +48,22 @@ export default function EventsDashboardPage() {
         >
           <div className="relative z-10 mb-8 flex items-center justify-between">
             <div className="space-y-1">
-              <h2 className="fc-title-accent text-2xl">Events and Webinars</h2>
-              <p className="fc-body">Manage your schedule</p>
+              <h2 className={`${titleAccent} text-2xl`.trim()}>Events and Webinars</h2>
+              <p>Manage your schedule</p>
             </div>
-            <span className="fc-icon">
+            <span className={ICON_GLYPH_CLASS}>
               <FontAwesomeIcon icon={faChartBar} className="h-6 w-6" />
             </span>
           </div>
 
           <div className="mb-6 max-w-md rounded-xl border border-gray-700/30 bg-gradient-to-br from-gray-800/60 via-purple-900/10 to-gray-800/40 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-primary/50 hover:shadow-purple-600/20 sm:max-w-full">
             <div className="flex items-center space-x-3">
-              <div className="fc-icon hidden md:inline-flex">
+              <div className={`${ICON_GLYPH_CLASS} hidden md:inline-flex`.trim()}>
                 <FontAwesomeIcon icon={faClock} className="h-5 w-5" />
               </div>
               <div className="space-y-0.5">
-                <h3 className="fc-title text-sm">Reminder</h3>
-                <p className="fc-body text-xs leading-relaxed">
+                <h3 className="text-sm">Reminder</h3>
+                <p className="text-xs leading-relaxed">
                   No need to delete past events—they&apos;ll remain on the
                   events page. Delete only those you no longer want to display.
                   If an event fills up, close registration on its card instead

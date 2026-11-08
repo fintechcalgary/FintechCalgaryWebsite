@@ -1,4 +1,12 @@
 "use client";
+import {
+  BTN_GRADIENT_PRIMARY_CLASS,
+  ICON_GLYPH_CLASS,
+  MODAL_BODY_CLASS,
+  MODAL_CALLOUT_CLASS,
+  MODAL_FOOTER_CLASS,
+  MODAL_ICON_CLOSE_CLASS,
+} from "@/lib/uiTokens";
 
 import {
   FiExternalLink,
@@ -30,7 +38,7 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                   href={article.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="fc-modal-icon-close border border-gray-700/40"
+                  className={`${MODAL_ICON_CLOSE_CLASS} border border-gray-700/40`.trim()}
                   title="Open original article"
                 >
                   <FiExternalLink className="h-5 w-5" />
@@ -39,7 +47,7 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
             }
             title={
               <>
-                <div className="fc-muted mb-3 flex flex-wrap items-center gap-2 text-sm">
+                <p className="text-muted mb-3 flex flex-wrap items-center gap-2 text-sm">
                   <span className="font-medium uppercase tracking-wide">
                     {extractReadableSource(article)}
                   </span>
@@ -51,8 +59,8 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                       </span>
                     </>
                   )}
-                </div>
-                <h2 className="fc-modal-title leading-tight">{article.title}</h2>
+                </p>
+                <h2 className="modal-title leading-tight">{article.title}</h2>
               </>
             }
           />
@@ -60,8 +68,8 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
       }
       footer={
         article ? (
-          <div className="fc-modal-footer flex-shrink-0 !flex-row !items-center !justify-between">
-            <p className="fc-muted text-sm">
+          <div className={`${MODAL_FOOTER_CLASS} flex-shrink-0 !flex-row !items-center !justify-between`.trim()}>
+            <p className="text-muted text-sm">
               AI analysis powered by Groq · Not financial advice
             </p>
             {article.url ? (
@@ -69,7 +77,7 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                 href={article.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="fc-btn-gradient-primary px-4 py-2"
+                className={`${BTN_GRADIENT_PRIMARY_CLASS} px-4 py-2`.trim()}
               >
                 <FiExternalLink className="h-4 w-4" />
                 Read Full Article
@@ -80,20 +88,20 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
       }
     >
       {article ? (
-        <div className="fc-modal-body">
+        <div className={MODAL_BODY_CLASS}>
           {article.summary ? (
             <div className="space-y-6">
               <div className="mb-6 flex items-center gap-3">
-                <span className="fc-icon">
+                <span className={ICON_GLYPH_CLASS}>
                   <FiZap className="h-6 w-6" />
                 </span>
                 <div>
-                  <h3 className="fc-modal-title !text-xl">AI Summary</h3>
-                  <p className="fc-muted">Comprehensive insights and analysis</p>
+                  <h2 className="modal-title !text-xl">AI Summary</h2>
+                  <p className="text-muted">Comprehensive insights and analysis</p>
                 </div>
               </div>
 
-              <div className="fc-body-lg space-y-4">
+              <p className="text-body-lg space-y-4">
                 {article.summary.split("\n\n").map((paragraph, index) => {
                   const p = paragraph.trim();
                   if (!p) return null;
@@ -113,7 +121,7 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                     <p key={index}>{p}</p>
                   );
                 })}
-              </div>
+              </p>
 
               <div className="mt-8 grid grid-cols-1 gap-4 border-t border-gray-800/50 pt-6 md:grid-cols-3">
                 {[
@@ -135,14 +143,14 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
                 ].map(({ icon: Icon, label, sub }) => (
                   <div
                     key={label}
-                    className="fc-modal-callout flex items-center gap-3"
+                    className={`${MODAL_CALLOUT_CLASS} flex items-center gap-3`.trim()}
                   >
-                    <span className="fc-icon">
+                    <span className={ICON_GLYPH_CLASS}>
                       <Icon className="h-5 w-5" />
                     </span>
                     <div>
                       <p className="text-sm font-medium text-white">{label}</p>
-                      <p className="fc-muted text-xs">{sub}</p>
+                      <p className="text-muted text-xs">{sub}</p>
                     </div>
                   </div>
                 ))}
@@ -150,11 +158,11 @@ export default function ArticleDetailModal({ isOpen, onClose, article }) {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <span className="fc-icon mb-4">
+              <span className={`${ICON_GLYPH_CLASS} mb-4`.trim()}>
                 <FiZap className="h-8 w-8" />
               </span>
-              <p className="fc-body mb-2">No AI summary available yet</p>
-              <p className="fc-muted">
+              <p className="mb-2">No AI summary available yet</p>
+              <p className="text-muted">
                 Summaries are generated during the weekly Friday refresh.
               </p>
             </div>

@@ -1,4 +1,6 @@
 "use client";
+import { body, linkUnderline, muted, titleAccent } from "@/lib/uiClassNames";
+import { ALERT_ERROR_CLASS, BTN_GRADIENT_PRIMARY_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import { useState } from "react";
 import {
@@ -157,7 +159,7 @@ export default function JoinPage() {
                     <PageTitle sizeClass="text-3xl sm:text-4xl mb-4">
                       Join Us
                     </PageTitle>
-                    <p className="fc-body-lg">
+                    <p className="text-body-lg">
                       Join the FinTech Calgary community to stay updated with
                       our latest events, workshops, and opportunities. Connect
                       with industry leaders and innovators in the blockchain and
@@ -168,13 +170,13 @@ export default function JoinPage() {
 
                 {submitStatus === "success" ? (
                   <div className="relative z-10 text-center py-8">
-                    <span className="fc-icon mx-auto mb-4">
+                    <span className={`${ICON_GLYPH_CLASS} mx-auto mb-4`.trim()}>
                       <FiCheck className="h-8 w-8" />
                     </span>
-                    <h2 className="fc-title text-2xl mb-2">
+                    <h2 className="mb-2 text-2xl">
                       Thank you for joining!
                     </h2>
-                    <p className="fc-body">
+                    <p>
                       Check your email for a welcome message from our team.
                     </p>
                   </div>
@@ -182,7 +184,7 @@ export default function JoinPage() {
                   <>
                     {/* Membership Options */}
                     <div className="relative z-10 mb-6">
-                      <h2 className="fc-title-accent text-xl mb-4">
+                      <h2 className={`${titleAccent} mb-4 text-xl`.trim()}>
                         Choose Your Membership
                       </h2>
 
@@ -209,7 +211,7 @@ export default function JoinPage() {
                             }}
                           >
                           <div className="flex justify-between items-start mb-3">
-                            <h3 className="fc-title text-lg">
+                            <h3 className="text-lg">
                               Free Membership
                             </h3>
                             <div
@@ -224,10 +226,10 @@ export default function JoinPage() {
                               )}
                             </div>
                           </div>
-                          <p className="fc-body mb-3">
+                          <p className="mb-3">
                             Stay updated with our community
                           </p>
-                          <ul className="space-y-1 fc-body">
+                          <ul className={`space-y-1 ${body}`.trim()}>
                             <li className="flex items-start">
                               <FiCheck className="w-4 h-4 text-primary mr-2 mt-0.5" />
                               <span>Email newsletters</span>
@@ -245,7 +247,7 @@ export default function JoinPage() {
                             <span className="text-xl font-bold text-white">
                               $0
                             </span>
-                            <span className="fc-muted">
+                            <span className={muted}>
                               {" "}
                               / forever
                             </span>
@@ -276,7 +278,7 @@ export default function JoinPage() {
                           >
                           <div className="flex justify-between items-start mb-3">
                             <div>
-                              <h3 className="fc-title text-lg">
+                              <h3 className="text-lg">
                                 Resume Submission
                               </h3>
                               <span className="inline-block px-2 py-1 bg-primary/20 text-primary text-xs rounded-full mt-1">
@@ -295,10 +297,10 @@ export default function JoinPage() {
                               )}
                             </div>
                           </div>
-                          <p className="fc-body mb-3">
+                          <p className="mb-3">
                             Submit your resume (members only)
                           </p>
-                          <ul className="space-y-1 fc-body">
+                          <ul className={`space-y-1 ${body}`.trim()}>
                             <li className="flex items-start">
                               <FiCheck className="w-4 h-4 text-primary mr-2 mt-0.5" />
                               <span>All free benefits</span>
@@ -320,7 +322,7 @@ export default function JoinPage() {
                             <span className="text-xl font-bold text-white">
                               $5
                             </span>
-                            <span className="fc-muted">
+                            <span className={muted}>
                               {" "}
                               / year
                             </span>
@@ -333,8 +335,8 @@ export default function JoinPage() {
                     <div className="relative z-10 mt-6">
                       <form onSubmit={handleSubmit} className="space-y-4">
                         {membershipType === "premium" && (
-                          <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 fc-body">
-                            <p className="font-medium text-white mb-1">
+                          <div className={`rounded-lg border border-primary/30 bg-primary/10 p-4 ${body}`.trim()}>
+                            <p className="mb-1 font-medium text-white">
                               Resume submission is for members only.
                             </p>
                             <p>
@@ -342,7 +344,7 @@ export default function JoinPage() {
                               <button
                                 type="button"
                                 onClick={() => setMembershipType("free")}
-                                className="fc-link-underline"
+                                className={linkUnderline}
                               >
                                 Free Membership
                               </button>{" "}
@@ -352,12 +354,12 @@ export default function JoinPage() {
                           </div>
                         )}
                         {errorMessage && (
-                          <div className="fc-alert-error flex items-start">
+                          <div className={`${ALERT_ERROR_CLASS} flex items-start`.trim()}>
                             <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
                             <div>
                               <p className="text-red-400">{errorMessage}</p>
                               {errorMessage.includes("already subscribed") && (
-                                <p className="fc-muted mt-1">
+                                <p className="text-muted mt-1">
                                   Please use a different email address or check
                                   your inbox for previous communications.
                                 </p>
@@ -368,7 +370,7 @@ export default function JoinPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label className="fc-form-label">
+                            <label className="text-label">
                               First Name <span className="text-red-400">*</span>
                             </label>
                             <input
@@ -387,7 +389,7 @@ export default function JoinPage() {
                           </div>
 
                           <div>
-                            <label className="fc-form-label">
+                            <label className="text-label">
                               Last Name <span className="text-red-400">*</span>
                             </label>
                             <input
@@ -406,7 +408,7 @@ export default function JoinPage() {
                           </div>
 
                           <div>
-                            <label className="fc-form-label">
+                            <label className="text-label">
                               UCID <span className="text-red-400">*</span>
                             </label>
                             <input
@@ -425,7 +427,7 @@ export default function JoinPage() {
                           </div>
 
                           <div>
-                            <label className="fc-form-label">
+                            <label className="text-label">
                               Email <span className="text-red-400">*</span>
                             </label>
                             <input
@@ -446,7 +448,7 @@ export default function JoinPage() {
 
                         {/* Resume Upload */}
                         <div>
-                          <label className="fc-form-label">
+                          <label className="text-label">
                             Resume (PDF, max 5MB){" "}
                             <span className="text-red-400">*</span>
                           </label>
@@ -491,10 +493,10 @@ export default function JoinPage() {
                                 className="cursor-pointer flex flex-col items-center gap-2"
                               >
                                 <FiUpload className="w-8 h-8 text-gray-400" />
-                                <span className="fc-body">
+                                <span className={body}>
                                   Click to upload or drag and drop
                                 </span>
-                                <span className="fc-muted text-xs">
+                                <span className={`${muted} text-xs`.trim()}>
                                   PDF only, max 5MB
                                 </span>
                               </label>
@@ -505,7 +507,7 @@ export default function JoinPage() {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="fc-btn-gradient-primary mt-2 w-full !px-4 !py-2.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+                          className={`${BTN_GRADIENT_PRIMARY_CLASS} mt-2 w-full !px-4 !py-2.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0`.trim()}
                         >
                           {isSubmitting
                             ? "Submitting..."

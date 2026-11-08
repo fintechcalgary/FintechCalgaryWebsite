@@ -1,4 +1,5 @@
 "use client";
+import { ADMIN_PANEL_CLASS } from "@/lib/uiTokens";
 
 import { useRouter } from "next/navigation";
 import { FiChevronRight, FiTrash2 } from "react-icons/fi";
@@ -26,7 +27,7 @@ export default function ApplicationList({
 
   return (
     <>
-      <div className="fc-admin-panel overflow-hidden">
+      <div className={`${ADMIN_PANEL_CLASS} overflow-hidden`.trim()}>
         {error ? (
           <div className="p-6 text-center sm:p-8">
             <p className="text-sm text-red-400 sm:text-base">{error}</p>
@@ -39,7 +40,7 @@ export default function ApplicationList({
           </div>
         ) : applications.length === 0 ? (
           <div className="p-6 text-center sm:p-8">
-            <p className="fc-body text-sm sm:text-base">No applications found.</p>
+            <p className="text-sm sm:text-base">No applications found.</p>
           </div>
         ) : (
           <>
@@ -86,9 +87,9 @@ export default function ApplicationList({
                     >
                       <td className="px-6 py-4">
                         <div className="flex flex-col gap-1">
-                          <span className="fc-title max-w-[220px] truncate text-sm text-primary group-hover:underline">
+                          <h4 className="inline max-w-[220px] truncate text-sm text-primary group-hover:underline">
                             {application.name}
-                          </span>
+                          </h4>
                           <span className="text-xs text-gray-500 transition-colors group-hover:text-primary/80">
                             Click to view application
                           </span>
@@ -105,21 +106,21 @@ export default function ApplicationList({
                           </StatusBadge>
                         </span>
                       </td>
-                      <td className="px-6 py-4 fc-body">
+                      <td className="px-6 py-4 text-sm leading-[1.7] text-white/65">
                         <div className="max-w-[180px] truncate">
                           {application.program}
                         </div>
-                        <div className="fc-muted">Year {application.year}</div>
+                        <p className="text-muted">Year {application.year}</p>
                       </td>
-                      <td className="px-6 py-4 fc-body">
+                      <td className="px-6 py-4 text-sm leading-[1.7] text-white/65">
                         <div className="max-w-[220px] truncate">
                           {application.email}
                         </div>
                         {application.phone ? (
-                          <div className="fc-muted">{application.phone}</div>
+                          <p className="text-muted">{application.phone}</p>
                         ) : null}
                       </td>
-                      <td className="px-6 py-4 fc-body whitespace-nowrap">
+                      <td className="px-6 py-4 text-sm leading-[1.7] text-white/65 whitespace-nowrap">
                         {formatDate(application.createdAt)}
                       </td>
                       <td className="px-6 py-4">
@@ -174,7 +175,7 @@ export default function ApplicationList({
                       <div className="relative z-10">
                         <div className="mb-3 flex items-start justify-between gap-3">
                           <div className="min-w-0 flex-1">
-                            <h3 className="fc-title mb-1 truncate text-base text-primary">
+                            <h3 className="mb-1 truncate text-base text-primary">
                               {application.name}
                             </h3>
                             <span title={application.role}>
@@ -202,28 +203,28 @@ export default function ApplicationList({
 
                         <div className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
                           <div className="min-w-0">
-                            <span className="fc-muted">Program:</span>
+                            <p className="text-muted inline">Program:</p>
                             <div className="truncate text-white">
                               {application.program}
                             </div>
-                            <div className="fc-muted">
+                            <p className="text-muted">
                               Year {application.year}
-                            </div>
+                            </p>
                           </div>
                           <div className="min-w-0">
-                            <span className="fc-muted">Contact:</span>
+                            <p className="text-muted inline">Contact:</p>
                             <div className="break-all text-white">
                               {application.email}
                             </div>
                             {application.phone ? (
-                              <div className="fc-muted">{application.phone}</div>
+                              <p className="text-muted">{application.phone}</p>
                             ) : null}
                           </div>
                         </div>
 
                         <div className="mt-3 flex items-center justify-between gap-3 border-t border-gray-700/30 pt-3">
                           <div>
-                            <span className="fc-muted text-xs">Applied:</span>
+                            <p className="text-muted inline text-xs">Applied:</p>
                             <div className="text-sm text-white">
                               {formatDate(application.createdAt)}
                             </div>
@@ -243,9 +244,9 @@ export default function ApplicationList({
         )}
       </div>
 
-      <div className="fc-muted mt-6 text-center sm:text-left">
+      <p className="text-muted mt-6 text-center sm:text-left">
         Total Applications: {applications.length}
-      </div>
+      </p>
     </>
   );
 }

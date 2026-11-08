@@ -1,4 +1,5 @@
 "use client";
+import { BTN_GRADIENT_PRIMARY_CLASS } from "@/lib/uiTokens";
 
 import { useState, useEffect, useCallback } from "react";
 import PublicPageShell from "@/components/layout/PublicPageShell";
@@ -199,7 +200,7 @@ export default function ArticlesPage() {
             <PageTitle sizeClass={PUBLIC_TITLE_SIZE}>
               Finance News Articles
             </PageTitle>
-            <p className="fc-lede mx-auto max-w-3xl">
+            <p className="text-lede mx-auto max-w-3xl">
               Browse weekly highlights or the full FinTech archive
             </p>
           </motion.div>
@@ -212,7 +213,7 @@ export default function ArticlesPage() {
           >
             <div className="grid grid-cols-1 xl:grid-cols-[auto_auto_1fr_auto] gap-4 items-stretch xl:items-end">
               <div className="space-y-2">
-                <p className="text-[11px] tracking-[0.14em] fc-muted font-semibold">
+                <p className="text-muted text-[11px] font-semibold tracking-[0.14em]">
                   Scope
                 </p>
                 <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
@@ -234,7 +235,7 @@ export default function ArticlesPage() {
               </div>
 
               <div className="space-y-2">
-                <p className="text-[11px] tracking-[0.14em] fc-muted font-semibold">
+                <p className="text-muted text-[11px] font-semibold tracking-[0.14em]">
                   Layout
                 </p>
                 <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
@@ -258,7 +259,7 @@ export default function ArticlesPage() {
               </div>
 
               <div className="space-y-2">
-                <p className="text-[11px] tracking-[0.14em] fc-muted font-semibold">
+                <p className="text-muted text-[11px] font-semibold tracking-[0.14em]">
                   Sort Order
                 </p>
                 <select
@@ -279,7 +280,7 @@ export default function ArticlesPage() {
                   type="button"
                   onClick={() => void loadArticles()}
                   disabled={loading}
-                  className="fc-btn-gradient-primary !px-4 !py-3 disabled:opacity-50"
+                  className={`${BTN_GRADIENT_PRIMARY_CLASS} !px-4 !py-3 disabled:opacity-50`.trim()}
                   aria-label="Refresh articles"
                 >
                   <FiRefreshCw
@@ -291,7 +292,7 @@ export default function ArticlesPage() {
           </motion.div>
 
           {!loading && (
-            <p className="fc-muted mb-1">
+            <p className="text-muted mb-1">
               {scope === "week" ? (
                 <>
                   Showing {filteredArticles.length} of{" "}
@@ -318,7 +319,7 @@ export default function ArticlesPage() {
             {filteredArticles.length === 0 ? (
               <div className="text-center py-16">
                 <FiCalendar className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                <p className="fc-body mb-4">
+                <p className="mb-4">
                   {scope === "week"
                     ? "No weekly digest available yet. Trigger Monday refresh to generate the weekly top 15."
                     : "No articles yet. Refresh from Insights or run article refresh."}
@@ -350,7 +351,7 @@ export default function ArticlesPage() {
                 <div className="space-y-8">
                   {Object.entries(articlesByDate).map(([date, dateArticles]) => (
                     <div key={date}>
-                      <h2 className="fc-title mb-4 border-b border-gray-700/50 pb-2 text-xl">
+                      <h2 className="mb-4 border-b border-gray-700/50 pb-2 text-xl">
                         {formatDate(date)}
                       </h2>
                       <div className="space-y-4">

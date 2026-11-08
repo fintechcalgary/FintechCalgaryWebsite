@@ -1,4 +1,6 @@
 "use client";
+import { body, muted } from "@/lib/uiClassNames";
+import { ADMIN_PANEL_CLASS } from "@/lib/uiTokens";
 
 import { motion } from "framer-motion";
 import { FiMail, FiCalendar, FiDownload, FiTrash2 } from "react-icons/fi";
@@ -155,33 +157,33 @@ export default function MembersPage() {
         {members.length === 0 ? (
           <EmptyState variant="admin" icon={FiMail} title="No members found" />
         ) : (
-          <div className="fc-admin-panel overflow-hidden">
+          <div className={`${ADMIN_PANEL_CLASS} overflow-hidden`.trim()}>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-800/50 border-b border-gray-700/50">
                   <tr>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
+                    <th className={`${muted} px-6 py-4 text-left text-xs font-medium tracking-wider`.trim()}>
                       Name
                     </th>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
+                    <th className={`${muted} px-6 py-4 text-left text-xs font-medium tracking-wider`.trim()}>
                       UCID
                     </th>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
+                    <th className={`${muted} px-6 py-4 text-left text-xs font-medium tracking-wider`.trim()}>
                       Email
                     </th>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
+                    <th className={`${muted} px-6 py-4 text-left text-xs font-medium tracking-wider`.trim()}>
                       Membership
                     </th>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
+                    <th className={`${muted} px-6 py-4 text-left text-xs font-medium tracking-wider`.trim()}>
                       Has Paid
                     </th>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
+                    <th className={`${muted} px-6 py-4 text-left text-xs font-medium tracking-wider`.trim()}>
                       Resume
                     </th>
-                    <th className="fc-muted px-6 py-4 text-left text-xs font-medium tracking-wider">
+                    <th className={`${muted} px-6 py-4 text-left text-xs font-medium tracking-wider`.trim()}>
                       Joined Date
                     </th>
-                    <th className="fc-muted px-6 py-4 text-right text-xs font-medium tracking-wider">
+                    <th className={`${muted} px-6 py-4 text-right text-xs font-medium tracking-wider`.trim()}>
                       Actions
                     </th>
                   </tr>
@@ -201,12 +203,12 @@ export default function MembersPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="fc-body text-sm">
+                        <div className={`${body} text-sm`.trim()}>
                           {member.ucid || "N/A"}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="fc-body text-sm">{member.email}</div>
+                        <div className={`${body} text-sm`.trim()}>{member.email}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm">
@@ -238,23 +240,22 @@ export default function MembersPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="fc-body text-sm">
+                        <div className={`${body} text-sm`.trim()}>
                           {member.resume ? (
                             <a
                               href={member.resume}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="fc-link-underline"
-                            >
+                             className="link-underline">
                               View
                             </a>
                           ) : (
-                            <span className="fc-muted">No resume</span>
+                            <span className={muted}>No resume</span>
                           )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="fc-muted text-sm">
+                        <div className={`${muted} text-sm`.trim()}>
                           {formatDateLocale(member.createdAt)}
                         </div>
                       </td>

@@ -1,0 +1,87 @@
+/* Default field chrome for native inputs (modals/dashboard use .fc-form-input instead). */
+@layer base {
+  input:not([type="file"]),
+  textarea,
+  select {
+    @apply w-full rounded-lg border border-gray-700/50 bg-gray-900/50 px-4 py-3 text-white shadow-sm shadow-black/10 backdrop-blur-sm placeholder:text-gray-400 transition-all duration-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  input[type="date"] {
+    @apply text-gray-300;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    @apply cursor-pointer opacity-50 invert filter transition-opacity hover:opacity-75;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  textarea {
+    -webkit-appearance: none;
+  }
+
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+  }
+
+  select::-ms-expand {
+    display: none;
+  }
+}
+
+@layer components {
+  /* Canonical form control for admin/modals (overrides base input styles) */
+  .form-input,
+  .fc-form-input {
+    @apply w-full rounded-xl border border-gray-700/50 bg-gray-800/50 px-4 py-3 text-white placeholder-gray-400 shadow-none transition-all duration-200 hover:border-gray-600/50 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20;
+  }
+
+  .form-input-auto,
+  .fc-form-input-auto,
+  select.form-input-auto,
+  select.fc-form-input-auto {
+    width: auto;
+    max-width: 100%;
+  }
+
+  /* Extra right padding so the chevron doesn't overlap the label */
+  select.form-input,
+  select.fc-form-input {
+    padding-right: 2.75rem;
+  }
+
+  select.form-input-auto,
+  select.fc-form-input-auto {
+    min-width: 15rem;
+  }
+
+  .input-group,
+  .fc-input-group {
+    @apply space-y-1;
+  }
+
+  .input-group label,
+  .fc-input-group label {
+    @apply mb-1.5 block text-sm font-medium text-gray-300 transition-colors;
+  }
+
+  .input-group:focus-within label,
+  .fc-input-group:focus-within label {
+    @apply text-primary;
+  }
+}

@@ -1,4 +1,6 @@
 "use client";
+import { linkAccent, linkUnderline } from "@/lib/uiClassNames";
+import { ALERT_ERROR_CLASS, TOPIC_CHIP_CLASS } from "@/lib/uiTokens";
 
 import { useState } from "react";
 import {
@@ -219,27 +221,23 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <span className="fc-muted text-xs font-medium uppercase tracking-wide">
+                  <p className="text-muted inline text-xs font-medium uppercase tracking-wide">
                     {extractReadableSource(article)}
-                  </span>
-                  <span className="fc-muted text-xs">•</span>
+                  </p>
+                  <p className="text-muted inline text-xs">•</p>
                   {displayDate && (
-                    <span className="fc-muted text-xs">
+                    <p className="text-muted inline text-xs">
                       {formatDateShort(displayDate)}
-                    </span>
+                    </p>
                   )}
                   {displayTime && (
                     <>
-                      <span className="fc-muted text-xs">•</span>
-                      <span className="fc-muted text-xs">{displayTime}</span>
+                      <p className="text-muted inline text-xs">•</p>
+                      <p className="text-muted inline text-xs">{displayTime}</p>
                     </>
                   )}
                 </div>
-                <h4
-                  className={`fc-title group-hover:text-primary transition-colors ${
-                    isListView ? "text-xl line-clamp-2" : "text-lg line-clamp-2"
-                  }`}
-                >
+                <h4 className={`group-hover:text-primary transition-colors ${isListView ? "text-xl line-clamp-2" : "text-lg line-clamp-2"}`}>
                   {article.title}
                 </h4>
               </div>
@@ -304,7 +302,7 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
               className={isListView ? "mb-2 min-h-[44px]" : "mb-2 min-h-[48px]"}
             >
               {summaryError ? (
-                <div className="fc-alert-error">{summaryError}</div>
+                <div className={ALERT_ERROR_CLASS}>{summaryError}</div>
               ) : isGeneratingSummary ? (
                 <div className="flex items-center gap-2 text-sm text-primary">
                   <motion.div
@@ -321,15 +319,13 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
                 </div>
               ) : (
                 <>
-                  <p
-                    className={`fc-body ${isExpanded ? "" : isListView ? "line-clamp-2" : "line-clamp-4"}`}
-                  >
+                  <p className={`${isExpanded ? "" : isListView ? "line-clamp-2" : "line-clamp-4"}`}>
                     {normalizedSummary}
                   </p>
                   {normalizedSummary && normalizedSummary.length > 170 && (
                     <button
                       onClick={() => setIsExpanded(!isExpanded)}
-                      className="fc-link mt-2 text-xs"
+                      className={`${linkAccent} mt-2 text-xs`.trim()}
                     >
                       {isExpanded ? "Show less" : "Read more"}
                     </button>
@@ -347,14 +343,14 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
                 {article.categories
                   ?.slice(0, isListView ? 5 : 3)
                   .map((category, index) => (
-                    <span key={index} className="fc-topic-chip !cursor-default">
+                    <span key={index} className={`${TOPIC_CHIP_CLASS} !cursor-default`.trim()}>
                       {category}
                     </span>
                   ))}
                 {article.categories?.length > (isListView ? 5 : 3) && (
-                  <span className="fc-muted px-2 py-1 rounded-md text-xs">
+                  <p className="text-muted inline px-2 py-1 rounded-md text-xs">
                     +{article.categories.length - (isListView ? 5 : 3)} more
-                  </span>
+                  </p>
                 )}
               </div>
 

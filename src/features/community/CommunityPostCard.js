@@ -1,4 +1,5 @@
 "use client";
+import { BTN_GRADIENT_PRIMARY_CLASS, BTN_SOFT_CHIP_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -76,15 +77,15 @@ export default function CommunityPostCard({
         </div>
 
         <div className="relative z-10 flex flex-1 flex-col p-6">
-          <h4 className="fc-title mb-2 line-clamp-2 text-xl transition-colors duration-300 group-hover:text-primary sm:text-2xl">
+          <h4 className="mb-2 line-clamp-2 text-xl transition-colors duration-300 group-hover:text-primary sm:text-2xl">
             {post.title}
           </h4>
 
-          <p className="fc-body mb-4 line-clamp-2">{post.description}</p>
+          <p className="mb-4 line-clamp-2">{post.description}</p>
 
           {dateLabel ? (
-            <div className="mt-auto flex items-center space-x-2 fc-body">
-              <span className="fc-icon">
+            <p className="mt-auto flex items-center space-x-2">
+              <span className={ICON_GLYPH_CLASS}>
                 <FiCalendar className="h-4 w-4" />
               </span>
               <p className="text-sm font-medium">
@@ -95,7 +96,7 @@ export default function CommunityPostCard({
                   </span>
                 ) : null}
               </p>
-            </div>
+            </p>
           ) : (
             <div className="mt-auto" />
           )}
@@ -105,7 +106,7 @@ export default function CommunityPostCard({
       <div className="flex flex-wrap items-center gap-3 px-6 pb-6">
         <Link
           href={href}
-          className="fc-btn-gradient-primary px-4 py-2"
+          className={`${BTN_GRADIENT_PRIMARY_CLASS} px-4 py-2`.trim()}
         >
           View Details
         </Link>
@@ -115,7 +116,7 @@ export default function CommunityPostCard({
             href={post.registrationUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="fc-btn-soft-chip px-4 py-2"
+            className={`${BTN_SOFT_CHIP_CLASS} px-4 py-2`.trim()}
           >
             Register
             <FiExternalLink className="h-4 w-4" />

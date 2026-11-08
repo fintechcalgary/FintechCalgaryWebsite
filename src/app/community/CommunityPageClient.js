@@ -27,7 +27,7 @@ function PostGrid({ posts }) {
 function EventSection({ title, posts, emptyMessage }) {
   return (
     <section className="mb-16">
-      <h2 className="fc-title mb-6 text-2xl sm:text-3xl">{title}</h2>
+      <h2 className="mb-6 text-2xl sm:text-3xl">{title}</h2>
       {posts.length === 0 ? (
         <EmptyState
           variant="public"

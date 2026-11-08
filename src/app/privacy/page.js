@@ -1,4 +1,5 @@
 "use client";
+import { bodyLg } from "@/lib/uiClassNames";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
 import { SITE_CONTACT } from "@/lib/constants";
@@ -23,20 +24,20 @@ export default function PrivacyPage() {
             >
               <div className="relative z-10 space-y-8">
               <section>
-                <h2 className="fc-title text-2xl mb-4">
+                <h2 className="mb-4">
                   1. Information We Collect
                 </h2>
-                <p className="fc-body-lg mb-4">
+                <p className="text-body-lg mb-4">
                   We collect information you provide directly to us, such as
                   when you:
                 </p>
-                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
+                <ul className={`list-disc list-inside ${bodyLg} space-y-2 ml-4`.trim()}>
                   <li>Create an account or apply for membership</li>
                   <li>Register for events</li>
                   <li>Contact us or subscribe to our newsletter</li>
                   <li>Participate in surveys or provide feedback</li>
                 </ul>
-                <p className="fc-body-lg mt-4">
+                <p className="text-body-lg mt-4">
                   This information may include your name, email address, phone
                   number, organization details, and other information you choose
                   to provide.
@@ -44,13 +45,13 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="fc-title text-2xl mb-4">
+                <h2 className="mb-4">
                   2. How We Use Your Information
                 </h2>
-                <p className="fc-body-lg mb-4">
+                <p className="text-body-lg mb-4">
                   We use the information we collect to:
                 </p>
-                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
+                <ul className={`list-disc list-inside ${bodyLg} space-y-2 ml-4`.trim()}>
                   <li>Provide, maintain, and improve our services</li>
                   <li>
                     Process membership applications and manage member accounts
@@ -68,15 +69,15 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="fc-title text-2xl mb-4">
+                <h2 className="mb-4">
                   3. Information Sharing
                 </h2>
-                <p className="fc-body-lg mb-4">
+                <p className="text-body-lg mb-4">
                   We do not sell, trade, or otherwise transfer your personal
                   information to third parties without your consent, except in
                   the following circumstances:
                 </p>
-                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
+                <ul className={`list-disc list-inside ${bodyLg} space-y-2 ml-4`.trim()}>
                   <li>With your explicit consent</li>
                   <li>To comply with legal obligations</li>
                   <li>To protect our rights, property, or safety</li>
@@ -91,10 +92,10 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="fc-title text-2xl mb-4">
+                <h2 className="mb-4">
                   4. Data Security
                 </h2>
-                <p className="fc-body-lg">
+                <p className="text-body-lg">
                   We implement appropriate security measures to protect your
                   personal information against unauthorized access, alteration,
                   disclosure, or destruction. However, no method of transmission
@@ -104,29 +105,29 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="fc-title text-2xl mb-4">
+                <h2 className="mb-4">
                   5. Cookies and Tracking
                 </h2>
-                <p className="fc-body-lg mb-4">
+                <p className="text-body-lg mb-4">
                   We use cookies and similar tracking technologies to:
                 </p>
-                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
+                <ul className={`list-disc list-inside ${bodyLg} space-y-2 ml-4`.trim()}>
                   <li>Remember your preferences and settings</li>
                   <li>Understand how you use our website</li>
                   <li>Improve our services and user experience</li>
                   <li>Provide personalized content and advertisements</li>
                 </ul>
-                <p className="fc-body-lg mt-4">
+                <p className="text-body-lg mt-4">
                   You can control cookies through your browser settings, but
                   disabling cookies may affect the functionality of our website.
                 </p>
               </section>
 
               <section>
-                <h2 className="fc-title text-2xl mb-4">
+                <h2 className="mb-4">
                   6. Third-Party Services
                 </h2>
-                <p className="fc-body-lg">
+                <p className="text-body-lg">
                   Our website may contain links to third-party websites or
                   services. We are not responsible for the privacy practices of
                   these third parties. We encourage you to read their privacy
@@ -135,10 +136,10 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="fc-title text-2xl mb-4">
+                <h2 className="mb-4">
                   7. Data Retention
                 </h2>
-                <p className="fc-body-lg">
+                <p className="text-body-lg">
                   We retain your personal information for as long as necessary
                   to fulfill the purposes outlined in this privacy policy,
                   unless a longer retention period is required or permitted by
@@ -148,14 +149,14 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="fc-title text-2xl mb-4">
+                <h2 className="mb-4">
                   8. Your Rights
                 </h2>
-                <p className="fc-body-lg mb-4">
+                <p className="text-body-lg mb-4">
                   Depending on your location, you may have certain rights
                   regarding your personal information, including:
                 </p>
-                <ul className="list-disc list-inside fc-body-lg space-y-2 ml-4">
+                <ul className={`list-disc list-inside ${bodyLg} space-y-2 ml-4`.trim()}>
                   <li>The right to access your personal information</li>
                   <li>The right to correct inaccurate information</li>
                   <li>The right to delete your personal information</li>
@@ -163,17 +164,17 @@ export default function PrivacyPage() {
                   <li>The right to data portability</li>
                   <li>The right to withdraw consent</li>
                 </ul>
-                <p className="fc-body-lg mt-4">
+                <p className="text-body-lg mt-4">
                   To exercise these rights, please contact us using the
                   information provided below.
                 </p>
               </section>
 
               <section>
-                <h2 className="fc-title text-2xl mb-4">
+                <h2 className="mb-4">
                   9. Children&apos;s Privacy
                 </h2>
-                <p className="fc-body-lg">
+                <p className="text-body-lg">
                   Our services are not directed to children under 13 years of
                   age. We do not knowingly collect personal information from
                   children under 13. If we become aware that we have collected
@@ -183,10 +184,10 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="fc-title text-2xl mb-4">
+                <h2 className="mb-4">
                   10. Changes to This Policy
                 </h2>
-                <p className="fc-body-lg">
+                <p className="text-body-lg">
                   We may update this privacy policy from time to time. We will
                   notify you of any changes by posting the new privacy policy on
                   this page and updating the &quot;Last updated&quot; date. We
@@ -196,21 +197,21 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="fc-title text-2xl mb-4">
+                <h2 className="mb-4">
                   11. Contact Us
                 </h2>
-                <p className="fc-body-lg">
+                <p className="text-body-lg">
                   If you have any questions about this privacy policy or our
                   privacy practices, please contact us at:
                 </p>
                 <div className="mt-4 p-4 bg-gray-700/30 rounded-lg">
-                  <p className="fc-body-lg">
+                  <p className="text-body-lg">
                     <strong>Email:</strong>{" "}
-                    <a href={SITE_CONTACT.mailto} className="fc-link-underline">
+                    <a href={SITE_CONTACT.mailto} className="link-underline">
                       {SITE_CONTACT.email}
                     </a>
                   </p>
-                  <p className="fc-body-lg mt-2">
+                  <p className="text-body-lg mt-2">
                     <strong>Address:</strong> {SITE_CONTACT.addressName},{" "}
                     {SITE_CONTACT.addressLine}
                   </p>

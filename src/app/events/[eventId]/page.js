@@ -1,3 +1,5 @@
+import { bodyLg, muted, titleAccent } from "@/lib/uiClassNames";
+import { BTN_GRADIENT_PRIMARY_CLASS } from "@/lib/uiTokens";
 import { connectToDatabase } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import Link from "next/link";
@@ -64,7 +66,7 @@ export async function generateMetadata({ params }) {
 
 function DetailRow({ icon: Icon, children }) {
   return (
-    <div className="fc-body-lg flex items-center">
+    <div className={`${bodyLg} flex items-center`.trim()}>
       <Icon className="mr-4 h-6 w-6 flex-shrink-0 text-primary" />
       <span className="text-lg">{children}</span>
     </div>
@@ -125,7 +127,7 @@ export default async function EventPage({ params }) {
               <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-4">
                 Invalid Event ID
               </PageTitle>
-              <p className="fc-muted mb-8">The event ID format is invalid.</p>
+              <p className="text-muted mb-8">The event ID format is invalid.</p>
               <BackLink
                 href="/events"
                 label="Back to Events"
@@ -151,7 +153,7 @@ export default async function EventPage({ params }) {
               <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-4">
                 Event Not Found
               </PageTitle>
-              <p className="fc-muted mb-8">
+              <p className="text-muted mb-8">
                 The requested event could not be found.
               </p>
               <BackLink
@@ -234,9 +236,9 @@ export default async function EventPage({ params }) {
                   </div>
 
                   <div className="prose prose-invert mb-8 max-w-none">
-                    <div className="fc-body-lg whitespace-pre-wrap">
+                    <p className="text-body-lg whitespace-pre-wrap">
                       {event.description}
-                    </div>
+                    </p>
                   </div>
                 </div>
 
@@ -244,7 +246,7 @@ export default async function EventPage({ params }) {
                   {isUpcoming && isRegistrationOpen(event) ? (
                     <Link
                       href={`/events/register/${event._id}`}
-                      className="fc-btn-gradient-primary !px-6 !py-3"
+                      className={`${BTN_GRADIENT_PRIMARY_CLASS} !px-6 !py-3`.trim()}
                     >
                       {event.eventType === "webinar"
                         ? "Register for Webinar"
@@ -258,7 +260,7 @@ export default async function EventPage({ params }) {
                     </div>
                   ) : (
                     <div className="w-full py-4 text-center">
-                      <span className="fc-muted text-lg">
+                      <span className={`${muted} text-lg`.trim()}>
                         This event has already taken place
                       </span>
                     </div>
@@ -273,12 +275,12 @@ export default async function EventPage({ params }) {
                 glowColor="purple"
                 className="mt-8 w-full !gap-0 !p-6"
               >
-                <h3 className="fc-title-accent relative z-10 mb-4 text-xl">
+                <h3 className={`${titleAccent} relative z-10 mb-4 text-xl`.trim()}>
                   Additional Information
                 </h3>
-                <div className="fc-body-lg relative z-10">
+                <p className="text-body-lg relative z-10">
                   {event.additionalInfo}
-                </div>
+                </p>
               </GlowCard>
             ) : null}
           </div>
@@ -294,7 +296,7 @@ export default async function EventPage({ params }) {
             <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-4">
               Error Loading Event
             </PageTitle>
-            <p className="fc-muted mb-8">
+            <p className="text-muted mb-8">
               There was an error loading the event details.
             </p>
             <BackLink

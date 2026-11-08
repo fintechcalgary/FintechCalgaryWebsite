@@ -1,4 +1,5 @@
 "use client";
+import { ADMIN_PANEL_CLASS, ICON_GLYPH_CLASS, ICON_TILE_CLASS } from "@/lib/uiTokens";
 import { useState, useEffect } from "react";
 import Modal from "@/components/ui/Modal/ConfirmModal";
 import Button from "@/components/ui/Button";
@@ -146,25 +147,25 @@ export default function EventRegistrations({ eventId }) {
           </Button>
         </div>
 
-        <div className="fc-admin-panel mb-8 p-8 shadow-xl">
+        <div className={`${ADMIN_PANEL_CLASS} mb-8 p-8 shadow-xl`.trim()}>
           <AdminPageTitle className="mb-4" sizeClass="text-3xl sm:text-4xl">
             {event?.title}
           </AdminPageTitle>
-          <div className="flex items-center fc-body text-lg">
-            <span className="fc-icon mr-3">
+          <p className="flex items-center text-lg">
+            <span className={`${ICON_GLYPH_CLASS} mr-3`.trim()}>
               <FiCalendar className="h-5 w-5" />
             </span>
             <span className="text-lg">
               {formatEventDate(event?.date)}
             </span>
-          </div>
+          </p>
         </div>
 
         {/* Registrations Section */}
-        <div className="fc-admin-panel overflow-hidden shadow-xl">
+        <div className={`${ADMIN_PANEL_CLASS} overflow-hidden shadow-xl`.trim()}>
           <div className="border-b border-gray-800/50 p-8">
-            <h2 className="fc-title flex items-center gap-3 text-2xl">
-              <span className="fc-icon-tile">
+            <h2 className="flex items-center gap-3 text-2xl">
+              <span className={ICON_TILE_CLASS}>
                 <FiUser className="h-5 w-5" />
               </span>
               Registrations ({event?.registrations?.length || 0})
@@ -200,51 +201,51 @@ export default function EventRegistrations({ eventId }) {
 
                     {/* Contact Info */}
                     <div className="space-y-3">
-                      <div className="flex items-center fc-body text-lg">
-                        <span className="fc-icon mr-3">
+                      <p className="flex items-center text-lg">
+                        <span className={`${ICON_GLYPH_CLASS} mr-3`.trim()}>
                           <FiMail className="h-4 w-4" />
                         </span>
                         <span>{reg.userEmail}</span>
-                      </div>
+                      </p>
 
                       {reg.ucid && (
-                        <div className="flex items-center fc-body text-lg">
-                          <span className="fc-icon mr-3">
+                        <p className="flex items-center text-lg">
+                          <span className={`${ICON_GLYPH_CLASS} mr-3`.trim()}>
                             <FiHash className="h-4 w-4" />
                           </span>
                           <span>UCID: {reg.ucid}</span>
-                        </div>
+                        </p>
                       )}
 
                       {reg.school && (
-                        <div className="flex items-center fc-body text-lg">
-                          <span className="fc-icon mr-3">
+                        <p className="flex items-center text-lg">
+                          <span className={`${ICON_GLYPH_CLASS} mr-3`.trim()}>
                             <FiUser className="h-4 w-4" />
                           </span>
                           <span>School: {reg.school}</span>
-                        </div>
+                        </p>
                       )}
 
                       {reg.major && (
-                        <div className="flex items-center fc-body text-lg">
-                          <span className="fc-icon mr-3">
+                        <p className="flex items-center text-lg">
+                          <span className={`${ICON_GLYPH_CLASS} mr-3`.trim()}>
                             <FiBook className="h-4 w-4" />
                           </span>
                           <span>Major: {reg.major}</span>
-                        </div>
+                        </p>
                       )}
                     </div>
 
                     {/* Comments */}
                     {reg.comments && (
                       <div className="mt-6 p-4 bg-gray-800/30 rounded-xl border border-gray-700/50">
-                        <div className="flex items-center gap-2 fc-muted mb-2">
-                          <span className="fc-icon">
+                        <p className="text-muted flex items-center gap-2 mb-2">
+                          <span className={ICON_GLYPH_CLASS}>
                             <FiMessageSquare className="h-4 w-4" />
                           </span>
                           Comments
-                        </div>
-                        <p className="fc-body">
+                        </p>
+                        <p>
                           {reg.comments}
                         </p>
                       </div>
@@ -253,16 +254,16 @@ export default function EventRegistrations({ eventId }) {
 
                   {/* Registration Date */}
                   <div className="ml-8 text-right">
-                    <div className="fc-muted mb-1">Registered</div>
+                    <p className="text-muted mb-1">Registered</p>
                     <div className="text-lg font-medium text-white">
                       {formatDateShort(reg.registeredAt)}
                     </div>
-                    <div className="fc-muted">
+                    <p className="text-muted">
                       {new Date(reg.registeredAt).toLocaleTimeString("en-US", {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
-                    </div>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -270,13 +271,13 @@ export default function EventRegistrations({ eventId }) {
 
             {event?.registrations?.length === 0 && (
               <div className="p-16 text-center">
-                <span className="fc-icon mx-auto mb-4">
+                <span className={`${ICON_GLYPH_CLASS} mx-auto mb-4`.trim()}>
                   <FiUser className="h-8 w-8" />
                 </span>
-                <h3 className="text-xl font-semibold fc-muted mb-2">
+                <h3 className="text-xl mb-2 text-white/45">
                   No registrations yet
                 </h3>
-                <p className="fc-muted">
+                <p className="text-muted">
                   Registrations will appear here once people sign up for this
                   event.
                 </p>
@@ -299,7 +300,7 @@ export default function EventRegistrations({ eventId }) {
               </span>
               ?
             </p>
-            <div className="bg-gray-800/50 rounded-lg p-3 fc-muted">
+            <p className="text-muted bg-gray-800/50 rounded-lg p-3">
               <div>
                 <strong>Email:</strong>{" "}
                 {event?.registrations?.[registrationToDelete]?.userEmail}
@@ -322,7 +323,7 @@ export default function EventRegistrations({ eventId }) {
                   {event?.registrations?.[registrationToDelete]?.major}
                 </div>
               )}
-            </div>
+            </p>
             <p className="text-red-400 text-xs mt-3">
               This action cannot be undone.
             </p>

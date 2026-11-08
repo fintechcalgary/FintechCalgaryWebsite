@@ -1,4 +1,5 @@
 "use client";
+import { ALERT_ERROR_CLASS, ALERT_SUCCESS_CLASS, BTN_MARKETING_PRIMARY_CLASS, ICON_TILE_CLASS } from "@/lib/uiTokens";
 import { useState } from "react";
 import {
   FiArrowRight,
@@ -79,17 +80,17 @@ export default function ContactPage() {
                 className="h-full w-full !gap-0 !p-8"
               >
                 <div className="relative z-10 flex items-start gap-4">
-                  <div className="fc-icon-tile">
+                  <div className={ICON_TILE_CLASS}>
                     <FiMail className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="fc-title mb-2 text-xl">Email</h3>
-                    <p className="fc-body mb-4">
+                    <h3 className="mb-2 text-xl">Email</h3>
+                    <p className="mb-4">
                       Questions, partnerships, or a note for the team.
                     </p>
                     <a
                       href={SITE_CONTACT.mailto}
-                      className="fc-link-underline inline-flex items-center gap-2"
+                      className="link-underline inline-flex items-center gap-2"
                     >
                       {SITE_CONTACT.email}
                       <FiArrowRight className="h-4 w-4" />
@@ -106,19 +107,19 @@ export default function ContactPage() {
                 className="h-full w-full !gap-0 !p-8"
               >
                 <div className="relative z-10 flex items-start gap-4">
-                  <div className="fc-icon-tile">
+                  <div className={ICON_TILE_CLASS}>
                     <FiMapPin className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="fc-title mb-2 text-xl">Find us</h3>
-                    <p className="fc-body mb-3">
+                    <h3 className="mb-2 text-xl">Find us</h3>
+                    <p className="mb-3">
                       Based at the University of Calgary. We work with partners
                       across campus and the city.
                     </p>
                     <p className="font-medium tracking-wide text-primary">
                       {SITE_CONTACT.addressName}
                     </p>
-                    <p className="fc-muted">{SITE_CONTACT.addressLine}</p>
+                    <p className="text-muted">{SITE_CONTACT.addressLine}</p>
                   </div>
                 </div>
               </GlowCard>
@@ -133,12 +134,12 @@ export default function ContactPage() {
             >
               <div className="relative z-10">
                 <div className="mb-6 flex items-start gap-4">
-                  <div className="fc-icon-tile">
+                  <div className={ICON_TILE_CLASS}>
                     <FiMessageSquare className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="fc-title mb-2 text-xl">Social media</h3>
-                    <p className="fc-body">
+                    <h3 className="mb-2 text-xl">Social media</h3>
+                    <p>
                       Event posts, club updates, and the occasional fintech
                       note. Pick whichever you already use.
                     </p>
@@ -158,8 +159,8 @@ export default function ContactPage() {
               className="h-full w-full !gap-0 !p-8"
             >
               <div className="relative z-10 mb-6">
-                <h2 className="fc-title mb-2 text-2xl">Send a message</h2>
-                <p className="fc-body">
+                <h2 className="mb-2 text-2xl">Send a message</h2>
+                <p>
                   Tell us who you are and what you need. We reply from{" "}
                   {SITE_CONTACT.email}.
                 </p>
@@ -167,7 +168,7 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="contact-name" className="fc-form-label">
+                    <label htmlFor="contact-name" className="text-label">
                       Name
                     </label>
                     <input
@@ -183,7 +184,7 @@ export default function ContactPage() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="contact-email" className="fc-form-label">
+                    <label htmlFor="contact-email" className="text-label">
                       Email
                     </label>
                     <input
@@ -200,7 +201,7 @@ export default function ContactPage() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="contact-subject" className="fc-form-label">
+                  <label htmlFor="contact-subject" className="text-label">
                     Subject
                   </label>
                   <input
@@ -215,7 +216,7 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="contact-message" className="fc-form-label">
+                  <label htmlFor="contact-message" className="text-label">
                     Message
                   </label>
                   <textarea
@@ -233,7 +234,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="fc-btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+                    className={`${BTN_MARKETING_PRIMARY_CLASS} w-full disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0`.trim()}
                   >
                     {isSubmitting ? (
                       "Sending..."
@@ -246,12 +247,12 @@ export default function ContactPage() {
                   </button>
                 </div>
                 {submitStatus === "success" && (
-                  <p className="fc-alert-success text-center">
+                  <p className={`${ALERT_SUCCESS_CLASS} text-center`.trim()}>
                     {SUCCESS_MESSAGES.CONTACT_SENT}
                   </p>
                 )}
                 {submitStatus === "error" && (
-                  <p className="fc-alert-error text-center">
+                  <p className={`${ALERT_ERROR_CLASS} text-center`.trim()}>
                     {ERROR_MESSAGES.CONTACT_FAILED}
                   </p>
                 )}

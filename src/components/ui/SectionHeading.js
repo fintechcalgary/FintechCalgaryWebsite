@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-/** Bright white → soft violet → brand purple */
 const TITLE_GRADIENT =
   "bg-clip-text text-transparent bg-gradient-to-br from-white via-violet-200 to-primary";
 
@@ -10,19 +9,14 @@ const TITLE_GLOW =
 const BRAND_FACE =
   "font-display font-bold leading-snug tracking-tight";
 
-/**
- * Landing-section heading with expressive gradient, glow, and linked underline.
- * Display face is always applied; sizeClass only sets scale.
- */
 export function SectionHeading({
   children,
   href,
-  as: Tag = "h2",
   className = "",
   sizeClass = "text-2xl sm:text-3xl md:text-4xl lg:text-5xl",
 }) {
   const title = (
-    <Tag
+    <h2
       className={`mb-3 md:mb-4 ${BRAND_FACE} ${sizeClass} ${className}`.trim()}
     >
       <span className="relative inline-block">
@@ -34,7 +28,7 @@ export function SectionHeading({
           {children}
         </span>
       </span>
-    </Tag>
+    </h2>
   );
 
   const underline = (
@@ -64,46 +58,35 @@ export function SectionHeading({
   );
 }
 
-/**
- * Page-level gradient H1 used across public routes.
- * Display face is always applied; sizeClass only sets scale/spacing.
- */
-export function PageTitle({
+/** Marketing page hero — use on public routes; overrides default `h1` with gradient scale. */
+export function PageHeading({
   children,
-  as: Tag = "h1",
   className = "",
-  sizeClass = "text-3xl sm:text-4xl md:text-5xl mb-6",
+  sizeClass = "",
 }) {
+  const scale =
+    sizeClass || "text-3xl sm:text-4xl md:text-5xl mb-6";
   return (
-    <Tag
-      className={`${BRAND_FACE} ${TITLE_GRADIENT} ${sizeClass} ${className}`.trim()}
-    >
-      {children}
-    </Tag>
+    <h1 className={`heading-hero ${scale} ${className}`.trim()}>{children}</h1>
   );
 }
 
-/**
- * Admin dashboard page H1 — matches Community accent title treatment.
- */
-export function AdminPageTitle({
-  children,
-  as: Tag = "h1",
-  className = "",
-  sizeClass = "text-3xl sm:text-4xl",
-}) {
+export const PageTitle = PageHeading;
+
+export function AdminPageTitle({ className = "", children, ...props }) {
   return (
-    <Tag className={`fc-title-accent ${sizeClass} ${className}`.trim()}>
+    <h1 className={`heading-accent ${className}`.trim()} {...props}>
       {children}
-    </Tag>
+    </h1>
   );
 }
 
-/**
- * Admin page intro line under the title.
- */
-export function AdminPageLede({ children, className = "" }) {
-  return <p className={`fc-lede ${className}`.trim()}>{children}</p>;
+export function AdminPageLede({ className = "", children, ...props }) {
+  return (
+    <p className={`text-lede ${className}`.trim()} {...props}>
+      {children}
+    </p>
+  );
 }
 
 export default SectionHeading;

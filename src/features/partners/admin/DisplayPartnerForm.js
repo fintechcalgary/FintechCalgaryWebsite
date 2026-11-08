@@ -1,5 +1,4 @@
 "use client";
-
 import { FiEdit2, FiUpload } from "react-icons/fi";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
@@ -24,9 +23,7 @@ export default function DisplayPartnerForm({
     <form onSubmit={onSubmit} className="space-y-4 sm:space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         <div>
-          <label className="fc-form-label">
-            Name *
-          </label>
+          <label className="text-label">Name *</label>
           <input
             type="text"
             value={formData.name}
@@ -39,10 +36,8 @@ export default function DisplayPartnerForm({
           />
         </div>
         <div>
-          <label className="fc-form-label">
-            Accent color
-          </label>
-          <p className="fc-muted mb-2">
+          <label className="text-label">Accent color</label>
+          <p className="text-muted mb-2">
             Used for the partner card highlight on the public page. Pick a color
             or enter a hex code.
           </p>
@@ -73,9 +68,7 @@ export default function DisplayPartnerForm({
         </div>
       </div>
       <div>
-        <label className="fc-form-label">
-          Website
-        </label>
+        <label className="text-label">Website</label>
         <input
           type="url"
           value={formData.website}
@@ -87,9 +80,7 @@ export default function DisplayPartnerForm({
         />
       </div>
       <div>
-        <label className="fc-form-label">
-          Description
-        </label>
+        <label className="text-label">Description</label>
         <textarea
           value={formData.description}
           onChange={(e) =>
@@ -101,9 +92,7 @@ export default function DisplayPartnerForm({
         />
       </div>
       <div>
-        <label className="fc-form-label">
-          Logo
-        </label>
+        <label className="text-label">Logo</label>
         <div className="flex flex-col sm:flex-row gap-4 items-start">
           {(logoPreview || formData.logo) && (
             <div className="relative w-32 h-32 rounded-lg overflow-hidden bg-gray-800 border border-gray-700 flex-shrink-0">

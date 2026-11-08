@@ -1,4 +1,5 @@
 "use client";
+import { ADMIN_PANEL_CLASS } from "@/lib/uiTokens";
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -102,7 +103,7 @@ export default function ExecutiveApplicationDetailPage() {
         />
 
         {error ? (
-          <div className="fc-admin-panel p-8 text-center">
+          <div className={`${ADMIN_PANEL_CLASS} p-8 text-center`.trim()}>
             <p className="text-red-400">{error}</p>
           </div>
         ) : application ? (

@@ -1,4 +1,6 @@
 "use client";
+import { muted, titleAccent } from "@/lib/uiClassNames";
+import { ALERT_ERROR_CLASS, BTN_MARKETING_PRIMARY_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 import { useState, useEffect, useRef, useCallback } from "react";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
@@ -332,23 +334,23 @@ export default function ExecutiveApplicationPage() {
               {!applicationsOpen ? (
                 <div className="relative z-10 text-center py-8 animate-fadeIn">
                   <FiAlertCircle className="mx-auto mb-4 h-8 w-8 text-white/40" />
-                  <h2 className="fc-title text-2xl mb-2">
+                  <h2 className="mb-2 text-2xl">
                     Applications Currently Closed
                   </h2>
-                  <p className="fc-body">
+                  <p>
                     Executive applications are not currently open. Please check
                     back later for new opportunities.
                   </p>
                 </div>
               ) : status === "success" ? (
                 <div className="relative z-10 text-center py-8 animate-fadeIn">
-                  <span className="fc-icon mx-auto mb-4">
+                  <span className={`${ICON_GLYPH_CLASS} mx-auto mb-4`.trim()}>
                     <FiCheck className="h-8 w-8" />
                   </span>
-                  <h2 className="fc-title text-2xl mb-2">
+                  <h2 className="mb-2 text-2xl">
                     Thank you for your application!
                   </h2>
-                  <p className="fc-body">
+                  <p>
                     We will review your application and be in contact with you
                     shortly.
                   </p>
@@ -356,9 +358,9 @@ export default function ExecutiveApplicationPage() {
               ) : (
                 <>
                   <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
-                    <div className="fc-title-accent text-xl">
+                    <h2 className={`${titleAccent} text-xl`.trim()}>
                       Role Information
-                    </div>
+                    </h2>
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
 
                     <div className="mb-5">
@@ -367,7 +369,7 @@ export default function ExecutiveApplicationPage() {
                           <Spinner size="sm" />
                         </div>
                       ) : availableRoles.length === 0 ? (
-                        <div className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 fc-muted">
+                        <div className={`w-full rounded-xl border border-gray-700/50 bg-gray-800/50 px-4 py-3 ${muted}`.trim()}>
                           No roles currently available
                         </div>
                       ) : (
@@ -406,7 +408,7 @@ export default function ExecutiveApplicationPage() {
                           );
                           return selectedRole ? (
                             <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/30">
-                              <h4 className="text-white font-medium mb-3">
+                              <h4 className="mb-3 font-medium text-white">
                                 {selectedRole.title} - Responsibilities
                               </h4>
                               <div className="relative group">
@@ -435,9 +437,9 @@ export default function ExecutiveApplicationPage() {
                       </div>
                     )}
 
-                    <div className="fc-title-accent text-xl">
+                    <h2 className={`${titleAccent} text-xl`.trim()}>
                       Personal Information
-                    </div>
+                    </h2>
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
 
                     <div className="grid grid-cols-2 gap-4 mb-5">
@@ -494,9 +496,9 @@ export default function ExecutiveApplicationPage() {
                       />
                     </div>
 
-                    <div className="fc-title-accent text-xl">
+                    <h2 className={`${titleAccent} text-xl`.trim()}>
                       Academic Information
-                    </div>
+                    </h2>
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
 
                     <div className="grid grid-cols-2 gap-4 mb-5">
@@ -536,10 +538,7 @@ export default function ExecutiveApplicationPage() {
                     )}
 
                     <div className="mb-5">
-                      <label
-                        htmlFor="resumeFile"
-                        className="fc-form-label"
-                      >
+                      <label htmlFor="resumeFile" className="text-label">
                         Resume/CV
                       </label>
                       <input
@@ -577,10 +576,10 @@ export default function ExecutiveApplicationPage() {
                                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                                 ></path>
                               </svg>
-                              <p className="text-white text-sm font-medium">
+                              <p className="text-sm font-medium text-white">
                                 {resumeFileName}
                               </p>
-                              <p className="fc-muted text-xs">
+                              <p className="text-muted text-xs">
                                 Click to change file
                               </p>
                             </div>
@@ -602,13 +601,13 @@ export default function ExecutiveApplicationPage() {
                                 d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                               />
                             </svg>
-                            <p className="mb-2 fc-muted">
+                            <p className="text-muted mb-2">
                               <span className="font-semibold">
                                 Click to upload
                               </span>{" "}
                               or drag and drop
                             </p>
-                            <p className="fc-muted text-xs">
+                            <p className="text-muted text-xs">
                               PDF only (max 5MB)
                             </p>
                           </div>
@@ -621,9 +620,9 @@ export default function ExecutiveApplicationPage() {
                       )}
                     </div>
 
-                    <div className="fc-title-accent text-xl">
+                    <h2 className={`${titleAccent} text-xl`.trim()}>
                       Application Questions
-                    </div>
+                    </h2>
                     <div className="my-2 border-t-2 border-primary/60 w-full"></div>
 
                     {selectedRoleQuestions.length > 0 ||
@@ -636,8 +635,7 @@ export default function ExecutiveApplicationPage() {
                           <div className="w-full">
                             <label
                               htmlFor={question.id}
-                              className="fc-form-label"
-                            >
+                             className="text-label">
                               {question.label}
                               {question.required && (
                                 <span className="text-red-400 ml-1">*</span>
@@ -665,10 +663,7 @@ export default function ExecutiveApplicationPage() {
                       <>
                         <div className="flex gap-x-2 mb-2">
                           <div className="w-full">
-                            <label
-                              htmlFor="why"
-                              className="fc-form-label"
-                            >
+                            <label htmlFor="why" className="text-label">
                               Why do you want to be an executive?
                             </label>
                             <textarea
@@ -690,10 +685,7 @@ export default function ExecutiveApplicationPage() {
 
                         <div className="flex gap-x-2 mb-2">
                           <div className="w-full">
-                            <label
-                              htmlFor="fintechVision"
-                              className="fc-form-label"
-                            >
+                            <label htmlFor="fintechVision" className="text-label">
                               What does &apos;fintech&apos; mean to you, and how
                               do you see its role in the future of business and
                               innovation?
@@ -717,10 +709,7 @@ export default function ExecutiveApplicationPage() {
 
                         <div className="flex gap-x-2 mb-2">
                           <div className="w-full">
-                            <label
-                              htmlFor="otherCommitments"
-                              className="fc-form-label"
-                            >
+                            <label htmlFor="otherCommitments" className="text-label">
                               Are you currently involved with any other clubs or
                               commitments? How do you plan to balance your
                               responsibilities?
@@ -785,24 +774,24 @@ export default function ExecutiveApplicationPage() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="fc-btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+                      className={`${BTN_MARKETING_PRIMARY_CLASS} w-full disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0`.trim()}
                     >
                       {submitting ? "Submitting..." : "Submit Application"}
                     </button>
                   </form>
 
                   {status === "error" && (
-                    <div className="fc-alert-error relative z-10 mx-auto mt-6 flex max-w-4xl items-start">
+                    <div className={`${ALERT_ERROR_CLASS} relative z-10 mx-auto mt-6 flex max-w-4xl items-start`.trim()}>
                       <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
                       <div>
-                        <h3 className="text-red-400 font-semibold mb-2">
+                        <h3 className="mb-2 font-semibold text-red-400">
                           Application Submission Failed
                         </h3>
                         {errorMessage ? (
                           <p className="text-red-400">{errorMessage}</p>
                         ) : (
                           <div>
-                            <p className="text-red-400 mb-2">
+                            <p className="mb-2 text-red-400">
                               Please correct the following issues and try again:
                             </p>
                             <ul className="text-red-400 text-sm space-y-1">
@@ -818,7 +807,7 @@ export default function ExecutiveApplicationPage() {
                             </ul>
                           </div>
                         )}
-                        <p className="text-red-300 text-sm mt-3">
+                        <p className="mt-3 text-sm text-red-300">
                           If you continue to experience issues, please contact
                           us at{" "}
                           <a

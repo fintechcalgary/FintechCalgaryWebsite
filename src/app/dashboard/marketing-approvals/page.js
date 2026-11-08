@@ -1,4 +1,5 @@
 "use client";
+import { ADMIN_PANEL_CLASS, ALERT_ERROR_CLASS, ALERT_WARNING_CLASS, BTN_CHIP_CLASS } from "@/lib/uiTokens";
 
 import { useState } from "react";
 import {
@@ -104,7 +105,7 @@ export default function MarketingApprovalsPage() {
           lede="Review marketing submissions and partner approval proof"
         />
         {pendingCount > 0 ? (
-          <p className="fc-alert-warning -mt-4 mb-8">
+          <p className={`${ALERT_WARNING_CLASS} -mt-4 mb-8`.trim()}>
             {pendingCount} submission{pendingCount !== 1 ? "s" : ""} awaiting
             review
           </p>
@@ -126,7 +127,7 @@ export default function MarketingApprovalsPage() {
               return (
                 <div
                   key={item._id}
-                  className="fc-admin-panel p-6"
+                  className={`${ADMIN_PANEL_CLASS} p-6`.trim()}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                     <div>
@@ -139,12 +140,12 @@ export default function MarketingApprovalsPage() {
                         {new Date(item.createdAt).toLocaleDateString()}
                       </p>
                       {item.description && (
-                        <p className="text-sm text-gray-300 mt-2">
+                        <p className="mt-2 text-sm text-gray-300">
                           {item.description}
                         </p>
                       )}
                       {item.reviewedBy && (
-                        <p className="text-xs text-gray-500 mt-2">
+                        <p className="mt-2 text-xs text-gray-500">
                           Reviewed by {item.reviewedBy} on{" "}
                           {new Date(item.reviewedAt).toLocaleString()}
                           {item.reviewNote && ` — "${item.reviewNote}"`}
@@ -162,14 +163,14 @@ export default function MarketingApprovalsPage() {
                   <div className="flex flex-wrap items-center gap-3 mt-4">
                     <a
                       href={`${API_ENDPOINTS.MARKETING_APPROVALS}/${item._id}?file=content`}
-                      className="fc-btn-chip"
+                      className={BTN_CHIP_CLASS}
                     >
                       <FiDownload className="w-4 h-4" />
                       Content
                     </a>
                     <a
                       href={`${API_ENDPOINTS.MARKETING_APPROVALS}/${item._id}?file=proof`}
-                      className="fc-btn-chip"
+                      className={BTN_CHIP_CLASS}
                     >
                       <FiDownload className="w-4 h-4" />
                       Partner Proof
@@ -208,7 +209,7 @@ export default function MarketingApprovalsPage() {
               for partner {reviewItem.partnerName}.
             </p>
             <div>
-              <label className="fc-form-label">
+              <label className="text-label">
                 Review note (optional)
               </label>
               <textarea
@@ -220,7 +221,7 @@ export default function MarketingApprovalsPage() {
               />
             </div>
             {reviewError && (
-              <p className="fc-alert-error">
+              <p className={ALERT_ERROR_CLASS}>
                 {reviewError}
               </p>
             )}

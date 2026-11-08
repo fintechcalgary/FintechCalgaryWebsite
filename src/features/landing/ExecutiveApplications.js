@@ -1,3 +1,5 @@
+import { linkAccent, linkUnderline } from "@/lib/uiClassNames";
+import { BTN_MARKETING_SOFT_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 import Link from "next/link";
 import { FiArrowRight, FiUsers, FiAward, FiTrendingUp } from "react-icons/fi";
 import {
@@ -23,13 +25,13 @@ export default function ExecutiveApplications() {
           >
             <div className="relative z-10 text-center">
               <div className="mb-8">
-                <div className="fc-icon mx-auto mb-6 transition-transform duration-300 hover:scale-110">
+                <div className={`${ICON_GLYPH_CLASS} mx-auto mb-6 transition-transform duration-300 hover:scale-110`.trim()}>
                   <FiAward className="h-10 w-10" />
                 </div>
-                <h3 className="fc-title-accent mb-4 text-2xl sm:text-3xl">
+                <h3 className="mb-4 text-2xl sm:text-3xl"><span className="heading-accent inline">
                   Join Our Executive Team
-                </h3>
-                <p className="fc-body mx-auto mb-8 max-w-3xl sm:text-base sm:leading-[1.75]">
+                </span></h3>
+                <p className="mx-auto mb-8 max-w-3xl sm:text-base sm:leading-[1.75]">
                   Take on a leadership role in shaping the future of fintech in
                   Calgary. We&apos;re looking for passionate individuals to join
                   our executive team and help drive innovation in the financial
@@ -59,20 +61,20 @@ export default function ExecutiveApplications() {
                   },
                 ].map((item) => (
                   <div key={item.title} className="group/item text-center">
-                    <div className="fc-icon mx-auto mb-4 transition-transform duration-300 group-hover/item:scale-110">
+                    <div className={`${ICON_GLYPH_CLASS} mx-auto mb-4 transition-transform duration-300 group-hover/item:scale-110`.trim()}>
                       <item.icon className="h-8 w-8" />
                     </div>
-                    <h4 className="fc-title mb-2 text-xl">
+                    <h4 className="mb-2 text-xl">
                       {item.title}
                     </h4>
-                    <p className="fc-body">
+                    <p>
                       {item.description}
                     </p>
                   </div>
                 ))}
               </div>
 
-              <Link href="/executive-application" className="fc-btn-soft group">
+              <Link href="/executive-application" className={`${BTN_MARKETING_SOFT_CLASS} group`.trim()}>
                 Apply Now
                 <FiArrowRight className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
@@ -105,15 +107,15 @@ export default function ExecutiveApplications() {
                 className="group relative flex w-full flex-col !gap-0 !p-6"
               >
                 <div className="relative z-10 flex h-full flex-col">
-                  <h3 className="fc-title mb-2 text-xl">
+                  <h3 className="mb-2 text-xl">
                     {card.title}
                   </h3>
-                  <p className="fc-body mb-4 flex-1">
+                  <p className="mb-4 flex-1">
                     {card.description}
                   </p>
                   <Link
                     href={card.link}
-                    className="fc-link group/link inline-flex items-center gap-2"
+                    className={`${linkAccent} group/link inline-flex items-center gap-2`.trim()}
                   >
                     <span>{card.linkText}</span>
                     <FiArrowRight className="transform transition-transform duration-300 group-hover/link:translate-x-1" />

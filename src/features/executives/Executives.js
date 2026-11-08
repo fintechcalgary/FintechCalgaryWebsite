@@ -1,4 +1,5 @@
 "use client";
+import { ICON_GLYPH_CLASS, MODAL_BODY_CLASS, MODAL_FILE_BTN_CLASS } from "@/lib/uiTokens";
 
 import { useState, useEffect } from "react";
 import { FiUser, FiEdit2, FiPlus, FiX, FiImage } from "react-icons/fi";
@@ -61,10 +62,10 @@ export default function Executives() {
     return (
       <div className="min-h-[500px] flex items-center justify-center">
         <div className="text-center">
-          <span className="fc-icon mx-auto mb-4">
+          <span className={`${ICON_GLYPH_CLASS} mx-auto mb-4`.trim()}>
             <FiUser className="h-10 w-10" />
           </span>
-          <p className="fc-muted">
+          <p className="text-muted">
             You don&apos;t have permission to manage team executives.
           </p>
         </div>
@@ -243,8 +244,8 @@ export default function Executives() {
   return (
     <div className="min-h-[500px]">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="fc-title text-2xl flex items-center gap-2">
-            <span className="fc-icon">
+          <h3 className="text-2xl flex items-center gap-2">
+            <span className={ICON_GLYPH_CLASS}>
               <FiUser className="h-5 w-5" />
             </span>
             Team Executives
@@ -319,12 +320,12 @@ export default function Executives() {
           <form
             id="executiveForm"
             onSubmit={handleSubmit}
-            className="fc-modal-body space-y-4"
+            className={`${MODAL_BODY_CLASS} space-y-4`.trim()}
           >
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               <div className="space-y-4">
                 <div>
-                  <label className="fc-form-label">
+                  <label className="text-label">
                     Name
                   </label>
                   <input
@@ -343,7 +344,7 @@ export default function Executives() {
                 </div>
 
                 <div>
-                  <label className="fc-form-label">
+                  <label className="text-label">
                     Team
                   </label>
                   <input
@@ -362,7 +363,7 @@ export default function Executives() {
                 </div>
 
                 <div>
-                  <label className="fc-form-label">
+                  <label className="text-label">
                     Position
                   </label>
                   <input
@@ -381,7 +382,7 @@ export default function Executives() {
                 </div>
 
                 <div>
-                  <label className="fc-form-label">
+                  <label className="text-label">
                     Major
                   </label>
                   <input
@@ -402,7 +403,7 @@ export default function Executives() {
 
               <div className="space-y-4">
                 <div>
-                  <label className="fc-form-label">
+                  <label className="text-label">
                     Username
                   </label>
                   <input
@@ -420,7 +421,7 @@ export default function Executives() {
                 </div>
 
                 <div>
-                  <label className="fc-form-label">
+                  <label className="text-label">
                     Role
                   </label>
                   <select
@@ -442,7 +443,7 @@ export default function Executives() {
 
               <div className="space-y-4">
                 <div>
-                  <label className="fc-form-label">
+                  <label className="text-label">
                     LinkedIn URL
                   </label>
                   <input
@@ -460,7 +461,7 @@ export default function Executives() {
                 </div>
 
                 <div>
-                  <label className="fc-form-label">
+                  <label className="text-label">
                     Profile Image
                   </label>
                   <div className="flex items-center gap-4">
@@ -473,9 +474,7 @@ export default function Executives() {
                     />
                     <label
                       htmlFor="executiveImageUpload"
-                      className={`fc-modal-file-btn ${
-                        uploading ? "pointer-events-none opacity-60" : ""
-                      }`}
+                      className={`${MODAL_FILE_BTN_CLASS} ${uploading ? "pointer-events-none opacity-60" : ""}`.trim()}
                     >
                       <FiImage className="h-5 w-5" />
                       {uploading ? "Uploading..." : "Choose Image"}
@@ -507,7 +506,7 @@ export default function Executives() {
                 </div>
 
                 <div>
-                  <label className="fc-form-label">
+                  <label className="text-label">
                     Description
                   </label>
                   <textarea

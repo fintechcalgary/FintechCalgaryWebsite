@@ -1,4 +1,5 @@
 "use client";
+import { ADMIN_PANEL_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import { FiImage, FiPlus } from "react-icons/fi";
 import Modal from "@/components/ui/Modal/ConfirmModal";
@@ -69,11 +70,11 @@ export default function DisplayPartnersPanel() {
       />
 
       {partners.length === 0 ? (
-        <div className="fc-admin-panel text-center py-12 sm:py-16 px-4">
-          <span className="fc-icon mx-auto mb-3 sm:mb-4">
+        <div className={`${ADMIN_PANEL_CLASS} text-center py-12 sm:py-16 px-4`.trim()}>
+          <span className={`${ICON_GLYPH_CLASS} mx-auto mb-3 sm:mb-4`.trim()}>
             <FiImage className="h-10 w-10" />
           </span>
-          <p className="fc-body mb-4">
+          <p className="mb-4">
             No partners yet
           </p>
           <Button

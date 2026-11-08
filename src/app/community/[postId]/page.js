@@ -1,3 +1,5 @@
+import { bodyLg, titleAccent } from "@/lib/uiClassNames";
+import { BTN_GRADIENT_PRIMARY_CLASS } from "@/lib/uiTokens";
 import Image from "next/image";
 import {
   FiCalendar,
@@ -67,7 +69,7 @@ function NotFoundState({ title, message }) {
           <PageTitle sizeClass="text-3xl sm:text-4xl md:text-5xl mb-4">
             {title}
           </PageTitle>
-          <p className="fc-muted mb-8">{message}</p>
+          <p className="text-muted mb-8">{message}</p>
           <BackLink
             href="/community"
             label="Back to Community"
@@ -82,7 +84,7 @@ function NotFoundState({ title, message }) {
 
 function DetailRow({ icon: Icon, children }) {
   return (
-    <div className="fc-body-lg flex items-center">
+    <div className={`${bodyLg} flex items-center`.trim()}>
       <Icon className="mr-4 h-6 w-6 flex-shrink-0 text-primary" />
       <span className="text-lg">{children}</span>
     </div>
@@ -198,8 +200,8 @@ export default async function CommunityPostPage({ params }) {
               </div>
 
               <div className="mb-8">
-                <h2 className="fc-title-accent mb-3 text-xl">About</h2>
-                <p className="fc-body-lg whitespace-pre-wrap">
+                <h2 className={`${titleAccent} mb-3 text-xl`.trim()}>About</h2>
+                <p className="text-body-lg whitespace-pre-wrap">
                   {post.description}
                 </p>
               </div>
@@ -209,7 +211,7 @@ export default async function CommunityPostPage({ params }) {
                   href={post.registrationUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="fc-btn-gradient-primary inline-flex items-center justify-center gap-2 !px-6 !py-3"
+                  className={`${BTN_GRADIENT_PRIMARY_CLASS} inline-flex items-center justify-center gap-2 !px-6 !py-3`.trim()}
                 >
                   Register
                   <FiExternalLink className="h-4 w-4" />

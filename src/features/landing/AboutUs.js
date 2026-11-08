@@ -7,6 +7,7 @@ import {
   LandingSectionHeader,
 } from "@/components/layout/LandingSection";
 import { GlowCard } from "@/components/ui/spotlight-card";
+import { linkAccent } from "@/lib/uiClassNames";
 
 const ServiceCard = ({ title, description, glowColor = "purple" }) => {
   return (
@@ -16,15 +17,13 @@ const ServiceCard = ({ title, description, glowColor = "purple" }) => {
       className="group relative flex min-h-0 flex-1 !gap-0 !p-6"
     >
       <div className="relative z-10 flex h-full flex-col justify-center">
-        <h3 className="fc-title mb-2 text-xl transition-transform duration-300 group-hover:-translate-y-0.5">
+        <h3 className="mb-2 text-xl transition-transform duration-300 group-hover:-translate-y-0.5">
           {title}
         </h3>
-        <p className="fc-body mb-4">
-          {description}
-        </p>
+        <p className="mb-4">{description}</p>
         <Link
           href="/about"
-          className="fc-link group/link mt-auto inline-flex items-center gap-2 text-sm"
+          className={`${linkAccent} group/link mt-auto inline-flex items-center gap-2 text-sm`.trim()}
         >
           <span className="transition-transform duration-300 group-hover/link:translate-x-1">
             Learn more
@@ -58,8 +57,8 @@ export default function AboutUs() {
             className="group relative flex min-h-[32rem] flex-col !gap-0 !p-7 sm:min-h-[34rem] lg:min-h-[36rem] lg:!p-8"
           >
             <div className="relative z-10 shrink-0">
-              <h3 className="fc-title mb-3 text-2xl">Our Mission</h3>
-              <p className="fc-body mb-4 sm:text-base sm:leading-[1.75]">
+              <h3 className="mb-3 text-2xl">Our Mission</h3>
+              <p className="mb-4 sm:text-base sm:leading-[1.75]">
                 FinTech Calgary is a student association at the University of
                 Calgary. We introduce fintech companies to business buyers, run
                 industry events, and give students project work with partners —
@@ -68,7 +67,7 @@ export default function AboutUs() {
               </p>
               <Link
                 href="/about"
-                className="fc-link group/link inline-flex items-center gap-2 text-sm"
+                className={`${linkAccent} group/link inline-flex items-center gap-2 text-sm`.trim()}
               >
                 <span className="transition-transform duration-300 group-hover/link:translate-x-1">
                   Learn more

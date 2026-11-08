@@ -1,4 +1,5 @@
 "use client";
+import { ALERT_ERROR_CLASS, BTN_DASHBOARD_CANCEL_CLASS, BTN_GRADIENT_PRIMARY_CLASS, GLASS_CARD_CLASS } from "@/lib/uiTokens";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -97,11 +98,11 @@ export default function RegisterEventForm({ eventId }) {
             spacing="tight"
           />
 
-          <div className="fc-card border-amber-500/30 p-6 shadow-2xl md:p-8">
+          <div className={`${GLASS_CARD_CLASS} border-amber-500/30 p-6 shadow-2xl md:p-8`.trim()}>
             <PageTitle sizeClass="text-2xl md:text-3xl">
               {REGISTRATION_CLOSED_MESSAGE}
             </PageTitle>
-            <p className="fc-muted mt-3">{event.title}</p>
+            <p className="text-muted mt-3">{event.title}</p>
           </div>
         </div>
       </div>
@@ -119,7 +120,7 @@ export default function RegisterEventForm({ eventId }) {
           >
             <BackLink href="/" label="Back to Home" spacing="tight" />
 
-            <div className="fc-card animate-fade-in border-red-500/30 p-4 shadow-2xl md:p-6">
+            <div className={`${GLASS_CARD_CLASS} animate-fade-in border-red-500/30 p-4 shadow-2xl md:p-6`.trim()}>
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <div className="flex-shrink-0">
@@ -144,7 +145,7 @@ export default function RegisterEventForm({ eventId }) {
                   </h2>
                 </div>
 
-                <div className="fc-alert-error">
+                <div className={ALERT_ERROR_CLASS}>
                   <p className="text-gray-200 text-sm">{error}</p>
                 </div>
               </div>
@@ -160,7 +161,7 @@ export default function RegisterEventForm({ eventId }) {
       <div className="w-full max-w-4xl">
         <BackLink href="/" label="Back to Home" />
 
-        <div className="fc-card p-6 shadow-xl md:p-8">
+        <div className={`${GLASS_CARD_CLASS} p-6 shadow-xl md:p-8`.trim()}>
           <PageTitle sizeClass="mb-4 text-2xl md:text-3xl">
             {event && event.eventType === "webinar"
               ? "Register for Webinar"
@@ -169,10 +170,10 @@ export default function RegisterEventForm({ eventId }) {
 
           {event && (
             <div className="mb-6 p-3 bg-gray-900/50 rounded-lg border border-gray-700/50">
-              <h2 className="fc-title mb-1 text-lg">
+              <h2 className="mb-1 text-lg">
                 {event.title}
               </h2>
-              <p className="fc-muted">
+              <p className="text-muted">
                 {new Date(event.date + "T00:00:00").toLocaleDateString(
                   "en-US",
                   {
@@ -338,13 +339,13 @@ export default function RegisterEventForm({ eventId }) {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Link
                 href="/"
-                className="fc-btn-dashboard-cancel flex-1 !py-3 text-center"
+                className={`${BTN_DASHBOARD_CANCEL_CLASS} flex-1 !py-3 text-center`.trim()}
               >
                 Cancel
               </Link>
               <button
                 type="submit"
-                className="fc-btn-gradient-primary flex-1 !px-4 !py-3"
+                className={`${BTN_GRADIENT_PRIMARY_CLASS} flex-1 !px-4 !py-3`.trim()}
               >
                 {event && event.eventType === "webinar"
                   ? "Register for Webinar"

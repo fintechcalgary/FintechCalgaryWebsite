@@ -1,4 +1,5 @@
 "use client";
+import { ALERT_ERROR_CLASS, BTN_GRADIENT_PRIMARY_CLASS, GLASS_CARD_CLASS } from "@/lib/uiTokens";
 import { useState, useEffect, useRef } from "react";
 import { useSession, signIn } from "next-auth/react";
 import Image from "next/image";
@@ -55,7 +56,7 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4 sm:p-6 md:p-8">
-      <div className="fc-card w-full max-w-md space-y-6 p-6 shadow-xl sm:space-y-8 sm:p-8">
+      <div className={`${GLASS_CARD_CLASS} w-full max-w-md space-y-6 p-6 shadow-xl sm:space-y-8 sm:p-8`.trim()}>
         <div className="flex justify-start">
           <BackLink href="/" label="Back to Home" spacing="tight" />
         </div>
@@ -75,18 +76,18 @@ export default function Login() {
           <PageTitle sizeClass="mb-2 text-center text-2xl sm:text-3xl">
             Welcome Back
           </PageTitle>
-          <p className="fc-body text-center">
+          <p className="text-center">
             Sign in to access your dashboard
           </p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
           {error && (
-            <div className="fc-alert-error">{error}</div>
+            <div className={ALERT_ERROR_CLASS}>{error}</div>
           )}
 
           <div className="input-group">
-            <label className="fc-form-label" htmlFor="username">
+            <label htmlFor="username" className="text-label">
               Username
             </label>
             <input
@@ -101,7 +102,7 @@ export default function Login() {
           </div>
 
           <div className="input-group">
-            <label className="fc-form-label" htmlFor="password">
+            <label htmlFor="password" className="text-label">
               Password
             </label>
             <input
@@ -118,8 +119,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`fc-btn-gradient-primary w-full !px-4 !py-2.5 text-sm sm:!py-3 sm:text-base disabled:cursor-not-allowed disabled:hover:translate-y-0
-              ${isLoading ? "opacity-70" : ""}`}
+            className={`${BTN_GRADIENT_PRIMARY_CLASS} w-full !px-4 !py-2.5 text-sm sm:!py-3 sm:text-base disabled:cursor-not-allowed disabled:hover:translate-y-0 ${isLoading ? "opacity-70" : ""}`.trim()}
           >
             {isLoading ? (
               <>

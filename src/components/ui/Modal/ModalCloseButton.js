@@ -1,6 +1,7 @@
 "use client";
 
 import { FiX } from "react-icons/fi";
+import { modalIconClose } from "@/lib/uiClassNames";
 
 /**
  * Shared icon-only modal close control.
@@ -17,7 +18,7 @@ export default function ModalCloseButton({
     <button
       type="button"
       onClick={onClick}
-      className={`fc-modal-icon-close ${className}`.trim()}
+      className={`${modalIconClose} ${className}`.trim()}
       aria-label={label}
       title={label}
     >

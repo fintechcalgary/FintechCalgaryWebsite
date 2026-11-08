@@ -1,4 +1,5 @@
 "use client";
+import { BTN_MARKETING_PRIMARY_CLASS } from "@/lib/uiTokens";
 
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
@@ -36,7 +37,7 @@ function PartnerCard({ partner }) {
           />
         ) : (
           <span
-            className="fc-title text-2xl text-white/80"
+            className="font-display text-2xl font-semibold tracking-tight text-white/80"
             style={{ color }}
           >
             {(partner.name || "?").charAt(0)}
@@ -44,7 +45,7 @@ function PartnerCard({ partner }) {
         )}
       </div>
 
-      <p className="fc-title z-10 mt-4 text-center text-sm font-medium text-gray-300 transition-colors duration-300 group-hover:text-white">
+      <p className="z-10 mt-4 text-center text-sm font-medium text-gray-300 transition-colors duration-300 group-hover:text-white">
         {partner.name}
       </p>
     </div>
@@ -107,7 +108,7 @@ export default function Partners() {
           </div>
 
           <div className="text-center">
-            <Link href="/partners" className="fc-btn-primary group">
+            <Link href="/partners" className={`${BTN_MARKETING_PRIMARY_CLASS} group`.trim()}>
               View All Partners
               <FiArrowRight className="text-xl transition-transform duration-300 group-hover:translate-x-1" />
             </Link>

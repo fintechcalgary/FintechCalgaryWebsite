@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { FiArrowLeft } from "react-icons/fi";
+import { backLink, backLinkIcon } from "@/lib/uiClassNames";
 
 const SPACING_CLASS = {
-  default: "",
-  none: "fc-back-link--flush",
-  tight: "fc-back-link--tight",
+  default: "mb-6",
+  none: "mb-0",
+  tight: "mb-4",
 };
 
 /**
@@ -17,13 +18,10 @@ export function backLinkClassName({
   align = "start",
 } = {}) {
   const spacingClass = SPACING_CLASS[spacing] ?? SPACING_CLASS.default;
-  const alignClass = align === "center" ? "fc-back-link--center" : "";
-  return `fc-back-link group ${spacingClass} ${alignClass} ${className}`.trim();
+  const alignClass = align === "center" ? "w-full justify-center" : "";
+  return `${backLink} ${spacingClass} group ${alignClass} ${className}`.trim();
 }
 
-/**
- * Standard site-wide back navigation (public + admin).
- */
 export default function BackLink({
   href,
   label,
@@ -40,7 +38,7 @@ export default function BackLink({
       {...props}
     >
       <FiArrowLeft
-        className={`fc-back-link__icon ${iconClassName}`.trim()}
+        className={`${backLinkIcon} ${iconClassName}`.trim()}
         aria-hidden
       />
       <span>{label}</span>
@@ -48,7 +46,6 @@ export default function BackLink({
   );
 }
 
-/** Same look as BackLink for in-page / modal back actions. */
 export function BackButton({
   label,
   className = "",
@@ -65,7 +62,7 @@ export function BackButton({
       {...props}
     >
       <FiArrowLeft
-        className={`fc-back-link__icon ${iconClassName}`.trim()}
+        className={`${backLinkIcon} ${iconClassName}`.trim()}
         aria-hidden
       />
       <span>{label}</span>
@@ -73,7 +70,6 @@ export function BackButton({
   );
 }
 
-/** Dashboard default — same styles as BackLink. */
 export function AdminBackLink({
   href = "/dashboard",
   label = "Back to Dashboard",
@@ -81,11 +77,6 @@ export function AdminBackLink({
   ...props
 }) {
   return (
-    <BackLink
-      href={href}
-      label={label}
-      className={className}
-      {...props}
-    />
+    <BackLink href={href} label={label} className={className} {...props} />
   );
 }

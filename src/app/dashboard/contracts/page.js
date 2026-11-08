@@ -1,4 +1,5 @@
 "use client";
+import { ADMIN_PANEL_CLASS, ALERT_ERROR_CLASS, BTN_CHIP_CLASS, BTN_DANGER_SOFT_CLASS, BTN_SUCCESS_SOFT_CLASS, FILE_INPUT_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -362,7 +363,7 @@ export default function ContractsPage() {
         <div className="container mx-auto px-6 py-8">
           <div className="min-h-[500px] flex items-center justify-center">
             <div className="text-center">
-              <span className="fc-icon mx-auto mb-4">
+              <span className={`${ICON_GLYPH_CLASS} mx-auto mb-4`.trim()}>
                 <FiFileText className="h-10 w-10" />
               </span>
               <p className="text-gray-400">
@@ -414,7 +415,7 @@ export default function ContractsPage() {
                   {contracts.length}
                 </p>
               </div>
-              <span className="fc-icon">
+              <span className={ICON_GLYPH_CLASS}>
                 <FiFileText className="text-xl" />
               </span>
             </div>
@@ -425,7 +426,7 @@ export default function ContractsPage() {
                 <p className="text-gray-400 text-sm font-medium">In Progress</p>
                 <p className="text-3xl font-bold text-white">{activeCount}</p>
               </div>
-              <span className="fc-icon">
+              <span className={ICON_GLYPH_CLASS}>
                 <FiClock className="text-xl" />
               </span>
             </div>
@@ -438,7 +439,7 @@ export default function ContractsPage() {
                   {completedCount}
                 </p>
               </div>
-              <span className="fc-icon">
+              <span className={ICON_GLYPH_CLASS}>
                 <FiCheckCircle className="text-xl" />
               </span>
             </div>
@@ -451,7 +452,7 @@ export default function ContractsPage() {
                 </p>
                 <p className="text-3xl font-bold text-white">{haltedCount}</p>
               </div>
-              <span className="fc-icon">
+              <span className={ICON_GLYPH_CLASS}>
                 <FiXCircle className="text-xl" />
               </span>
             </div>
@@ -496,12 +497,12 @@ export default function ContractsPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="fc-admin-panel p-6 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
+                  className={`${ADMIN_PANEL_CLASS} p-6 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10`.trim()}
                 >
                   {/* Card header */}
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
                     <div className="flex items-start gap-3 min-w-0">
-                      <span className="fc-icon flex-shrink-0">
+                      <span className={`${ICON_GLYPH_CLASS} flex-shrink-0`.trim()}>
                         <FiFileText className="text-xl" />
                       </span>
                       <div className="min-w-0">
@@ -580,7 +581,7 @@ export default function ContractsPage() {
                             href={`${API_ENDPOINTS.CONTRACTS}/${contract._id}/eoi`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="fc-btn-chip"
+                            className={BTN_CHIP_CLASS}
                           >
                             <FiExternalLink className="w-4 h-4" />
                             View EOI PDF
@@ -638,7 +639,7 @@ export default function ContractsPage() {
                               ? "Attach the EOI PDF before advancing past EOI Submission"
                               : undefined
                           }
-                          className="fc-btn-success-soft"
+                          className={BTN_SUCCESS_SOFT_CLASS}
                         >
                           <FiCheck className="w-4 h-4" />
                           {isFinalStage
@@ -652,7 +653,7 @@ export default function ContractsPage() {
                               CONTRACT_STAGE_ACTIONS.DO_NOT_PROCEED,
                             )
                           }
-                          className="fc-btn-danger-soft"
+                          className={BTN_DANGER_SOFT_CLASS}
                         >
                           <FiX className="w-4 h-4" />
                           Do Not Proceed
@@ -739,7 +740,7 @@ export default function ContractsPage() {
       >
         <form onSubmit={handleFormSubmit} className="p-6 space-y-5">
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Title <span className="text-red-400">*</span>
             </label>
             <input
@@ -755,7 +756,7 @@ export default function ContractsPage() {
           </div>
 
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Partner name <span className="text-red-400">*</span>
             </label>
             <input
@@ -771,7 +772,7 @@ export default function ContractsPage() {
           </div>
 
           <div>
-            <label className="fc-form-label">Description</label>
+            <label className="text-label">Description</label>
             <textarea
               value={formData.description}
               onChange={(e) =>
@@ -785,14 +786,14 @@ export default function ContractsPage() {
 
           {!editingContract && (
             <div>
-              <label className="fc-form-label">
+              <label className="text-label">
                 EOI PDF (optional, max 5MB)
               </label>
               <input
                 type="file"
                 accept="application/pdf"
                 onChange={handleFormFileChange}
-                className="fc-file-input"
+                className={FILE_INPUT_CLASS}
               />
               <p className="text-xs text-gray-500 mt-2">
                 You can also attach or replace the EOI PDF later. The contract
@@ -801,7 +802,7 @@ export default function ContractsPage() {
             </div>
           )}
 
-          {formError && <p className="fc-alert-error">{formError}</p>}
+          {formError && <p className={ALERT_ERROR_CLASS}>{formError}</p>}
 
           <div className="flex justify-end gap-3 pt-2">
             <Button
@@ -887,7 +888,7 @@ export default function ContractsPage() {
             )}
 
             <div>
-              <label className="fc-form-label">Note (optional)</label>
+              <label className="text-label">Note (optional)</label>
               <textarea
                 value={stageNote}
                 onChange={(e) => setStageNote(e.target.value)}
@@ -897,7 +898,7 @@ export default function ContractsPage() {
               />
             </div>
 
-            {stageError && <p className="fc-alert-error">{stageError}</p>}
+            {stageError && <p className={ALERT_ERROR_CLASS}>{stageError}</p>}
 
             <div className="flex justify-end gap-3">
               <Button

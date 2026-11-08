@@ -1,4 +1,5 @@
 "use client";
+import { GLASS_CARD_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 import { motion } from "framer-motion";
 import { FiCheck } from "react-icons/fi";
 import BackLink from "@/components/ui/BackLink";
@@ -19,9 +20,9 @@ export default function RegistrationSuccess() {
           >
             <BackLink href="/" label="Back to Home" />
 
-            <div className="fc-card p-8 shadow-2xl animate-fade-in">
+            <div className={`${GLASS_CARD_CLASS} p-8 shadow-2xl animate-fade-in`.trim()}>
               <div className="flex items-center justify-center mb-6">
-                <span className="fc-icon">
+                <span className={ICON_GLYPH_CLASS}>
                   <FiCheck className="h-8 w-8" />
                 </span>
               </div>
@@ -30,7 +31,7 @@ export default function RegistrationSuccess() {
                 Registration Successful!
               </PageTitle>
 
-              <p className="fc-body text-center">
+              <p className="text-center">
                 Thank you for registering.
               </p>
             </div>

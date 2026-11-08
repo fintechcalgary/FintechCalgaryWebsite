@@ -1,4 +1,5 @@
 "use client";
+import { ADMIN_PANEL_CLASS, ALERT_ERROR_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import { useState } from "react";
 import { FiPlus, FiUser } from "react-icons/fi";
@@ -120,14 +121,14 @@ export default function UsersPage() {
           {users.map((user) => (
             <div
               key={user._id}
-              className="fc-admin-panel flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between"
+              className={`${ADMIN_PANEL_CLASS} flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between`.trim()}
             >
               <div className="flex items-center gap-3">
-                <span className="fc-icon">
+                <span className={ICON_GLYPH_CLASS}>
                   <FiUser className="h-5 w-5" />
                 </span>
                 <div>
-                  <p className="text-white font-medium">{user.username}</p>
+                  <p className="font-medium text-white">{user.username}</p>
                   <p className="text-sm text-gray-400">
                     {STAFF_ROLE_LABELS[user.role] || user.role}
                   </p>
@@ -157,7 +158,7 @@ export default function UsersPage() {
       >
         <form onSubmit={handleCreate} className="p-6 space-y-5">
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Username
             </label>
             <input
@@ -171,7 +172,7 @@ export default function UsersPage() {
             />
           </div>
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Password
             </label>
             <input
@@ -185,7 +186,7 @@ export default function UsersPage() {
             />
           </div>
           <div>
-            <label className="fc-form-label">
+            <label className="text-label">
               Role
             </label>
             <select
@@ -203,7 +204,7 @@ export default function UsersPage() {
             </select>
           </div>
           {formError && (
-            <p className="fc-alert-error">
+            <p className={ALERT_ERROR_CLASS}>
               {formError}
             </p>
           )}

@@ -1,4 +1,5 @@
 "use client";
+import { ADMIN_PANEL_CLASS } from "@/lib/uiTokens";
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -18,7 +19,6 @@ import {
 } from "react-icons/fi";
 import AdminCard from "@/features/dashboard/AdminCard";
 import { LoadingState } from "@/components/ui/Spinner";
-import { STAFF_ROLE_LABELS } from "@/lib/constants";
 import { getAdminPanelCards, isStaffRole } from "@/lib/permissions";
 
 const ICONS = {
@@ -158,19 +158,19 @@ export default function AdminDashboardClient() {
           <p className="font-mono text-[11px] font-medium tracking-[0.28em] text-primary">
             Staff workspace
           </p>
-          <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+          <h1 className="heading-accent mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
             {greetingForHour(new Date().getHours())}
             {name ? <span className="text-white/75">, {name}</span> : ""}
           </h1>
-          <p className="mt-3 max-w-xl text-base font-light leading-relaxed text-white/55 sm:text-lg">
+          <p className="text-lede mt-3 max-w-xl">
             Club operations, grouped by what you are working on.
           </p>
         </header>
 
         {sections.length === 0 ? (
-          <div className="fc-admin-panel px-6 py-14 text-center">
-            <h2 className="fc-title text-lg">No tools assigned</h2>
-            <p className="mx-auto mt-2 max-w-md fc-body">
+          <div className={`${ADMIN_PANEL_CLASS} px-6 py-14 text-center`.trim()}>
+            <h3 className="text-lg">No tools assigned</h3>
+            <p className="mx-auto mt-2 max-w-md">
               Your role does not include dashboard tools yet. Ask an admin if
               that looks wrong.
             </p>

@@ -1,4 +1,5 @@
 "use client";
+import { ALERT_ERROR_CLASS, ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 import { useState } from "react";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import { FaEnvelope } from "react-icons/fa";
@@ -201,6 +202,7 @@ export default function PartnerSignupPage() {
 
       <PublicPageFrame>
           <PublicPageHeader
+            className="mb-8 sm:mb-10"
             title="Partner Sign Up"
             lede={
               <>
@@ -208,7 +210,7 @@ export default function PartnerSignupPage() {
                 Contact us at{" "}
                 <a
                   href={SITE_CONTACT.mailto}
-                  className="fc-link-underline inline-flex items-center gap-1"
+                  className="link-underline inline-flex items-center gap-1"
                 >
                   <FaEnvelope className="h-4 w-4" />
                   {SITE_CONTACT.email}
@@ -218,16 +220,16 @@ export default function PartnerSignupPage() {
           />
 
           <div className="flex items-center justify-center">
-            <div className="mx-auto w-full max-w-4xl py-16">
+            <div className="mx-auto w-full max-w-4xl pb-12">
               {submitStatus === "success" ? (
                 <div className="text-center py-8 animate-fadeIn">
-                  <span className="fc-icon mx-auto mb-4">
+                  <span className={`${ICON_GLYPH_CLASS} mx-auto mb-4`.trim()}>
                     <FiCheck className="h-8 w-8" />
                   </span>
-                  <h2 className="fc-title text-2xl mb-2">
+                  <h2 className="mb-2 text-2xl">
                     Thank you for your interest in becoming a Partner!
                   </h2>
-                  <p className="fc-body">
+                  <p>
                     We will be in contact with you shortly to discuss the next
                     steps.
                   </p>
@@ -252,17 +254,17 @@ export default function PartnerSignupPage() {
                   />
 
                   {submitStatus === "error" && (
-                    <div className="fc-alert-error mx-auto mt-6 flex max-w-4xl items-start">
+                    <div className={`${ALERT_ERROR_CLASS} mx-auto mt-6 flex max-w-4xl items-start`.trim()}>
                       <FiAlertCircle className="text-red-400 mt-0.5 mr-3 flex-shrink-0" />
                       <div>
-                        <h3 className="text-red-400 font-semibold mb-2">
+                        <h3 className="mb-2 font-semibold text-red-400">
                           Application Submission Failed
                         </h3>
                         {generalError ? (
                           <p className="text-red-400">{generalError}</p>
                         ) : (
                           <div>
-                            <p className="text-red-400 mb-2">
+                            <p className="mb-2 text-red-400">
                               Please correct the following issues and try again:
                             </p>
                             <ul className="text-red-400 text-sm space-y-1">
@@ -284,7 +286,7 @@ export default function PartnerSignupPage() {
                             </ul>
                           </div>
                         )}
-                        <p className="text-red-300 text-sm mt-3">
+                        <p className="mt-3 text-sm text-red-300">
                           If you continue to experience issues, please contact
                           us at{" "}
                           <a

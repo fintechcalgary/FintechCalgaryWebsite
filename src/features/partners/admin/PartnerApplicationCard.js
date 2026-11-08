@@ -1,4 +1,6 @@
 "use client";
+import { linkAccent, linkUnderline } from "@/lib/uiClassNames";
+import { ICON_GLYPH_CLASS } from "@/lib/uiTokens";
 
 import { motion } from "framer-motion";
 import {
@@ -61,15 +63,15 @@ export default function PartnerApplicationCard({
                 />
               </div>
             ) : (
-              <span className="fc-icon flex-shrink-0">
+              <span className={`${ICON_GLYPH_CLASS} flex-shrink-0`.trim()}>
                 <FiHome className="text-xl" />
               </span>
             )}
             <div className="min-w-0 flex-1">
-              <h3 className="fc-title text-lg truncate">
+              <h3 className="text-lg truncate">
                 {member.organizationName}
               </h3>
-              <p className="fc-muted">{formatDateLocale(member.createdAt)}</p>
+              <p className="text-muted">{formatDateLocale(member.createdAt)}</p>
             </div>
           </div>
 
@@ -115,9 +117,9 @@ export default function PartnerApplicationCard({
               {statusMeta.shortLabel}
             </StatusBadge>
             {member.approvalStatus === "accepted" && member.approvedAt && (
-              <span className="fc-muted">
+              <p className="text-muted inline">
                 Approved on {formatDateLocale(member.approvedAt)}
-              </span>
+              </p>
             )}
           </div>
           {member.approvalStatus === "pending" && (
@@ -145,74 +147,74 @@ export default function PartnerApplicationCard({
         </div>
 
         <div className="space-y-3 mb-6 flex-1">
-          <div className="flex items-center gap-2 fc-body">
+          <p className="flex items-center gap-2">
             <FiUser className="text-white/45 w-4 h-4 flex-shrink-0" />
             <span className="text-white truncate">
               {[member.title, member.firstName, member.lastName]
                 .filter(Boolean)
                 .join(" ")}
             </span>
-          </div>
+          </p>
 
-          <div className="flex items-center gap-2 fc-body">
+          <p className="flex items-center gap-2">
             <FiMail className="text-white/45 w-4 h-4 flex-shrink-0" />
             <a
               href={`mailto:${member.contactEmail}`}
-              className="fc-link truncate"
+              className="link-accent truncate"
               onClick={(e) => e.stopPropagation()}
             >
               {member.contactEmail}
             </a>
-          </div>
+          </p>
 
           {member.contactPhoneNumber && (
-            <div className="flex items-center gap-2 fc-body">
+            <p className="flex items-center gap-2">
               <FiPhone className="text-white/45 w-4 h-4 flex-shrink-0" />
-              <span className="fc-muted">Personal:</span>
+              <p className="text-muted inline">Personal:</p>
               <span className="text-white">{member.contactPhoneNumber}</span>
-            </div>
+            </p>
           )}
         </div>
 
         <div className="space-y-3 mb-6 pt-4 border-t border-gray-800">
-          <h4 className="fc-muted font-semibold tracking-wide">Organization</h4>
+          <p className="eyebrow !mb-2">Organization</p>
 
           {member.organizationEmail && (
-            <div className="flex items-center gap-2 fc-body">
+            <p className="flex items-center gap-2">
               <FiMail className="text-white/45 w-4 h-4 flex-shrink-0" />
               <a
                 href={`mailto:${member.organizationEmail}`}
-                className="fc-link truncate"
+                className="link-accent truncate"
                 onClick={(e) => e.stopPropagation()}
               >
                 {member.organizationEmail}
               </a>
-            </div>
+            </p>
           )}
 
           {member.organizationPhoneNumber && (
-            <div className="flex items-center gap-2 fc-body">
+            <p className="flex items-center gap-2">
               <FiPhone className="text-white/45 w-4 h-4 flex-shrink-0" />
               <span className="text-white">
                 {member.organizationPhoneNumber}
               </span>
-            </div>
+            </p>
           )}
 
           {member.website && (
-            <div className="flex items-center gap-2 fc-body">
+            <p className="flex items-center gap-2">
               <FiGlobe className="text-white/45 w-4 h-4 flex-shrink-0" />
               <a
                 href={externalUrl(member.website)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="fc-link truncate flex items-center gap-1"
+                className="link-accent truncate flex items-center gap-1"
                 onClick={(e) => e.stopPropagation()}
               >
                 {member.website}
                 <FiExternalLink className="w-3 h-3" />
               </a>
-            </div>
+            </p>
           )}
 
           {(member.address ||
@@ -220,7 +222,7 @@ export default function PartnerApplicationCard({
             member.province ||
             member.country ||
             member.postalCode) && (
-            <div className="flex items-start gap-2 fc-body">
+            <p className="flex items-start gap-2">
               <FiMapPin className="text-white/45 w-4 h-4 flex-shrink-0 mt-0.5" />
               <div className="leading-relaxed">
                 {member.address && <div>{member.address}</div>}
@@ -231,7 +233,7 @@ export default function PartnerApplicationCard({
                 </div>
                 {member.country && <div>{member.country}</div>}
               </div>
-            </div>
+            </p>
           )}
         </div>
 
@@ -278,8 +280,8 @@ export default function PartnerApplicationCard({
 
         {member.aboutUs && (
           <div className="mt-4 pt-4 border-t border-gray-800">
-            <p className="fc-muted mb-2 font-medium">About</p>
-            <p className="fc-body line-clamp-3">{member.aboutUs}</p>
+            <p className="text-muted mb-2 font-medium">About</p>
+            <p className="line-clamp-3">{member.aboutUs}</p>
           </div>
         )}
       </GlowCard>
