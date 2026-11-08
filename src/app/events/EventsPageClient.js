@@ -47,13 +47,7 @@ export default function EventsPageClient({ initialEvents }) {
       .sort((a, b) => {
         const aDate = normalizeDate(a.date);
         const bDate = normalizeDate(b.date);
-
-        // Sort upcoming events before past events
-        if (aDate >= currentDate && bDate < currentDate) return -1;
-        if (aDate < currentDate && bDate >= currentDate) return 1;
-
-        // For events in the same category (both upcoming or both past), sort by date
-        return aDate - bDate;
+        return bDate - aDate;
       });
 
     return filtered;
