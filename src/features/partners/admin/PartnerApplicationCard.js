@@ -1,6 +1,7 @@
 "use client";
 import { linkAccent, linkUnderline } from "@/lib/uiClassNames";
 import { ICON_GLYPH_CLASS } from "@/lib/uiTokens";
+import { PARTNER_APPLICATION_STATUS } from "@/lib/constants";
 
 import { motion } from "framer-motion";
 import {
@@ -116,18 +117,22 @@ export default function PartnerApplicationCard({
             <StatusBadge tone={statusMeta.tone} size="sm">
               {statusMeta.shortLabel}
             </StatusBadge>
-            {member.approvalStatus === "accepted" && member.approvedAt && (
+            {member.approvalStatus === PARTNER_APPLICATION_STATUS.ACCEPTED &&
+              member.approvedAt && (
               <p className="text-muted inline">
                 Approved on {formatDateLocale(member.approvedAt)}
               </p>
             )}
           </div>
-          {member.approvalStatus === "pending" && (
+          {member.approvalStatus === PARTNER_APPLICATION_STATUS.PENDING && (
             <div className="flex gap-2 mt-3">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onApprovalStatusChange(member._id, "accepted");
+                  onApprovalStatusChange(
+                    member._id,
+                    PARTNER_APPLICATION_STATUS.ACCEPTED
+                  );
                 }}
                 className="text-xs bg-green-500/20 hover:bg-green-500/30 text-green-500 px-3 py-1 rounded transition-all duration-200 relative z-20 border border-green-500/20 hover:border-green-500/40 hover:scale-105"
               >
@@ -136,7 +141,10 @@ export default function PartnerApplicationCard({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onApprovalStatusChange(member._id, "rejected");
+                  onApprovalStatusChange(
+                    member._id,
+                    PARTNER_APPLICATION_STATUS.REJECTED
+                  );
                 }}
                 className="text-xs bg-red-500/20 hover:bg-red-500/30 text-red-500 px-3 py-1 rounded transition-all duration-200 relative z-20 border border-red-500/20 hover:border-red-500/40 hover:scale-105"
               >

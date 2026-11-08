@@ -3,6 +3,14 @@
  * Prefer StatusBadge + tone; className helpers remain for gradual migration.
  */
 
+import { PARTNER_APPLICATION_STATUS } from "@/lib/constants";
+
+const {
+  PENDING: PARTNER_PENDING,
+  ACCEPTED: PARTNER_ACCEPTED,
+  REJECTED: PARTNER_REJECTED,
+} = PARTNER_APPLICATION_STATUS;
+
 export const TONE_CLASSES = {
   success: "bg-green-500/20 text-green-400 border-green-500/30",
   danger: "bg-red-500/20 text-red-400 border-red-500/30",
@@ -20,17 +28,17 @@ export const SIZE_CLASSES = {
 };
 
 export const APPROVAL_STATUS_META = {
-  accepted: {
+  [PARTNER_ACCEPTED]: {
     tone: "success",
     label: "Approved",
     shortLabel: "Accepted",
   },
-  rejected: {
+  [PARTNER_REJECTED]: {
     tone: "danger",
     label: "Rejected",
     shortLabel: "Rejected",
   },
-  pending: {
+  [PARTNER_PENDING]: {
     tone: "warning",
     label: "Awaiting Approval",
     shortLabel: "Pending",
@@ -39,7 +47,9 @@ export const APPROVAL_STATUS_META = {
 
 export function getApprovalStatusMeta(status) {
   const key =
-    status === "accepted" || status === "rejected" ? status : "pending";
+    status === PARTNER_ACCEPTED || status === PARTNER_REJECTED
+      ? status
+      : PARTNER_PENDING;
   const meta = APPROVAL_STATUS_META[key];
   const className = TONE_CLASSES[meta.tone];
   return {

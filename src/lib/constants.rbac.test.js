@@ -7,6 +7,8 @@ import {
   USER_ROLES,
   STAFF_ROLE_LABELS,
   UPLOAD_FOLDERS,
+  PARTNER_APPLICATION_STATUS,
+  EVENT_TYPE,
 } from "@/lib/constants";
 
 describe("RBAC constants", () => {
@@ -34,6 +36,14 @@ describe("RBAC constants", () => {
   it("allows email proof files for marketing submissions", () => {
     expect(FILE_TYPES.MARKETING.EXTENSIONS).toContain("eml");
     expect(FILE_TYPES.MARKETING.EXTENSIONS).toContain("pdf");
+  });
+
+  it("defines partner application status distinct from executive approved", () => {
+    expect(PARTNER_APPLICATION_STATUS.ACCEPTED).toBe("accepted");
+    expect(PARTNER_APPLICATION_STATUS.PENDING).toBe("pending");
+    expect(EVENT_TYPE.WEBINAR).toBe("webinar");
+    expect(API_ENDPOINTS.CHAT).toBe("/api/chat");
+    expect(API_ENDPOINTS.PARTNERS_ORDER).toBe("/api/partners/order");
   });
 
   it("defines community posts API and collection constants", () => {

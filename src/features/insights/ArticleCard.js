@@ -15,6 +15,12 @@ import { PUBLIC_GLOW_CARD } from "@/components/layout/PublicPageFrame";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import { formatDateShort } from "@/lib/dates";
 import { extractReadableSource } from "@/lib/article-display";
+import { ARTICLE_SENTIMENT } from "@/lib/articleSentiment";
+import {
+  API_ENDPOINTS,
+  CONTENT_TYPES,
+  HTTP_METHODS,
+} from "@/lib/constants";
 
 /**
  * ArticleCard Component
@@ -28,9 +34,9 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
 
   const getSentimentIcon = (sentiment) => {
     switch (sentiment) {
-      case "positive":
+      case ARTICLE_SENTIMENT.POSITIVE:
         return <FiTrendingUp className="w-4 h-4 text-green-400" />;
-      case "negative":
+      case ARTICLE_SENTIMENT.NEGATIVE:
         return <FiTrendingDown className="w-4 h-4 text-red-400" />;
       default:
         return <FiMinus className="w-4 h-4 text-gray-400" />;
@@ -39,9 +45,9 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
 
   const getSentimentColor = (sentiment) => {
     switch (sentiment) {
-      case "positive":
+      case ARTICLE_SENTIMENT.POSITIVE:
         return "bg-green-500/20 text-green-400 border-green-500/30";
-      case "negative":
+      case ARTICLE_SENTIMENT.NEGATIVE:
         return "bg-red-500/20 text-red-400 border-red-500/30";
       default:
         return "bg-gray-500/20 text-gray-400 border-gray-500/30";
@@ -58,9 +64,9 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
     setSummaryError(null);
 
     try {
-      const response = await fetch("/api/articles/generate-summaries-simple", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch(API_ENDPOINTS.ARTICLES_GENERATE_SUMMARIES, {
+        method: HTTP_METHODS.POST,
+        headers: { "Content-Type": CONTENT_TYPES.JSON },
         body: JSON.stringify({
           maxArticles: 1,
           articleUrl: article.url,
@@ -88,9 +94,9 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
 
           // Save the summary to the database
           try {
-            await fetch("/api/articles", {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
+            await fetch(API_ENDPOINTS.ARTICLES, {
+              method: HTTP_METHODS.PUT,
+              headers: { "Content-Type": CONTENT_TYPES.JSON },
               body: JSON.stringify({
                 url: article.url,
                 summary: responseData.summary,
@@ -111,7 +117,7 @@ export default function ArticleCard({ article, viewMode = "grid" }) {
           attempts++;
           try {
             const articleResponse = await fetch(
-              `/api/articles?url=${encodeURIComponent(article.url)}`,
+              `${API_ENDPOINTS.ARTICLES}?url=${encodeURIComponent(article.url)}`,
             );
             if (articleResponse.ok) {
               const articles = await articleResponse.json();

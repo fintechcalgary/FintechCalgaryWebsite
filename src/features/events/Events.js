@@ -20,7 +20,14 @@ import IconButton from "@/components/ui/IconButton";
 import Link from "next/link";
 import Image from "next/image";
 import { uploadFile } from "@/lib/frontend-helpers";
-import { UPLOAD_FOLDERS } from "@/lib/constants";
+import {
+  API_ENDPOINTS,
+  CONTENT_TYPES,
+  EVENT_TYPE,
+  EVENT_TYPE_OPTIONS,
+  HTTP_METHODS,
+  UPLOAD_FOLDERS,
+} from "@/lib/constants";
 import { formatEventDate, normalizeDate, startOfToday } from "@/lib/dates";
 import {
   isRegistrationOpen,
@@ -47,7 +54,7 @@ export default function Events({ mode }) {
     time: "",
     imageUrl: "",
     images: [],
-    eventType: "event",
+    eventType: EVENT_TYPE.EVENT,
     recordingUrl: "",
     isPartner: mode === "partner" ? true : false,
   });
@@ -59,7 +66,7 @@ export default function Events({ mode }) {
 
   const fetchEvents = useCallback(async () => {
     try {
-      const response = await fetch(`/api/events`);
+      const response = await fetch(API_ENDPOINTS.EVENTS);
       const data = await response.json();
 
       if (mode === "partner") {
@@ -84,8 +91,8 @@ export default function Events({ mode }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = editingEvent
-      ? `/api/events/${editingEvent._id}`
-      : "/api/events";
+      ? `${API_ENDPOINTS.EVENTS}/${editingEvent._id}`
+      : API_ENDPOINTS.EVENTS;
 
     // Include existing registrations when editing
     const body = editingEvent
@@ -93,8 +100,8 @@ export default function Events({ mode }) {
       : formData;
 
     const response = await fetch(url, {
-      method: editingEvent ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
+      method: editingEvent ? HTTP_METHODS.PUT : HTTP_METHODS.POST,
+      headers: { "Content-Type": CONTENT_TYPES.JSON },
       body: JSON.stringify(body),
     });
 
@@ -106,7 +113,7 @@ export default function Events({ mode }) {
         time: "",
         imageUrl: "",
         images: [],
-        eventType: "event",
+        eventType: EVENT_TYPE.EVENT,
         recordingUrl: "",
         isPartner: mode === "partner" ? true : false,
       });
@@ -124,9 +131,12 @@ export default function Events({ mode }) {
   };
 
   const confirmDelete = async () => {
-    const response = await fetch(`/api/events/${deleteModal.eventId}`, {
-      method: "DELETE",
-    });
+    const response = await fetch(
+      `${API_ENDPOINTS.EVENTS}/${deleteModal.eventId}`,
+      {
+        method: HTTP_METHODS.DELETE,
+      }
+    );
 
     if (response.ok) {
       fetchEvents();
@@ -139,9 +149,9 @@ export default function Events({ mode }) {
     setTogglingRegistrationId(event._id);
 
     try {
-      const response = await fetch(`/api/events/${event._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch(`${API_ENDPOINTS.EVENTS}/${event._id}`, {
+        method: HTTP_METHODS.PUT,
+        headers: { "Content-Type": CONTENT_TYPES.JSON },
         body: JSON.stringify({ registrationOpen: nextOpen }),
       });
 
@@ -171,7 +181,7 @@ export default function Events({ mode }) {
       imageUrl: event.imageUrl || "",
       images: event.images || [],
       registrations: event.registrations?.length || 0,
-      eventType: event.eventType || "event",
+      eventType: event.eventType || EVENT_TYPE.EVENT,
       recordingUrl: event.recordingUrl || "",
       isPartner: event.isPartner || false,
     });
@@ -209,7 +219,7 @@ export default function Events({ mode }) {
       time: "",
       imageUrl: "",
       images: [],
-      eventType: "event",
+      eventType: EVENT_TYPE.EVENT,
       recordingUrl: "",
     });
     setEditingEvent(null);
@@ -278,14 +288,14 @@ export default function Events({ mode }) {
             <div className="space-y-4 lg:col-span-3">
               <div
                 className={`grid gap-4 ${
-                  formData.eventType === "webinar"
+                  formData.eventType === EVENT_TYPE.WEBINAR
                     ? "sm:grid-cols-5"
                     : "sm:grid-cols-2"
                 }`}
               >
                 <div
                   className={
-                    formData.eventType === "webinar" ? "sm:col-span-2" : ""
+                    formData.eventType === EVENT_TYPE.WEBINAR ? "sm:col-span-2" : ""
                   }
                 >
                   <label
@@ -306,11 +316,14 @@ export default function Events({ mode }) {
                     className="form-input"
                     required
                   >
-                    <option value="event">Event</option>
-                    <option value="webinar">Webinar</option>
+                    {EVENT_TYPE_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
-                {formData.eventType === "webinar" ? (
+                {formData.eventType === EVENT_TYPE.WEBINAR ? (
                   <div className="sm:col-span-3">
                     <label
                       htmlFor="recordingUrl"

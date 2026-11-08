@@ -2,7 +2,10 @@
 
 import PortalModal from "@/components/ui/Modal/ContentModal";
 import PartnerForm from "@/features/partners/PartnerForm";
-import { createPartnerFieldChangeHandler } from "@/features/partners/partnerFormFields";
+import {
+  createPartnerFieldChangeHandler,
+  PARTNER_FORM_MODE,
+} from "@/features/partners/partnerFormFields";
 
 export default function PartnerEditModal({
   isOpen,
@@ -23,7 +26,7 @@ export default function PartnerEditModal({
     >
       <div className="p-6">
         <PartnerForm
-          mode="partner-edit"
+          mode={PARTNER_FORM_MODE.PARTNER_EDIT}
           values={values}
           errors={errors}
           onChange={createPartnerFieldChangeHandler(setValues, setErrors)}

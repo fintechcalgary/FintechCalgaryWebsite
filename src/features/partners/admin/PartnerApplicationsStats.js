@@ -2,11 +2,14 @@
 
 import { FiCalendar, FiHome, FiUsers } from "react-icons/fi";
 import PartnersStatCard from "@/features/partners/admin/PartnersStatCard";
+import { PARTNER_APPLICATION_STATUS } from "@/lib/constants";
 
 export default function PartnerApplicationsStats({ partners = [] }) {
-  const pending = partners.filter((m) => m.approvalStatus === "pending").length;
+  const pending = partners.filter(
+    (m) => m.approvalStatus === PARTNER_APPLICATION_STATUS.PENDING
+  ).length;
   const approved = partners.filter(
-    (m) => m.approvalStatus === "accepted"
+    (m) => m.approvalStatus === PARTNER_APPLICATION_STATUS.ACCEPTED
   ).length;
 
   return (

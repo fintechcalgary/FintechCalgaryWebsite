@@ -11,6 +11,7 @@ import {
   isRegistrationOpen,
   REGISTRATION_CLOSED_MESSAGE,
 } from "@/lib/eventRegistration";
+import { EVENT_TYPE } from "@/lib/constants";
 
 export default function RegisterEventForm({ eventId }) {
   const router = useRouter();
@@ -163,7 +164,7 @@ export default function RegisterEventForm({ eventId }) {
 
         <div className={`${GLASS_CARD_CLASS} p-6 shadow-xl md:p-8`.trim()}>
           <PageTitle sizeClass="mb-4 text-2xl md:text-3xl">
-            {event && event.eventType === "webinar"
+            {event && event.eventType === EVENT_TYPE.WEBINAR
               ? "Register for Webinar"
               : "Register for Event"}
           </PageTitle>
@@ -215,7 +216,7 @@ export default function RegisterEventForm({ eventId }) {
                 />
               </div>
 
-              {event && event.eventType === "webinar" && (
+              {event && event.eventType === EVENT_TYPE.WEBINAR && (
                 <>
                   <div className="input-group">
                     <label>Company Name (if applicable)</label>
@@ -286,7 +287,7 @@ export default function RegisterEventForm({ eventId }) {
                 <div className="input-group">
                   <label>
                     UCID{" "}
-                    {event?.eventType === "webinar" ? (
+                    {event?.eventType === EVENT_TYPE.WEBINAR ? (
                       "(if applicable)"
                     ) : (
                       <span className="text-gray-500 font-normal">
@@ -347,7 +348,7 @@ export default function RegisterEventForm({ eventId }) {
                 type="submit"
                 className={`${BTN_GRADIENT_PRIMARY_CLASS} flex-1 !px-4 !py-3`.trim()}
               >
-                {event && event.eventType === "webinar"
+                {event && event.eventType === EVENT_TYPE.WEBINAR
                   ? "Register for Webinar"
                   : "Register for Event"}
               </button>

@@ -10,6 +10,7 @@ import {
   LandingSection,
   LandingSectionHeader,
 } from "@/components/layout/LandingSection";
+import { API_ENDPOINTS } from "@/lib/constants";
 
 function PartnerCard({ partner }) {
   const color = partner.color || "#8B5CF6";
@@ -60,7 +61,7 @@ export default function Partners() {
 
     const fetchSponsors = async () => {
       try {
-        const res = await fetch("/api/partners");
+        const res = await fetch(API_ENDPOINTS.PARTNER);
         if (res.ok && isMounted) {
           const data = await res.json();
           setPartners(data);

@@ -38,13 +38,22 @@ import PublicPageShell from "@/components/layout/PublicPageShell";
 import { PageTitle } from "@/components/ui/SectionHeading";
 import { LoadingState } from "@/components/ui/Spinner";
 import useConfirmLogout from "@/hooks/useConfirmLogout";
+import {
+  API_ENDPOINTS,
+  PARTNER_APPLICATION_STATUS,
+} from "@/lib/constants";
 import { formatDateLocale } from "@/lib/dates";
+import { formatPageTitle } from "@/lib/siteMeta";
+
+const { PENDING, ACCEPTED, REJECTED } = PARTNER_APPLICATION_STATUS;
 
 const STATUS_ICONS = {
-  accepted: FiCheckCircle,
-  rejected: FiXCircle,
-  pending: FiClock,
+  [ACCEPTED]: FiCheckCircle,
+  [REJECTED]: FiXCircle,
+  [PENDING]: FiClock,
 };
+
+const PARTNER_DASHBOARD_TITLE = formatPageTitle("Partner Dashboard");
 
 export default function PartnerDashboardClient() {
   const [memberData, setMemberData] = useState(null);
@@ -79,7 +88,7 @@ export default function PartnerDashboardClient() {
     const fetchMemberData = async () => {
       if (session?.user?.role === "associate") {
         try {
-          const response = await fetch("/api/partner-applications/me");
+          const response = await fetch(API_ENDPOINTS.PARTNER_APPLICATIONS_ME);
           if (response.ok) {
             const data = await response.json();
             setMemberData(data);
@@ -118,13 +127,16 @@ export default function PartnerDashboardClient() {
 
     try {
       setSubmitting(true);
-      const response = await fetch(`/api/partner-applications/${memberData._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editFormData),
-      });
+      const response = await fetch(
+        `${API_ENDPOINTS.PARTNER_APPLICATIONS}/${memberData._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editFormData),
+        }
+      );
 
       if (!response.ok) {
         const data = await response.json();
@@ -139,7 +151,7 @@ export default function PartnerDashboardClient() {
       }
 
       // Refresh the member data
-      const fetchResponse = await fetch("/api/partner-applications/me");
+      const fetchResponse = await fetch(API_ENDPOINTS.PARTNER_APPLICATIONS_ME);
       if (fetchResponse.ok) {
         const data = await fetchResponse.json();
         setMemberData(data);
@@ -158,15 +170,15 @@ export default function PartnerDashboardClient() {
 
   const statusMeta = getApprovalStatusMeta(memberData?.approvalStatus);
   const approvalKey =
-    memberData?.approvalStatus === "accepted" ||
-    memberData?.approvalStatus === "rejected"
+    memberData?.approvalStatus === ACCEPTED ||
+    memberData?.approvalStatus === REJECTED
       ? memberData.approvalStatus
-      : "pending";
+      : PENDING;
   const StatusIcon = STATUS_ICONS[approvalKey] || FiClock;
 
   if (loading) {
     return (
-      <PublicPageShell title="Partner Dashboard | FinTech Calgary">
+      <PublicPageShell title={PARTNER_DASHBOARD_TITLE}>
         <div className="flex-grow flex items-center justify-center relative">
           <LoadingState size="lg" message="Loading your dashboard..." />
         </div>
@@ -176,7 +188,7 @@ export default function PartnerDashboardClient() {
 
   if (!memberData) {
     return (
-      <PublicPageShell title="Partner Dashboard | FinTech Calgary">
+      <PublicPageShell title={PARTNER_DASHBOARD_TITLE}>
         <div className="flex-grow flex items-center justify-center relative">
           <div className="text-center">
             <FiAlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
@@ -194,7 +206,7 @@ export default function PartnerDashboardClient() {
 
   return (
     <>
-      <PublicPageShell title="Partner Dashboard | FinTech Calgary">
+      <PublicPageShell title={PARTNER_DASHBOARD_TITLE}>
         <div className="relative flex-grow">
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
@@ -250,9 +262,9 @@ export default function PartnerDashboardClient() {
                   <div className={ICON_GLYPH_CLASS}>
                     <StatusIcon
                       className={`w-5 h-5 ${
-                        approvalKey === "accepted"
+                        approvalKey === ACCEPTED
                           ? "text-green-500"
-                          : approvalKey === "rejected"
+                          : approvalKey === REJECTED
                             ? "text-red-500"
                             : "text-yellow-500"
                       }`}
@@ -279,7 +291,7 @@ export default function PartnerDashboardClient() {
             </div>
 
             {/* Partner Events Card */}
-            {memberData.approvalStatus === "accepted" && (
+            {memberData.approvalStatus === ACCEPTED && (
               <section className="group animate-fadeIn">
                 <div
                   className={`${ADMIN_PANEL_CLASS} relative h-full overflow-hidden p-8 transition-all duration-500 hover:border-primary/30`.trim()}

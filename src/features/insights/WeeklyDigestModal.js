@@ -20,6 +20,7 @@ import {
   FiMessageCircle,
 } from "react-icons/fi";
 import { useChatBot } from "@/contexts/ChatBotContext";
+import { ARTICLE_SENTIMENT } from "@/lib/articleSentiment";
 import BleedModal, {
   BleedModalHeader,
 } from "@/components/ui/Modal/BleedModal";
@@ -71,8 +72,8 @@ export default function WeeklyDigestModal({
 
     articles.forEach((article) => {
       const s = (article.sentiment || "").toLowerCase();
-      if (s === "positive") sentiment.positive++;
-      else if (s === "negative") sentiment.negative++;
+      if (s === ARTICLE_SENTIMENT.POSITIVE) sentiment.positive++;
+      else if (s === ARTICLE_SENTIMENT.NEGATIVE) sentiment.negative++;
       else sentiment.neutral++;
       sentiment.total++;
 

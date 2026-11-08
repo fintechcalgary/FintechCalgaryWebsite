@@ -10,14 +10,21 @@ import { useSession } from "next-auth/react";
 import DraggableExecutive from "@/features/executives/DraggableExecutive";
 import Image from "next/image";
 import { uploadFile } from "@/lib/frontend-helpers";
-import { UPLOAD_FOLDERS } from "@/lib/constants";
+import {
+  API_ENDPOINTS,
+  CONTENT_TYPES,
+  ERROR_MESSAGES,
+  HTTP_METHODS,
+  UPLOAD_FOLDERS,
+  USER_ROLES,
+} from "@/lib/constants";
 import EmptyState from "@/components/ui/EmptyState";
 
 const DEFAULT_PROFILE_IMAGE = "/default-profile.webp";
 
 export default function Executives() {
   const { data: session } = useSession();
-  const isAdmin = session?.user?.role === "admin";
+  const isAdmin = session?.user?.role === USER_ROLES.ADMIN;
   const [executives, setExecutives] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingExecutive, setEditingExecutive] = useState(null);
@@ -42,7 +49,7 @@ export default function Executives() {
   const [availableTeams, setAvailableTeams] = useState(["All"]);
 
   const fetchExecutives = async () => {
-    const response = await fetch("/api/executives");
+    const response = await fetch(API_ENDPOINTS.EXECUTIVES);
     const data = await response.json();
     setExecutives(data);
 
@@ -88,26 +95,29 @@ export default function Executives() {
       };
 
       if (editingExecutive) {
-        const response = await fetch(`/api/executives/${editingExecutive._id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...payload,
-            oldUsername: editingExecutive.username, // Include old username for reference
-          }),
-        });
+        const response = await fetch(
+          `${API_ENDPOINTS.EXECUTIVES}/${editingExecutive._id}`,
+          {
+            method: HTTP_METHODS.PUT,
+            headers: {
+              "Content-Type": CONTENT_TYPES.JSON,
+            },
+            body: JSON.stringify({
+              ...payload,
+              oldUsername: editingExecutive.username, // Include old username for reference
+            }),
+          }
+        );
 
         if (!response.ok) {
           const data = await response.json();
           throw new Error(data.error || "Failed to update executive");
         }
       } else {
-        const response = await fetch("/api/executives", {
-          method: "POST",
+        const response = await fetch(API_ENDPOINTS.EXECUTIVES, {
+          method: HTTP_METHODS.POST,
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPES.JSON,
           },
           body: JSON.stringify(payload),
         });
@@ -144,9 +154,12 @@ export default function Executives() {
   };
 
   const confirmDelete = async () => {
-    const response = await fetch(`/api/executives/${deleteModal.executiveId}`, {
-      method: "DELETE",
-    });
+    const response = await fetch(
+      `${API_ENDPOINTS.EXECUTIVES}/${deleteModal.executiveId}`,
+      {
+        method: HTTP_METHODS.DELETE,
+      }
+    );
 
     if (response.ok) {
       fetchExecutives();
@@ -223,16 +236,16 @@ export default function Executives() {
 
   const saveOrder = async (updatedExecutives) => {
     try {
-      await fetch("/api/executives/order", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
+      await fetch(API_ENDPOINTS.EXECUTIVES_ORDER, {
+        method: HTTP_METHODS.PUT,
+        headers: { "Content-Type": CONTENT_TYPES.JSON },
         body: JSON.stringify({
           orderedExecutiveIds: updatedExecutives.map((e) => e._id),
         }),
       });
     } catch (error) {
       console.error("Error saving order:", error);
-      alert("Failed to save order. Try again.");
+      alert(ERROR_MESSAGES.SAVE_ORDER_FAILED);
     }
   };
 

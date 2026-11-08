@@ -1,3 +1,4 @@
+import { PARTNER_APPLICATION_STATUS } from "@/lib/constants";
 import { downloadCsv } from "@/lib/csv";
 import { formatDateLocale, todayIsoDate } from "@/lib/dates";
 
@@ -49,7 +50,7 @@ export function exportPartnerApplicationsCsv(partners = []) {
       member.country || "",
       member.postalCode || "",
       member.aboutUs || "",
-      member.approvalStatus || "pending",
+      member.approvalStatus || PARTNER_APPLICATION_STATUS.PENDING,
       formatDateLocale(member.approvedAt),
       formatDateLocale(member.createdAt),
     ]),

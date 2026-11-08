@@ -2,7 +2,14 @@
  * Shared partner organization form field config and helpers.
  */
 
+import { PARTNER_APPLICATION_STATUS } from "@/lib/constants";
 import { FORM_INPUT_CLASS } from "@/lib/uiTokens";
+
+export const PARTNER_FORM_MODE = {
+  SIGNUP: "signup",
+  PARTNER_EDIT: "partner-edit",
+  ADMIN_EDIT: "admin-edit",
+};
 
 export const INITIAL_PARTNER_FORM = {
   organizationName: "",
@@ -69,7 +76,8 @@ export function memberToPartnerApplicationForm(member = {}) {
   delete form.logo;
   return {
     ...form,
-    approvalStatus: member.approvalStatus || "pending",
+    approvalStatus:
+      member.approvalStatus || PARTNER_APPLICATION_STATUS.PENDING,
     approvedAt: member.approvedAt || null,
   };
 }

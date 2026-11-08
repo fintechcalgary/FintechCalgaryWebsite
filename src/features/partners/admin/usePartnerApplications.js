@@ -5,6 +5,10 @@ import useConfirmDelete from "@/hooks/useConfirmDelete";
 import useRoleResource from "@/hooks/useRoleResource";
 import { downloadRemoteFile } from "@/lib/frontend-helpers";
 import { exportPartnerApplicationsCsv } from "@/features/partners/admin/exportPartnerApplicationsCsv";
+import {
+  API_ENDPOINTS,
+  PARTNER_APPLICATION_STATUS,
+} from "@/lib/constants";
 import { PERMISSIONS } from "@/lib/permissions";
 import {
   INITIAL_PARTNER_APPLICATION_FORM,
@@ -22,7 +26,7 @@ export default function usePartnerApplications(options = {}) {
     setData: setPartners,
     loading,
     refetch,
-  } = useRoleResource("/api/partner-applications", PERMISSIONS.PARTNERS);
+  } = useRoleResource(API_ENDPOINTS.PARTNER_APPLICATIONS, PERMISSIONS.PARTNERS);
   const {
     isOpen: showDeleteModal,
     target: memberToDelete,
@@ -94,7 +98,10 @@ export default function usePartnerApplications(options = {}) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           approvalStatus: newStatus,
-          approvedAt: newStatus === "accepted" ? new Date() : null,
+          approvedAt:
+            newStatus === PARTNER_APPLICATION_STATUS.ACCEPTED
+              ? new Date()
+              : null,
         }),
       });
 

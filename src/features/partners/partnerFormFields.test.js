@@ -5,6 +5,7 @@ import {
   memberToPartnerApplicationForm,
   createPartnerFieldChangeHandler,
 } from "@/features/partners/partnerFormFields";
+import { PARTNER_APPLICATION_STATUS } from "@/lib/constants";
 
 describe("PARTNER_FORM_INPUT_CLASS", () => {
   it("equals fc-form-input", () => {
@@ -77,7 +78,7 @@ describe("memberToPartnerApplicationForm", () => {
       organizationName: "Acme Corp",
       firstName: "Ada",
     });
-    expect(form.approvalStatus).toBe("pending");
+    expect(form.approvalStatus).toBe(PARTNER_APPLICATION_STATUS.PENDING);
     expect(form.approvedAt).toBeNull();
     expect(form.organizationName).toBe("Acme Corp");
     expect(form.firstName).toBe("Ada");
@@ -87,10 +88,10 @@ describe("memberToPartnerApplicationForm", () => {
 
   it("preserves approvalStatus when provided", () => {
     const form = memberToPartnerApplicationForm({
-      approvalStatus: "accepted",
+      approvalStatus: PARTNER_APPLICATION_STATUS.ACCEPTED,
       approvedAt: "2026-01-01T00:00:00Z",
     });
-    expect(form.approvalStatus).toBe("accepted");
+    expect(form.approvalStatus).toBe(PARTNER_APPLICATION_STATUS.ACCEPTED);
     expect(form.approvedAt).toBe("2026-01-01T00:00:00Z");
   });
 });

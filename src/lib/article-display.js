@@ -2,6 +2,8 @@
  * Article display helpers for Insights, digest modals, and article cards.
  */
 
+import { ARTICLE_SENTIMENT } from "@/lib/articleSentiment";
+
 export const FINTECH_TOPIC_KEYWORDS = {
   fintech: "FinTech",
   banking: "Banking",
@@ -221,8 +223,8 @@ export function calculateArticleSentiment(articles) {
   articles.forEach((article) => {
     if (article.sentiment) {
       const sentiment = article.sentiment.toLowerCase();
-      if (sentiment === "positive") positive++;
-      else if (sentiment === "negative") negative++;
+      if (sentiment === ARTICLE_SENTIMENT.POSITIVE) positive++;
+      else if (sentiment === ARTICLE_SENTIMENT.NEGATIVE) negative++;
       else neutral++;
       return;
     }

@@ -2,6 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import DraggablePartner from "@/features/partners/DraggablePartner";
+import {
+  API_ENDPOINTS,
+  CONTENT_TYPES,
+  ERROR_MESSAGES,
+  HTTP_METHODS,
+} from "@/lib/constants";
 
 export default function PartnersGrid({
   partners,
@@ -30,9 +36,9 @@ export default function PartnersGrid({
 
   const savePartnerOrder = async (orderedPartners) => {
     try {
-      const res = await fetch("/api/partners/order", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch(API_ENDPOINTS.PARTNERS_ORDER, {
+        method: HTTP_METHODS.PUT,
+        headers: { "Content-Type": CONTENT_TYPES.JSON },
         body: JSON.stringify({
           orderedPartnerIds: orderedPartners.map((p) => p._id),
         }),
@@ -40,7 +46,7 @@ export default function PartnersGrid({
       if (!res.ok) throw new Error("Failed to save order");
     } catch (err) {
       console.error(err);
-      alert("Failed to save order. Try again.");
+      alert(ERROR_MESSAGES.SAVE_ORDER_FAILED);
     }
   };
 

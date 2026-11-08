@@ -6,8 +6,13 @@ import {
   PasswordStrength,
   defaultPasswordRules,
 } from "@/components/ui/password-strength";
-import { PARTNER_FORM_INPUT_CLASS } from "@/features/partners/partnerFormFields";
+import {
+  PARTNER_FORM_INPUT_CLASS,
+  PARTNER_FORM_MODE,
+} from "@/features/partners/partnerFormFields";
 import { VALIDATION } from "@/lib/constants";
+
+const { SIGNUP, PARTNER_EDIT, ADMIN_EDIT } = PARTNER_FORM_MODE;
 
 const signupPasswordRules = [
   {
@@ -41,7 +46,7 @@ function Field({
 }
 
 function SectionTitle({ children, mode }) {
-  if (mode === "signup") {
+  if (mode === SIGNUP) {
     return (
       <>
         <div className="text-xl font-semibold">{children}</div>
@@ -57,10 +62,10 @@ function SectionTitle({ children, mode }) {
 /**
  * Shared partner org form for signup, partner-dashboard edit, and admin edit.
  *
- * @param {"signup"|"partner-edit"|"admin-edit"} mode
+ * @param {keyof typeof PARTNER_FORM_MODE | string} mode
  */
 export default function PartnerForm({
-  mode = "partner-edit",
+  mode = PARTNER_EDIT,
   values,
   errors = {},
   onChange,
@@ -69,8 +74,8 @@ export default function PartnerForm({
   submitting = false,
   submitLabel,
   // Logo upload (signup / optional edit)
-  showLogoUpload = mode === "signup",
-  logoRequired = mode === "signup",
+  showLogoUpload = mode === SIGNUP,
+  logoRequired = mode === SIGNUP,
   previewUrl,
   isDragOver,
   setIsDragOver,
@@ -79,8 +84,8 @@ export default function PartnerForm({
   className = "",
   beforeActions = null,
 }) {
-  const showLabels = mode !== "signup";
-  const showPassword = mode === "signup";
+  const showLabels = mode !== SIGNUP;
+  const showPassword = mode === SIGNUP;
   const inputClass = PARTNER_FORM_INPUT_CLASS;
 
   const set = (field) => (e) => onChange(field, e.target.value);
@@ -91,13 +96,13 @@ export default function PartnerForm({
       : inputClass;
 
   const defaultSubmit =
-    mode === "signup" ? "Submit Application" : "Save Changes";
+    mode === SIGNUP ? "Submit Application" : "Save Changes";
 
   return (
     <form onSubmit={onSubmit} className={`space-y-6 ${className}`.trim()}>
       {showLogoUpload ? (
         <div>
-          {mode === "signup" ? (
+          {mode === SIGNUP ? (
             <label className="text-label">
               Upload your Logo
             </label>
@@ -120,7 +125,7 @@ export default function PartnerForm({
 
       <div>
         <SectionTitle mode={mode}>
-          {mode === "signup" ? "Organization Information" : "Organization Information"}
+          {mode === SIGNUP ? "Organization Information" : "Organization Information"}
         </SectionTitle>
         <div className="space-y-4">
           <Field
@@ -144,7 +149,7 @@ export default function PartnerForm({
             showLabel={showLabels}
             error={errors.username}
             hint={
-              !errors.username && mode === "signup"
+              !errors.username && mode === SIGNUP
                 ? "Choose a unique username for your account"
                 : undefined
             }
@@ -185,7 +190,7 @@ export default function PartnerForm({
             </Field>
           ) : null}
 
-          {mode !== "signup" ? (
+          {mode !== SIGNUP ? (
             <Field label="Website" showLabel>
               <input
                 type="url"
@@ -201,9 +206,9 @@ export default function PartnerForm({
 
       <div>
         <SectionTitle mode={mode}>
-          {mode === "signup" ? "Contacts" : "Contact Information"}
+          {mode === SIGNUP ? "Contacts" : "Contact Information"}
         </SectionTitle>
-        {mode === "signup" ? (
+        {mode === SIGNUP ? (
           <p className="mb-2">
             Please enter the information for the Main Contact of your
             organization.
@@ -272,7 +277,7 @@ export default function PartnerForm({
             </Field>
           </div>
 
-          {mode !== "signup" ? (
+          {mode !== SIGNUP ? (
             <div className="grid grid-cols-2 gap-4">
               <Field label="Organization Email" showLabel>
                 <input
@@ -297,7 +302,7 @@ export default function PartnerForm({
         </div>
       </div>
 
-      {mode === "signup" ? (
+      {mode === SIGNUP ? (
         <div>
           <SectionTitle mode={mode}>
             Organization Contact Information
@@ -333,7 +338,7 @@ export default function PartnerForm({
 
       <div>
         <SectionTitle mode={mode}>
-          {mode === "signup" ? "Social Media" : "Social Media"}
+          {mode === SIGNUP ? "Social Media" : "Social Media"}
         </SectionTitle>
         <div className="space-y-4">
           <Field label="Facebook URL" showLabel={showLabels}>
@@ -465,7 +470,7 @@ export default function PartnerForm({
 
       <div
         className={
-          mode === "signup"
+          mode === SIGNUP
             ? "flex justify-center pt-4"
             : "flex justify-end space-x-4 pt-8 border-t border-white/10"
         }

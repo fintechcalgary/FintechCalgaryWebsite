@@ -21,6 +21,11 @@ import { useChatBot } from "@/contexts/ChatBotContext";
 import { useRateLimit } from "@/hooks/useRateLimit";
 import { CostTracker } from "@/lib/costTracker";
 import ModalCloseButton from "@/components/ui/Modal/ModalCloseButton";
+import {
+  API_ENDPOINTS,
+  CONTENT_TYPES,
+  HTTP_METHODS,
+} from "@/lib/constants";
 
 const MAX_MESSAGE_LENGTH = 2000;
 const STORAGE_KEY = "fintech_chat_messages";
@@ -159,9 +164,9 @@ export default function FinTechChatBot({ articles = [] }) {
     const timeoutId = setTimeout(() => controller.abort(), 60000);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch(API_ENDPOINTS.CHAT, {
+        method: HTTP_METHODS.POST,
+        headers: { "Content-Type": CONTENT_TYPES.JSON },
         body: JSON.stringify({
           message: userMessage,
           conversationHistory: updatedMessages.slice(-10),

@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { UPLOAD_FOLDERS } from "@/lib/constants";
+import {
+  API_ENDPOINTS,
+  CONTENT_TYPES,
+  HTTP_METHODS,
+  UPLOAD_FOLDERS,
+} from "@/lib/constants";
 import useConfirmDelete from "@/hooks/useConfirmDelete";
 import useFileUpload from "@/hooks/useFileUpload";
 import useRoleResource from "@/hooks/useRoleResource";
@@ -20,7 +25,7 @@ export default function useDisplayPartners() {
     data: partners,
     setData: setPartners,
     loading,
-  } = useRoleResource("/api/partners", PERMISSIONS.PARTNERS);
+  } = useRoleResource(API_ENDPOINTS.PARTNER, PERMISSIONS.PARTNERS);
   const {
     isOpen: showDeleteModal,
     target: partnerToDelete,
@@ -83,9 +88,9 @@ export default function useDisplayPartners() {
     try {
       setSubmitting(true);
       const logoUrl = await resolveLogoUrl();
-      const response = await fetch("/api/partners", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch(API_ENDPOINTS.PARTNER, {
+        method: HTTP_METHODS.POST,
+        headers: { "Content-Type": CONTENT_TYPES.JSON },
         body: JSON.stringify({
           ...formData,
           logo: logoUrl || null,
@@ -109,14 +114,17 @@ export default function useDisplayPartners() {
     try {
       setSubmitting(true);
       const logoUrl = await resolveLogoUrl();
-      const response = await fetch(`/api/partners/${editingPartner._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          logo: logoUrl || null,
-        }),
-      });
+      const response = await fetch(
+        `${API_ENDPOINTS.PARTNER}/${editingPartner._id}`,
+        {
+          method: HTTP_METHODS.PUT,
+          headers: { "Content-Type": CONTENT_TYPES.JSON },
+          body: JSON.stringify({
+            ...formData,
+            logo: logoUrl || null,
+          }),
+        }
+      );
       if (!response.ok) throw new Error("Failed to update partner");
       const updated = await response.json();
       setPartners((prev) =>
@@ -134,9 +142,12 @@ export default function useDisplayPartners() {
   const handleDeleteConfirm = async () => {
     if (!partnerToDelete) return;
     try {
-      const response = await fetch(`/api/partners/${partnerToDelete._id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${API_ENDPOINTS.PARTNER}/${partnerToDelete._id}`,
+        {
+          method: HTTP_METHODS.DELETE,
+        }
+      );
       if (!response.ok) throw new Error("Failed to delete partner");
       setPartners((prev) => prev.filter((p) => p._id !== partnerToDelete._id));
       closeDeleteModal();

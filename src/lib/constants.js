@@ -27,6 +27,10 @@ export const API_ENDPOINTS = {
   USERS: "/api/users",
   COMMUNITY_POSTS: "/api/community-posts",
   CONVERGE_SESSION_TOKEN: "/api/converge/session-token",
+  ARTICLES: "/api/articles",
+  ARTICLES_GENERATE_SUMMARIES: "/api/articles/generate-summaries-simple",
+  CHAT: "/api/chat",
+  PARTNERS_ORDER: "/api/partners/order",
 };
 
 // Membership payments (charged via Elavon Converge hosted payment modal)
@@ -150,6 +154,7 @@ export const ERROR_MESSAGES = {
   UPDATE_FAILED: "Failed to update. Please try again.",
   DELETE_FAILED: "Failed to delete. Please try again.",
   LOAD_FAILED: "Failed to load data. Please try again.",
+  SAVE_ORDER_FAILED: "Failed to save order. Try again.",
   
   // API Specific
   CONTACT_FAILED: "Failed to send message. Please try again.",
@@ -248,12 +253,40 @@ export const STAFF_ROLE_LABELS = {
   [USER_ROLES.PROJECTS]: "Projects",
 };
 
-// Application Status
+// Application Status (executive applications — uses "approved", not partner "accepted")
 export const APPLICATION_STATUS = {
   PENDING: "pending",
   APPROVED: "approved",
   REJECTED: "rejected",
 };
+
+/** Partner org signup application workflow (see APPROVAL_STATUS_META in statusBadges.js). */
+export const PARTNER_APPLICATION_STATUS = {
+  PENDING: "pending",
+  ACCEPTED: "accepted",
+  REJECTED: "rejected",
+};
+
+export const PARTNER_APPLICATION_STATUS_OPTIONS = [
+  { value: PARTNER_APPLICATION_STATUS.PENDING, label: "Pending" },
+  { value: PARTNER_APPLICATION_STATUS.ACCEPTED, label: "Accepted" },
+  { value: PARTNER_APPLICATION_STATUS.REJECTED, label: "Rejected" },
+];
+
+export const PARTNER_APPLICATION_FIELD = {
+  APPROVAL_STATUS: "approvalStatus",
+};
+
+/** Stored event.type values for events and webinars. */
+export const EVENT_TYPE = {
+  EVENT: "event",
+  WEBINAR: "webinar",
+};
+
+export const EVENT_TYPE_OPTIONS = [
+  { value: EVENT_TYPE.EVENT, label: "Event" },
+  { value: EVENT_TYPE.WEBINAR, label: "Webinar" },
+];
 
 // Contract Pipeline Stages (in order, from the contract approvals process flow)
 export const CONTRACT_STAGES = [

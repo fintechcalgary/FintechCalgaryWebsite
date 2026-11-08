@@ -1,13 +1,19 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import {
+  API_ENDPOINTS,
+  PARTNER_APPLICATION_STATUS,
+} from "@/lib/constants";
 
 async function fetchPendingCount() {
-  const response = await fetch("/api/partner-applications");
+  const response = await fetch(API_ENDPOINTS.PARTNER_APPLICATIONS);
   if (!response.ok) return 0;
   const data = await response.json();
   return Array.isArray(data)
-    ? data.filter((m) => m.approvalStatus === "pending").length
+    ? data.filter(
+        (m) => m.approvalStatus === PARTNER_APPLICATION_STATUS.PENDING
+      ).length
     : 0;
 }
 

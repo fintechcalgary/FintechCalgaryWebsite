@@ -9,6 +9,7 @@ import {
   isRegistrationOpen,
   REGISTRATION_CLOSED_MESSAGE,
 } from "@/lib/eventRegistration";
+import { EVENT_TYPE } from "@/lib/constants";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import StatusBadge from "@/components/ui/StatusBadge";
 
@@ -98,7 +99,7 @@ export default function EventCard({ event }) {
                 {formatEventDate(event.date)}
                 {event.time && ` • ${event.time}`}
               </StatusBadge>
-              {event.eventType === "webinar" && (
+              {event.eventType === EVENT_TYPE.WEBINAR && (
                 <StatusBadge tone="primary" size="sm" className="backdrop-blur-sm">
                   Webinar
                 </StatusBadge>
@@ -120,7 +121,9 @@ export default function EventCard({ event }) {
             )}
 
             <div className={`${BTN_GRADIENT_PRIMARY_CLASS} px-4 py-2 pointer-events-none`.trim()}>
-              {event.eventType === "webinar" ? "View Webinar" : "View Event"}
+              {event.eventType === EVENT_TYPE.WEBINAR
+                ? "View Webinar"
+                : "View Event"}
             </div>
           </div>
         </div>
