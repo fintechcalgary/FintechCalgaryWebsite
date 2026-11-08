@@ -13,19 +13,22 @@ import PublicPageShell from "@/components/layout/PublicPageShell";
 import Spinner from "@/components/ui/Spinner";
 import { PublicPageFrame, PublicPageHeader } from "@/components/layout/PublicPageFrame";
 import { GlowCard } from "@/components/ui/spotlight-card";
-import Image from "next/image";
 import Link from "next/link";
+import PublicPartnerCard from "@/features/partners/public/PublicPartnerCard";
+import PartnerDetailModal from "@/features/partners/public/PartnerDetailModal";
+import { API_ENDPOINTS } from "@/lib/constants";
 
 export default function PartnersPage() {
   const [showAll, setShowAll] = useState(false);
   const [partners, setPartners] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPartner, setSelectedPartner] = useState(null);
   const INITIAL_PARTNERS_COUNT = 6;
 
   useEffect(() => {
     const fetchSponsors = async () => {
       try {
-        const res = await fetch("/api/partners");
+        const res = await fetch(API_ENDPOINTS.PARTNER);
         if (res.ok) {
           const data = await res.json();
           setPartners(data);
@@ -60,66 +63,23 @@ export default function PartnersPage() {
                   return (
                     <div
                       key={partner._id || partner.name}
-                      className="animate-fadeIn"
+                      className="flex h-full animate-fadeIn"
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
-                    <GlowCard
-                      customSize
-                      color={partner.color || "#8B5CF6"}
-                      className="group relative flex h-full w-full flex-col !gap-0 !p-8"
-                    >
-                      <div
-                        className="absolute inset-0 z-0 scale-100 rounded-2xl opacity-0 transition-all duration-500 group-hover:scale-110 group-hover:opacity-80"
-                        style={{
-                          background: `radial-gradient(circle at center, ${partner.color}20 0%, transparent 70%)`,
-                        }}
+                      <PublicPartnerCard
+                        partner={partner}
+                        onSelect={setSelectedPartner}
                       />
-
-                      <div className="relative z-10 mb-6 flex h-40 items-center justify-center">
-                        <div className="relative flex h-32 w-full items-center justify-center transition-transform duration-300 hover:scale-105">
-                          {partner.logo ? (
-                            <Image
-                              src={partner.logo}
-                              alt={partner.name}
-                              width={200}
-                              height={100}
-                              className="max-h-32 object-contain drop-shadow-lg"
-                            />
-                          ) : (
-                            <div
-                              className="flex h-24 w-24 items-center justify-center rounded-xl text-2xl font-bold text-white/80"
-                              style={{
-                                backgroundColor: `${partner.color || "#8b5cf6"}30`,
-                              }}
-                            >
-                              {(partner.name || "?").charAt(0)}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <h3 className="relative z-10 mb-4 text-2xl">
-                        {partner.name}
-                      </h3>
-                      <p className="relative z-10 mb-6 flex-grow">
-                        {partner.description}
-                      </p>
-
-                      {partner.website ? (
-                        <a
-                          href={partner.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="link-accent relative z-10 inline-flex items-center"
-                        >
-                          Visit Website <FiArrowRight className="ml-2" />
-                        </a>
-                      ) : null}
-                    </GlowCard>
                     </div>
                   );
                 })}
               </div>
+
+              <PartnerDetailModal
+                partner={selectedPartner}
+                isOpen={Boolean(selectedPartner)}
+                onClose={() => setSelectedPartner(null)}
+              />
 
               {partners.length > INITIAL_PARTNERS_COUNT && (
                 <div
