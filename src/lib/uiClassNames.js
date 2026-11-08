@@ -5,7 +5,7 @@
 
 /* ——— Modals ——— */
 export const modalBackdrop =
-  "fixed inset-0 z-[999998] bg-black/70 backdrop-blur-xl";
+  "fixed inset-0 z-[999998] bg-black/80";
 
 export const modalContainer =
   "fixed inset-0 z-[999999] flex items-center justify-center p-3 pointer-events-none sm:p-4 md:p-6";

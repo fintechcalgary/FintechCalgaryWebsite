@@ -4,9 +4,8 @@ import { useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useModalBodyEffects } from "@/hooks/useModalBodyEffects";
+import { useModalMotion } from "@/hooks/useModalMotion";
 import { modalBackdrop, modalContainer } from "@/lib/uiClassNames";
-
-const spring = { type: "spring", damping: 25, stiffness: 300 };
 
 /**
  * Shared portal modal shell: backdrop, body lock, Escape-to-close.
@@ -28,25 +27,30 @@ export default function ModalRoot({
     () => false
   );
 
-  useModalBodyEffects(isOpen, onClose);
+  const { backdrop, panel } = useModalMotion();
+  const onExitComplete = useModalBodyEffects(isOpen, onClose);
 
   const content = (
-    <AnimatePresence>
-      {isOpen && (
+    <AnimatePresence onExitComplete={onExitComplete}>
+      {isOpen ? (
         <>
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            key="modal-backdrop"
+            role="presentation"
+            initial={backdrop.initial}
+            animate={backdrop.animate}
+            exit={backdrop.exit}
+            transition={backdrop.transition}
             className={`${modalBackdrop} ${backdropClassName}`.trim()}
             onClick={onClose}
           />
           {layout === "center" ? (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={spring}
+              key="modal-panel"
+              initial={panel.initial}
+              animate={panel.animate}
+              exit={panel.exit}
+              transition={panel.transition}
               className={`${modalContainer} ${containerClassName}`.trim()}
             >
               {children}
@@ -55,7 +59,7 @@ export default function ModalRoot({
             children
           )}
         </>
-      )}
+      ) : null}
     </AnimatePresence>
   );
 

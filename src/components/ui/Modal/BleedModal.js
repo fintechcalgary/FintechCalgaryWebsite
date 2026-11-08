@@ -3,9 +3,8 @@
 import { motion } from "framer-motion";
 import ModalRoot from "./ModalRoot";
 import ModalCloseButton from "./ModalCloseButton";
+import { useModalMotion } from "@/hooks/useModalMotion";
 import { modalHeader, modalPanel, modalPanelBleed } from "@/lib/uiClassNames";
-
-const ease = [0.16, 1, 0.3, 1];
 
 /**
  * Edge-inset modal for large public content (weekly digest, article detail).
@@ -22,14 +21,16 @@ export default function BleedModal({
   bodyClassName = "",
   bodyRef,
 }) {
+  const { bleedPanel } = useModalMotion();
+
   return (
     <ModalRoot isOpen={isOpen} onClose={onClose} layout="none">
       <motion.div
         key="bleed-panel"
-        initial={{ opacity: 0, y: 24, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 16, scale: 0.98 }}
-        transition={{ duration: 0.3, ease }}
+        initial={bleedPanel.initial}
+        animate={bleedPanel.animate}
+        exit={bleedPanel.exit}
+        transition={bleedPanel.transition}
         role="dialog"
         aria-modal="true"
         aria-label={ariaLabel}

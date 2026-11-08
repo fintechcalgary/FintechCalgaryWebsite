@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 /**
- * Escape-to-close and body scroll lock for overlay modals.
+ * Escape-to-close and body scroll lock while a modal is open.
+ * Returns `onExitComplete` — call from AnimatePresence so scroll unlocks after the close animation.
  */
 export function useModalBodyEffects(
   isOpen,
@@ -20,14 +21,17 @@ export function useModalBodyEffects(
   }, [isOpen, onClose, closeOnEscape]);
 
   useEffect(() => {
-    if (!lockScroll) return;
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (!lockScroll || !isOpen) return;
+    document.body.style.overflow = "hidden";
+  }, [isOpen, lockScroll]);
+
+  useEffect(() => {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen, lockScroll]);
+  }, []);
+
+  return useCallback(() => {
+    document.body.style.overflow = "";
+  }, []);
 }

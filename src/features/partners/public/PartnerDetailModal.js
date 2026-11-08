@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
 import { FiExternalLink } from "react-icons/fi";
 import ContentModal from "@/components/ui/Modal/ContentModal";
@@ -8,16 +9,20 @@ import { BTN_MARKETING_PRIMARY_CLASS } from "@/lib/uiTokens";
 const DEFAULT_COLOR = "#8B5CF6";
 
 export default function PartnerDetailModal({ partner, isOpen, onClose }) {
-  if (!partner) return null;
+  const partnerRef = useRef(partner);
+  if (partner) partnerRef.current = partner;
 
-  const color = partner.color || DEFAULT_COLOR;
-  const website = partner.website?.trim();
+  const display = partnerRef.current;
+  if (!display) return null;
+
+  const color = display.color || DEFAULT_COLOR;
+  const website = display.website?.trim();
 
   return (
     <ContentModal
       isOpen={isOpen}
       onClose={onClose}
-      title={partner.name}
+      title={display.name}
       size="md"
       footer={
         website ? (
@@ -35,9 +40,9 @@ export default function PartnerDetailModal({ partner, isOpen, onClose }) {
     >
       <div className="space-y-6 p-6 sm:p-8">
         <div className="flex h-32 items-center justify-center">
-          {partner.logo ? (
+          {display.logo ? (
             <Image
-              src={partner.logo}
+              src={display.logo}
               alt=""
               width={240}
               height={120}
@@ -48,13 +53,13 @@ export default function PartnerDetailModal({ partner, isOpen, onClose }) {
               className="font-display text-4xl font-bold text-white/80"
               style={{ color }}
             >
-              {(partner.name || "?").charAt(0)}
+              {(display.name || "?").charAt(0)}
             </span>
           )}
         </div>
 
         <p className="text-body-lg whitespace-pre-wrap">
-          {partner.description || "No description available."}
+          {display.description || "No description available."}
         </p>
       </div>
     </ContentModal>

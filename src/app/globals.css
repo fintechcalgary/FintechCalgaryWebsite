@@ -14,6 +14,7 @@
 /* Root document shell (fonts applied on body via layout.js) */
 html {
   overscroll-behavior: none;
+  scrollbar-gutter: stable;
   min-height: 100%;
   min-height: 100dvh;
   min-height: -webkit-fill-available;
