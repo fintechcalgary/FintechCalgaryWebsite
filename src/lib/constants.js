@@ -33,7 +33,7 @@ export const API_ENDPOINTS = {
   PARTNERS_ORDER: "/api/partners/order",
 };
 
-// Membership payments (charged via Elavon Converge hosted payment modal)
+// Membership payments (charged via Elavon Converge hosted payment page)
 export const MEMBERSHIP = {
   PREMIUM_PRICE: "5.00",
 };

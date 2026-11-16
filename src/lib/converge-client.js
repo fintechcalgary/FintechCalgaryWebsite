@@ -1,65 +1,57 @@
 /**
- * Client-side helper for Elavon Converge's hosted payment Lightbox.
- * Loads PayWithConverge.js on demand and opens Elavon's payment modal.
+ * Client-side helper for Elavon Converge's hosted payment page.
+ * Posts a one-time session token to Elavon so card data never touches this site.
  */
 
-let scriptPromise = null;
+const ALLOWED_HOSTS = new Set([
+  "api.convergepay.com",
+  "api.demo.convergepay.com",
+]);
 
-function loadPayWithConverge(scriptUrl) {
-  if (window.PayWithConverge) {
-    return Promise.resolve(window.PayWithConverge);
+/**
+ * True when `url` is Elavon's hosted payment page on a known Converge host.
+ */
+export function isConvergePaymentPage(url) {
+  try {
+    const parsed = new URL(url);
+    const path = parsed.pathname.replace(/\/+$/, "") || "/";
+    return (
+      parsed.protocol === "https:" &&
+      ALLOWED_HOSTS.has(parsed.hostname) &&
+      path === "/hosted-payments" &&
+      !parsed.username &&
+      !parsed.password &&
+      !parsed.search &&
+      !parsed.hash
+    );
+  } catch {
+    return false;
   }
-  if (!scriptPromise) {
-    scriptPromise = new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = scriptUrl;
-      script.async = true;
-      script.onload = () => {
-        if (window.PayWithConverge) {
-          resolve(window.PayWithConverge);
-        } else {
-          scriptPromise = null;
-          reject(new Error("Payment library failed to initialize"));
-        }
-      };
-      script.onerror = () => {
-        scriptPromise = null;
-        script.remove();
-        reject(new Error("Failed to load the payment library"));
-      };
-      document.head.appendChild(script);
-    });
-  }
-  return scriptPromise;
 }
 
 /**
- * Opens the Converge Lightbox payment modal for a one-time session token.
+ * Sends the browser to Converge's hosted payment page.
+ * A form POST URL-encodes the token; a raw "+" or "&" in the token returns 401.
  *
- * @param {Object} session - `{ token, scriptUrl }` from /api/converge/session-token
- * @returns {Promise<{status: "approved"|"declined"|"cancelled", response: Object|null}>}
- *          Rejects if the library fails to load or the Lightbox reports an error.
+ * @param {Object} session - `{ token, paymentPageUrl }` from /api/converge/session-token
  */
-export async function openConvergeLightbox({ token, scriptUrl }) {
-  const PayWithConverge = await loadPayWithConverge(scriptUrl);
+export function redirectToConvergeHostedPage({ token, paymentPageUrl }) {
+  if (!token || !isConvergePaymentPage(paymentPageUrl)) {
+    throw new Error("Payment session response was invalid.");
+  }
 
-  return new Promise((resolve, reject) => {
-    PayWithConverge.open(
-      { ssl_txn_auth_token: token },
-      {
-        onError: (error) => {
-          reject(
-            new Error(
-              typeof error === "string" && error
-                ? error
-                : "Payment could not be processed. Please try again.",
-            ),
-          );
-        },
-        onCancelled: () => resolve({ status: "cancelled", response: null }),
-        onDeclined: (response) => resolve({ status: "declined", response }),
-        onApproval: (response) => resolve({ status: "approved", response }),
-      },
-    );
-  });
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = paymentPageUrl;
+  form.enctype = "application/x-www-form-urlencoded";
+  form.acceptCharset = "UTF-8";
+
+  const input = document.createElement("input");
+  input.type = "hidden";
+  input.name = "ssl_txn_auth_token";
+  input.value = token;
+  form.appendChild(input);
+
+  document.body.appendChild(form);
+  form.submit();
 }
