@@ -1,5 +1,5 @@
 "use client";
-import { linkAccent, linkUnderline } from "@/lib/uiClassNames";
+import { linkAccent } from "@/lib/uiClassNames";
 import { ADMIN_PANEL_CLASS, BTN_GRADIENT_PRIMARY_CLASS, ICON_GLYPH_CLASS, MODAL_BODY_CLASS, MODAL_FILE_BTN_CLASS } from "@/lib/uiTokens";
 import { useState, useEffect, useCallback } from "react";
 import { getSession } from "next-auth/react";
@@ -36,6 +36,18 @@ import {
 import EmptyState from "@/components/ui/EmptyState";
 import StatusBadge from "@/components/ui/StatusBadge";
 
+const initialFormData = (mode) => ({
+  title: "",
+  description: "",
+  date: "",
+  time: "",
+  imageUrl: "",
+  images: [],
+  eventType: EVENT_TYPE.EVENT,
+  recordingUrl: "",
+  isPartner: mode === "partner",
+});
+
 export default function Events({ mode }) {
   const pathname = usePathname();
   const isDashboard =
@@ -47,17 +59,9 @@ export default function Events({ mode }) {
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    date: "",
-    time: "",
-    imageUrl: "",
-    images: [],
-    eventType: EVENT_TYPE.EVENT,
-    recordingUrl: "",
-    isPartner: mode === "partner" ? true : false,
-  });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [formData, setFormData] = useState(() => initialFormData(mode));
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     eventId: null,
@@ -90,6 +94,8 @@ export default function Events({ mode }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError("");
+    setSubmitting(true);
     const url = editingEvent
       ? `${API_ENDPOINTS.EVENTS}/${editingEvent._id}`
       : API_ENDPOINTS.EVENTS;
@@ -99,27 +105,27 @@ export default function Events({ mode }) {
       ? { ...formData, registrations: editingEvent.registrations }
       : formData;
 
-    const response = await fetch(url, {
-      method: editingEvent ? HTTP_METHODS.PUT : HTTP_METHODS.POST,
-      headers: { "Content-Type": CONTENT_TYPES.JSON },
-      body: JSON.stringify(body),
-    });
-
-    if (response.ok) {
-      setFormData({
-        title: "",
-        description: "",
-        date: "",
-        time: "",
-        imageUrl: "",
-        images: [],
-        eventType: EVENT_TYPE.EVENT,
-        recordingUrl: "",
-        isPartner: mode === "partner" ? true : false,
+    try {
+      const response = await fetch(url, {
+        method: editingEvent ? HTTP_METHODS.PUT : HTTP_METHODS.POST,
+        headers: { "Content-Type": CONTENT_TYPES.JSON },
+        body: JSON.stringify(body),
       });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.error || "Unable to save the event. Please try again.");
+      }
+
+      setFormData(initialFormData(mode));
       setShowForm(false);
       setEditingEvent(null);
       fetchEvents();
+    } catch (error) {
+      console.error("Event save error:", error);
+      setSubmitError(error.message || "Unable to save the event. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -172,6 +178,7 @@ export default function Events({ mode }) {
   };
 
   const handleEdit = (event) => {
+    setSubmitError("");
     setEditingEvent(event);
     setFormData({
       title: event.title,
@@ -212,16 +219,8 @@ export default function Events({ mode }) {
   };
 
   const resetForm = () => {
-    setFormData({
-      title: "",
-      description: "",
-      date: "",
-      time: "",
-      imageUrl: "",
-      images: [],
-      eventType: EVENT_TYPE.EVENT,
-      recordingUrl: "",
-    });
+    setFormData(initialFormData(mode));
+    setSubmitError("");
     setEditingEvent(null);
     setShowForm(false);
   };
@@ -260,7 +259,7 @@ export default function Events({ mode }) {
               type="button"
               variant="cancel"
               onClick={resetForm}
-              disabled={uploading}
+              disabled={uploading || submitting}
               className="!flex-none"
             >
               Cancel
@@ -269,11 +268,11 @@ export default function Events({ mode }) {
               type="submit"
               form="eventForm"
               variant="primary"
-              disabled={uploading}
+              disabled={uploading || submitting}
               className="!flex-none"
             >
               {editingEvent ? <FiEdit2 className="h-4 w-4" /> : <FiPlus className="h-4 w-4" />}
-              {uploading
+              {uploading || submitting
                 ? "Please wait..."
                 : editingEvent
                   ? "Update Event"
@@ -283,6 +282,11 @@ export default function Events({ mode }) {
         }
       >
         <form id="eventForm" onSubmit={handleSubmit} className={MODAL_BODY_CLASS}>
+          {submitError ? (
+            <div className="rounded-lg border border-red-500/50 bg-red-500/10 px-4 py-3 text-sm text-red-200" role="alert">
+              {submitError}
+            </div>
+          ) : null}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-5 lg:gap-8">
             {/* Primary fields — left on desktop */}
             <div className="space-y-4 lg:col-span-3">
