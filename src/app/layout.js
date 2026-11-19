@@ -9,7 +9,7 @@ import ClientSessionProvider from "@/components/providers/ClientSessionProvider"
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { Analytics } from "@vercel/analytics/next";
 import ChromaticIcons from "@/components/ui/ChromaticIcons";
-import SilkBackground from "@/components/ui/SilkBackground";
+import HazeGlowBackground from "@/components/ui/HazeGlowBackground";
 
 /* Slim geometric UI — body, nav, buttons */
 const plusJakarta = Plus_Jakarta_Sans({
@@ -96,14 +96,14 @@ export default function RootLayout({ children }) {
       className={`${plusJakarta.variable} ${spaceGrotesk.variable} ${syne.variable} ${jetbrainsMono.variable}`}
     >
       <body
-        className={`silk-boot ${plusJakarta.className} text-foreground relative min-h-screen font-sans antialiased`}
+        className={`hazeglow-boot ${plusJakarta.className} text-foreground relative min-h-screen font-sans antialiased`}
       >
         <noscript>
-          <style>{`body.silk-boot .site-content{opacity:1!important}`}</style>
+          <style>{`body.hazeglow-boot .site-content{opacity:1!important}`}</style>
         </noscript>
         <ChromaticIcons />
-        <SilkBackground />
-        {/* Main content wrapper — revealed after first silk frame */}
+        <HazeGlowBackground />
+        {/* Main content wrapper — revealed after first hazeglow frame */}
         <div className="site-content relative z-10 min-h-screen">
           <SettingsProvider>
             <ClientSessionProvider>{children}</ClientSessionProvider>
