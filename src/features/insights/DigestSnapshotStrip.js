@@ -45,10 +45,10 @@ export default function DigestSnapshotStrip({ keyInsights, totalArchiveArticles 
                 <span className="font-semibold tabular-nums tracking-tight text-white">
                   {seg.value}
                 </span>
-                <p className="text-muted inline">
+                <span className="text-muted inline">
                   {" "}
                   {seg.phrase}
-                </p>
+                </span>
               </span>
             ))}
           </p>

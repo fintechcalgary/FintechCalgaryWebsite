@@ -209,25 +209,25 @@ export default function ArticlesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-6 sticky top-24 z-40 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.06),transparent_35%),linear-gradient(155deg,rgba(8,8,10,0.98),rgba(18,18,22,0.96)_45%,rgba(10,10,12,0.98))] backdrop-blur-xl rounded-2xl p-5 border border-zinc-600/45 shadow-2xl shadow-black/65"
+            className="mb-6 sticky top-24 z-40 rounded-2xl border border-primary/20 bg-gradient-to-br from-violet-950/55 via-gray-900/45 to-purple-950/40 p-5 shadow-lg shadow-primary/10 backdrop-blur-xl"
           >
             <div className="grid grid-cols-1 xl:grid-cols-[auto_auto_1fr_auto] gap-4 items-stretch xl:items-end">
               <div className="space-y-2">
                 <p className="text-muted text-[11px] font-semibold tracking-[0.14em]">
                   Scope
                 </p>
-                <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
+                <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] p-1">
                   <button
                     type="button"
                     onClick={() => handleScopeChange("week")}
-                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${scope === "week" ? "bg-gradient-to-r from-primary to-purple-500/80 text-white shadow-lg shadow-primary/10" : "text-gray-300 hover:text-white"}`}
+                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${scope === "week" ? "bg-gradient-to-r from-primary to-purple-500/80 text-white shadow-lg shadow-primary/20" : "text-gray-300 hover:bg-white/[0.06] hover:text-white"}`}
                   >
                     This Week
                   </button>
                   <button
                     type="button"
                     onClick={() => handleScopeChange("all")}
-                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${scope === "all" ? "bg-gradient-to-r from-primary to-purple-500/80 text-white shadow-lg shadow-primary/10" : "text-gray-300 hover:text-white"}`}
+                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${scope === "all" ? "bg-gradient-to-r from-primary to-purple-500/80 text-white shadow-lg shadow-primary/20" : "text-gray-300 hover:bg-white/[0.06] hover:text-white"}`}
                   >
                     Full Archive
                   </button>
@@ -238,11 +238,11 @@ export default function ArticlesPage() {
                 <p className="text-muted text-[11px] font-semibold tracking-[0.14em]">
                   Layout
                 </p>
-                <div className="flex items-center gap-2 bg-gray-800/60 rounded-xl p-1 border border-gray-700/60">
+                <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] p-1">
                   <button
                     type="button"
                     onClick={() => setViewMode("grid")}
-                    className={`p-2.5 rounded-xl transition-all ${viewMode === "grid" ? "bg-primary text-white" : "text-gray-400 hover:text-white"}`}
+                    className={`p-2.5 rounded-xl transition-all ${viewMode === "grid" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-gray-400 hover:bg-white/[0.06] hover:text-white"}`}
                     aria-label="Grid view"
                   >
                     <FiGrid className="w-5 h-5" />
@@ -250,7 +250,7 @@ export default function ArticlesPage() {
                   <button
                     type="button"
                     onClick={() => setViewMode("list")}
-                    className={`p-2.5 rounded-xl transition-all ${viewMode === "list" ? "bg-primary text-white" : "text-gray-400 hover:text-white"}`}
+                    className={`p-2.5 rounded-xl transition-all ${viewMode === "list" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-gray-400 hover:bg-white/[0.06] hover:text-white"}`}
                     aria-label="List view"
                   >
                     <FiList className="w-5 h-5" />
@@ -268,7 +268,7 @@ export default function ArticlesPage() {
                     setSortBy(e.target.value);
                     if (scope === "all") setArchivePage(1);
                   }}
-                  className="w-full px-4 py-3 rounded-xl bg-gray-800/60 border border-gray-700/60 text-white focus:outline-none focus:ring-2 focus:ring-primary/25 min-w-[280px]"
+                  className="form-input min-w-[280px] border-white/10 bg-white/[0.06] hover:border-primary/35"
                 >
                   <option value="date_desc">Newest to Oldest</option>
                   <option value="date_asc">Oldest to Newest</option>
