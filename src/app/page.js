@@ -122,7 +122,7 @@ export default function Home() {
                 <p className="font-display text-2xl font-semibold tabular-nums tracking-tight text-white sm:text-3xl">
                   B2B
                 </p>
-                <p className="mt-1 font-mono text-[10px] font-medium tracking-[0.14em] text-gray-500 sm:text-[11px]">
+                <p className="mt-1 font-mono text-[10px] font-medium tracking-[0.14em] text-white sm:text-[11px]">
                   Focused programs
                 </p>
               </div>
@@ -130,7 +130,7 @@ export default function Home() {
                 <p className="font-display text-2xl font-semibold tabular-nums tracking-tight text-white sm:text-3xl">
                   Events
                 </p>
-                <p className="mt-1 font-mono text-[10px] font-medium tracking-[0.14em] text-gray-500 sm:text-[11px]">
+                <p className="mt-1 font-mono text-[10px] font-medium tracking-[0.14em] text-white sm:text-[11px]">
                   & educational talks
                 </p>
               </div>
@@ -138,7 +138,7 @@ export default function Home() {
                 <p className="font-display text-2xl font-semibold tabular-nums tracking-tight text-white sm:text-3xl">
                   Network
                 </p>
-                <p className="mt-1 font-mono text-[10px] font-medium tracking-[0.14em] text-gray-500 sm:text-[11px]">
+                <p className="mt-1 font-mono text-[10px] font-medium tracking-[0.14em] text-white sm:text-[11px]">
                   Industry partners
                 </p>
               </div>

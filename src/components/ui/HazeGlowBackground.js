@@ -15,48 +15,32 @@ const READY_TIMEOUT_MS = 2000;
 const MAX_DPR = 2;
 const MAX_DT = 0.1;
 
-/* Black → indigo → brand violet mesh tuned for FinTech Calgary */
+/* Pill · seed 22 — hazeglow.dev generator preset */
 const HAZEGLOW_CONFIG = parseConfig({
   version: 1,
-  seed: 1,
-  shape: "mesh",
-  center: [0.5, 0.42],
-  size: [0.86, 0.6],
-  roundness: 0.7,
-  softness: 0.9,
+  seed: 22,
+  shape: "pill",
+  center: [0.5, 0.92],
+  size: [1.5, 1.27],
+  roundness: 0.67,
+  softness: 0.79,
   rotation: 0,
-  rampDirection: 0.9,
-  angle: 90,
-  warp: 0.1,
-  warpScale: 1.1,
-  palette: ["#8B5CF6", "#6D28D9", "#4C1D95", "#2E1065", "#1A0B2E", "#0A0618"],
-  background: "#050208",
-  mesh: [
-    // Near-black frame so edges stay quiet
-    [0.02, 0.04, "#050208"],
-    [0.98, 0.06, "#0A0618"],
-    [0.04, 0.96, "#080414"],
-    [0.96, 0.94, "#0C081A"],
-    // Upper bloom behind the hero / globe
-    [0.38, 0.16, "#3B1D6E"],
-    [0.58, 0.24, "#8B5CF6"],
-    [0.72, 0.12, "#5B21B6"],
-    // Mid depth — indigo bridges so the blend feels continuous
-    [0.22, 0.48, "#1E0A3C"],
-    [0.5, 0.52, "#4C1D95"],
-    [0.82, 0.56, "#2E1065"],
-    // Lower weight — deep purple-black for section readability
-    [0.48, 0.86, "#12081F"],
-  ],
-  grain: 0.32,
+  rampDirection: 0.4,
+  angle: 283,
+  warp: 0.4,
+  warpScale: 1.05,
+  palette: ["#32004d", "#3e0594", "#2e046c", "#350061"],
+  background: "#000000",
+  mesh: [],
+  grain: 0.75,
   motion: "drift",
-  speed: 1.05,
+  speed: 0.55,
   loop: 0,
-  hover: 0.45,
+  hover: 0.31,
   hoverMode: "pull",
   effect: "none",
-  effectSize: 22,
-  effectAmount: 0.94,
+  effectSize: 18,
+  effectAmount: 0.85,
 });
 
 function markHazeglowReady() {
