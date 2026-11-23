@@ -14,19 +14,17 @@ const BOOT_CLASS = "hazeglow-boot";
 const READY_TIMEOUT_MS = 2000;
 const MAX_DPR = 2;
 const MAX_DT = 0.1;
+const MOBILE_LAYOUT_MQ = "(max-width: 767px)";
 
-/* Pill · seed 22 — hazeglow.dev generator preset */
-const HAZEGLOW_CONFIG = parseConfig({
+const HAZEGLOW_SHARED = {
   version: 1,
   seed: 22,
   shape: "pill",
-  center: [0.5, 0.92],
   size: [1.5, 1.27],
   roundness: 0.67,
   softness: 0.79,
   rotation: 0,
   rampDirection: 0.4,
-  angle: 283,
   warp: 0.4,
   warpScale: 1.05,
   palette: ["#32004d", "#3e0594", "#2e046c", "#350061"],
@@ -41,6 +39,18 @@ const HAZEGLOW_CONFIG = parseConfig({
   effect: "none",
   effectSize: 18,
   effectAmount: 0.85,
+};
+
+const HAZEGLOW_DESKTOP = parseConfig({
+  ...HAZEGLOW_SHARED,
+  center: [0.5, 0.92],
+  angle: 283,
+});
+
+const HAZEGLOW_MOBILE = parseConfig({
+  ...HAZEGLOW_SHARED,
+  center: [0.5, 0.08],
+  angle: 103,
 });
 
 function markHazeglowReady() {
@@ -50,12 +60,23 @@ function markHazeglowReady() {
   body.classList.remove(BOOT_CLASS);
 }
 
+function syncShellHeight(isMobile) {
+  const vv = window.visualViewport;
+  const layoutH = window.innerHeight;
+  const visualH = vv ? vv.height + vv.offsetTop : layoutH;
+  const bleed = isMobile ? 160 : 0;
+  const height = Math.ceil(Math.max(layoutH, visualH) + bleed);
+  document.documentElement.style.setProperty("--mobile-vvh", `${height}px`);
+}
+
 export default function HazeGlowBackground() {
+  const shellRef = useRef(null);
   const canvasRef = useRef(null);
 
   useLayoutEffect(() => {
+    const shell = shellRef.current;
     const canvas = canvasRef.current;
-    if (!canvas) {
+    if (!shell || !canvas) {
       markHazeglowReady();
       return;
     }
@@ -78,7 +99,11 @@ export default function HazeGlowBackground() {
     const reduceMotionMq = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
+    const mobileLayoutMq = window.matchMedia(MOBILE_LAYOUT_MQ);
     const failOpen = window.setTimeout(markHazeglowReady, READY_TIMEOUT_MS);
+
+    const getConfig = () =>
+      mobileLayoutMq.matches ? HAZEGLOW_MOBILE : HAZEGLOW_DESKTOP;
 
     const reveal = () => {
       if (revealed) return;
@@ -87,29 +112,34 @@ export default function HazeGlowBackground() {
       requestAnimationFrame(markHazeglowReady);
     };
 
-    const resize = () => {
+    const sync = () => {
+      syncShellHeight(mobileLayoutMq.matches);
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
-      const w = Math.max(1, canvas.clientWidth);
-      const h = Math.max(1, canvas.clientHeight);
-      renderer.resize(w * dpr, h * dpr);
+      renderer.resize(
+        Math.max(1, canvas.clientWidth) * dpr,
+        Math.max(1, canvas.clientHeight) * dpr,
+      );
+      renderer.render(getConfig(), time, pointer);
+      reveal();
+      kick();
     };
 
     const paint = (now) => {
       if (disposed) return;
 
+      const config = getConfig();
       const dt = Math.min((now - last) / 1000, MAX_DT);
       last = now;
 
       const reduceMotion = reduceMotionMq.matches;
-      const motionOn =
-        !reduceMotion && HAZEGLOW_CONFIG.motion !== "none";
-      const hoverOn = !reduceMotion && HAZEGLOW_CONFIG.hover > 0;
+      const motionOn = !reduceMotion && config.motion !== "none";
+      const hoverOn = !reduceMotion && config.hover > 0;
 
-      if (motionOn) time += dt * HAZEGLOW_CONFIG.speed;
+      if (motionOn) time += dt * config.speed;
 
       const goal = hoverOn ? target : { ...target, inside: false };
       pointer = stepPointer(pointer, goal, dt);
-      renderer.render(HAZEGLOW_CONFIG, time, pointer);
+      renderer.render(config, time, pointer);
       reveal();
 
       const keepGoing =
@@ -132,11 +162,9 @@ export default function HazeGlowBackground() {
 
     const setTargetFromEvent = (event) => {
       const rect = canvas.getBoundingClientRect();
-      const width = rect.width || 1;
-      const height = rect.height || 1;
       target = {
-        x: (event.clientX - rect.left) / width,
-        y: (event.clientY - rect.top) / height,
+        x: (event.clientX - rect.left) / (rect.width || 1),
+        y: (event.clientY - rect.top) / (rect.height || 1),
         inside: true,
       };
       kick();
@@ -146,15 +174,6 @@ export default function HazeGlowBackground() {
       if (!target.inside) return;
       target = { ...target, inside: false };
       kick();
-    };
-
-    const onPointerMove = (event) => {
-      if (HAZEGLOW_CONFIG.hover <= 0 || reduceMotionMq.matches) return;
-      setTargetFromEvent(event);
-    };
-
-    const onPointerUp = (event) => {
-      if (event.pointerType !== "mouse") clearTarget();
     };
 
     const onVisibility = () => {
@@ -167,55 +186,56 @@ export default function HazeGlowBackground() {
       }
     };
 
-    const onResize = () => {
-      resize();
-      renderer.render(HAZEGLOW_CONFIG, time, pointer);
-      reveal();
-      kick();
-    };
-
     renderer.ready.then((ok) => {
       if (disposed) return;
       if (!ok) markHazeglowReady();
     });
 
-    const ro = new ResizeObserver(onResize);
-    ro.observe(canvas);
+    const onPointerMove = (event) => {
+      if (getConfig().hover <= 0 || reduceMotionMq.matches) return;
+      setTargetFromEvent(event);
+    };
 
-    /* Window-level tracking — canvas sits under site content with
-       pointer-events: none, so Hazeglow's built-in canvas handlers never fire. */
+    const onPointerUp = (event) => {
+      if (event.pointerType !== "mouse") clearTarget();
+    };
+
+    const ro = new ResizeObserver(sync);
+    ro.observe(shell);
+
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerup", onPointerUp, { passive: true });
     window.addEventListener("pointercancel", clearTarget, { passive: true });
-    document.documentElement.addEventListener("mouseleave", clearTarget);
-    window.addEventListener("blur", clearTarget);
+    window.addEventListener("resize", sync, { passive: true });
+    window.addEventListener("orientationchange", sync, { passive: true });
+    mobileLayoutMq.addEventListener("change", sync);
+    window.visualViewport?.addEventListener("resize", sync, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
 
-    resize();
-    renderer.render(HAZEGLOW_CONFIG, time, pointer);
-    kick();
+    const lateSync = window.setTimeout(sync, 400);
+    sync();
 
     return () => {
       disposed = true;
       window.clearTimeout(failOpen);
+      window.clearTimeout(lateSync);
       cancelAnimationFrame(raf);
       ro.disconnect();
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
       window.removeEventListener("pointercancel", clearTarget);
-      document.documentElement.removeEventListener("mouseleave", clearTarget);
-      window.removeEventListener("blur", clearTarget);
+      window.removeEventListener("resize", sync);
+      window.removeEventListener("orientationchange", sync);
+      mobileLayoutMq.removeEventListener("change", sync);
+      window.visualViewport?.removeEventListener("resize", sync);
       document.removeEventListener("visibilitychange", onVisibility);
       renderer.dispose();
     };
   }, []);
 
   return (
-    <div aria-hidden className="hazeglow-bg pointer-events-none z-0">
-      <canvas
-        ref={canvasRef}
-        style={{ display: "block", width: "100%", height: "100%" }}
-      />
+    <div ref={shellRef} aria-hidden className="hazeglow-bg">
+      <canvas ref={canvasRef} className="block h-full w-full" />
     </div>
   );
 }

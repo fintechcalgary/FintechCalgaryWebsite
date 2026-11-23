@@ -11,20 +11,22 @@
   font-size: 90%;
 }
 
-/* Root document shell (fonts applied on body via layout.js) */
+/* Root document shell (fonts applied on body via layout.js).
+   html background must match hazeglow (#000) — Safari paints its own status /
+   URL bar zones with this colour; a mismatch reads as a strip at the bottom. */
 html {
   overscroll-behavior: none;
   scrollbar-gutter: stable;
   min-height: 100%;
   min-height: 100dvh;
   min-height: -webkit-fill-available;
-  background-color: var(--background);
+  background-color: #000000;
   background-image: none;
 }
 
 body {
   color: var(--foreground);
-  background-color: var(--background);
+  background-color: #000000;
   background-image: none;
   font-family: var(--font-sans), "Plus Jakarta Sans", system-ui, sans-serif;
   overscroll-behavior: none;

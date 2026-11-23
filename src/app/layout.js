@@ -78,6 +78,7 @@ export const metadata = {
     index: true,
     follow: true,
   },
+  themeColor: "#000000",
 };
 
 /* viewport-fit=cover is required for content to extend under iOS chrome.
