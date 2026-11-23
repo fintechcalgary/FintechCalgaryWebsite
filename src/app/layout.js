@@ -78,7 +78,6 @@ export const metadata = {
     index: true,
     follow: true,
   },
-  themeColor: "#000000",
 };
 
 /* viewport-fit=cover is required for content to extend under iOS chrome.
@@ -88,6 +87,7 @@ export const viewport = {
   viewportFit: "cover",
   width: "device-width",
   initialScale: 1,
+  themeColor: "#000000",
 };
 
 export default function RootLayout({ children }) {
